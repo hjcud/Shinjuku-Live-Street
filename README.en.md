@@ -71,6 +71,8 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
 
 ## Recent development and improvements
 
+<sub>As of September 3, 2026</sub>
+
 The live-equipment synchronization and traffic simulation were redesigned to keep shared state consistent with many users connected while reducing repeated CPU, physics, and GC work.
 
 ### Shared live equipment — consistent state from placement to return
