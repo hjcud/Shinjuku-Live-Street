@@ -64,7 +64,6 @@
       <path d="M802 123 l10 5 -10 5 3-5z"/><path d="M842 123 l10 5 -10 5 3-5z"/>
       <path d="M882 123 l10 5 -10 5 3-5z"/><path d="M922 123 l10 5 -10 5 3-5z"/>
     </g>
-    <text x="1168" y="96" text-anchor="end" fill="#f0c98d" fill-opacity="0.055" font-size="86" font-weight="800">新宿</text>
   </g>
 
   <rect x="16.5" y="16.5" width="1247" height="617" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/>
