@@ -10,7 +10,6 @@
       .caption { fill: #8c959f; }
     }
   </style>
-  <path d="M196 5H244" stroke="#c84036" stroke-width="3" stroke-linecap="round"/>
   <text x="220" y="30" class="link">예정된 작업 확인하기 →</text>
   <text x="220" y="54" class="caption">진행 중인 작업과 개선 계획</text>
 </svg>
