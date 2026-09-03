@@ -134,34 +134,6 @@ Traffic-light stopping now uses baked stop-line data, and lane-change sensor bou
 
 Between the initial and latest snapshots, CPU frame-time P95 fell from `24.60 ms to 17.44 ms`, a 29.1% reduction. Average CPU frame time also fell by 32.5%, improving both typical performance and recurring slow frames. Model, material, and render settings remained unchanged.
 
-## 5. Model optimization that preserves Shinjuku's character
-
-### Problem
-
-Combining the environment into one mesh caused hidden areas to be rendered together, while splitting it too finely increased the number of renderers and material passes.
-
-### Current implementation
-
-| Item | Current setting |
-| --- | ---: |
-| Environment model | 246,921 triangles, 240 meshes |
-| Materials | 77 materials, 313 renderer material slots |
-| Static-batching targets | 392 objects |
-| Occluders | 330 objects |
-| Occlusion data | 3.28 MB |
-| Meshes using baked lighting | Approximately 220 |
-| Lightmaps | Three 4096×4096 maps and one 512×512 map |
-| Environment mesh colliders | 2 |
-| Blend shapes | 41 across 4 meshes, 2,624 triangles |
-
-- Buildings and street objects are divided into spatial sections for occlusion culling
-- Static batching is applied to 392 static objects
-- Bakery baked lighting is applied to approximately 220 meshes
-- Shadow receiving is disabled on 264 renderers that do not need it
-- Motion vectors are disabled on 247 static renderers
-- Mesh Read/Write is disabled, while vertex welding and lightmap UV generation are enabled
-- Automatic colliders are disabled for the full model, leaving only two meshes for movement collision detection
-
 ## Supporting editor tools
 
 | Tool | Problem addressed | Code |
