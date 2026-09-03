@@ -2,13 +2,12 @@
   <strong>한국어</strong> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a>
 </p>
 
-<p align="center">
+<div align="center">
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">
-    <img src="https://api.vrchat.cloud/api/1/file/file_c6b519ec-141a-4edb-83f3-2fc3dc39c2e1/5/file" alt="신주쿠 라이브 스트리트 대표 이미지" width="900">
+    <img src="./Docs/images/shinjuku-live-street-hero.png" alt="신주쿠 라이브 스트리트 대표 이미지" width="900">
   </a>
-</p>
-
-<h1 align="center">Shinjuku Live Street</h1>
+  <h1>Shinjuku Live Street</h1>
+</div>
 
 <p align="center">
   <strong>신주쿠의 밤거리에서 누구나 공연을 시작하고, 지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드</strong>
