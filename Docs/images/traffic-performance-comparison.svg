@@ -41,11 +41,11 @@
     <style>
       text { font-family: Inter, Pretendard, "Noto Sans KR", "Segoe UI", sans-serif; }
       .title { fill: #f4eee5; font-size: 36px; font-weight: 750; letter-spacing: 0.2px; }
-      .subtitle { fill: #9ba5ad; font-size: 15px; font-weight: 500; letter-spacing: 0.65px; }
-      .card-title { fill: #ede8df; font-size: 20px; font-weight: 700; }
-      .delta { fill: #f2b16d; font-size: 17px; font-weight: 750; }
-      .label { fill: #aab2b7; font-size: 13px; font-weight: 600; letter-spacing: 0.25px; }
-      .value { fill: #f5f0e8; font-size: 16px; font-weight: 750; }
+      .subtitle { fill: #9ba5ad; font-size: 18px; font-weight: 500; letter-spacing: 0.65px; }
+      .card-title { fill: #ede8df; font-size: 24px; font-weight: 700; }
+      .delta { fill: #f2b16d; font-size: 21px; font-weight: 750; }
+      .label { fill: #aab2b7; font-size: 18px; font-weight: 600; letter-spacing: 0.25px; }
+      .value { fill: #f5f0e8; font-size: 21px; font-weight: 750; }
     </style>
   </defs>
 
