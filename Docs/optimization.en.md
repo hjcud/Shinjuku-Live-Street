@@ -4,13 +4,35 @@
 
 # Traffic system performance optimization
 
-## Test setup
+## Test environment and comparison method
 
-- The Profiler comparison uses 300-frame captures recorded under the same conditions for the initial and latest snapshots
-- The initial snapshot uses per-vehicle, per-frame execution; the latest uses a central manager and staggered sensor checks
-- The test uses ten active vehicles and 80 ClientSim remote players concentrated in the same area
-- CPU frame time, PlayerLoop, Udon, Physics, and GC figures are CPU measurements captured with Unity Profiler
-- Per-second counts assume 60 FPS
+| Item | Condition |
+| --- | --- |
+| Hardware | Intel Core i5-13400F · NVIDIA GeForce RTX 3080 Ti 12GB · 32GB RAM |
+| Software | Unity `2022.3.22f1` · VRChat SDK - Worlds `3.8.1` |
+| Runtime | Unity Editor Play Mode · ClientSim · no PC build or VRChat Build & Test capture |
+| Load | Ten active vehicles · 80 ClientSim remote players concentrated at the same location |
+| Comparison | Initial: per-vehicle work every frame · Latest: central manager with staggered sensor checks |
+| Capture window | 300 frames from each of the initial and latest snapshots |
+| Aggregation | Arithmetic mean and P95 of per-frame samples · per-second counts assume 60 FPS |
+| Profiler metrics | CPU frame time · PlayerLoop · Udon · Physics.Simulate · GC Alloc |
+
+The original capture record does not preserve the Deep Profile setting, a separate warm-up duration, or the number of repeated runs. The initial implementation is a local snapshot from before the public repository was created, so there is no matching commit hash. The current implementation appears in the first public source commit, [`e212623`](https://github.com/hjcud/Shinjuku-Live-Street/commit/e212623), but the table compares two local snapshots rather than two repository commits.
+
+> [!NOTE]
+> These results compare the effect of the architecture change on the same PC under matching Editor conditions. ClientSim does not fully reproduce live networking or user behavior, so the figures should not be treated as live VRChat instance or build performance. GPU frame time and memory usage were not measured.
+
+## Reproducibility tool provided today
+
+[`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) did not produce the 300-frame results above. It is an Editor-only stress test added later to make future captures repeatable.
+
+- Runs `WAIT`, `DIST`, and `CROWD` for 600 frames each
+- Marks the first 60 frames after each transition as warm-up and the remaining 540 frames as the measurement window
+- Repeats the three-state cycle three times, producing nine measurement windows
+- Uses custom Profiler markers to identify the state and warm-up or measurement phase
+- Writes the Unity-to-Profiler frame mapping to `Temp/TrafficPlayerStressPhases.csv` on every run
+
+Future published results should use matching build and Profiler settings and state how the three cycles are aggregated, such as by median or mean.
 
 ## Results
 

@@ -1,0 +1,66 @@
+name: 이용 허가 요청 / Usage permission / 利用許可
+description: 저장소 콘텐츠의 이용 허가를 요청합니다. / Request permission to use repository content. / リポジトリのコンテンツ利用許可を申請します。
+title: "[Permission] "
+labels: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        이 양식은 공개 Issue로 등록됩니다. 개인정보나 비공개 자료는 적지 마세요.
+        This form creates a public issue. Do not include personal or confidential information.
+        このフォームは公開Issueとして作成されます。個人情報や非公開資料は記載しないでください。
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: 작성 언어 / Language / 言語
+      options:
+        - 한국어
+        - English
+        - 日本語
+    validations:
+      required: true
+
+  - type: input
+    id: requester
+    attributes:
+      label: 요청자 / Requester / 申請者
+      description: 이름, GitHub 계정 또는 단체명을 적어주세요. / Enter your name, GitHub account, or organization. / 氏名、GitHubアカウント、または団体名を記載してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: material
+    attributes:
+      label: 이용하려는 콘텐츠 / Requested material / 利用対象
+      description: 파일 경로, 코드 범위 또는 링크를 구체적으로 적어주세요. / Identify the files, code sections, or links. / ファイルパス、コード範囲、またはリンクを具体的に記載してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: 이용 목적과 방법 / Purpose and use / 利用目的と方法
+      description: 어디에서 어떻게 사용할지, 수정하거나 배포할 예정인지 설명해 주세요. / Explain where and how it will be used, modified, or distributed. / 使用場所・方法、改変や配布の予定を説明してください。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: commercial
+    attributes:
+      label: 상업적 이용 / Commercial use / 商用利用
+      options:
+        - 아니요 / No / いいえ
+        - 예 / Yes / はい
+        - 미정 / Undecided / 未定
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: acknowledgement
+    attributes:
+      label: 확인 / Acknowledgement / 確認
+      options:
+        - label: 권리 보유자의 서면 승인을 받기 전에는 요청한 이용이 허가되지 않는다는 점을 확인했습니다. / I understand that the requested use is not permitted until the rights holder approves it in writing. / 権利者から書面による承認を得るまで、申請した利用は許可されないことを確認しました。
+          required: true

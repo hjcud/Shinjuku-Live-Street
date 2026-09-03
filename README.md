@@ -9,6 +9,8 @@
   <h1>Shinjuku Live Street</h1>
 </div>
 
+<p align="center"><strong>이 저장소는 실행 가능한 Unity 프로젝트가 아닌, 자체 작성 코드와 기술 문서를 정리한 포트폴리오입니다.</strong></p>
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/world-intro.ko.svg">
@@ -97,7 +99,7 @@
 
 ![교통 시스템 초기 스냅샷과 최신 스냅샷의 Unity Profiler 비교](./Docs/images/traffic-performance-comparison.ko.svg)
 
-차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, 초기·최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다.
+차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, Unity Editor에서 초기·최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다. 이 결과는 동일 조건의 상대 비교이며 실제 VRChat 인스턴스의 성능을 나타내지는 않습니다.
 
 차량 위치와 회전은 매 프레임 보간해 계산 사이에서도 움직임이 끊기지 않도록 했습니다.
 
@@ -141,7 +143,7 @@
 
 ## 저장소 안내
 
-이 저장소만으로 월드를 실행할 수는 없습니다. 직접 작성한 C#·UdonSharp 코드와 문서만 공개하며, Unity 씬과 프리팹, 모델, 이미지, 음원, 영상, 머티리얼, 애니메이션, 셰이더, `.meta` 파일은 포함하지 않습니다.
+이 저장소는 월드를 실행할 수 있는 완전한 Unity 프로젝트가 아닙니다. 직접 작성한 C#·UdonSharp 코드, 기술 문서와 README용 자체 제작 이미지만 공개합니다. 월드 구동에 필요한 Unity 씬·Prefab·모델·텍스처·음원·영상·머티리얼·애니메이션·셰이더·`.meta` 파일과 외부 에셋은 포함하지 않습니다.
 
 <details>
 <summary><strong>사용한 SDK·패키지·외부 구성요소</strong></summary>
@@ -181,10 +183,10 @@
 
 ## 저작권 및 이용 조건
 
-| 대상 | 이용 조건 |
-| --- | --- |
-| **자체 작성 코드** | 오픈 소스 라이선스 미적용<br>GitHub 내 열람·포크 외 복제·수정·재배포는 사전 허가가 필요합니다. |
-| **외부 구성요소·에셋** | 각 원 저작자·배포처의 라이선스와 이용 조건을 따릅니다. |
+> [!IMPORTANT]
+> 이 저장소는 오픈 소스가 아닌 **소스 공개형(source-available) 포트폴리오**입니다. GitHub에서의 열람·포크를 넘어 코드를 복제·수정·재배포하거나 상업적으로 이용하려면 사전 서면 허가가 필요합니다.
+
+[저작권 및 이용 조건 자세히 보기](./COPYRIGHT.md) · [이용 허가 요청하기](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 
 ## 팀
 
