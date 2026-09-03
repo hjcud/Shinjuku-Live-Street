@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  Music, conversation, and group photos unfold throughout the street.
+  Music begins throughout the streets, drawing people together around each performance.
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 
 Shinjuku Live Street is a VRChat social world built around street performances, where performers and audiences meet in the streets of Shinjuku.
 
-There is no single fixed stage. Performances begin throughout the streets, passersby stop to watch, and the night continues through conversations and group photos after each set.
+There is no single fixed stage. Performances begin throughout the streets, and passersby stop to enjoy them together.
 
 <table align="center">
   <tr>
