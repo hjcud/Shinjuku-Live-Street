@@ -9,9 +9,10 @@
   <h1>新宿ライブストリート</h1>
 </div>
 
-<p align="center">
-  <strong>新宿の夜の街角で誰もがライブを始められ、通りかかった人が自然と観客になるVRChatソーシャルワールド</strong>
-</p>
+<h3 align="center">
+  <sup>“</sup> 新宿の夜の街角で誰もがライブを始められ、<br>
+  通りかかった人が自然と観客になるVRChatソーシャルワールド <sub>”</sub>
+</h3>
 
 <table align="center">
   <tr>

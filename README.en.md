@@ -9,9 +9,10 @@
   <h1>Shinjuku Live Street</h1>
 </div>
 
-<p align="center">
-  <strong>A VRChat social world where anyone can start a street performance and passersby naturally become part of the audience.</strong>
-</p>
+<h3 align="center">
+  <sup>“</sup> A VRChat social world where anyone can start a street performance,<br>
+  and passersby naturally become part of the audience. <sub>”</sub>
+</h3>
 
 <table align="center">
   <tr>
