@@ -117,17 +117,15 @@
   <sub>왼쪽: 기본 렌더링 · 오른쪽: 동일 카메라에서 촬영한 와이어프레임</sub>
 </p>
 
-환경 모델은 구역별로 나누고, 카메라에 보이지 않는 구역은 오클루전 컬링으로 렌더링에서 제외했습니다. 고정 오브젝트는 정적 배칭으로 묶었으며, 거리와 건물 조명은 베이크했습니다.
+환경 모델을 구역별로 분리하고, 오클루전 컬링·정적 배칭·베이크 조명을 적용해 실시간 처리 범위를 줄였습니다.
 
 <table align="center">
   <tr>
-    <td width="260" align="center"><strong>모델 구성</strong><br><sub>삼각형 246,921개 · 환경 메시 240개</sub></td>
-    <td width="260" align="center"><strong>렌더링 최적화</strong><br><sub>정적 배칭 대상 392개 · 오클루더 설정 330개</sub></td>
-    <td width="260" align="center"><strong>충돌 처리</strong><br><sub>메시 콜라이더 2개</sub></td>
+    <td width="260" align="center"><strong>모델 구성</strong><br><sub>삼각형 246,921개<br>환경 메시 240개<br>메시 콜라이더 2개</sub></td>
+    <td width="260" align="center"><strong>렌더링 처리</strong><br><sub>정적 배칭 대상 392개<br>오클루더 설정 330개</sub></td>
+    <td width="260" align="center"><strong>베이크 조명</strong><br><sub>적용 메시 약 220개<br>4096×4096 3장<br>512×512 1장</sub></td>
   </tr>
 </table>
-
-베이크 조명은 약 220개 메시에 적용했습니다. 라이트맵은 4096×4096 해상도 3장과 512×512 해상도 1장을 사용했습니다.
 
 ## 코드 구성
 
