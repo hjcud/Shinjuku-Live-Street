@@ -25,8 +25,7 @@
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatでワールドを開く ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2名で制作</sub></p>
-<p align="center"><sub>訪問数・お気に入り数 · 2026年9月3日時点</sub></p>
+<p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2名で制作<br>訪問数・お気に入り数 · 2026年9月3日時点</sub></p>
 
 ## ストリートライブとコミュニティ
 

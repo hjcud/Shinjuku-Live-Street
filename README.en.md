@@ -25,8 +25,7 @@
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>Open the world in VRChat ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team</sub></p>
-<p align="center"><sub>Visits and favorites as of September 3, 2026</sub></p>
+<p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team<br>Visits and favorites as of September 3, 2026</sub></p>
 
 ## Street performances and community
 

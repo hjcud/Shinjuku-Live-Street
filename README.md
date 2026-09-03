@@ -25,8 +25,7 @@
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChat에서 월드 열기 ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChat 소셜 월드 · Unity / UdonSharp · 2인 제작</sub></p>
-<p align="center"><sub>방문·즐겨찾기 수치 · 2026년 9월 3일 기준</sub></p>
+<p align="center"><sub>VRChat 소셜 월드 · Unity / UdonSharp · 2인 제작<br>방문·즐겨찾기 수치 · 2026년 9월 3일 기준</sub></p>
 
 ## 거리 공연과 커뮤니티
 
