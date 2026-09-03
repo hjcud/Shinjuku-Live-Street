@@ -1,0 +1,67 @@
+name: 機能・改善を提案（日本語）
+description: 新しい機能やワールドでの体験に関するご意見をお寄せください。
+title: "[提案] "
+labels:
+  - enhancement
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        実装方法まで決まっていなくても構いません。不便に感じた点や、期待する体験を中心にお聞かせください。
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 提案分野
+      options:
+        - ライブ・機材
+        - 交通システム
+        - ワールドでの体験
+        - UI・案内
+        - パフォーマンス・プラットフォーム対応
+        - アクセシビリティ
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 提案の背景
+      description: どのような場面で必要性や不便を感じたかをご記入ください。
+      placeholder: 提案のきっかけや、現在不便に感じている点をお聞かせください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 提案内容
+      description: 追加してほしいことや、変更してほしいことをご記入ください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: 期待する変化
+      description: 提案が反映された場合、どのような点が良くなるかをご記入ください。
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 参考資料
+      description: 参考になる画像、動画、リンクがあればご記入ください。
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: 送信前の確認
+      options:
+        - label: 同じ内容のIssueがすでに登録されていないことを確認しました。
+          required: true

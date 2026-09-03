@@ -15,6 +15,8 @@
 /.github/ISSUE_TEMPLATE/*
 !/.github/ISSUE_TEMPLATE/1-bug-report.yml
 !/.github/ISSUE_TEMPLATE/2-improvement-suggestion.yml
+!/.github/ISSUE_TEMPLATE/3-bug-report-ja.yml
+!/.github/ISSUE_TEMPLATE/4-improvement-suggestion-ja.yml
 !/.github/ISSUE_TEMPLATE/config.yml
 
 # 포트폴리오에서 연결하는 자체 기술 문서만 허용합니다.
