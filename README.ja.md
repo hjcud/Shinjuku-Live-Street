@@ -50,7 +50,9 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
   </tr>
 </table>
 
-実際のライブや訪問の記録は、[#VRSJKで見る ↗](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)
+<p align="center">
+  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJKでライブや訪問の記録を見る ↗</strong></a>
+</p>
 
 <p align="center">
   <img src="./Docs/images/community-gallery-placeholder.svg" alt="ストリートライブとコミュニティの実際の場面を入れる画像領域" width="900">
@@ -106,9 +108,9 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
 
 ![交通システムの初期スナップショットと最新スナップショットのUnity Profiler比較](./Docs/images/traffic-performance-comparison.ja.svg)
 
-車両10台とClientSimのリモートプレイヤー80人を1地点に集め、初期スナップショットと最新スナップショットの同じ300フレームを比較しました。平均CPUフレーム時間は`17.65 ms → 11.92 ms`、繰り返し発生する遅いフレームを示すP95は`24.60 ms → 17.44 ms`まで減少しました。物理処理時間は65.3%、1フレームあたりのGC割り当ては88.1%削減しています。
+車両10台とClientSimで再現したリモートプレイヤー80人を同じ地点に配置し、初期状態と最新状態をそれぞれ300フレーム測定しました。平均CPUフレーム時間は`17.65 ms → 11.92 ms`、P95フレーム時間は`24.60 ms → 17.44 ms`まで減少しました。物理処理時間は65.3%、1フレームあたりのGC割り当ては88.1%削減しています。
 
-計算頻度は`10 Hz`に抑え、位置と回転は毎フレーム補間して画面上では滑らかに動くようにしました。
+車両の位置と回転は毎フレーム補間し、計算の間も動きが途切れて見えないようにしました。
 
 [測定条件と問題ごとの実装を詳しく見る](./Docs/optimization.ja.md)
 
@@ -194,13 +196,3 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
 | --- | --- |
 | [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 企画 · グラフィック · 3Dモデリング |
 | [hjcud](https://github.com/hjcud) | Unity・UdonSharpシステムの開発・最適化 |
-
----
-
-<p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">VRChatワールド</a>
-  ·
-  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live">#VRSJK</a>
-  ·
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street">GitHub</a>
-</p>

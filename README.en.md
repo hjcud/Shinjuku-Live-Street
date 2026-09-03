@@ -50,7 +50,9 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
   </tr>
 </table>
 
-See performances and visit records on [#VRSJK ↗](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)
+<p align="center">
+  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>View performances and visit records on #VRSJK ↗</strong></a>
+</p>
 
 <p align="center">
   <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved image area for community performance scenes" width="900">
@@ -106,9 +108,9 @@ The traffic owner calculates all ten vehicles in one place and sends each vehicl
 
 ![Unity Profiler comparison between the initial and latest traffic-system snapshots](./Docs/images/traffic-performance-comparison.svg)
 
-The comparison uses the same 300-frame segment from the initial and latest snapshots, with ten cars and 80 ClientSim remote players gathered at one point. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95—which represents recurring slow frames—fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
+Ten vehicles and 80 remote players simulated with ClientSim were placed at the same location, and 300 frames were measured in both the initial and latest states. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
 
-The calculation rate is reduced to `10 Hz`, while position and rotation are interpolated every frame to keep vehicles moving smoothly on screen.
+Vehicle position and rotation are interpolated every frame so motion remains smooth between simulation updates.
 
 [Read the test conditions and implementation details](./Docs/optimization.en.md)
 
@@ -194,13 +196,3 @@ No open-source license is granted for the original code in this repository. The 
 | --- | --- |
 | [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | Planning · Graphics · 3D modeling |
 | [hjcud](https://github.com/hjcud) | Unity and UdonSharp system development and optimization |
-
----
-
-<p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">VRChat World</a>
-  ·
-  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live">#VRSJK</a>
-  ·
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street">GitHub</a>
-</p>

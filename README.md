@@ -50,7 +50,9 @@ Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 
   </tr>
 </table>
 
-실제 공연과 방문 기록은 [#VRSJK에서 보기 ↗](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)
+<p align="center">
+  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJK에서 실제 공연과 방문 기록 보기 ↗</strong></a>
+</p>
 
 <p align="center">
   <img src="./Docs/images/community-gallery-placeholder.svg" alt="거리 공연과 커뮤니티의 실제 장면을 넣을 이미지 영역" width="900">
@@ -106,9 +108,9 @@ Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 
 
 ![교통 시스템 초기 스냅샷과 최신 스냅샷의 Unity Profiler 비교](./Docs/images/traffic-performance-comparison.ko.svg)
 
-차량 10대와 ClientSim 원격 플레이어 80명이 한 지점에 모인 상태에서 초기 스냅샷과 최신 스냅샷의 동일한 300프레임을 비교했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, 반복적으로 느린 프레임을 나타내는 P95는 `24.60 ms → 17.44 ms`로 줄었습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 감소했습니다.
+차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, 초기·최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다.
 
-계산 주기는 `10 Hz`로 낮췄지만 차량 위치와 회전은 매 프레임 보간해 화면에서 부드럽게 움직이도록 했습니다.
+차량 위치와 회전은 매 프레임 보간해 계산 사이에서도 움직임이 끊기지 않도록 했습니다.
 
 [측정 조건과 문제별 적용 내용을 자세히 보기](./Docs/optimization.md)
 
@@ -194,13 +196,3 @@ Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 
 | --- | --- |
 | [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 기획 · 그래픽 · 3D 모델링 |
 | [hjcud](https://github.com/hjcud) | Unity·UdonSharp 시스템 개발 및 최적화 |
-
----
-
-<p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">VRChat 월드</a>
-  ·
-  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live">#VRSJK</a>
-  ·
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street">GitHub</a>
-</p>
