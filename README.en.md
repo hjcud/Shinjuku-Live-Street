@@ -64,8 +64,6 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.en.svg" alt="Share feedback — report a bug or suggest an improvement" width="49%"></a>
 </p>
 
----
-
 ## Recent improvements
 
 <sub>As of September 3, 2026</sub>
