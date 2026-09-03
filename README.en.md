@@ -117,17 +117,15 @@ Ten vehicles and 80 remote players simulated with ClientSim were concentrated in
   <sub>Left: normal render · Right: wireframe captured from the same camera</sub>
 </p>
 
-The environment is divided into sections so occlusion culling can exclude areas outside the camera view. Static objects use static batching, while lighting for the streets and buildings is baked.
+The environment is divided into sections, with occlusion culling, static batching, and baked lighting used to reduce real-time rendering work.
 
 <table align="center">
   <tr>
-    <td width="260" align="center"><strong>Model geometry</strong><br><sub>246,921 triangles · 240 environment meshes</sub></td>
-    <td width="260" align="center"><strong>Rendering</strong><br><sub>392 static-batched objects · 330 occluders</sub></td>
-    <td width="260" align="center"><strong>Collision</strong><br><sub>2 mesh colliders</sub></td>
+    <td width="260" align="center"><strong>Model geometry</strong><br><sub>246,921 triangles<br>240 environment meshes<br>2 mesh colliders</sub></td>
+    <td width="260" align="center"><strong>Rendering</strong><br><sub>392 static-batched objects<br>330 occluders</sub></td>
+    <td width="260" align="center"><strong>Baked lighting</strong><br><sub>Applied to approximately 220 meshes<br>3 × 4096×4096 lightmaps<br>1 × 512×512 lightmap</sub></td>
   </tr>
 </table>
-
-Baked lighting is applied to approximately 220 meshes. The scene uses three 4096×4096 lightmaps and one 512×512 lightmap.
 
 ## Code map
 
