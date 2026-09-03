@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="112" viewBox="0 0 900 112" role="img" aria-labelledby="title desc">
+  <title id="title">Shinjuku Live Street 소개</title>
+  <desc id="desc">신주쿠의 밤거리에서 누구나 공연을 시작하고, 지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드</desc>
+  <style>
+    .copy { fill: #f0f6fc; font-family: Pretendard, "Noto Sans KR", "Segoe UI", sans-serif; font-size: 26px; font-weight: 750; }
+    .quote { fill: #ffffff; }
+  </style>
+  <path class="quote" transform="translate(-40 0)" d="M65 49c0-11 5-20 16-26l4 8c-6 3-9 7-10 12 6 0 10 4 10 10 0 6-4 10-10 10-7 0-10-6-10-14Zm23 0c0-11 5-20 16-26l4 8c-6 3-9 7-10 12 6 0 10 4 10 10 0 6-4 10-10 10-7 0-10-6-10-14Z"/>
+  <text x="450" y="45" text-anchor="middle" class="copy">신주쿠의 밤거리에서 누구나 공연을 시작하고,</text>
+  <text x="450" y="80" text-anchor="middle" class="copy">지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드</text>
+  <path class="quote" transform="translate(40 0)" d="M835 63c0 11-5 20-16 26l-4-8c6-3 9-7 10-12-6 0-10-4-10-10 0-6 4-10 10-10 7 0 10 6 10 14Zm-23 0c0 11-5 20-16 26l-4-8c6-3 9-7 10-12-6 0-10-4-10-10 0-6 4-10 10-10 7 0 10 6 10 14Z"/>
+</svg>
