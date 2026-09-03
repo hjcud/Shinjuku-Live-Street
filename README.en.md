@@ -101,7 +101,11 @@ Ten vehicles and 80 remote players simulated with ClientSim were concentrated in
 
 Vehicle position and rotation are interpolated every frame so motion remains smooth between simulation updates.
 
-[Read the test conditions and implementation details](./Docs/optimization.en.md)
+<p align="center">
+  <a href="./Docs/optimization.en.md"><strong>View test conditions and implementation details →</strong></a>
+</p>
+
+---
 
 ## Model and rendering optimization
 

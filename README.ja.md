@@ -101,7 +101,11 @@
 
 車両の位置と回転を毎フレーム補間することで、シミュレーション更新の間も滑らかに見えるようにしました。
 
-[測定条件と実装の詳細を見る](./Docs/optimization.ja.md)
+<p align="center">
+  <a href="./Docs/optimization.ja.md"><strong>測定条件と実装の詳細を見る →</strong></a>
+</p>
+
+---
 
 ## モデルと描画の最適化
 

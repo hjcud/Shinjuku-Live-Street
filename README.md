@@ -101,7 +101,11 @@
 
 차량 위치와 회전은 매 프레임 보간해 계산 사이에서도 움직임이 끊기지 않도록 했습니다.
 
-[측정 조건과 문제별 적용 내용을 자세히 보기](./Docs/optimization.md)
+<p align="center">
+  <a href="./Docs/optimization.md"><strong>측정 조건과 문제별 적용 내용을 자세히 보기 →</strong></a>
+</p>
+
+---
 
 ## 모델과 렌더링 최적화
 
