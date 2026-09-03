@@ -43,7 +43,7 @@
 </table>
 
 <p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2人チーム · 2025. 04. 04.公開 · 最終更新 2026. 08. 31.</sub></p>
-<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">VRChat公式ワールド情報</a> · 2026年9月3日確認 · 訪問数とお気に入り数は今後変わる場合があります。</sub></p>
+<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">VRChat公式ワールド情報</a> · 2026年9月3日確認</sub></p>
 
 ## ストリートライブとコミュニティ
 

@@ -43,7 +43,7 @@
 </table>
 
 <p align="center"><sub>VRChat 소셜 월드 · Unity / UdonSharp · 2인 제작 · 2025. 04. 04. 공개 · 최근 업데이트 2026. 08. 31.</sub></p>
-<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">VRChat 공식 월드 정보</a> · 2026년 9월 3일 확인 · 방문 및 즐겨찾기 수는 이후 달라질 수 있습니다.</sub></p>
+<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">VRChat 공식 월드 정보</a> · 2026년 9월 3일 확인</sub></p>
 
 ## 거리 공연과 커뮤니티
 
