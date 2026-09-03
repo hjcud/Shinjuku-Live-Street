@@ -11,11 +11,11 @@
     <style>
       text { font-family: "Noto Sans JP", "Yu Gothic", "Segoe UI", sans-serif; }
       .title { fill: #f4eee5; font-size: 34px; font-weight: 750; }
-      .section { fill: #ede8df; font-size: 19px; font-weight: 700; }
-      .item-title { fill: #ede8df; font-size: 16px; font-weight: 700; }
-      .item-body { fill: #97a1a7; font-size: 13px; font-weight: 600; }
-      .result-label { fill: #64d0c8; font-size: 13px; font-weight: 750; }
-      .result-text { fill: #f4eee5; font-size: 16px; font-weight: 700; }
+      .section { fill: #ede8df; font-size: 24px; font-weight: 700; }
+      .item-title { fill: #ede8df; font-size: 20px; font-weight: 700; }
+      .item-body { fill: #97a1a7; font-size: 18px; font-weight: 600; }
+      .result-label { fill: #64d0c8; font-size: 16px; font-weight: 750; }
+      .result-text { fill: #f4eee5; font-size: 20px; font-weight: 700; }
     </style>
   </defs>
   <g clip-path="url(#panelClip)">
@@ -28,11 +28,11 @@
   <g filter="url(#cardShadow)"><rect x="48" y="154" width="342" height="232" rx="18" fill="#17171a" fill-opacity="0.97" stroke="#6b3c35" stroke-opacity="0.82"/><rect x="430" y="154" width="802" height="232" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.82"/></g>
   <rect x="72" y="177" width="34" height="3" rx="1.5" fill="#c84036"/><text x="72" y="204" class="section">以前の問題</text>
   <rect x="72" y="226" width="294" height="62" rx="12" fill="#1c1a1c" stroke="#6b3c35" stroke-opacity="0.72"/><text x="92" y="251" class="item-title">返却後も状態が残る</text><text x="92" y="274" class="item-body">画面・ペン・メディア設定</text>
-  <rect x="72" y="302" width="294" height="62" rx="12" fill="#1c1a1c" stroke="#6b3c35" stroke-opacity="0.72"/><text x="92" y="327" class="item-title">途中参加者に機材が表示されない</text><text x="92" y="350" class="item-body">設置済みスピーカーが見えない</text>
+  <rect x="72" y="302" width="294" height="62" rx="12" fill="#1c1a1c" stroke="#6b3c35" stroke-opacity="0.72"/><text x="92" y="327" class="item-title">途中参加者に表示されない</text><text x="92" y="350" class="item-body">設置済みスピーカーが見えない</text>
   <path d="M397 270 H421" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round"/><path d="M414 263 L421 270 L414 277" fill="none" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
   <rect x="454" y="177" width="34" height="3" rx="1.5" fill="#58c9c2"/><text x="454" y="204" class="section">現在の仕組み</text>
-  <rect x="454" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/><text x="474" y="253" class="item-title">設置時にまとめて同期</text><text x="474" y="279" class="item-body">所有権・位置</text><text x="474" y="301" class="item-body">画面・ペン・メディア</text>
-  <rect x="710" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/><text x="730" y="253" class="item-title">途中参加者にも状態を反映</text><text x="730" y="279" class="item-body">設置済み機材を</text><text x="730" y="301" class="item-body">参加直後に表示</text>
+  <rect x="454" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/><text x="474" y="253" class="item-title">設置時に一括同期</text><text x="474" y="279" class="item-body">所有権・位置</text><text x="474" y="301" class="item-body">画面・ペン・メディア</text>
+  <rect x="710" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/><text x="730" y="253" class="item-title">途中参加時に反映</text><text x="730" y="279" class="item-body">設置済み機材を</text><text x="730" y="301" class="item-body">参加直後に表示</text>
   <rect x="966" y="226" width="242" height="138" rx="12" fill="#192022" stroke="#5b4b38" stroke-opacity="0.78"/><text x="986" y="253" class="item-title">返却・退出時に初期化</text><text x="986" y="279" class="item-body">連動機能と</text><text x="986" y="301" class="item-body">前の利用者の設定を初期化</text>
   <rect x="48" y="408" width="1184" height="52" rx="14" fill="url(#resultBar)" stroke="#42615e" stroke-opacity="0.72"/><text x="72" y="440" class="result-label">結果</text><text x="126" y="440" class="result-text">すべてのユーザーに同じ状態が反映され、返却後は設定を初期化</text>
 </svg>
