@@ -1,4 +1,4 @@
-# 이 저장소는 자체 작성 코드와 포트폴리오 문서만 공개합니다.
+# 이 저장소는 자체 작성 코드와 공개 문서만 포함합니다.
 # 아래에서 명시적으로 허용하지 않은 최상위 프로젝트 항목은 모두 차단합니다.
 /*
 
@@ -25,7 +25,7 @@
 !/.github/ISSUE_TEMPLATE/7-usage-permission-request.yml
 !/.github/ISSUE_TEMPLATE/config.yml
 
-# 포트폴리오에서 연결하는 자체 기술 문서만 허용합니다.
+# README에서 연결하는 자체 기술 문서만 허용합니다.
 !/Docs/
 /Docs/*
 !/Docs/optimization.md

@@ -5,7 +5,7 @@
 # Copyright and usage terms
 
 > [!IMPORTANT]
-> The Shinjuku Live Street repository is not an open-source project. It is a source-available portfolio, and these terms do not grant a standard open-source license such as MIT, Apache, or GPL.
+> The Shinjuku Live Street repository is not an open-source project. Its source code is publicly viewable, but these terms do not grant a standard open-source license such as MIT, Apache, or GPL.
 
 ## Scope
 

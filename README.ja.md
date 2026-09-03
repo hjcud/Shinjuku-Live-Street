@@ -9,7 +9,7 @@
   <h1>新宿ライブストリート</h1>
 </div>
 
-<p align="center"><strong>このリポジトリは、実行可能なUnityプロジェクトではなく、自作コードと技術資料をまとめたポートフォリオです。</strong></p>
+<p align="center"><strong>このリポジトリでは自作コードと技術資料を公開していますが、実行可能なUnityプロジェクトではありません。</strong></p>
 
 <p align="center">
   <picture>
@@ -184,7 +184,7 @@
 ## 著作権と利用条件
 
 > [!IMPORTANT]
-> このリポジトリはオープンソースではなく、**ソースコードを閲覧できるポートフォリオ**です。GitHub上での閲覧・フォークを超えて、コードを複製・改変・再配布・商用利用する場合は、事前の書面による許可が必要です。
+> このリポジトリはオープンソースではなく、**ソースコード公開型（source-available）**です。GitHub上での閲覧・フォークを超えて、コードを複製・改変・再配布・商用利用する場合は、事前の書面による許可が必要です。
 
 [著作権と利用条件の詳細](./COPYRIGHT.ja.md) · [利用許可を申請する](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 
