@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="520" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
-  <title id="title">交通状態の計算と送信構成</title>
-  <desc id="desc">エディタで生成したレーンデータを交通所有者が計算、圧縮し、リモート側へ送る構成</desc>
+  <title id="title">交通シミュレーションの計算と同期</title>
+  <desc id="desc">エディターで生成したレーンデータを交通オーナーが計算・圧縮し、ネットワークを通じてリモート側へ同期する構成</desc>
   <defs>
     <linearGradient id="panelBackground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17191b"/><stop offset="0.55" stop-color="#101418"/><stop offset="1" stop-color="#17120f"/></linearGradient>
     <radialGradient id="stationLight" cx="88%" cy="3%" r="76%"><stop offset="0" stop-color="#d69a50" stop-opacity="0.17"/><stop offset="0.42" stop-color="#a46531" stop-opacity="0.045"/><stop offset="1" stop-color="#000000" stop-opacity="0"/></radialGradient>
@@ -25,12 +25,12 @@
     <path d="M16 472 C300 452 483 489 721 467 C943 447 1088 459 1264 450" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 494 C292 478 484 506 734 487 C951 470 1110 484 1264 472" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
   </g>
   <rect x="16.5" y="16.5" width="1247" height="487" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
-  <rect x="52" y="43" width="4" height="76" rx="2" fill="#c84036"/><text x="72" y="77" class="title">交通状態 · 計算と送信の構成</text><text x="72" y="108" class="subtitle">車両ごとに行っていた処理を役割別に分離</text>
+  <rect x="52" y="43" width="4" height="76" rx="2" fill="#c84036"/><text x="72" y="77" class="title">交通シミュレーション · 計算と同期</text><text x="72" y="108" class="subtitle">車両ごとの重複処理を役割別に分離</text>
   <g filter="url(#cardShadow)"><rect x="48" y="166" width="252" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#5b4b38" stroke-opacity="0.78"/><rect x="348" y="166" width="252" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.78"/><rect x="648" y="166" width="252" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#5b4b38" stroke-opacity="0.78"/><rect x="948" y="166" width="284" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.78"/></g>
-  <text x="72" y="201" class="role">EDITOR</text><text x="72" y="237" class="card-title">レーンデータを生成</text><text x="72" y="274" class="card-body">位置・接続関係・停止線</text><text x="72" y="300" class="card-body">実行前に計算</text>
-  <text x="372" y="201" class="role">TRAFFIC OWNER</text><text x="372" y="237" class="card-title">車両10台を中央で計算</text><text x="372" y="274" class="card-body">固定周期でシミュレーション</text><text x="372" y="300" class="card-body">センサーは2台ずつ判定</text>
-  <text x="672" y="201" class="role">NETWORK</text><text x="672" y="237" class="card-title">車両ごとに64ビット</text><text x="672" y="274" class="card-body">0.25秒ごとに状態を送信</text><text x="672" y="300" class="card-body">重複する送信要求を防止</text>
-  <text x="972" y="201" class="role">REMOTE CLIENT</text><text x="972" y="237" class="card-title">レーンデータから復元</text><text x="972" y="274" class="card-body">位置と回転を毎フレーム補間</text><text x="972" y="300" class="card-body">画面上の途切れを抑制</text>
+  <text x="72" y="201" class="role">EDITOR</text><text x="72" y="237" class="card-title">レーンデータを生成</text><text x="72" y="274" class="card-body">位置・接続関係・停止線</text><text x="72" y="300" class="card-body">実行前に計算済み</text>
+  <text x="372" y="201" class="role">TRAFFIC OWNER</text><text x="372" y="237" class="card-title">10台の車両を一括計算</text><text x="372" y="274" class="card-body">固定周期でシミュレーション</text><text x="372" y="300" class="card-body">毎フレーム2台を判定</text>
+  <text x="672" y="201" class="role">NETWORK</text><text x="672" y="237" class="card-title">車両状態を64ビット化</text><text x="672" y="274" class="card-body">0.25秒ごとに状態を同期</text><text x="672" y="300" class="card-body">重複する送信要求を抑制</text>
+  <text x="972" y="201" class="role">REMOTE CLIENT</text><text x="972" y="237" class="card-title">レーンデータから再現</text><text x="972" y="274" class="card-body">位置と回転を毎フレーム補間</text><text x="972" y="300" class="card-body">滑らかな動きを維持</text>
   <g fill="none" stroke="#63cbc4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M307 276 H340"/><path d="M333 269 L340 276 L333 283"/><path d="M607 276 H640"/><path d="M633 269 L640 276 L633 283"/><path d="M907 276 H940"/><path d="M933 269 L940 276 L933 283"/></g>
-  <rect x="48" y="414" width="1184" height="52" rx="14" fill="url(#resultBar)" stroke="#5b4b38" stroke-opacity="0.72"/><text x="72" y="446" class="result-label">変更結果</text><text x="160" y="446" class="result-text">車両ごとに行っていた計算と送信を一つの交通管理スクリプトへ集約</text>
+  <rect x="48" y="414" width="1184" height="52" rx="14" fill="url(#resultBar)" stroke="#5b4b38" stroke-opacity="0.72"/><text x="72" y="446" class="result-label">変更結果</text><text x="160" y="446" class="result-text">車両ごとの計算と同期を1つの交通管理スクリプトに集約</text>
 </svg>
