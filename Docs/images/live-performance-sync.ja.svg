@@ -1,31 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-labelledby="title desc">
-  <title id="title">ライブ機材の同期フロー</title><desc id="desc">ライブ機材の設置確認、所有権と状態の共有、途中参加者との同期、返却と初期化の流れ</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="500" viewBox="0 0 1280 500" role="img" aria-labelledby="title desc">
+  <title id="title">ライブ機材の状態同期改善</title>
+  <desc id="desc">ライブ機材で発生していた状態の残留と同期漏れを、所有権と連動状態の一括同期で解決した内容</desc>
   <defs>
     <linearGradient id="panelBackground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17191b"/><stop offset="0.55" stop-color="#101418"/><stop offset="1" stop-color="#17120f"/></linearGradient>
     <radialGradient id="stationLight" cx="88%" cy="3%" r="76%"><stop offset="0" stop-color="#d69a50" stop-opacity="0.17"/><stop offset="0.42" stop-color="#a46531" stop-opacity="0.045"/><stop offset="1" stop-color="#000000" stop-opacity="0"/></radialGradient>
+    <linearGradient id="resultBar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#17302f"/><stop offset="0.55" stop-color="#1a2928"/><stop offset="1" stop-color="#2d211a"/></linearGradient>
     <pattern id="streetGrid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="#e9c08a" stroke-opacity="0.035"/></pattern>
-    <filter id="cardShadow" x="-10%" y="-15%" width="120%" height="135%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.24"/></filter>
-    <clipPath id="panelClip"><rect x="16" y="16" width="1248" height="388" rx="30"/></clipPath>
+    <filter id="cardShadow" x="-8%" y="-12%" width="116%" height="130%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.24"/></filter>
+    <clipPath id="panelClip"><rect x="16" y="16" width="1248" height="468" rx="30"/></clipPath>
     <style>
       text { font-family: "Noto Sans JP", "Yu Gothic", "Segoe UI", sans-serif; }
       .title { fill: #f4eee5; font-size: 34px; font-weight: 750; }
-      .step { fill: #d99852; font-size: 12px; font-weight: 750; }
-      .card-title { fill: #ede8df; font-size: 19px; font-weight: 700; }
-      .primary { fill: #f2b16d; font-size: 16px; font-weight: 700; }
-      .secondary { fill: #8f9aa1; font-size: 13px; font-weight: 600; }
+      .section { fill: #ede8df; font-size: 19px; font-weight: 700; }
+      .item-title { fill: #ede8df; font-size: 16px; font-weight: 700; }
+      .item-body { fill: #97a1a7; font-size: 13px; font-weight: 600; }
+      .result-label { fill: #64d0c8; font-size: 13px; font-weight: 750; }
+      .result-text { fill: #f4eee5; font-size: 16px; font-weight: 700; }
     </style>
   </defs>
   <g clip-path="url(#panelClip)">
-    <rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#panelBackground)"/><rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#stationLight)"/><rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#streetGrid)"/>
+    <rect x="16" y="16" width="1248" height="468" rx="30" fill="url(#panelBackground)"/><rect x="16" y="16" width="1248" height="468" rx="30" fill="url(#stationLight)"/><rect x="16" y="16" width="1248" height="468" rx="30" fill="url(#streetGrid)"/>
     <path d="M16 129 C290 123 445 137 664 128 C890 119 1055 121 1264 126" fill="none" stroke="#a83831" stroke-opacity="0.56" stroke-width="2"/><path d="M16 136 C295 130 456 144 675 135 C902 126 1068 128 1264 132" fill="none" stroke="#df9d53" stroke-opacity="0.16"/>
-    <path d="M16 373 C300 353 483 390 721 368 C943 348 1088 360 1264 351" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 393 C292 377 484 405 734 386 C951 369 1110 383 1264 371" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
+    <path d="M16 452 C300 432 483 469 721 447 C943 427 1088 439 1264 430" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 474 C292 458 484 486 734 467 C951 450 1110 464 1264 452" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
   </g>
-  <rect x="16.5" y="16.5" width="1247" height="387" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
-  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">ライブ機材 · 同期フロー</text>
-  <g filter="url(#cardShadow)"><rect x="48" y="154" width="272" height="178" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#5c4036" stroke-opacity="0.78"/><rect x="344" y="154" width="272" height="178" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#5b4b38" stroke-opacity="0.78"/><rect x="640" y="154" width="272" height="178" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#355553" stroke-opacity="0.78"/><rect x="936" y="154" width="272" height="178" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#5c4036" stroke-opacity="0.78"/></g>
-  <rect x="72" y="177" width="32" height="3" rx="1.5" fill="#c84036"/><text x="72" y="202" class="step">01</text><text x="72" y="235" class="card-title">設置確認</text><text x="72" y="271" class="primary">3 m · 傾斜30°</text><text x="72" y="299" class="secondary">Desktop · VR</text>
-  <rect x="368" y="177" width="32" height="3" rx="1.5" fill="#d79b54"/><text x="368" y="202" class="step">02</text><text x="368" y="235" class="card-title">所有権・状態共有</text><text x="368" y="271" class="primary">位置 · 向き</text><text x="368" y="299" class="secondary">画面 · ペン · メディア</text>
-  <rect x="664" y="177" width="32" height="3" rx="1.5" fill="#58c9c2"/><text x="664" y="202" class="step">03</text><text x="664" y="235" class="card-title">途中参加者との同期</text><text x="664" y="271" class="primary">現在の状態を再送信</text>
-  <rect x="960" y="177" width="32" height="3" rx="1.5" fill="#c84036"/><text x="960" y="202" class="step">04</text><text x="960" y="235" class="card-title">返却・初期化</text><text x="960" y="271" class="primary">返却 · 5 m離脱</text><text x="960" y="299" class="secondary">連動状態を初期化</text>
-  <g fill="none" stroke="#d79b54" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M324 243 H338"/><path d="M333 238 L338 243 L333 248"/><path d="M620 243 H634"/><path d="M629 238 L634 243 L629 248"/><path d="M916 243 H930"/><path d="M925 238 L930 243 L925 248"/></g>
+  <rect x="16.5" y="16.5" width="1247" height="467" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
+  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">ライブ機材 · 状態同期の改善</text>
+  <g filter="url(#cardShadow)"><rect x="48" y="154" width="342" height="232" rx="18" fill="#17171a" fill-opacity="0.97" stroke="#6b3c35" stroke-opacity="0.82"/><rect x="430" y="154" width="802" height="232" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.82"/></g>
+  <rect x="72" y="177" width="34" height="3" rx="1.5" fill="#c84036"/><text x="72" y="204" class="section">以前の問題</text>
+  <rect x="72" y="226" width="294" height="62" rx="12" fill="#1c1a1c" stroke="#6b3c35" stroke-opacity="0.72"/><text x="92" y="251" class="item-title">返却後も状態が残る</text><text x="92" y="274" class="item-body">画面・ペン・メディア設定</text>
+  <rect x="72" y="302" width="294" height="62" rx="12" fill="#1c1a1c" stroke="#6b3c35" stroke-opacity="0.72"/><text x="92" y="327" class="item-title">途中入場者には表示されない</text><text x="92" y="350" class="item-body">設置済みスピーカーが欠ける</text>
+  <path d="M397 270 H421" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round"/><path d="M414 263 L421 270 L414 277" fill="none" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="454" y="177" width="34" height="3" rx="1.5" fill="#58c9c2"/><text x="454" y="204" class="section">現在の動作</text>
+  <rect x="454" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/><text x="474" y="253" class="item-title">設置時にまとめて同期</text><text x="474" y="279" class="item-body">所有権・位置</text><text x="474" y="301" class="item-body">画面・ペン・メディア</text>
+  <rect x="710" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/><text x="730" y="253" class="item-title">途中入場者へ再送信</text><text x="730" y="279" class="item-body">設置済み機材を</text><text x="730" y="301" class="item-body">入場直後に反映</text>
+  <rect x="966" y="226" width="242" height="138" rx="12" fill="#192022" stroke="#5b4b38" stroke-opacity="0.78"/><text x="986" y="253" class="item-title">返却・退出時に初期化</text><text x="986" y="279" class="item-body">連動機能と</text><text x="986" y="301" class="item-body">前の利用者の設定を削除</text>
+  <rect x="48" y="408" width="1184" height="52" rx="14" fill="url(#resultBar)" stroke="#42615e" stroke-opacity="0.72"/><text x="72" y="440" class="result-label">結果</text><text x="126" y="440" class="result-text">全員が同じ機材の状態を確認でき、返却後に前の設定が残らない</text>
 </svg>

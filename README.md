@@ -47,8 +47,6 @@
 
 ## 거리 공연과 커뮤니티
 
-<!-- SCREENSHOT_SLOT: 실제 공연 장면 3장을 외부 URL로 연결한 뒤 아래 카드 위에 배치합니다. 저장소에는 이미지 파일을 추가하지 않습니다. -->
-
 <table>
   <tr>
     <td width="33%" valign="top"><strong>거리 곳곳이 무대</strong><br><sub>솔로 보컬과 악기 연주부터 밴드 공연까지, 공연자가 고른 자리에서 시작되는 공연</sub></td>
@@ -61,27 +59,27 @@
 
 ## 최근 개발과 개선
 
-공연 장비 동기화와 교통 시뮬레이션을 다시 설계했습니다. 다인원 환경에서 공유 상태를 안정적으로 유지하고, 반복되던 CPU·물리·GC 부하를 줄였습니다.
+공연 장비 동기화와 교통 시뮬레이션을 다시 설계했습니다. 여러 사용자가 동시에 접속한 상황에서 장비 상태를 안정적으로 동기화하고, 반복되던 CPU·물리·GC 부하를 줄였습니다.
 
-### 공연 장비 동기화 — 소유권과 상태를 한 흐름으로 관리
+### 공연 장비 동기화 — 배치부터 반납까지 상태를 일관되게 관리
 
-스피커를 반납하거나 사용자가 자리를 떠난 뒤 일부 기능의 상태가 남고, 중간 참가자에게 이미 설치된 스피커가 보이지 않는 문제가 있었습니다.
+스피커를 반납하거나 사용자가 자리를 떠난 뒤 일부 기능의 상태가 남고, 중간 입장자에게 이미 설치된 스피커가 보이지 않는 문제가 있었습니다.
 
 <p align="center">
-  <img src="./Docs/images/live-performance-sync.ko.svg" alt="공연 장비의 배치 확인부터 소유권 설정, 중간 참가자 동기화와 반납 초기화까지의 흐름" width="900">
+  <img src="./Docs/images/live-performance-sync.ko.svg" alt="공연 장비의 기존 동기화 문제와 개선 결과" width="900">
 </p>
 
-배치 조건 확인, 소유권 설정, 상태 전송과 반납 초기화를 하나의 흐름으로 묶고, 모두가 공유하는 상태와 개인 설정을 분리했습니다.
+모든 사용자가 같은 장비 상태를 확인할 수 있고, 반납한 장비에는 이전 사용자의 설정이 남지 않도록 했습니다.
 
 ### 교통 시뮬레이션 — 차량별 반복 계산을 중앙 처리로 통합
 
 차량마다 매 프레임 목적지 계산, `BoxCast`, Transform 이동과 직렬화를 실행해 차량과 사용자가 늘수록 CPU·물리·GC 부하가 함께 증가했습니다.
 
 <p align="center">
-  <img src="./Docs/images/traffic-system-architecture.ko.svg" alt="차량별 매 프레임 처리 구조를 중앙 시뮬레이션과 분산 센서, 압축 스냅샷 구조로 개선한 비교" width="900">
+  <img src="./Docs/images/traffic-system-architecture.ko.svg" alt="에디터, 교통 소유자, 네트워크와 원격 사용자로 이어지는 교통 상태 처리 구조" width="900">
 </p>
 
-차선 데이터를 기준으로 차량을 중앙에서 계산하고, 원격 사용자는 차량당 64비트로 압축한 스냅샷을 같은 차선 위에 복원하도록 바꿨습니다. 렌더링은 상태 사이를 매 프레임 보간해 움직임의 연속성을 유지합니다.
+교통 소유자가 차량 10대의 주행 상태를 한 곳에서 계산하고, 차량 상태는 64비트로 압축해 전송합니다. 원격 클라이언트는 같은 차선 데이터에서 차량을 복원하고 매 프레임 보간해 끊김을 줄였습니다.
 
 <details>
 <summary><strong>실행 중 디버그 화면 보기</strong></summary>
@@ -100,7 +98,7 @@
 
 차량 10대와 ClientSim 원격 플레이어 80명이 한 지점에 모인 상태에서 초기 스냅샷과 최신 스냅샷의 동일한 300프레임을 비교했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, 반복적으로 느린 프레임을 나타내는 P95는 `24.60 ms → 17.44 ms`로 줄었습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 감소했습니다.
 
-주행 판단은 `10 Hz`로 처리하고 렌더링은 상태 사이를 매 프레임 보간해 움직임의 연속성을 유지했습니다.
+계산 주기는 `10 Hz`로 낮췄지만 차량 위치와 회전은 매 프레임 보간해 화면에서 부드럽게 움직이도록 했습니다.
 
 [측정 조건과 문제별 적용 내용을 자세히 보기](./Docs/optimization.md)
 
@@ -112,7 +110,7 @@
   <sub>왼쪽: 기본 렌더링 · 오른쪽: 동일 카메라에서 촬영한 와이어프레임</sub>
 </p>
 
-환경 모델을 구역별로 나눠 카메라에서 보이지 않는 영역이 오클루전 컬링으로 제외되도록 구성했습니다. 정적 배칭과 베이크 조명을 함께 적용해 신주쿠 거리의 조명 밀도와 공간감을 유지했습니다.
+환경 모델을 구역별로 나눠 카메라에 보이지 않는 영역은 오클루전 컬링으로 그리지 않게 했습니다. 정적 배칭을 적용하고 네온과 건물 조명은 베이크 조명으로 처리했습니다.
 
 <table>
   <tr>
@@ -130,10 +128,10 @@
 
 | 영역 | 주요 파일 | 역할 |
 | --- | --- | --- |
-| 공연 장비 | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | 스피커 배치, 검증, 소유권, 참가자 동기화와 초기화 |
+| 공연 장비 | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | 스피커 배치, 검증, 소유권, 중간 입장자 동기화와 초기화 |
 | 무대 음성 | [`VoiceRange.cs`](./Assets/Shinjuku%20Udon/Speaker/VoiceRange.cs) | 공연자의 음성 거리와 음량 공유 |
 | 공유 상호작용 | [`ObjectGlobalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectGlobalToggle.cs), [`ObjectLocalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectLocalToggle.cs) | 전역 상태와 개인 상태 분리 |
-| 교통 실행 | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | 차량 계산, 상태 압축, 전송과 원격 재생 |
+| 교통 실행 | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | 차량 계산, 상태 압축, 전송과 원격 차량 복원 |
 | 차선 데이터 | [`TrafficLaneDatabase.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficLaneDatabase.cs) | 베이크된 차선 정보 조회와 차량 자세 복원 |
 | 제작 도구 | [`TrafficLaneBakerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) | 차선 베이킹, 설정 검사와 시각화 |
 | 월드 기능 | [`PosterSlide.cs`](./Assets/Shinjuku%20Udon/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/Shinjuku%20Udon/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/Shinjuku%20Udon/Teleport/CollisionTeleport.cs) | 포스터 전환, 포털과 이동 처리 |

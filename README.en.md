@@ -47,8 +47,6 @@ There is no single fixed stage. Performances begin throughout the streets, passe
 
 ## Street performances and community
 
-<!-- SCREENSHOT_SLOT: Add three externally hosted performance screenshots above these cards. Do not add the image files to this repository. -->
-
 <table>
   <tr>
     <td width="33%" valign="top"><strong>Every corner can become a stage</strong><br><sub>Solo vocals, instrumentals, and full-band sets beginning wherever performers choose</sub></td>
@@ -61,27 +59,27 @@ Community performances and visit records can be found through the [#VRSJK search
 
 ## Recent development and improvements
 
-The performance-equipment synchronization and traffic simulation were redesigned to keep shared state consistent in high-player-count sessions while reducing recurring CPU, physics, and GC costs.
+The live-equipment synchronization and traffic simulation were redesigned to keep shared state consistent with many users connected while reducing repeated CPU, physics, and GC work.
 
-### Performance equipment synchronization — managing ownership and state as one flow
+### Shared live equipment — consistent state from placement to return
 
 Portable speakers could retain part of their linked state after being returned or left behind, while late joiners could miss speakers already placed in the world.
 
 <p align="center">
-  <img src="./Docs/images/live-performance-sync.svg" alt="Flow from placement validation and ownership assignment to late-join synchronization and reset" width="900">
+  <img src="./Docs/images/live-performance-sync.svg" alt="Previous synchronization problems and the current behavior of shared live equipment" width="900">
 </p>
 
-Placement validation, ownership assignment, synchronization, and reset now run as one flow. Shared state and per-user settings are managed separately.
+Everyone sees the same equipment state, and returned equipment no longer retains the previous user's settings.
 
 ### Traffic simulation — centralizing repeated per-vehicle work
 
 Each vehicle previously calculated its destination, ran a `BoxCast`, moved its Transform, and requested serialization every frame. CPU, physics, and GC costs rose together as the number of vehicles and players increased.
 
 <p align="center">
-  <img src="./Docs/images/traffic-system-architecture.svg" alt="Comparison between per-vehicle per-frame processing and the current central simulation, distributed sensors, and compressed snapshots" width="900">
+  <img src="./Docs/images/traffic-system-architecture.svg" alt="Traffic-state flow from editor data through the traffic owner and network to remote clients" width="900">
 </p>
 
-Vehicles are now simulated centrally against baked lane data. Remote clients reconstruct each vehicle from a 64-bit snapshot and interpolate between states on every rendered frame to preserve continuous motion.
+The traffic owner calculates all ten vehicles in one place and sends each vehicle's state as a 64-bit record. Remote clients rebuild the vehicles from the same lane data and interpolate every frame to reduce visible stepping.
 
 <details>
 <summary><strong>View the runtime debug screen</strong></summary>
@@ -100,7 +98,7 @@ Vehicles are now simulated centrally against baked lane data. Remote clients rec
 
 The comparison uses the same 300-frame segment from the initial and latest snapshots, with ten cars and 80 ClientSim remote players gathered at one point. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95—which represents recurring slow frames—fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
 
-Driving decisions run at `10 Hz`, while every rendered frame interpolates between states to maintain continuous motion.
+The calculation rate is reduced to `10 Hz`, while position and rotation are interpolated every frame to keep vehicles moving smoothly on screen.
 
 [Read the test conditions and implementation details](./Docs/optimization.en.md)
 
@@ -112,7 +110,7 @@ Driving decisions run at `10 Hz`, while every rendered frame interpolates betwee
   <sub>Left: normal render · Right: wireframe captured from the same camera</sub>
 </p>
 
-The environment is divided into sections so occlusion culling can exclude areas outside the camera view. Static batching and baked lighting preserve the density and depth of Shinjuku's nighttime streets.
+The environment is divided into sections so occlusion culling can skip areas outside the camera view. Static batching is applied to fixed objects, while neon signs and building lights use baked lighting.
 
 <table>
   <tr>
@@ -133,7 +131,7 @@ Baked lighting covers approximately 220 meshes using three 4096 lightmaps and on
 | Performance equipment | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | Speaker placement, validation, ownership, late-join sync, and reset |
 | Stage voice | [`VoiceRange.cs`](./Assets/Shinjuku%20Udon/Speaker/VoiceRange.cs) | Shared performer voice range and gain |
 | Shared interactions | [`ObjectGlobalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectGlobalToggle.cs), [`ObjectLocalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectLocalToggle.cs) | Separation of global and local state |
-| Traffic runtime | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | Simulation, state packing, transfer, and remote playback |
+| Traffic runtime | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | Simulation, state packing, transfer, and remote reconstruction |
 | Lane data | [`TrafficLaneDatabase.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficLaneDatabase.cs) | Baked lane lookup and vehicle pose reconstruction |
 | Editor tooling | [`TrafficLaneBakerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) | Lane baking, validation, and visualization |
 | World utilities | [`PosterSlide.cs`](./Assets/Shinjuku%20Udon/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/Shinjuku%20Udon/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/Shinjuku%20Udon/Teleport/CollisionTeleport.cs) | Poster transitions, portals, and teleportation |
