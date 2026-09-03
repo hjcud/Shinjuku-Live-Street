@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="650" viewBox="0 0 1280 650" role="img" aria-labelledby="title desc">
+  <title id="title">교통 시스템 초기와 최신 성능 비교</title>
+  <desc id="desc">차량 10대와 원격 사용자 80명 조건에서 CPU 프레임 시간, P95, 물리 처리 시간과 프레임당 메모리 할당을 비교한 그래프</desc>
+  <defs>
+    <linearGradient id="panelBackground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17191b"/><stop offset="0.55" stop-color="#101418"/><stop offset="1" stop-color="#17120f"/></linearGradient>
+    <radialGradient id="stationLight" cx="88%" cy="3%" r="76%"><stop offset="0" stop-color="#d69a50" stop-opacity="0.17"/><stop offset="0.42" stop-color="#a46531" stop-opacity="0.045"/><stop offset="1" stop-color="#000000" stop-opacity="0"/></radialGradient>
+    <linearGradient id="latestBar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cf4138"/><stop offset="0.58" stop-color="#e66b43"/><stop offset="1" stop-color="#efad62"/></linearGradient>
+    <linearGradient id="latestChip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#52261f"/><stop offset="1" stop-color="#30251d"/></linearGradient>
+    <pattern id="streetGrid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="#e9c08a" stroke-opacity="0.035" stroke-width="1"/></pattern>
+    <filter id="cardShadow" x="-8%" y="-12%" width="116%" height="130%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.24"/></filter>
+    <filter id="barGlow" x="-8%" y="-100%" width="116%" height="300%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="panelClip"><rect x="16" y="16" width="1248" height="618" rx="30"/></clipPath>
+    <style>
+      text { font-family: Pretendard, "Noto Sans KR", "Segoe UI", sans-serif; }
+      .title { fill: #f4eee5; font-size: 34px; font-weight: 750; }
+      .subtitle { fill: #9ba5ad; font-size: 15px; font-weight: 500; letter-spacing: 0.35px; }
+      .card-title { fill: #ede8df; font-size: 20px; font-weight: 700; }
+      .delta { fill: #f2b16d; font-size: 17px; font-weight: 750; }
+      .label { fill: #aab2b7; font-size: 13px; font-weight: 650; }
+      .value { fill: #f5f0e8; font-size: 16px; font-weight: 750; }
+    </style>
+  </defs>
+  <g clip-path="url(#panelClip)">
+    <rect x="16" y="16" width="1248" height="618" rx="30" fill="url(#panelBackground)"/><rect x="16" y="16" width="1248" height="618" rx="30" fill="url(#stationLight)"/><rect x="16" y="16" width="1248" height="618" rx="30" fill="url(#streetGrid)"/>
+    <path d="M16 129 C290 123 445 137 664 128 C890 119 1055 121 1264 126" fill="none" stroke="#a83831" stroke-opacity="0.56" stroke-width="2"/><path d="M16 136 C295 130 456 144 675 135 C902 126 1068 128 1264 132" fill="none" stroke="#df9d53" stroke-opacity="0.16"/>
+    <path d="M16 574 C300 554 483 591 721 569 C943 549 1088 561 1264 552" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 597 C292 581 484 609 734 590 C951 573 1110 587 1264 575" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
+    <g fill="#d08a48" opacity="0.22"><path d="M802 123 l10 5 -10 5 3-5z"/><path d="M842 123 l10 5 -10 5 3-5z"/><path d="M882 123 l10 5 -10 5 3-5z"/><path d="M922 123 l10 5 -10 5 3-5z"/></g>
+    <text x="1168" y="96" text-anchor="end" fill="#f0c98d" fill-opacity="0.055" font-size="86" font-weight="800">新宿</text>
+  </g>
+  <rect x="16.5" y="16.5" width="1247" height="617" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
+  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">신주쿠 교통 · 성능 비교</text><text x="72" y="108" class="subtitle">차량 10대 · 원격 사용자 80명 · 300프레임</text>
+  <g filter="url(#cardShadow)"><rect x="48" y="148" width="580" height="180" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#554739" stroke-opacity="0.62"/><rect x="652" y="148" width="580" height="180" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#554739" stroke-opacity="0.62"/><rect x="48" y="350" width="580" height="180" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#554739" stroke-opacity="0.62"/><rect x="652" y="350" width="580" height="180" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#554739" stroke-opacity="0.62"/></g>
+  <rect x="76" y="168" width="34" height="3" rx="1.5" fill="#c84036"/><text x="76" y="192" class="card-title">CPU 프레임 평균</text><rect x="510" y="167" width="90" height="31" rx="15.5" fill="url(#latestChip)" stroke="#a85b3b" stroke-opacity="0.55"/><text x="585" y="188" text-anchor="end" class="delta">−32.5%</text>
+  <text x="76" y="236" class="label">초기</text><rect x="232" y="224" width="260" height="14" rx="7" fill="#535a61"/><text x="600" y="237" text-anchor="end" class="value">17.65 ms</text><text x="76" y="282" class="label">최신</text><rect x="232" y="270" width="176" height="14" rx="7" fill="url(#latestBar)" filter="url(#barGlow)"/><text x="600" y="283" text-anchor="end" class="value">11.92 ms</text>
+  <rect x="680" y="168" width="34" height="3" rx="1.5" fill="#c84036"/><text x="680" y="192" class="card-title">프레임 시간 P95</text><rect x="1114" y="167" width="90" height="31" rx="15.5" fill="url(#latestChip)" stroke="#a85b3b" stroke-opacity="0.55"/><text x="1189" y="188" text-anchor="end" class="delta">−29.1%</text>
+  <text x="680" y="236" class="label">초기</text><rect x="836" y="224" width="260" height="14" rx="7" fill="#535a61"/><text x="1204" y="237" text-anchor="end" class="value">24.60 ms</text><text x="680" y="282" class="label">최신</text><rect x="836" y="270" width="184" height="14" rx="7" fill="url(#latestBar)" filter="url(#barGlow)"/><text x="1204" y="283" text-anchor="end" class="value">17.44 ms</text>
+  <rect x="76" y="370" width="34" height="3" rx="1.5" fill="#58c9c2"/><text x="76" y="394" class="card-title">물리 연산 평균</text><rect x="510" y="369" width="90" height="31" rx="15.5" fill="url(#latestChip)" stroke="#a85b3b" stroke-opacity="0.55"/><text x="585" y="390" text-anchor="end" class="delta">−65.3%</text>
+  <text x="76" y="438" class="label">초기</text><rect x="232" y="426" width="260" height="14" rx="7" fill="#535a61"/><text x="600" y="439" text-anchor="end" class="value">0.49 ms</text><text x="76" y="484" class="label">최신</text><rect x="232" y="472" width="90" height="14" rx="7" fill="url(#latestBar)" filter="url(#barGlow)"/><text x="600" y="485" text-anchor="end" class="value">0.17 ms</text>
+  <rect x="680" y="370" width="34" height="3" rx="1.5" fill="#58c9c2"/><text x="680" y="394" class="card-title">프레임당 GC 할당</text><rect x="1114" y="369" width="90" height="31" rx="15.5" fill="url(#latestChip)" stroke="#a85b3b" stroke-opacity="0.55"/><text x="1189" y="390" text-anchor="end" class="delta">−88.1%</text>
+  <text x="680" y="438" class="label">초기</text><rect x="836" y="426" width="260" height="14" rx="7" fill="#535a61"/><text x="1204" y="439" text-anchor="end" class="value">101.0 KB</text><text x="680" y="484" class="label">최신</text><rect x="836" y="472" width="31" height="14" rx="7" fill="url(#latestBar)" filter="url(#barGlow)"/><text x="1204" y="485" text-anchor="end" class="value">12.0 KB</text>
+</svg>

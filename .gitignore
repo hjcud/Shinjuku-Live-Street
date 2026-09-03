@@ -21,6 +21,14 @@
 !/Docs/images/shinjuku-model-rendering-comparison.png
 !/Docs/images/shinjuku-traffic-system-debug.png
 !/Docs/images/traffic-performance-comparison.svg
+!/Docs/images/traffic-performance-comparison.ko.svg
+!/Docs/images/traffic-performance-comparison.ja.svg
+!/Docs/images/live-performance-sync.svg
+!/Docs/images/live-performance-sync.ko.svg
+!/Docs/images/live-performance-sync.ja.svg
+!/Docs/images/traffic-system-architecture.svg
+!/Docs/images/traffic-system-architecture.ko.svg
+!/Docs/images/traffic-system-architecture.ja.svg
 
 # 직접 작성한 C# 소스가 있는 폴더만 허용합니다.
 !/Assets/

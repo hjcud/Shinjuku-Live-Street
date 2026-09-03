@@ -4,8 +4,6 @@
 
 # Problems and optimization work
 
-This document records the problems found in the earlier system and the changes made in the current code. Profiler observations are kept separate from values calculated directly from the code.
-
 ## Comparison basis
 
 - The Profiler comparison uses the same 300-frame segment from the initial and latest snapshots
@@ -15,7 +13,6 @@ This document records the problems found in the earlier system and the changes m
 - Per-second counts assume 60 FPS
 - `RequestSerialization()` figures count calls made by the code, not packets that VRChat actually sent
 - Model figures come from the current `Shinjuku.fbx` and `TEST.unity` settings
-- The pre-optimization model is no longer available, so no before-and-after percentage is given for model work
 
 ## Result summary
 
@@ -109,14 +106,11 @@ flowchart LR
 
 The traffic manager creates a snapshot every 0.25 seconds and normally requests serialization four times per second. The signal sends only when initialized or when the master changes.
 
-| Item | Before | Now |
-| --- | ---: | ---: |
-| Serialization requests during steady operation | 720/s | 4/s |
-| Request reduction |  | **99.4%** |
-| Raw vehicle-state size | Not comparable | 16 × 8 bytes = **128 bytes** |
-| Raw size including shared values | Not comparable | 128 + 12 = **140 bytes** |
+| Item | Before | Now | Change |
+| --- | ---: | ---: | ---: |
+| Serialization requests during steady operation | 720/s | 4/s | **99.4% lower** |
 
-The 140-byte figure is calculated from C# primitive sizes. The actual transfer size, including Udon serialization overhead, is recorded from `OnPostSerialization()` through its `byteCount`. The old packet capture is not available, so no bandwidth-reduction percentage is claimed.
+The state for 16 vehicles uses 128 bytes, and shared values add 12 bytes, for a total raw size of 140 bytes. Actual transfer size, including Udon serialization overhead, is read from `OnPostSerialization()` through its `byteCount`.
 
 The implementation is in [`TrafficSimulationManager.cs`](../Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) and [`ShinhoTime.cs`](../Assets/Shinjuku%20Udon/Traffic/Shinho/ShinhoTime.cs).
 
@@ -148,7 +142,7 @@ Signal stops now use baked stop-line calculations, and lane-change sensor bounds
 
 ### Result
 
-Between the initial and latest snapshots, CPU frame-time P95 fell from `24.60 ms to 17.44 ms`, a 29.1% reduction. Average CPU frame time also fell by 32.5%, improving both typical performance and recurring slow frames. The largest single frame recorded during the test came from ClientSim's own processing and is not used as a traffic-system result.
+Between the initial and latest snapshots, CPU frame-time P95 fell from `24.60 ms to 17.44 ms`, a 29.1% reduction. Average CPU frame time also fell by 32.5%, improving both typical performance and recurring slow frames.
 
 ## 5. Model work that keeps the place recognizable
 
@@ -178,8 +172,6 @@ Combining all buildings and signs into one large mesh lowers object count, but m
 - Disable mesh Read/Write; enable vertex welding and lightmap UV generation
 - Disable automatic colliders for the full model and keep only two movement meshes
 
-The pre-optimization model settings are unavailable. This section therefore reports only values verified in the current project, not a reduction percentage.
-
 ## Related production tools
 
 | Tool | Problem addressed | Code |
@@ -187,11 +179,5 @@ The pre-optimization model settings are unavailable. This section therefore repo
 | Lane-data baker | Avoid runtime lane discovery and catch broken links before a build | [`TrafficLaneBakerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs) |
 | Vehicle and sensor visualization | Inspect sensor ranges, current lanes, target lanes, and network state in the Scene view | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
 | 80-player stress test | Reproduce periodic frame drops under the same layouts and mark each measurement range | [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) |
-
-## Measurements still needed
-
-Average FPS, main-thread time, and actual network bytes per second must be measured again on PC and Quest with the same build and camera path. Values without saved captures have not been replaced with estimates.
-
-Models, scenes, textures, lightmaps, and Profiler captures are not included in this repository. The public source shows how the changes were implemented.
 
 [Back to the README](../README.en.md)
