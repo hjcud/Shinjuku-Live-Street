@@ -4,13 +4,35 @@
 
 # 교통 시스템 성능 최적화
 
-## 비교 기준
+## 측정 환경과 비교 방법
 
-- Profiler 전후 비교는 초기 스냅샷과 최신 스냅샷의 동일한 300프레임을 사용
-- 초기 스냅샷은 차량별 매 프레임 실행 구조, 최신 스냅샷은 중앙 관리자와 분산 센서를 적용한 구조
-- 활성 차량 10대와 ClientSim 원격 플레이어 80명이 한 지점에 모인 상태
-- 프레임, PlayerLoop, Udon, Physics와 GC 수치는 Unity Profiler의 CPU 측정값
-- 초당 실행 횟수는 60 FPS를 기준으로 계산
+| 항목 | 조건 |
+| --- | --- |
+| 측정 장비 | Intel Core i5-13400F · NVIDIA GeForce RTX 3080 Ti 12GB · RAM 32GB |
+| 소프트웨어 | Unity `2022.3.22f1` · VRChat SDK - Worlds `3.8.1` |
+| 실행 환경 | Unity Editor Play Mode · ClientSim · PC 빌드와 VRChat Build & Test는 측정하지 않음 |
+| 부하 조건 | 활성 차량 10대 · ClientSim 원격 플레이어 80명을 같은 지점에 배치 |
+| 비교 대상 | 초기: 차량별 매 프레임 실행 · 최신: 중앙 관리자와 분산 센서 적용 |
+| 수집 구간 | 초기·최신 스냅샷에서 각각 300프레임 |
+| 집계 | 프레임별 표본의 산술 평균과 P95 · 초당 실행 횟수는 60 FPS 기준 |
+| Profiler 항목 | CPU frame time · PlayerLoop · Udon · Physics.Simulate · GC Alloc |
+
+당시 측정 기록에는 Deep Profile 설정, 별도 워밍업 시간과 반복 측정 횟수가 남아 있지 않습니다. 초기 구현은 공개 저장소를 만들기 전의 로컬 스냅샷이므로 비교 가능한 커밋 해시도 없습니다. 현재 구현은 자체 작성 코드를 처음 공개한 커밋 [`e212623`](https://github.com/hjcud/Shinjuku-Live-Street/commit/e212623)에 포함되어 있지만, 표의 수치는 커밋 간 벤치마크가 아닌 두 로컬 스냅샷의 비교입니다.
+
+> [!NOTE]
+> 아래 결과는 같은 PC와 Editor 조건에서 구조 변경의 영향을 비교한 값입니다. ClientSim은 네트워크와 실제 사용자 동작을 완전히 재현하지 않으므로 실제 VRChat 인스턴스나 빌드 성능과 동일하게 해석할 수 없습니다. GPU 프레임 시간과 메모리 사용량은 측정하지 않았습니다.
+
+## 현재 제공되는 재현 도구
+
+[`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs)는 위 300프레임 결과를 산출한 도구가 아니라, 이후 반복 측정을 위해 추가한 Editor 전용 스트레스 테스트입니다.
+
+- `WAIT`·`DIST`·`CROWD` 세 상태를 각각 600프레임 실행
+- 상태 전환 후 처음 60프레임은 워밍업으로 분리하고 나머지 540프레임을 측정 구간으로 표시
+- 세 상태를 한 사이클로 묶어 3회 반복해 총 9개 측정 구간 생성
+- Custom Profiler marker로 상태와 워밍업·측정 구간을 구분
+- 실행할 때마다 `Temp/TrafficPlayerStressPhases.csv`에 Unity frame과 Profiler frame 대응 기록 저장
+
+이 도구로 새 결과를 기록할 때는 동일한 빌드·Profiler 설정을 사용하고, 세 사이클의 중앙값이나 평균처럼 집계 방식을 함께 명시해야 합니다.
 
 ## 결과 요약
 

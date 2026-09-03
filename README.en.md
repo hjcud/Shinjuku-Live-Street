@@ -9,6 +9,8 @@
   <h1>Shinjuku Live Street</h1>
 </div>
 
+<p align="center"><strong>This is a source-code portfolio with technical documentation, not a runnable Unity project.</strong></p>
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/world-intro.en.svg">
@@ -97,7 +99,7 @@ The traffic owner calculates all ten vehicles through a single manager and sends
 
 ![Unity Profiler comparison between the initial and latest traffic-system snapshots](./Docs/images/traffic-performance-comparison.svg)
 
-Ten vehicles and 80 remote players simulated with ClientSim were concentrated in the same area. We captured 300 frames from both the initial and latest snapshots. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
+Ten vehicles and 80 remote players simulated with ClientSim were concentrated in the same area. We captured 300 frames from both the initial and latest snapshots in the Unity Editor. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%. These figures are a relative comparison under matching conditions, not a measure of live VRChat instance performance.
 
 Vehicle position and rotation are interpolated every frame so motion remains smooth between simulation updates.
 
@@ -141,7 +143,7 @@ Baked lighting is applied to approximately 220 meshes. The scene uses three 4096
 
 ## Repository scope
 
-This repository is not a complete Unity project. It contains only original C# and UdonSharp code plus documentation. Scenes, prefabs, models, images, audio, video, materials, animations, shaders, and Unity `.meta` files are not included.
+This repository is not a complete, runnable Unity project. It contains original C# and UdonSharp code, technical documentation, and original images created for the README. Unity scenes, prefabs, models, textures, audio, video, materials, animations, shaders, `.meta` files, and third-party assets required to run the world are not included.
 
 <details>
 <summary><strong>SDKs, packages, and third-party components</strong></summary>
@@ -181,10 +183,10 @@ Third-party components are not included in this repository. Their respective aut
 
 ## Copyright and usage
 
-| Scope | Terms |
-| --- | --- |
-| **Original code** | No open-source license<br>Beyond viewing and forking on GitHub, reproduction, modification, and redistribution require prior permission. |
-| **Third-party components and assets** | Their respective creators' and distributors' licenses and terms apply. |
+> [!IMPORTANT]
+> This repository is a **source-available portfolio**, not an open-source project. Reproducing, modifying, redistributing, or commercially using the code beyond viewing and forking it on GitHub requires prior written permission.
+
+[Read the full copyright and usage terms](./COPYRIGHT.en.md) · [Request permission](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 
 ## Team
 
