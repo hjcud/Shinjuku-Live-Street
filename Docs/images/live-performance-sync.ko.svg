@@ -1,31 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-labelledby="title desc">
-  <title id="title">공연 장비 동기화 흐름</title><desc id="desc">공연 장비의 배치 확인, 소유권과 상태 공유, 중간 참가자 동기화, 반납과 초기화 과정</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="500" viewBox="0 0 1280 500" role="img" aria-labelledby="title desc">
+  <title id="title">공연 장비의 상태 동기화 개선</title>
+  <desc id="desc">공연 장비에서 발생하던 상태 누락과 잔존 문제를 소유권과 연결 상태의 일괄 동기화로 해결한 내용</desc>
   <defs>
     <linearGradient id="panelBackground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17191b"/><stop offset="0.55" stop-color="#101418"/><stop offset="1" stop-color="#17120f"/></linearGradient>
     <radialGradient id="stationLight" cx="88%" cy="3%" r="76%"><stop offset="0" stop-color="#d69a50" stop-opacity="0.17"/><stop offset="0.42" stop-color="#a46531" stop-opacity="0.045"/><stop offset="1" stop-color="#000000" stop-opacity="0"/></radialGradient>
+    <linearGradient id="resultBar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#17302f"/><stop offset="0.55" stop-color="#1a2928"/><stop offset="1" stop-color="#2d211a"/></linearGradient>
     <pattern id="streetGrid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="#e9c08a" stroke-opacity="0.035"/></pattern>
-    <filter id="cardShadow" x="-10%" y="-15%" width="120%" height="135%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.24"/></filter>
-    <clipPath id="panelClip"><rect x="16" y="16" width="1248" height="388" rx="30"/></clipPath>
+    <filter id="cardShadow" x="-8%" y="-12%" width="116%" height="130%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.24"/></filter>
+    <clipPath id="panelClip"><rect x="16" y="16" width="1248" height="468" rx="30"/></clipPath>
     <style>
       text { font-family: Pretendard, "Noto Sans KR", "Segoe UI", sans-serif; }
       .title { fill: #f4eee5; font-size: 34px; font-weight: 750; }
-      .step { fill: #d99852; font-size: 12px; font-weight: 750; }
-      .card-title { fill: #ede8df; font-size: 19px; font-weight: 700; }
-      .primary { fill: #f2b16d; font-size: 16px; font-weight: 700; }
-      .secondary { fill: #8f9aa1; font-size: 13px; font-weight: 600; }
+      .section { fill: #ede8df; font-size: 19px; font-weight: 700; }
+      .item-title { fill: #ede8df; font-size: 16px; font-weight: 700; }
+      .item-body { fill: #97a1a7; font-size: 13px; font-weight: 600; }
+      .result-label { fill: #64d0c8; font-size: 13px; font-weight: 750; }
+      .result-text { fill: #f4eee5; font-size: 16px; font-weight: 700; }
     </style>
   </defs>
   <g clip-path="url(#panelClip)">
-    <rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#panelBackground)"/><rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#stationLight)"/><rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#streetGrid)"/>
-    <path d="M16 129 C290 123 445 137 664 128 C890 119 1055 121 1264 126" fill="none" stroke="#a83831" stroke-opacity="0.56" stroke-width="2"/><path d="M16 136 C295 130 456 144 675 135 C902 126 1068 128 1264 132" fill="none" stroke="#df9d53" stroke-opacity="0.16"/>
-    <path d="M16 373 C300 353 483 390 721 368 C943 348 1088 360 1264 351" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 393 C292 377 484 405 734 386 C951 369 1110 383 1264 371" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
+    <rect x="16" y="16" width="1248" height="468" rx="30" fill="url(#panelBackground)"/>
+    <rect x="16" y="16" width="1248" height="468" rx="30" fill="url(#stationLight)"/>
+    <rect x="16" y="16" width="1248" height="468" rx="30" fill="url(#streetGrid)"/>
+    <path d="M16 129 C290 123 445 137 664 128 C890 119 1055 121 1264 126" fill="none" stroke="#a83831" stroke-opacity="0.56" stroke-width="2"/>
+    <path d="M16 136 C295 130 456 144 675 135 C902 126 1068 128 1264 132" fill="none" stroke="#df9d53" stroke-opacity="0.16"/>
+    <path d="M16 452 C300 432 483 469 721 447 C943 427 1088 439 1264 430" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/>
+    <path d="M16 474 C292 458 484 486 734 467 C951 450 1110 464 1264 452" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
   </g>
-  <rect x="16.5" y="16.5" width="1247" height="387" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
-  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">공연 장비 · 동기화 흐름</text>
-  <g filter="url(#cardShadow)"><rect x="48" y="154" width="272" height="178" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#5c4036" stroke-opacity="0.78"/><rect x="344" y="154" width="272" height="178" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#5b4b38" stroke-opacity="0.78"/><rect x="640" y="154" width="272" height="178" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#355553" stroke-opacity="0.78"/><rect x="936" y="154" width="272" height="178" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#5c4036" stroke-opacity="0.78"/></g>
-  <rect x="72" y="177" width="32" height="3" rx="1.5" fill="#c84036"/><text x="72" y="202" class="step">01</text><text x="72" y="235" class="card-title">배치 확인</text><text x="72" y="271" class="primary">3 m · 경사 30°</text><text x="72" y="299" class="secondary">Desktop · VR</text>
-  <rect x="368" y="177" width="32" height="3" rx="1.5" fill="#d79b54"/><text x="368" y="202" class="step">02</text><text x="368" y="235" class="card-title">소유권·상태 공유</text><text x="368" y="271" class="primary">위치 · 방향</text><text x="368" y="299" class="secondary">화면 · 펜 · 미디어</text>
-  <rect x="664" y="177" width="32" height="3" rx="1.5" fill="#58c9c2"/><text x="664" y="202" class="step">03</text><text x="664" y="235" class="card-title">중간 참가자 동기화</text><text x="664" y="271" class="primary">현재 상태 재전송</text>
-  <rect x="960" y="177" width="32" height="3" rx="1.5" fill="#c84036"/><text x="960" y="202" class="step">04</text><text x="960" y="235" class="card-title">반납·초기화</text><text x="960" y="271" class="primary">반납 · 5 m 이탈</text><text x="960" y="299" class="secondary">연결 상태 초기화</text>
-  <g fill="none" stroke="#d79b54" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M324 243 H338"/><path d="M333 238 L338 243 L333 248"/><path d="M620 243 H634"/><path d="M629 238 L634 243 L629 248"/><path d="M916 243 H930"/><path d="M925 238 L930 243 L925 248"/></g>
+  <rect x="16.5" y="16.5" width="1247" height="467" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/>
+  <path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
+  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">공연 장비 · 상태 동기화 개선</text>
+
+  <g filter="url(#cardShadow)">
+    <rect x="48" y="154" width="342" height="232" rx="18" fill="#17171a" fill-opacity="0.97" stroke="#6b3c35" stroke-opacity="0.82"/>
+    <rect x="430" y="154" width="802" height="232" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.82"/>
+  </g>
+
+  <rect x="72" y="177" width="34" height="3" rx="1.5" fill="#c84036"/><text x="72" y="204" class="section">기존 문제</text>
+  <rect x="72" y="226" width="294" height="62" rx="12" fill="#1c1a1c" stroke="#6b3c35" stroke-opacity="0.72"/>
+  <text x="92" y="251" class="item-title">반납 뒤에도 상태가 남음</text><text x="92" y="274" class="item-body">화면 · 펜 · 미디어 설정</text>
+  <rect x="72" y="302" width="294" height="62" rx="12" fill="#1c1a1c" stroke="#6b3c35" stroke-opacity="0.72"/>
+  <text x="92" y="327" class="item-title">중간 입장자에게 장비가 누락됨</text><text x="92" y="350" class="item-body">설치된 스피커가 보이지 않음</text>
+
+  <path d="M397 270 H421" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round"/><path d="M414 263 L421 270 L414 277" fill="none" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="454" y="177" width="34" height="3" rx="1.5" fill="#58c9c2"/><text x="454" y="204" class="section">개선한 방식</text>
+  <rect x="454" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/>
+  <text x="474" y="253" class="item-title">배치할 때 함께 동기화</text><text x="474" y="279" class="item-body">소유권 · 위치</text><text x="474" y="301" class="item-body">화면 · 펜 · 미디어</text>
+  <rect x="710" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/>
+  <text x="730" y="253" class="item-title">중간 입장자에게 재전송</text><text x="730" y="279" class="item-body">현재 설치 상태를</text><text x="730" y="301" class="item-body">입장 직후 전달</text>
+  <rect x="966" y="226" width="242" height="138" rx="12" fill="#192022" stroke="#5b4b38" stroke-opacity="0.78"/>
+  <text x="986" y="253" class="item-title">반납·이탈 시 전체 초기화</text><text x="986" y="279" class="item-body">연결된 기능과</text><text x="986" y="301" class="item-body">이전 사용자 설정 제거</text>
+
+  <rect x="48" y="408" width="1184" height="52" rx="14" fill="url(#resultBar)" stroke="#42615e" stroke-opacity="0.72"/>
+  <text x="72" y="440" class="result-label">결과</text><text x="126" y="440" class="result-text">모든 사용자가 같은 장비 상태를 확인하고, 반납 뒤에는 이전 설정이 남지 않음</text>
 </svg>

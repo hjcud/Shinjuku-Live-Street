@@ -1,108 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="520" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
-  <title id="title">교통 시스템 초기 구조와 현재 구조 비교</title>
-  <desc id="desc">차량마다 매 프레임 계산하고 전송하던 초기 구조를 중앙 시뮬레이션, 분산 센서, 압축 스냅샷과 원격 보간 구조로 바꾼 내용을 보여주는 도식</desc>
-
+  <title id="title">Traffic-state calculation and transfer architecture</title>
+  <desc id="desc">Lane data moves from the editor to the traffic owner, through the network, and into remote-client reconstruction</desc>
   <defs>
-    <linearGradient id="panelBackground" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#17191b"/>
-      <stop offset="0.55" stop-color="#101418"/>
-      <stop offset="1" stop-color="#17120f"/>
-    </linearGradient>
-    <radialGradient id="stationLight" cx="88%" cy="3%" r="76%">
-      <stop offset="0" stop-color="#d69a50" stop-opacity="0.17"/>
-      <stop offset="0.42" stop-color="#a46531" stop-opacity="0.045"/>
-      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="currentChip" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#52261f"/>
-      <stop offset="1" stop-color="#30251d"/>
-    </linearGradient>
-    <pattern id="streetGrid" width="80" height="80" patternUnits="userSpaceOnUse">
-      <path d="M80 0H0V80" fill="none" stroke="#e9c08a" stroke-opacity="0.035" stroke-width="1"/>
-    </pattern>
-    <filter id="cardShadow" x="-8%" y="-12%" width="116%" height="130%">
-      <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.24"/>
-    </filter>
-    <clipPath id="panelClip">
-      <rect x="16" y="16" width="1248" height="488" rx="30"/>
-    </clipPath>
+    <linearGradient id="panelBackground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17191b"/><stop offset="0.55" stop-color="#101418"/><stop offset="1" stop-color="#17120f"/></linearGradient>
+    <radialGradient id="stationLight" cx="88%" cy="3%" r="76%"><stop offset="0" stop-color="#d69a50" stop-opacity="0.17"/><stop offset="0.42" stop-color="#a46531" stop-opacity="0.045"/><stop offset="1" stop-color="#000000" stop-opacity="0"/></radialGradient>
+    <linearGradient id="resultBar" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#17302f"/><stop offset="0.55" stop-color="#1a2928"/><stop offset="1" stop-color="#2d211a"/></linearGradient>
+    <pattern id="streetGrid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="#e9c08a" stroke-opacity="0.035"/></pattern>
+    <filter id="cardShadow" x="-8%" y="-12%" width="116%" height="130%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.24"/></filter>
+    <clipPath id="panelClip"><rect x="16" y="16" width="1248" height="488" rx="30"/></clipPath>
     <style>
-      text { font-family: Inter, Pretendard, "Noto Sans KR", "Segoe UI", sans-serif; }
-      .title { fill: #f4eee5; font-size: 34px; font-weight: 750; letter-spacing: 0.2px; }
-      .section { fill: #ede8df; font-size: 19px; font-weight: 700; }
-      .chip { fill: #f2b16d; font-size: 14px; font-weight: 750; }
-      .node-title { fill: #ede8df; font-size: 15px; font-weight: 700; }
-      .node-detail { fill: #8f9aa1; font-size: 12px; font-weight: 600; letter-spacing: 0.25px; }
-      .result { fill: #65d2cb; font-size: 13px; font-weight: 700; letter-spacing: 0.65px; }
+      text { font-family: Inter, "Segoe UI", sans-serif; }
+      .title { fill: #f4eee5; font-size: 34px; font-weight: 750; }
+      .subtitle { fill: #8f9aa1; font-size: 14px; font-weight: 600; }
+      .role { fill: #64d0c8; font-size: 12px; font-weight: 750; letter-spacing: 0.6px; }
+      .card-title { fill: #ede8df; font-size: 18px; font-weight: 700; }
+      .card-body { fill: #97a1a7; font-size: 13px; font-weight: 600; }
+      .result-label { fill: #f2b16d; font-size: 13px; font-weight: 750; }
+      .result-text { fill: #f4eee5; font-size: 16px; font-weight: 700; }
     </style>
   </defs>
-
-  <!-- 캔버스 외곽은 투명합니다. -->
   <g clip-path="url(#panelClip)">
-    <rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#panelBackground)"/>
-    <rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#stationLight)"/>
-    <rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#streetGrid)"/>
-    <path d="M16 129 C290 123 445 137 664 128 C890 119 1055 121 1264 126" fill="none" stroke="#a83831" stroke-opacity="0.56" stroke-width="2"/>
-    <path d="M16 136 C295 130 456 144 675 135 C902 126 1068 128 1264 132" fill="none" stroke="#df9d53" stroke-opacity="0.16"/>
-    <path d="M16 472 C300 452 483 489 721 467 C943 447 1088 459 1264 450" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/>
-    <path d="M16 494 C292 478 484 506 734 487 C951 470 1110 484 1264 472" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
+    <rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#panelBackground)"/><rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#stationLight)"/><rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#streetGrid)"/>
+    <path d="M16 136 C290 128 445 143 664 134 C890 125 1055 128 1264 133" fill="none" stroke="#a83831" stroke-opacity="0.56" stroke-width="2"/><path d="M16 143 C295 135 456 150 675 141 C902 132 1068 135 1264 139" fill="none" stroke="#df9d53" stroke-opacity="0.16"/>
+    <path d="M16 472 C300 452 483 489 721 467 C943 447 1088 459 1264 450" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 494 C292 478 484 506 734 487 C951 470 1110 484 1264 472" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
   </g>
-
-  <rect x="16.5" y="16.5" width="1247" height="487" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/>
-  <path d="M46 17 H288" stroke="#c74137" stroke-width="3"/>
-  <path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
-
-  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/>
-  <text x="72" y="77" class="title">SHINJUKU TRAFFIC · ARCHITECTURE</text>
-
-  <g filter="url(#cardShadow)">
-    <rect x="48" y="154" width="390" height="304" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#5c4036" stroke-opacity="0.78"/>
-    <rect x="466" y="154" width="766" height="304" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#355553" stroke-opacity="0.78"/>
-  </g>
-
-  <rect x="76" y="177" width="34" height="3" rx="1.5" fill="#c84036"/>
-  <text x="76" y="202" class="section">INITIAL STRUCTURE</text>
-
-  <rect x="76" y="222" width="334" height="58" rx="12" fill="#1b1b1e" stroke="#6b3c35" stroke-opacity="0.72"/>
-  <text x="96" y="246" class="node-title">DECIDE EVERY FRAME</text>
-  <text x="96" y="268" class="node-detail">10 CARS · 600 / s</text>
-  <rect x="76" y="296" width="334" height="58" rx="12" fill="#1b1b1e" stroke="#6b3c35" stroke-opacity="0.72"/>
-  <text x="96" y="320" class="node-title">BOXCAST PER CAR</text>
-  <text x="96" y="342" class="node-detail">ALL SENSORS IN ONE FRAME</text>
-  <rect x="76" y="370" width="334" height="58" rx="12" fill="#1b1b1e" stroke="#6b3c35" stroke-opacity="0.72"/>
-  <text x="96" y="394" class="node-title">MOVE &amp; SERIALIZE</text>
-  <text x="96" y="416" class="node-detail">720 REQUESTS / s</text>
-  <path d="M243 280 V296 M243 354 V370" stroke="#b84a3d" stroke-width="2"/>
-
-  <path d="M443 306 H461" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M454 299 L461 306 L454 313" fill="none" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-
-  <rect x="494" y="177" width="34" height="3" rx="1.5" fill="#58c9c2"/>
-  <text x="494" y="202" class="section">CURRENT STRUCTURE</text>
-  <rect x="1054" y="174" width="150" height="29" rx="14.5" fill="url(#currentChip)" stroke="#a85b3b" stroke-opacity="0.55"/>
-  <text x="1186" y="194" text-anchor="end" class="chip">−99.4% REQUESTS</text>
-
-  <rect x="494" y="222" width="214" height="74" rx="12" fill="#1a1d1f" stroke="#42615e" stroke-opacity="0.72"/>
-  <text x="514" y="250" class="node-title">BAKED LANE DATA</text>
-  <text x="514" y="274" class="node-detail">EDITOR GENERATED</text>
-  <rect x="722" y="222" width="214" height="74" rx="12" fill="#1a1d1f" stroke="#42615e" stroke-opacity="0.72"/>
-  <text x="742" y="250" class="node-title">ONE OWNER · 10 CARS</text>
-  <text x="742" y="274" class="node-detail">CENTRAL SIMULATION</text>
-  <rect x="950" y="222" width="254" height="74" rx="12" fill="#1a1d1f" stroke="#42615e" stroke-opacity="0.72"/>
-  <text x="970" y="250" class="node-title">2 SENSORS / FRAME</text>
-  <text x="970" y="274" class="node-detail">DISTRIBUTED PHYSICS</text>
-
-  <rect x="494" y="320" width="330" height="74" rx="12" fill="#1a1d1f" stroke="#5b4b38" stroke-opacity="0.78"/>
-  <text x="514" y="348" class="node-title">64 BITS / VEHICLE</text>
-  <text x="514" y="372" class="node-detail">LANE · DISTANCE · SPEED · STATE</text>
-  <rect x="846" y="320" width="358" height="74" rx="12" fill="#1a1d1f" stroke="#5b4b38" stroke-opacity="0.78"/>
-  <text x="866" y="348" class="node-title">0.25 s SNAPSHOTS</text>
-  <text x="866" y="372" class="node-detail">REMOTE INTERPOLATION · EVERY FRAME</text>
-
-  <g fill="none" stroke="#63cbc4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M712 259 H716"/><path d="M711 254 L716 259 L711 264"/>
-    <path d="M940 259 H944"/><path d="M939 254 L944 259 L939 264"/>
-    <path d="M1077 301 V306 H659 V314"/><path d="M654 309 L659 314 L664 309"/>
-    <path d="M828 357 H840"/><path d="M835 352 L840 357 L835 362"/>
-  </g>
+  <rect x="16.5" y="16.5" width="1247" height="487" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
+  <rect x="52" y="43" width="4" height="76" rx="2" fill="#c84036"/><text x="72" y="77" class="title">TRAFFIC STATE · CALCULATION AND TRANSFER</text><text x="72" y="108" class="subtitle">Separate per-vehicle work into clear system roles</text>
+  <g filter="url(#cardShadow)"><rect x="48" y="166" width="252" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#5b4b38" stroke-opacity="0.78"/><rect x="348" y="166" width="252" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.78"/><rect x="648" y="166" width="252" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#5b4b38" stroke-opacity="0.78"/><rect x="948" y="166" width="284" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.78"/></g>
+  <text x="72" y="201" class="role">EDITOR</text><text x="72" y="237" class="card-title">Bake lane data</text><text x="72" y="274" class="card-body">Positions · connections · stop lines</text><text x="72" y="300" class="card-body">Calculated before runtime</text>
+  <text x="372" y="201" class="role">TRAFFIC OWNER</text><text x="372" y="237" class="card-title">Simulate all 10 vehicles</text><text x="372" y="274" class="card-body">Fixed-step calculation</text><text x="372" y="300" class="card-body">Check two sensors per frame</text>
+  <text x="672" y="201" class="role">NETWORK</text><text x="672" y="237" class="card-title">Send 64 bits per vehicle</text><text x="672" y="274" class="card-body">Transfer state every 0.25 seconds</text><text x="672" y="300" class="card-body">Do not queue overlapping requests</text>
+  <text x="972" y="201" class="role">REMOTE CLIENT</text><text x="972" y="237" class="card-title">Rebuild from lane data</text><text x="972" y="274" class="card-body">Interpolate position and rotation</text><text x="972" y="300" class="card-body">on every rendered frame</text>
+  <g fill="none" stroke="#63cbc4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M307 276 H340"/><path d="M333 269 L340 276 L333 283"/><path d="M607 276 H640"/><path d="M633 269 L640 276 L633 283"/><path d="M907 276 H940"/><path d="M933 269 L940 276 L933 283"/></g>
+  <rect x="48" y="414" width="1184" height="52" rx="14" fill="url(#resultBar)" stroke="#5b4b38" stroke-opacity="0.72"/><text x="72" y="446" class="result-label">RESULT</text><text x="146" y="446" class="result-text">One traffic manager replaces per-vehicle calculation and transfer</text>
 </svg>
