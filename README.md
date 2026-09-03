@@ -42,7 +42,7 @@ Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 
 
 ## 거리 공연과 커뮤니티
 
-<table>
+<table width="100%">
   <tr>
     <td width="50%" valign="top"><strong>원하는 곳에서 시작하는 공연</strong><br><sub>보컬과 악기 연주부터 밴드 공연까지, 거리 곳곳을 무대로 활용</sub></td>
     <td width="50%" valign="top"><strong>지나가던 사람도 관객으로</strong><br><sub>우연히 발견한 공연 앞에 멈춰 함께 듣고 즐기는 경험</sub></td>

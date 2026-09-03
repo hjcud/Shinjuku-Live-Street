@@ -42,7 +42,7 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
 
 ## Street performances and community
 
-<table>
+<table width="100%">
   <tr>
     <td width="50%" valign="top"><strong>Turn any street corner into a stage</strong><br><sub>From solo vocals and instrumentals to full-band sets throughout the world</sub></td>
     <td width="50%" valign="top"><strong>Passersby become part of the audience</strong><br><sub>People stop at performances they discover and enjoy them together</sub></td>
