@@ -14,20 +14,12 @@
 </p>
 
 <p align="center">
-  路上でライブが始まると、通りすがりの人も足を止め、その場で一緒に楽しみます。
-</p>
-
-<p align="center">
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatでワールドを開く ↗</strong></a>
 </p>
 
 ---
 
-## どんなワールド？
-
-Shinjuku Live Streetは、新宿の街を舞台に、**ストリートライブを中心に人が集まるVRChatのソーシャルワールド**です。
-
-決まったステージはなく、街のあちこちでライブを始められます。通りすがりの人も足を止め、その場で一緒に楽しめます。
+## ワールド情報
 
 <table align="center">
   <tr>
