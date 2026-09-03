@@ -13,14 +13,6 @@
   <strong>新宿の夜の街角で誰もがライブを始められ、通りかかった人が自然と観客になるVRChatソーシャルワールド</strong>
 </p>
 
-<p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatでワールドを開く ↗</strong></a>
-</p>
-
----
-
-## ワールド情報
-
 <table align="center">
   <tr>
     <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697回</strong><br><sub>累計訪問数</sub></td>
@@ -28,6 +20,10 @@
     <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>最大80人</strong><br><sub>定員</sub></td>
   </tr>
 </table>
+
+<p align="center">
+  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatでワールドを開く ↗</strong></a>
+</p>
 
 <p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2名で制作</sub></p>
 <p align="center"><sub>訪問数・お気に入り数 · 2026年9月3日時点</sub></p>
