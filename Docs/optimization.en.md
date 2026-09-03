@@ -31,7 +31,7 @@ The reciprocal of average CPU frame time changes from roughly 56.7 to 83.9 FPS e
 
 Average Udon time is higher than in the initial snapshot because the latest snapshot adds centralized simulation, lane changes, compressed vehicle state, and remote interpolation. Larger reductions in PlayerLoop, Physics, and GC still produce a lower overall CPU frame time.
 
-`10 Hz` is the driving-decision rate. Vehicle transforms are interpolated on every rendered frame for both authority and remote clients, so the display is not updated at 10 FPS. Model, material, and render settings were not reduced. GPU frame time and image quality were not measured and are outside this table.
+`10 Hz` is the driving-decision rate. Vehicle transforms are interpolated on every rendered frame for both authority and remote clients, so the display is not updated at 10 FPS. Model, material, and render settings were not reduced.
 
 ## 1. Per-vehicle work ran every frame
 
