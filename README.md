@@ -10,8 +10,8 @@
 </div>
 
 <h3 align="center">
-  <sup>“</sup> 신주쿠의 밤거리에서 누구나 공연을 시작하고,<br>
-  지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드 <sub>”</sub>
+  <sup><img src="./Docs/images/quote-open.svg" alt="" width="34"></sup> 신주쿠의 밤거리에서 누구나 공연을 시작하고,<br>
+  지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드 <sub><img src="./Docs/images/quote-close.svg" alt="" width="34"></sub>
 </h3>
 
 <table align="center">
