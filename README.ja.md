@@ -42,7 +42,7 @@ Shinjuku Live Streetは、新宿の街を舞台に、**ストリートライブ�
 
 ## ストリートライブとコミュニティ
 
-<table>
+<table width="100%">
   <tr>
     <td width="50%" valign="top"><strong>好きな場所で始めるライブ</strong><br><sub>ソロボーカルや楽器演奏、バンドライブまで、街の各所がステージに</sub></td>
     <td width="50%" valign="top"><strong>通りすがりの人も観客に</strong><br><sub>偶然出会ったライブに足を止め、一緒に聴いて楽しむ体験</sub></td>
