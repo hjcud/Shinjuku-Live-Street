@@ -44,7 +44,7 @@
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery-placeholder.svg" alt="거리 공연과 커뮤니티의 실제 장면을 넣을 이미지 영역" width="900">
+  <img src="./Docs/images/community-gallery.png" alt="거리 공연 장면과 추후 추가할 커뮤니티 사진 영역" width="900">
 </p>
 
 ---
