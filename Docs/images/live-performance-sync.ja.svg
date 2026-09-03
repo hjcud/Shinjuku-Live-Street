@@ -18,7 +18,7 @@
   <g clip-path="url(#panelClip)">
     <rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#panelBackground)"/><rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#stationLight)"/><rect x="16" y="16" width="1248" height="388" rx="30" fill="url(#streetGrid)"/>
     <path d="M16 129 C290 123 445 137 664 128 C890 119 1055 121 1264 126" fill="none" stroke="#a83831" stroke-opacity="0.56" stroke-width="2"/><path d="M16 136 C295 130 456 144 675 135 C902 126 1068 128 1264 132" fill="none" stroke="#df9d53" stroke-opacity="0.16"/>
-    <path d="M16 373 C300 353 483 390 721 368 C943 348 1088 360 1264 351" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 393 C292 377 484 405 734 386 C951 369 1110 383 1264 371" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/><text x="1168" y="96" text-anchor="end" fill="#f0c98d" fill-opacity="0.055" font-size="86" font-weight="800">新宿</text>
+    <path d="M16 373 C300 353 483 390 721 368 C943 348 1088 360 1264 351" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 393 C292 377 484 405 734 386 C951 369 1110 383 1264 371" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
   </g>
   <rect x="16.5" y="16.5" width="1247" height="387" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
   <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">ライブ機材 · 同期フロー</text>
