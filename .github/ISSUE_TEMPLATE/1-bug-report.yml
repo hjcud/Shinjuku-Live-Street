@@ -1,0 +1,79 @@
+name: 버그 제보
+description: 월드에서 발생한 오류나 예상과 다른 동작을 알려주세요.
+title: "[버그] "
+labels:
+  - 결함
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        제보 내용을 확인할 수 있도록 발생 상황과 재현 방법을 알려주세요.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 이용 환경
+      description: 문제가 발생한 환경을 선택해주세요.
+      options:
+        - 데스크톱
+        - PC VR
+        - Quest
+        - 여러 환경에서 발생
+        - 확인하지 못함
+    validations:
+      required: true
+
+  - type: input
+    id: occurred-at
+    attributes:
+      label: 발생 시점
+      description: 문제가 발생한 날짜나 월드 방문 시점을 적어주세요.
+      placeholder: 예) 2026-09-03 오후 9시경
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 문제 내용
+      description: 실제로 어떤 일이 발생했는지 적어주세요.
+      placeholder: 발생한 현상과 영향을 구체적으로 적어주세요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 재현 방법
+      description: 문제를 다시 확인할 수 있는 순서를 적어주세요.
+      placeholder: |
+        1. 월드에 입장합니다.
+        2. ...
+        3. 문제가 발생합니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 예상한 동작
+      description: 정상이라면 어떻게 동작해야 하는지 적어주세요.
+    validations:
+      required: false
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: 참고 자료
+      description: 스크린샷이나 영상이 있다면 끌어다 놓아 첨부해주세요.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: 제출 전 확인
+      options:
+        - label: 같은 내용의 Issue가 이미 등록되어 있는지 확인했습니다.
+          required: true
