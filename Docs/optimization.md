@@ -2,7 +2,7 @@
   <strong>한국어</strong> · <a href="./optimization.en.md">English</a> · <a href="./optimization.ja.md">日本語</a>
 </p>
 
-# 성능 최적화
+# 교통 시스템 성능 최적화
 
 ## 비교 기준
 
