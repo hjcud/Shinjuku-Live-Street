@@ -10,8 +10,8 @@
 </div>
 
 <h3 align="center">
-  <sup>“</sup> 新宿の夜の街角で誰もがライブを始められ、<br>
-  通りかかった人が自然と観客になるVRChatソーシャルワールド <sub>”</sub>
+  <sup><img src="./Docs/images/quote-open.svg" alt="" width="34"></sup> 新宿の夜の街角で誰もがライブを始められ、<br>
+  通りかかった人が自然と観客になるVRChatソーシャルワールド <sub><img src="./Docs/images/quote-close.svg" alt="" width="34"></sub>
 </h3>
 
 <table align="center">
