@@ -5,6 +5,8 @@
 # 저장소 문서와 정책 파일입니다.
 !/.gitignore
 !/README.md
+!/README.en.md
+!/README.ja.md
 
 # 직접 작성한 C# 소스가 있는 폴더만 허용합니다.
 !/Assets/
