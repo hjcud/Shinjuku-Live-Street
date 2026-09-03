@@ -1,0 +1,79 @@
+name: 不具合を報告（日本語）
+description: ワールド内で発生した不具合や想定外の動作をご報告ください。
+title: "[不具合] "
+labels:
+  - 결함
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        状況を確認できるよう、発生時の状況と再現手順をご記入ください。
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 利用環境
+      description: 不具合が発生した環境を選択してください。
+      options:
+        - デスクトップ
+        - PC VR
+        - Quest
+        - 複数の環境
+        - 未確認
+    validations:
+      required: true
+
+  - type: input
+    id: occurred-at
+    attributes:
+      label: 発生日時
+      description: 不具合が発生した日時や、ワールドを訪れた時間帯をご記入ください。
+      placeholder: 例：2026年9月3日 21時頃
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 不具合の内容
+      description: 実際に起きたことをご記入ください。
+      placeholder: 発生した現象や影響を具体的にご記入ください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 再現手順
+      description: 不具合を再現できる手順をご記入ください。
+      placeholder: |
+        1. ワールドに入ります。
+        2. …
+        3. 不具合が発生します。
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待される動作
+      description: 正常な場合にどのように動作するべきかをご記入ください。
+    validations:
+      required: false
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: 参考資料
+      description: スクリーンショットや動画があれば、ドラッグ＆ドロップで添付してください。
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: 送信前の確認
+      options:
+        - label: 同じ内容のIssueがすでに登録されていないことを確認しました。
+          required: true
