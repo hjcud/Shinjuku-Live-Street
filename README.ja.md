@@ -34,11 +34,11 @@
 
 決められたステージはありません。街のあちこちでライブが始まり、通りすがりの人が足を止めて一緒に楽しみます。演奏が終わったあとは、会話や集合写真としてその夜の出来事が残ります。
 
-<table>
+<table align="center">
   <tr>
-    <td width="33%" align="center"><strong>1,693,697回</strong><br><sub>累計訪問数</sub></td>
-    <td width="33%" align="center"><strong>64,453人</strong><br><sub>お気に入り</sub></td>
-    <td width="33%" align="center"><strong>最大80人</strong><br><sub>定員</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697回</strong><br><sub>累計訪問数</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>64,453人</strong><br><sub>お気に入り</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>最大80人</strong><br><sub>定員</sub></td>
   </tr>
 </table>
 

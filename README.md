@@ -34,11 +34,11 @@
 
 정해진 무대 대신 거리 곳곳에서 공연이 시작됩니다. 지나가던 사람은 그 자리에 머물러 함께 공연을 즐기고, 공연이 끝난 뒤에는 대화와 단체사진으로 그날의 순간을 남깁니다.
 
-<table>
+<table align="center">
   <tr>
-    <td width="33%" align="center"><strong>1,693,697회</strong><br><sub>누적 방문</sub></td>
-    <td width="33%" align="center"><strong>64,453명</strong><br><sub>즐겨찾기</sub></td>
-    <td width="33%" align="center"><strong>최대 80명</strong><br><sub>수용 인원</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697회</strong><br><sub>누적 방문</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>64,453명</strong><br><sub>즐겨찾기</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>최대 80명</strong><br><sub>수용 인원</sub></td>
   </tr>
 </table>
 

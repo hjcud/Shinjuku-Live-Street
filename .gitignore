@@ -23,6 +23,7 @@
 !/Docs/optimization.md
 !/Docs/optimization.en.md
 !/Docs/optimization.ja.md
+!/Docs/THIRD_PARTY_NOTICES.md
 
 # README에서 사용하는 자체 촬영 비교 이미지만 허용합니다.
 !/Docs/images/
@@ -39,6 +40,9 @@
 !/Docs/images/traffic-system-architecture.ko.svg
 !/Docs/images/traffic-system-architecture.ja.svg
 !/Docs/images/community-gallery-placeholder.svg
+!/Docs/images/metric-visits.svg
+!/Docs/images/metric-favorites.svg
+!/Docs/images/metric-capacity.svg
 
 # 직접 작성한 C# 소스가 있는 폴더만 허용합니다.
 !/Assets/
