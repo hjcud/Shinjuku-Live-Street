@@ -1,8 +1,12 @@
-# 외부 라이선스 고지
+# 외부 라이선스 고지 / Third-party notices / 外部ライセンス表記
 
 ## Tabler Icons
 
 통계 표의 `walk`, `star`, `users` 아이콘은 [Tabler Icons](https://github.com/tabler/tabler-icons)를 바탕으로 색상을 조정했습니다.
+
+The `walk`, `star`, and `users` icons in the metrics table are adapted from [Tabler Icons](https://github.com/tabler/tabler-icons) with adjusted colors.
+
+統計テーブルの `walk`、`star`、`users` アイコンは、[Tabler Icons](https://github.com/tabler/tabler-icons)をもとに色を調整しています。
 
 MIT License
 

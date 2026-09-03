@@ -112,7 +112,7 @@
 ## 모델과 렌더링 최적화
 
 <p align="center">
-  <img src="./Docs/images/shinjuku-model-rendering-comparison.png" alt="기본 렌더링과 와이어프레임 비교" width="900">
+  <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="기본 렌더링과 와이어프레임 비교" width="900">
   <br>
   <sub>왼쪽: 기본 렌더링 · 오른쪽: 동일 카메라에서 촬영한 와이어프레임</sub>
 </p>
@@ -176,6 +176,8 @@
 - Atelier Rayrell, RIONESTA, Zelkova Tree 및 기타 모델·환경 리소스
 
 외부 구성요소는 이 저장소에 포함하지 않습니다. 각 항목의 저작권과 라이선스는 원 저작자 및 배포처의 정책을 따릅니다.
+
+[외부 라이선스 고지 보기 →](./Docs/THIRD_PARTY_NOTICES.md)
 
 </details>
 
