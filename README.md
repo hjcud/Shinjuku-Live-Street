@@ -14,20 +14,12 @@
 </p>
 
 <p align="center">
-  거리에서 공연이 시작되면 지나가던 사람들도 발걸음을 멈추고 함께 즐깁니다.
-</p>
-
-<p align="center">
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChat에서 월드 열기 ↗</strong></a>
 </p>
 
 ---
 
-## 어떤 월드인가요?
-
-Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 중심의 VRChat 소셜 월드**입니다.
-
-정해진 무대 없이 거리 곳곳에서 공연을 시작할 수 있습니다. 지나가던 사람도 잠시 멈춰 함께 듣고 즐길 수 있습니다.
+## 월드 정보
 
 <table align="center">
   <tr>

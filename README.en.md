@@ -14,20 +14,12 @@
 </p>
 
 <p align="center">
-  When a performance begins on the street, passersby stop and enjoy it together.
-</p>
-
-<p align="center">
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>Open the world in VRChat ↗</strong></a>
 </p>
 
 ---
 
-## About the world
-
-Shinjuku Live Street is a **VRChat social world centered on street performances**, set in the streets of Shinjuku.
-
-There is no fixed stage. Performers can set up anywhere along the streets, and passersby can stop to listen and join the audience.
+## World information
 
 <table align="center">
   <tr>
