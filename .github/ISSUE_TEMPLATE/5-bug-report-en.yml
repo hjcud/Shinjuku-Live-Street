@@ -1,0 +1,79 @@
+name: Report a bug (English)
+description: Report an error or unexpected behavior in the world.
+title: "[Bug] "
+labels:
+  - 결함
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us what happened and how we can reproduce it.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Select the environment where the problem occurred.
+      options:
+        - Desktop
+        - PC VR
+        - Quest
+        - Multiple platforms
+        - Not confirmed
+    validations:
+      required: true
+
+  - type: input
+    id: occurred-at
+    attributes:
+      label: When it happened
+      description: Enter the date and approximate time when the problem occurred.
+      placeholder: Example: September 3, 2026, around 9 PM
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened
+      description: Describe the problem and how it affected your experience.
+      placeholder: Describe what you saw or experienced.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: List the steps that cause the problem.
+      placeholder: |
+        1. Enter the world.
+        2. ...
+        3. The problem occurs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Describe what you expected to happen instead.
+    validations:
+      required: false
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments
+      description: Drag and drop any relevant screenshots or videos here.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: Before submitting
+      options:
+        - label: I checked that no existing issue reports the same problem.
+          required: true
