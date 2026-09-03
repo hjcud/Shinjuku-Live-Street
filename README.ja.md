@@ -32,12 +32,12 @@
 
 ## ストリートライブとコミュニティ
 
-<table width="100%">
-  <tr>
-    <td width="50%" valign="top"><strong>好きな場所で始めるライブ</strong><br><sub>ソロボーカルや楽器演奏、バンドライブまで、街の各所がステージに</sub></td>
-    <td width="50%" valign="top"><strong>通りすがりの人も観客に</strong><br><sub>偶然出会ったライブに足を止め、一緒に聴いて楽しむ体験</sub></td>
-  </tr>
-</table>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/community-highlights.ja.svg">
+    <img src="./Docs/images/community-highlights.ja.light.svg" alt="好きな場所で始めるライブと通りすがりの人も観客になる体験" width="900">
+  </picture>
+</p>
 
 <p align="center">
   <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJKで実際のライブやワールドの様子を見る ↗</strong></a>

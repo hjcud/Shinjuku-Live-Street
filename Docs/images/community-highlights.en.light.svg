@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="108" viewBox="0 0 900 108" role="img" aria-labelledby="title desc">
+  <title id="title">Street performances and their audiences</title>
+  <desc id="desc">Performances held throughout the streets and the people who stop to enjoy them</desc>
+  <style>
+    text { font-family: Inter, "Segoe UI", sans-serif; text-anchor: middle; }
+    .heading { fill: #1f2328; font-size: 21px; font-weight: 700; }
+    .copy { fill: #57606a; font-size: 16px; font-weight: 600; }
+  </style>
+  <text x="225" y="31" class="heading">Turn any street corner into a stage</text>
+  <text x="225" y="67" class="copy">From solo vocals and instrumentals</text>
+  <text x="225" y="91" class="copy">to full-band sets throughout the world</text>
+  <text x="675" y="31" class="heading">Passersby become part of the audience</text>
+  <text x="675" y="67" class="copy">People stop at performances they discover</text>
+  <text x="675" y="91" class="copy">and enjoy them together</text>
+</svg>

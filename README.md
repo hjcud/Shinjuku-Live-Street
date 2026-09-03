@@ -32,12 +32,12 @@
 
 ## 거리 공연과 커뮤니티
 
-<table width="100%">
-  <tr>
-    <td width="50%" valign="top"><strong>원하는 곳에서 시작하는 공연</strong><br><sub>보컬과 악기 연주부터 밴드 공연까지, 거리 곳곳을 무대로 활용</sub></td>
-    <td width="50%" valign="top"><strong>지나가던 사람도 관객으로</strong><br><sub>우연히 발견한 공연 앞에 멈춰 함께 듣고 즐기는 경험</sub></td>
-  </tr>
-</table>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/community-highlights.ko.svg">
+    <img src="./Docs/images/community-highlights.ko.light.svg" alt="원하는 곳에서 시작하는 공연과 지나가던 사람도 관객이 되는 경험" width="900">
+  </picture>
+</p>
 
 <p align="center">
   <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJK에서 실제 공연과 방문 기록 보기 ↗</strong></a>

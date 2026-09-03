@@ -32,12 +32,12 @@
 
 ## Street performances and community
 
-<table width="100%">
-  <tr>
-    <td width="50%" valign="top"><strong>Turn any street corner into a stage</strong><br><sub>From solo vocals and instrumentals to full-band sets throughout the world</sub></td>
-    <td width="50%" valign="top"><strong>Passersby become part of the audience</strong><br><sub>People stop at performances they discover and enjoy them together</sub></td>
-  </tr>
-</table>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/community-highlights.en.svg">
+    <img src="./Docs/images/community-highlights.en.light.svg" alt="Street performances and the passersby who become part of the audience" width="900">
+  </picture>
+</p>
 
 <p align="center">
   <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>See performances and moments shared by visitors on #VRSJK ↗</strong></a>
