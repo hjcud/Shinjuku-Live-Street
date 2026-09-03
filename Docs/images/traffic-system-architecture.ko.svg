@@ -34,10 +34,10 @@
     <rect x="948" y="166" width="284" height="220" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.78"/>
   </g>
 
-  <text x="72" y="201" class="role">EDITOR</text><text x="72" y="237" class="card-title">차선 데이터 생성</text><text x="72" y="274" class="card-body">위치 · 연결 · 정지선</text><text x="72" y="300" class="card-body">실행 전에 미리 계산</text>
-  <text x="372" y="201" class="role">TRAFFIC OWNER</text><text x="372" y="237" class="card-title">차량 10대 계산</text><text x="372" y="274" class="card-body">고정 주기 시뮬레이션</text><text x="372" y="300" class="card-body">센서는 2대씩 나눠 검사</text>
-  <text x="672" y="201" class="role">NETWORK</text><text x="672" y="237" class="card-title">64비트 차량 상태</text><text x="672" y="274" class="card-body">0.25초마다 상태 전송</text><text x="672" y="300" class="card-body">중복 전송 요청 차단</text>
-  <text x="972" y="201" class="role">REMOTE CLIENT</text><text x="972" y="237" class="card-title">차선 데이터로 복원</text><text x="972" y="274" class="card-body">위치·회전 매 프레임 보간</text><text x="972" y="300" class="card-body">끊김 없이 부드럽게 표시</text>
+  <text x="72" y="231" class="role">EDITOR</text><text x="72" y="267" class="card-title">차선 데이터 생성</text><text x="72" y="304" class="card-body">위치 · 연결 · 정지선</text><text x="72" y="330" class="card-body">실행 전에 미리 계산</text>
+  <text x="372" y="231" class="role">TRAFFIC OWNER</text><text x="372" y="267" class="card-title">차량 10대 계산</text><text x="372" y="304" class="card-body">고정 주기 시뮬레이션</text><text x="372" y="330" class="card-body">센서는 2대씩 나눠 검사</text>
+  <text x="672" y="231" class="role">NETWORK</text><text x="672" y="267" class="card-title">64비트 차량 상태</text><text x="672" y="304" class="card-body">0.25초마다 상태 전송</text><text x="672" y="330" class="card-body">중복 전송 요청 차단</text>
+  <text x="972" y="231" class="role">REMOTE CLIENT</text><text x="972" y="267" class="card-title">차선 데이터로 복원</text><text x="972" y="304" class="card-body">위치·회전 매 프레임 보간</text><text x="972" y="330" class="card-body">끊김 없이 부드럽게 표시</text>
 
   <g fill="none" stroke="#63cbc4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M307 276 H340"/><path d="M333 269 L340 276 L333 283"/><path d="M607 276 H640"/><path d="M633 269 L640 276 L633 283"/><path d="M907 276 H940"/><path d="M933 269 L940 276 L933 283"/></g>
 

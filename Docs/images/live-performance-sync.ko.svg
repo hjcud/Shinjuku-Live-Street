@@ -46,11 +46,11 @@
 
   <rect x="454" y="177" width="34" height="3" rx="1.5" fill="#58c9c2"/><text x="454" y="204" class="section">개선한 방식</text>
   <rect x="454" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/>
-  <text x="474" y="253" class="item-title">배치 시 함께 동기화</text><text x="474" y="279" class="item-body">소유권 · 위치</text><text x="474" y="301" class="item-body">화면 · 펜 · 미디어</text>
+  <text x="474" y="274" class="item-title">배치 시 함께 동기화</text><text x="474" y="302" class="item-body">소유권 · 위치</text><text x="474" y="326" class="item-body">화면 · 펜 · 미디어</text>
   <rect x="710" y="226" width="238" height="138" rx="12" fill="#192022" stroke="#42615e" stroke-opacity="0.78"/>
-  <text x="730" y="253" class="item-title">중간 입장 시 재전송</text><text x="730" y="279" class="item-body">현재 설치 상태를</text><text x="730" y="301" class="item-body">입장 직후 전달</text>
+  <text x="730" y="274" class="item-title">중간 입장 시 재전송</text><text x="730" y="302" class="item-body">현재 설치 상태를</text><text x="730" y="326" class="item-body">입장 직후 전달</text>
   <rect x="966" y="226" width="242" height="138" rx="12" fill="#192022" stroke="#5b4b38" stroke-opacity="0.78"/>
-  <text x="986" y="253" class="item-title">반납·이탈 시 초기화</text><text x="986" y="279" class="item-body">연결된 기능과</text><text x="986" y="301" class="item-body">이전 사용자 설정 제거</text>
+  <text x="986" y="274" class="item-title">반납·이탈 시 초기화</text><text x="986" y="302" class="item-body">연결된 기능과</text><text x="986" y="326" class="item-body">이전 사용자 설정 제거</text>
 
   <rect x="48" y="408" width="1184" height="52" rx="14" fill="url(#resultBar)" stroke="#42615e" stroke-opacity="0.72"/>
   <text x="72" y="440" class="result-label">결과</text><text x="126" y="440" class="result-text">모든 사용자가 같은 장비 상태를 확인하고, 반납 뒤에는 이전 설정이 남지 않음</text>
