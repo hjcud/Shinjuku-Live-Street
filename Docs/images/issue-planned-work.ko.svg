@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="96" viewBox="0 0 440 96" role="img" aria-labelledby="title desc">
+  <title id="title">예정된 작업 확인하기</title>
+  <desc id="desc">진행 중인 작업과 개선 계획을 확인하는 링크</desc>
+  <style>
+    text { font-family: "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif; text-anchor: middle; }
+    .link { fill: #0969da; font-size: 18px; font-weight: 700; }
+    .caption { fill: #57606a; font-size: 13px; font-weight: 500; }
+    @media (prefers-color-scheme: dark) {
+      .link { fill: #58a6ff; }
+      .caption { fill: #8c959f; }
+    }
+  </style>
+  <path d="M196 15H244" stroke="#c84036" stroke-width="3" stroke-linecap="round"/>
+  <text x="220" y="45" class="link">예정된 작업 확인하기 →</text>
+  <text x="220" y="72" class="caption">진행 중인 작업과 개선 계획</text>
+</svg>

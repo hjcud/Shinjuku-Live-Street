@@ -59,18 +59,10 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
 
 ---
 
-<table align="center">
-  <tr>
-    <td width="300" align="center">
-      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>View planned work →</strong></a><br>
-      <sub>Work in progress and planned improvements</sub>
-    </td>
-    <td width="300" align="center">
-      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><strong>Share feedback →</strong></a><br>
-      <sub>Report a bug or suggest an improvement</sub>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><img src="./Docs/images/issue-planned-work.en.svg" alt="View planned work — work in progress and planned improvements" width="49%"></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.en.svg" alt="Share feedback — report a bug or suggest an improvement" width="49%"></a>
+</p>
 
 ---
 

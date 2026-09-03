@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="96" viewBox="0 0 440 96" role="img" aria-labelledby="title desc">
+  <title id="title">意見を投稿する</title>
+  <desc id="desc">不具合を報告したり機能改善を提案したりするリンク</desc>
+  <style>
+    text { font-family: "Noto Sans JP", "Yu Gothic", "Segoe UI", sans-serif; text-anchor: middle; }
+    .link { fill: #0969da; font-size: 18px; font-weight: 700; }
+    .caption { fill: #57606a; font-size: 13px; font-weight: 500; }
+    @media (prefers-color-scheme: dark) {
+      .link { fill: #58a6ff; }
+      .caption { fill: #8c959f; }
+    }
+  </style>
+  <path d="M196 15H244" stroke="#3eb8b0" stroke-width="3" stroke-linecap="round"/>
+  <text x="220" y="45" class="link">意見を投稿する →</text>
+  <text x="220" y="72" class="caption">不具合の報告・機能改善の提案</text>
+</svg>
