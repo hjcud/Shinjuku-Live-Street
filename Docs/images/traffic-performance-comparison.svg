@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="650" viewBox="0 0 1280 650" role="img" aria-labelledby="title desc">
-  <title id="title">교통 시스템 초기 스냅샷과 최신 스냅샷의 성능 비교</title>
-  <desc id="desc">차량 10대와 원격 플레이어 80명 밀집 조건의 동일한 300프레임에서 초기 스냅샷과 최신 스냅샷의 평균 CPU 프레임 시간, 느린 프레임 기준, 물리 처리 시간, 프레임당 메모리 할당을 비교한 그래프</desc>
+  <title id="title">Traffic-system performance: initial and latest snapshots</title>
+  <desc id="desc">Comparison of average CPU frame time, P95 frame time, physics time, and per-frame memory allocation across 300-frame captures with 10 vehicles and 80 remote players</desc>
 
   <defs>
     <linearGradient id="panelBackground" x1="0" y1="0" x2="1" y2="1">

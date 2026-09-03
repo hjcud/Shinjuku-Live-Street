@@ -11,11 +11,11 @@
 <h1 align="center">Shinjuku Live Street</h1>
 
 <p align="center">
-  <strong>A VRChat social world where anyone can start a street performance and passersby naturally become the audience.</strong>
+  <strong>A VRChat social world where anyone can start a street performance and passersby naturally become part of the audience.</strong>
 </p>
 
 <p align="center">
-  Music begins throughout the streets, drawing people together around each performance.
+  Singing and live music fill the streets, bringing people together around each performance.
 </p>
 
 <p align="center">
@@ -39,23 +39,23 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
 </table>
 
 <p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team</sub></p>
-<p align="center"><sub>Visit and favorite counts · September 3, 2026</sub></p>
+<p align="center"><sub>Visits and favorites as of September 3, 2026</sub></p>
 
 ## Street performances and community
 
 <table>
   <tr>
-    <td width="50%" valign="top"><strong>Perform anywhere along the street</strong><br><sub>Solo vocals, instrumentals, and full-band sets using different parts of the street as a stage</sub></td>
-    <td width="50%" valign="top"><strong>Passersby become the audience</strong><br><sub>People can stop at a performance they discover and enjoy it together</sub></td>
+    <td width="50%" valign="top"><strong>Turn any street corner into a stage</strong><br><sub>From solo vocals and instrumentals to full-band sets throughout the world</sub></td>
+    <td width="50%" valign="top"><strong>Passersby become part of the audience</strong><br><sub>People stop at performances they discover and enjoy them together</sub></td>
   </tr>
 </table>
 
 <p align="center">
-  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>View performances and visit records on #VRSJK ↗</strong></a>
+  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>See performances and moments shared by visitors on #VRSJK ↗</strong></a>
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved image area for community performance scenes" width="900">
+  <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved space for photos of community performances" width="900">
 </p>
 
 ---
@@ -64,7 +64,7 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
   <tr>
     <td width="300" align="center">
       <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>View planned work →</strong></a><br>
-      <sub>Current work and improvement plans</sub>
+      <sub>Work in progress and planned improvements</sub>
     </td>
     <td width="300" align="center">
       <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><strong>Share feedback →</strong></a><br>
@@ -75,31 +75,31 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
 
 ---
 
-## Recent development and improvements
+## Recent improvements
 
 <sub>As of September 3, 2026</sub>
 
-The live-equipment synchronization and traffic simulation were redesigned to keep shared state consistent with many users connected while reducing repeated CPU, physics, and GC work.
+Live-equipment synchronization and the traffic simulation were redesigned to keep shared state consistent in crowded instances and reduce recurring CPU, physics, and GC overhead.
 
-### Shared live equipment — consistent state from placement to return
+### Shared live equipment — reliable state from setup to return
 
-Portable speakers could retain part of their linked state after being returned or left behind, while late joiners could miss speakers already placed in the world.
+Portable speakers sometimes kept their screen, pen, or media settings after being returned or after their user left. Players joining later could also miss speakers that had already been placed in the world.
 
 <p align="center">
   <img src="./Docs/images/live-performance-sync.svg" alt="Previous synchronization problems and the current behavior of shared live equipment" width="900">
 </p>
 
-Everyone sees the same equipment state, and returned equipment no longer retains the previous user's settings.
+All players now see the same equipment state, and returned equipment no longer keeps the previous user's settings.
 
 ### Traffic simulation — centralizing repeated per-vehicle work
 
-Each vehicle previously calculated its destination, ran a `BoxCast`, moved its Transform, and requested serialization every frame. CPU, physics, and GC costs rose together as the number of vehicles and players increased.
+Each vehicle previously calculated its destination, ran a `BoxCast`, updated its Transform, and triggered serialization every frame. CPU, physics, and GC costs rose together as the number of vehicles and players increased.
 
 <p align="center">
   <img src="./Docs/images/traffic-system-architecture.svg" alt="Traffic-state flow from editor data through the traffic owner and network to remote clients" width="900">
 </p>
 
-The traffic owner calculates all ten vehicles in one place and sends each vehicle's state as a 64-bit record. Remote clients rebuild the vehicles from the same lane data and interpolate every frame to reduce visible stepping.
+The traffic owner calculates all ten vehicles through a single manager and sends each vehicle's state as a 64-bit record. Remote clients reconstruct the vehicles from the same lane data and interpolate their movement every frame to keep it smooth.
 
 <details>
 <summary><strong>View the runtime debug screen</strong></summary>
@@ -107,7 +107,7 @@ The traffic owner calculates all ten vehicles in one place and sends each vehicl
 <p align="center">
   <img src="./Docs/images/shinjuku-traffic-system-debug.png" alt="Runtime lane and vehicle debugging for the traffic system" width="900">
   <br>
-  <sub>Baked lanes, vehicle occupancy, predicted positions, and obstacle sensor ranges</sub>
+  <sub>Baked lanes, occupied areas, predicted positions, and obstacle-sensor ranges</sub>
 </p>
 
 </details>
@@ -116,7 +116,7 @@ The traffic owner calculates all ten vehicles in one place and sends each vehicl
 
 ![Unity Profiler comparison between the initial and latest traffic-system snapshots](./Docs/images/traffic-performance-comparison.svg)
 
-Ten vehicles and 80 remote players simulated with ClientSim were placed at the same location, and 300 frames were measured in both the initial and latest states. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
+Ten vehicles and 80 remote players simulated with ClientSim were concentrated in the same area. We captured 300 frames from both the initial and latest snapshots. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
 
 Vehicle position and rotation are interpolated every frame so motion remains smooth between simulation updates.
 
@@ -130,7 +130,7 @@ Vehicle position and rotation are interpolated every frame so motion remains smo
   <sub>Left: normal render · Right: wireframe captured from the same camera</sub>
 </p>
 
-The environment is divided into sections so occlusion culling can exclude sections outside the camera view. Fixed objects use static batching, while street and building lighting is baked.
+The environment is divided into sections so occlusion culling can exclude areas outside the camera view. Static objects use static batching, while lighting for the streets and buildings is baked.
 
 <table align="center">
   <tr>
@@ -146,7 +146,7 @@ Baked lighting is applied to approximately 220 meshes. The scene uses three 4096
 
 | Area | Key files | Responsibility |
 | --- | --- | --- |
-| Performance equipment | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | Speaker placement, validation, ownership, late-join sync, and reset |
+| Live equipment | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | Speaker placement, validation, ownership, late-join sync, and reset |
 | Stage voice | [`VoiceRange.cs`](./Assets/Shinjuku%20Udon/Speaker/VoiceRange.cs) | Shared performer voice range and gain |
 | Shared interactions | [`ObjectGlobalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectGlobalToggle.cs), [`ObjectLocalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectLocalToggle.cs) | Separation of global and local state |
 | Traffic runtime | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | Simulation, state packing, transfer, and remote reconstruction |
@@ -203,4 +203,4 @@ No open-source license is granted for the original code in this repository. The 
 | Member | Role |
 | --- | --- |
 | [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | Planning · Graphics · 3D modeling |
-| [hjcud](https://github.com/hjcud) | Unity and UdonSharp system development and optimization |
+| [hjcud](https://github.com/hjcud) | Unity/UdonSharp systems and optimization |

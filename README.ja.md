@@ -11,7 +11,7 @@
 <h1 align="center">新宿ライブストリート</h1>
 
 <p align="center">
-  <strong>新宿の夜道で誰もがライブを始められ、通りすがりの人が自然と観客になるVRChatソーシャルワールド</strong>
+  <strong>新宿の夜の街角で誰もがライブを始められ、通りかかった人が自然と観客になるVRChatソーシャルワールド</strong>
 </p>
 
 <p align="center">
@@ -26,7 +26,7 @@
 
 ## どんなワールド？
 
-Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライブ中心のVRChatソーシャルワールド**です。
+Shinjuku Live Streetは、新宿の街を舞台に、**ストリートライブを中心に人が集まるVRChatのソーシャルワールド**です。
 
 決まったステージはなく、街のあちこちでライブを始められます。通りすがりの人も足を止め、その場で一緒に楽しめます。
 
@@ -38,24 +38,24 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
   </tr>
 </table>
 
-<p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2人制作</sub></p>
+<p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2名で制作</sub></p>
 <p align="center"><sub>訪問数・お気に入り数 · 2026年9月3日時点</sub></p>
 
 ## ストリートライブとコミュニティ
 
 <table>
   <tr>
-    <td width="50%" valign="top"><strong>好きな場所で始めるライブ</strong><br><sub>ボーカルや楽器演奏、バンドライブで街のあちこちをステージとして活用</sub></td>
+    <td width="50%" valign="top"><strong>好きな場所で始めるライブ</strong><br><sub>ソロボーカルや楽器演奏、バンドライブまで、街の各所がステージに</sub></td>
     <td width="50%" valign="top"><strong>通りすがりの人も観客に</strong><br><sub>偶然出会ったライブに足を止め、一緒に聴いて楽しむ体験</sub></td>
   </tr>
 </table>
 
 <p align="center">
-  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJKでライブや訪問の記録を見る ↗</strong></a>
+  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJKで実際のライブやワールドの様子を見る ↗</strong></a>
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery-placeholder.svg" alt="ストリートライブとコミュニティの実際の場面を入れる画像領域" width="900">
+  <img src="./Docs/images/community-gallery-placeholder.svg" alt="ストリートライブとコミュニティの写真掲載予定エリア" width="900">
 </p>
 
 ---
@@ -63,23 +63,23 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
 <table align="center">
   <tr>
     <td width="300" align="center">
-      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>今後の作業を確認 →</strong></a><br>
+      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>今後の作業を見る →</strong></a><br>
       <sub>進行中の作業と改善予定</sub>
     </td>
     <td width="300" align="center">
-      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><strong>意見を送る →</strong></a><br>
-      <sub>不具合の報告と機能・改善の提案</sub>
+      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><strong>意見を投稿する →</strong></a><br>
+      <sub>不具合の報告・機能改善の提案</sub>
     </td>
   </tr>
 </table>
 
 ---
 
-## 最近の開発と改善
+## 最近の改善
 
 <sub>2026年9月3日時点</sub>
 
-ライブ機材の同期と交通シミュレーションを再設計しました。多くのユーザーが同時に接続しても機材の状態がずれないようにし、繰り返し発生していたCPU・物理・GCの負荷を削減しています。
+ライブ機材の同期と交通シミュレーションを再設計しました。同時接続が多い場面でも機材の状態を安定して共有できるようにし、繰り返し発生していたCPU・物理・GCの負荷を削減しています。
 
 ### ライブ機材の同期 — 設置から返却まで状態を一貫して管理
 
@@ -89,20 +89,20 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
   <img src="./Docs/images/live-performance-sync.ja.svg" alt="ライブ機材で発生していた同期の問題と改善結果" width="900">
 </p>
 
-全員が同じ機材の状態を確認でき、返却後の機材に前の利用者の設定が残らないようにしました。
+すべてのユーザーに同じ機材の状態が反映され、返却後の機材には前の利用者の設定が残らないようにしました。
 
 ### 交通シミュレーション — 車両ごとの重複処理を中央へ集約
 
-各車両が毎フレーム目的地計算、`BoxCast`、Transform移動、直列化を実行していたため、車両とユーザーが増えるほどCPU・物理・GCの負荷も増えていました。
+各車両が毎フレーム、目的地の計算、`BoxCast`、Transformの更新、シリアライズ要求を個別に行っていたため、車両とユーザーが増えるほどCPU・物理・GCの負荷も増えていました。
 
 <p align="center">
   <img src="./Docs/images/traffic-system-architecture.ja.svg" alt="エディタ、オーナー、ネットワーク、リモートユーザーへ続く交通状態の処理構成" width="900">
 </p>
 
-オーナーが10台の走行状態を一か所で計算し、車両ごとの状態を64ビットに圧縮して送信します。リモート側は同じレーンデータから車両を復元し、毎フレーム補間して画面上の途切れを抑えました。
+交通オーナーが10台の走行状態を1つの管理スクリプトで計算し、各車両の状態を64ビットに圧縮して送信します。リモート側は同じレーンデータから車両を再現し、毎フレーム補間して滑らかな動きを保ちます。
 
 <details>
-<summary><strong>実行中のデバッグ画面を見る</strong></summary>
+<summary><strong>実行時のデバッグ表示を見る</strong></summary>
 
 <p align="center">
   <img src="./Docs/images/shinjuku-traffic-system-debug.png" alt="実行中の交通システムにおけるレーンと車両のデバッグ画面" width="900">
@@ -116,11 +116,11 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
 
 ![交通システムの初期スナップショットと最新スナップショットのUnity Profiler比較](./Docs/images/traffic-performance-comparison.ja.svg)
 
-車両10台とClientSimで再現したリモートプレイヤー80人を同じ地点に配置し、初期状態と最新状態をそれぞれ300フレーム測定しました。平均CPUフレーム時間は`17.65 ms → 11.92 ms`、P95フレーム時間は`24.60 ms → 17.44 ms`まで減少しました。物理処理時間は65.3%、1フレームあたりのGC割り当ては88.1%削減しています。
+車両10台とClientSimで再現したリモートプレイヤー80人を同じエリアに集め、初期・最新スナップショットをそれぞれ300フレーム計測しました。平均CPUフレーム時間は`17.65 ms → 11.92 ms`、P95フレーム時間は`24.60 ms → 17.44 ms`まで減少しました。物理処理時間は65.3%、1フレームあたりのGC割り当ては88.1%削減しています。
 
-車両の位置と回転は毎フレーム補間し、計算の間も動きが途切れて見えないようにしました。
+車両の位置と回転を毎フレーム補間することで、シミュレーション更新の間も滑らかに見えるようにしました。
 
-[測定条件と問題ごとの実装を詳しく見る](./Docs/optimization.ja.md)
+[測定条件と実装の詳細を見る](./Docs/optimization.ja.md)
 
 ## モデルと描画の最適化
 
@@ -130,33 +130,33 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
   <sub>左：通常レンダリング · 右：同じカメラから撮影したワイヤーフレーム</sub>
 </p>
 
-環境モデルをエリアごとに分け、カメラに映らないエリアはオクルージョンカリングで描画対象から外しました。固定オブジェクトにはスタティックバッチを適用し、街路と建物の照明はベイクしています。
+環境モデルをエリアごとに分け、カメラに映らないエリアはオクルージョンカリングで描画対象から外しました。静的オブジェクトにはスタティックバッチングを適用し、街路と建物の照明はベイクしています。
 
 <table align="center">
   <tr>
     <td width="260" align="center"><strong>モデル構成</strong><br><sub>三角形 246,921個 · 環境メッシュ 240個</sub></td>
-    <td width="260" align="center"><strong>描画最適化</strong><br><sub>スタティックバッチ対象 392個 · オクルーダー 330個</sub></td>
+    <td width="260" align="center"><strong>描画最適化</strong><br><sub>スタティックバッチング 392個 · オクルーダー 330個</sub></td>
     <td width="260" align="center"><strong>当たり判定</strong><br><sub>メッシュコライダー 2個</sub></td>
   </tr>
 </table>
 
-ベイク照明は約220メッシュに適用しました。ライトマップは4096×4096を3枚、512×512を1枚使用しています。
+ベイク済みライティングは約220メッシュに適用しました。ライトマップは4096×4096を3枚、512×512を1枚使用しています。
 
 ## コード構成
 
 | 分野 | 主なファイル | 役割 |
 | --- | --- | --- |
 | ライブ機材 | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | スピーカー設置、検証、所有権、途中参加者との同期、初期化 |
-| ステージ音声 | [`VoiceRange.cs`](./Assets/Shinjuku%20Udon/Speaker/VoiceRange.cs) | 出演者の音声距離と音量の共有 |
+| ステージ音声 | [`VoiceRange.cs`](./Assets/Shinjuku%20Udon/Speaker/VoiceRange.cs) | 出演者のボイス範囲とゲインの同期 |
 | 共有操作 | [`ObjectGlobalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectGlobalToggle.cs), [`ObjectLocalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectLocalToggle.cs) | グローバル状態とローカル状態の分離 |
 | 交通処理 | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | 車両計算、状態圧縮、送信、リモート車両の復元 |
 | レーンデータ | [`TrafficLaneDatabase.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficLaneDatabase.cs) | ベイク済みレーンの参照と車両姿勢の復元 |
-| 制作ツール | [`TrafficLaneBakerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) | レーンのベイク、検証、可視化 |
+| エディターツール | [`TrafficLaneBakerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) | レーンのベイク、検証、可視化 |
 | ワールド機能 | [`PosterSlide.cs`](./Assets/Shinjuku%20Udon/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/Shinjuku%20Udon/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/Shinjuku%20Udon/Teleport/CollisionTeleport.cs) | ポスター切り替え、ポータル、テレポート |
 
 ## リポジトリについて
 
-このリポジトリだけでワールドを実行することはできません。公開しているのは、自作のC#・UdonSharpコードとドキュメントのみです。UnityのScene、Prefab、モデル、画像、音声、動画、Material、Animation、Shader、`.meta`ファイルは含まれていません。
+このリポジトリだけでワールドを実行することはできません。公開しているのは、自作のC#・UdonSharpコードとドキュメントのみです。Unityのシーン、Prefab、モデル、画像、音声、動画、マテリアル、アニメーション、シェーダー、`.meta`ファイルは含まれていません。
 
 <details>
 <summary><strong>使用したSDK・パッケージ・外部コンポーネント</strong></summary>
@@ -190,7 +190,7 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
 - Noriben Lunch shader assets
 - Atelier Rayrell、RIONESTA、Zelkova Tree、その他クリエイターによるモデル・環境素材
 
-外部コンポーネントはこのリポジトリに含まれていません。著作権およびライセンスは、それぞれの作者・配布元の規約に従います。
+外部コンポーネントはこのリポジトリに含まれていません。各コンポーネントの権利は作者・配布元に帰属し、利用にはそれぞれのライセンス条件が適用されます。
 
 </details>
 
