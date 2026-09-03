@@ -60,12 +60,18 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
 
 ---
 
-<p align="center">
-  <strong>今後の改善と提案</strong><br><br>
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>今後の作業を見る →</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>意見を送る →</strong></a>
-</p>
+<table align="center">
+  <tr>
+    <td width="300" align="center">
+      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>今後の作業を確認 →</strong></a><br>
+      <sub>進行中の作業と改善予定</sub>
+    </td>
+    <td width="300" align="center">
+      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><strong>意見を送る →</strong></a><br>
+      <sub>不具合の報告と機能・改善の提案</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
