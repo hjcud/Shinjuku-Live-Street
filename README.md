@@ -57,6 +57,18 @@
 
 사용자들이 남긴 실제 공연과 방문 기록은 [X의 #VRSJK 검색 결과](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)에서 볼 수 있습니다.
 
+---
+
+<p align="center">
+  <strong>개선 제안과 예정된 작업</strong><br>
+  <sub>앞으로 추가할 기능과 개선 의견은 GitHub Issues에서 확인하거나 제안할 수 있습니다.</sub><br><br>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>예정된 작업 보기</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>의견 남기기</strong></a>
+</p>
+
+---
+
 ## 최근 개발과 개선
 
 공연 장비 동기화와 교통 시뮬레이션을 다시 설계했습니다. 여러 사용자가 동시에 접속한 상황에서 장비 상태를 안정적으로 동기화하고, 반복되던 CPU·물리·GC 부하를 줄였습니다.

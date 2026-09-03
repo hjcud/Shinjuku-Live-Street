@@ -57,6 +57,18 @@ There is no single fixed stage. Performances begin throughout the streets, passe
 
 Community performances and visit records can be found through the [#VRSJK search on X](https://x.com/search?q=%23VRSJK&src=typed_query&f=live).
 
+---
+
+<p align="center">
+  <strong>Planned improvements and suggestions</strong><br>
+  <sub>See upcoming work or share an idea through GitHub Issues.</sub><br><br>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>View planned work</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>Share feedback</strong></a>
+</p>
+
+---
+
 ## Recent development and improvements
 
 The live-equipment synchronization and traffic simulation were redesigned to keep shared state consistent with many users connected while reducing repeated CPU, physics, and GC work.
