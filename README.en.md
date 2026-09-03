@@ -184,8 +184,8 @@ No open-source license is granted for the original code in this repository. The 
 
 | Member | Role |
 | --- | --- |
-| [hjcud](https://github.com/hjcud) | Unity and UdonSharp system development and optimization |
 | [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | Planning · Graphics · 3D modeling |
+| [hjcud](https://github.com/hjcud) | Unity and UdonSharp system development and optimization |
 
 ---
 
