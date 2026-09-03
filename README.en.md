@@ -28,81 +28,121 @@
 
 Shinjuku Live Street brings the light, sound, and human density of a Shinjuku night into VRChat. It is a social world built around street performances.
 
-This is not a venue where visitors only watch a fixed stage. Performers choose their own spot, sing, or play an instrument, while people walking through the city naturally become the audience. After a set, performers and listeners talk, take group photos, and carry the night into the community.
+This is not a venue built around a single fixed stage. Performers choose their own spot, and people walking through the city naturally become the audience. After a set, performers and listeners talk, take photos, and carry the night into the community.
 
-| Published | Platform | Capacity | Technology |
-| --- | --- | ---: | --- |
-| April 4, 2025 | VRChat | Up to 80 | Unity and UdonSharp world systems |
+<table>
+  <tr>
+    <td width="33%" align="center"><strong>1,693,697</strong><br><sub>Total visits</sub></td>
+    <td width="33%" align="center"><strong>64,453</strong><br><sub>Favorites</sub></td>
+    <td width="33%" align="center"><strong>Up to 80</strong><br><sub>Capacity</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>April 4, 2025</strong><br><sub>Public release</sub></td>
+    <td align="center"><strong>August 31, 2026</strong><br><sub>Latest world update</sub></td>
+    <td align="center"><strong>Version 207</strong><br><sub>Unity · UdonSharp</sub></td>
+  </tr>
+</table>
+
+<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">Official VRChat world information</a> · Checked September 3, 2026 · Visit and favorite counts will change over time.</sub></p>
 
 ## What happens here
 
-Posts shared under `#VRSJK` show that the world is shaped by the people using it rather than by one prescribed activity.
+<!-- SCREENSHOT_SLOT: Add three externally hosted performance screenshots above these cards. Do not add the image files to this repository. -->
 
-| Performers | Audience | What remains |
-| --- | --- | --- |
-| Solo singers, instrumentalists, and bands turn different parts of the street into a stage. | Visitors stop to listen, dance, cheer, or simply enjoy a performance quietly. | Performers and listeners talk, take group photos, and share moments from the night through `#VRSJK`. |
+<table>
+  <tr>
+    <td width="33%" valign="top"><strong>Every corner can become a stage</strong><br><sub>From solo vocals and instruments to full bands, the performer chooses where the show begins.</sub></td>
+    <td width="33%" valign="top"><strong>Passersby become the audience</strong><br><sub>Visitors stop for someone they have never met, then listen, dance, and cheer together.</sub></td>
+    <td width="33%" valign="top"><strong>The night continues afterward</strong><br><sub>Conversations and group photos shared under #VRSJK carry the performance beyond the world.</sub></td>
+  </tr>
+</table>
 
-Some visitors arrive for a scheduled performance. Others follow a friend into the world and unexpectedly stay for a stranger's song. That chance encounter is the experience Shinjuku Live Street is designed to create.
+Some visitors arrive for a scheduled performance. Others follow a friend into the world and unexpectedly stay for a stranger's song. Community performances and visit records can be found through the [#VRSJK search on X](https://x.com/search?q=%23VRSJK&src=typed_query&f=live).
 
-> Community performances and visit records can be found through the [#VRSJK search on X](https://x.com/search?q=%23VRSJK&src=typed_query&f=live).
+## Recent work
 
-## Systems behind the world
+Recent work addressed state mismatches in shared performance equipment and repeated calculations and transfers in the traffic system. Production and test tools were built alongside these changes so the same conditions can be reproduced and checked.
 
-Performance tools, shared interactions, and network systems work together so people can begin a performance without friction and experience the same moment together.
+### Performance system: problems and solutions
 
-### Tools for starting a performance
+The portable speaker carries more than its position. Ownership, voice gain, screens, drawing tools, and media all change with it. Returning a speaker or walking away could leave part of that state behind, while late joiners could miss speakers that had already been placed.
 
-- A portable speaker placement flow with separate desktop and VR input handling.
-- A holographic preview that checks slope, distance, and available speaker count before placement.
-- Ownership and transform synchronization, including state delivery to late joiners.
-- A unified return flow that resets voice, screen, drawing tools, and media state when the performer leaves or returns the speaker.
-
-```mermaid
+~~~mermaid
 flowchart LR
-    A[Choose a performance spot] --> B[Validate placement]
-    B --> C[Assign speaker ownership]
-    C --> D[Share position and rotation]
-    D --> E[Enable performance tools]
-    E --> F[Reset on return or departure]
-```
+    A["Preview placement<br/>Desktop · VR"] --> B["Validate placement<br/>3 m · 30° slope"]
+    B --> C["Assign ownership<br/>Sync position and rotation"]
+    C --> D["Resend current state<br/>to late joiners"]
+    D --> E["Detect return or distance<br/>Reset linked state"]
+~~~
 
-### Shared-world interactions
+Distance, slope, and remaining capacity are checked before ownership is assigned and placement is synchronized. Returning a speaker or moving more than 5 m away resets its linked features together. Shared screens and drawing tools are also separated from local choices such as mirrors.
 
-- Stage controls adjust the performer's voice range and gain for the audience.
-- Global state is separated from settings that only need to affect the local user.
-- Posters, portals, teleportation, object toggles, and recovery logic are implemented as small independent UdonSharp components.
+### Traffic system: problems and solutions
 
-## Traffic as a living backdrop
+Traffic keeps the city moving behind the performances. In the first system, each vehicle calculated its destination, ran a `BoxCast`, moved its Transform, and requested serialization every frame. More vehicles meant more copies of the same work, while high-player-count tests exposed regular frame-time spikes.
 
-Traffic is not the subject of the world. It is the moving backdrop behind the people gathered there. Cars react to signals and surrounding vehicles so the city continues to feel active while a performance is taking place.
+<p align="center">
+  <img src="./Docs/images/shinjuku-traffic-system-debug.png" alt="Runtime lane and vehicle debugging for the traffic system" width="900">
+  <br>
+  <sub>Baked lanes, vehicle occupancy, predicted positions, and obstacle sensor ranges during execution</sub>
+</p>
 
-If every client simulates traffic independently, the results drift apart. Sending every transform continuously would also be expensive. Instead, one owner simulates the vehicles and remote users reconstruct their movement from compact logical state.
-
-```mermaid
+~~~mermaid
 flowchart LR
-    A[Baked lane data] --> B[Owner simulates vehicles]
-    B --> C[Pack logical state]
-    C --> D[Manual synchronization]
-    D --> E[Interpolation and short prediction]
-    E --> F[Render vehicles for each user]
-```
+    subgraph BEFORE["Previous structure"]
+        direction TB
+        B1["Every vehicle decides every frame"]
+        B2["Every vehicle runs BoxCast"]
+        B3["Every vehicle moves and serializes"]
+        B1 --> B2 --> B3
+    end
+    subgraph AFTER["Current structure"]
+        direction TB
+        A1["Bake lane data in the editor"]
+        A2["One owner simulates ten vehicles"]
+        A3["Update sensors for two vehicles per frame"]
+        A4["Pack 64 bits per vehicle"]
+        A5["Send every 0.25 s · interpolate remotely"]
+        A1 --> A2 --> A3 --> A4 --> A5
+    end
+    BEFORE ==> AFTER
+~~~
 
-| Area | Implementation |
-| --- | --- |
-| Simulation | Fixed 0.1-second step with a per-frame catch-up limit |
-| State transfer | Lane, distance, speed, and related state packed into 64 bits per vehicle for up to 16 vehicles |
-| Remote playback | Jitter-aware interpolation and up to 0.15 seconds of short prediction |
-| Ownership changes | Generation and sequence checks reject stale state and resume from the latest snapshot |
-| Physics checks | Owner-only sensors distributed across vehicles to spread frame cost |
+Leading vehicles and signals are evaluated through lane progress. Remote clients reconstruct vehicles on the same lane data and predict no more than 0.15 seconds ahead when a packet is late. Lane changes, emergency avoidance, and reverse recovery remain inside the same 64-bit record.
 
-## Tooling for world production
+### Measured with Unity Profiler
 
-Manually entering lane arrays and discovering errors only at runtime does not scale with the world. The project includes an editor baker that converts scene lanes into runtime data, plus visualization tools for inspecting vehicles, sensors, and network state directly in the Scene view.
+![Unity Profiler comparison between the initial and latest traffic-system snapshots](./Docs/images/traffic-performance-comparison.svg)
 
-- Automatic lane sampling and connection generation
-- Validation for broken links and invalid settings
-- Visualization of vehicle state, sensor ranges, and target lanes
-- Stress testing for multi-player conditions
+The comparison uses the same 300-frame segment from the initial and latest snapshots, with ten cars and 80 ClientSim remote players gathered at one point. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95—which represents recurring slow frames—fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
+
+`10 Hz` is the driving-decision rate, not the display refresh rate. Authority-side cars interpolate between simulation states, while remote cars interpolate received snapshots **on every rendered frame**. The model, materials, and render settings were not reduced. GPU frame time and image quality were not part of this comparison.
+
+[Read the test conditions and implementation details](./Docs/optimization.en.md)
+
+## Model and rendering setup
+
+<p align="center">
+  <img src="./Docs/images/shinjuku-model-rendering-comparison.png" alt="Comparison of the normal render and wireframe view" width="900">
+  <br>
+  <sub>Left: normal render · Right: wireframe captured from the same camera</sub>
+</p>
+
+Combining every building and sign into one large mesh can draw hidden alleys and objects together. Splitting everything too finely increases renderer and material submissions. The environment is divided so the shape of the Shinjuku streets remains recognizable while hidden areas can be culled by section.
+
+<table>
+  <tr>
+    <td align="center"><strong>246,921</strong><br><sub>Triangles</sub></td>
+    <td align="center"><strong>240</strong><br><sub>Environment meshes</sub></td>
+    <td align="center"><strong>392</strong><br><sub>Static-batched objects</sub></td>
+    <td align="center"><strong>330</strong><br><sub>Occluders</sub></td>
+    <td align="center"><strong>2</strong><br><sub>Mesh colliders</sub></td>
+  </tr>
+</table>
+
+Baked lighting covers approximately 220 meshes using three 4096 lightmaps and one 512 lightmap.
+
+The pre-optimization model settings are unavailable, so these figures are labeled as current settings rather than performance gains.
 
 ## Code map
 
@@ -159,6 +199,13 @@ Third-party components are not included in this repository. Their respective aut
 ## Copyright
 
 No open-source license is granted for the original code in this repository. The code may not be used, modified, or redistributed without separate permission. Rights to third-party components and world assets remain with their respective authors.
+
+## Team
+
+| Member | Role |
+| --- | --- |
+| [hjcud](https://github.com/hjcud) | Unity and UdonSharp system development and optimization |
+| [@Artistoid_VRC](https://x.com/Artistoid_VRC) | 3D modeling of the Shinjuku streets and environment |
 
 ---
 
