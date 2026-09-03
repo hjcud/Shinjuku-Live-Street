@@ -184,8 +184,8 @@
 
 | メンバー | 担当 |
 | --- | --- |
-| [hjcud](https://github.com/hjcud) | Unity・UdonSharpシステムの開発・最適化 |
 | [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 企画 · グラフィック · 3Dモデリング |
+| [hjcud](https://github.com/hjcud) | Unity・UdonSharpシステムの開発・最適化 |
 
 ---
 
