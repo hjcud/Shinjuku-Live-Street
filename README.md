@@ -45,8 +45,8 @@ Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 
 
 <table>
   <tr>
-    <td width="50%" valign="top"><strong>거리 곳곳이 무대</strong><br><sub>솔로 보컬과 악기 연주부터 밴드 공연까지, 공연자가 고른 자리에서 시작되는 공연</sub></td>
-    <td width="50%" valign="top"><strong>지나가던 사람이 관객으로</strong><br><sub>처음 만난 연주 앞에 멈춰 함께 듣고 춤추고 응원하는 사람들</sub></td>
+    <td width="50%" valign="top"><strong>원하는 곳에서 시작하는 공연</strong><br><sub>보컬과 악기 연주부터 밴드 공연까지, 거리 곳곳을 무대로 활용</sub></td>
+    <td width="50%" valign="top"><strong>지나가던 사람도 관객으로</strong><br><sub>우연히 발견한 공연 앞에 멈춰 함께 듣고 즐기는 경험</sub></td>
   </tr>
 </table>
 
@@ -120,19 +120,17 @@ Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 
   <sub>왼쪽: 기본 렌더링 · 오른쪽: 동일 카메라에서 촬영한 와이어프레임</sub>
 </p>
 
-환경 모델을 구역별로 나눠 카메라에 보이지 않는 영역은 오클루전 컬링으로 그리지 않게 했습니다. 정적 배칭을 적용하고 거리와 건물의 조명은 베이크 조명으로 처리했습니다.
+환경 모델은 구역별로 나누고, 카메라에 보이지 않는 구역은 오클루전 컬링으로 렌더링에서 제외했습니다. 고정 오브젝트는 정적 배칭으로 묶었으며, 거리와 건물 조명은 베이크했습니다.
 
-<table>
+<table align="center">
   <tr>
-    <td align="center"><strong>246,921</strong><br><sub>삼각형</sub></td>
-    <td align="center"><strong>240</strong><br><sub>환경 메시</sub></td>
-    <td align="center"><strong>392</strong><br><sub>정적 배칭 오브젝트</sub></td>
-    <td align="center"><strong>330</strong><br><sub>오클루더</sub></td>
-    <td align="center"><strong>2</strong><br><sub>메시 콜라이더</sub></td>
+    <td width="260" align="center"><strong>모델 구성</strong><br><sub>삼각형 246,921개 · 환경 메시 240개</sub></td>
+    <td width="260" align="center"><strong>렌더링 최적화</strong><br><sub>정적 배칭 대상 392개 · 오클루더 설정 330개</sub></td>
+    <td width="260" align="center"><strong>충돌 처리</strong><br><sub>메시 콜라이더 2개</sub></td>
   </tr>
 </table>
 
-약 220개 메시에 베이크 조명을 적용했고, 4096 라이트맵 3장과 512 라이트맵 1장을 사용합니다.
+베이크 조명은 약 220개 메시에 적용했습니다. 라이트맵은 4096×4096 해상도 3장과 512×512 해상도 1장을 사용했습니다.
 
 ## 코드 구성
 
