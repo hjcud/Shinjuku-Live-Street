@@ -43,7 +43,7 @@ There is no single fixed stage. Performances begin throughout the streets, passe
 </table>
 
 <p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team · Public since April 4, 2025 · Latest update August 31, 2026</sub></p>
-<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">Official VRChat world information</a> · Checked September 3, 2026 · Visit and favorite counts will change over time.</sub></p>
+<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">Official VRChat world information</a> · Checked September 3, 2026</sub></p>
 
 ## Street performances and community
 
