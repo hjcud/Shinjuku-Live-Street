@@ -5,10 +5,12 @@
     text { font-family: Inter, "Segoe UI", sans-serif; text-anchor: middle; }
     .heading { fill: #f0f6fc; font-size: 21px; font-weight: 700; }
     .copy { fill: #aab2ba; font-size: 16px; font-weight: 600; }
+    .join { fill: #8c959f; font-size: 26px; font-weight: 500; }
   </style>
   <text x="225" y="31" class="heading">Turn any street corner into a stage</text>
   <text x="225" y="67" class="copy">From solo vocals and instrumentals</text>
   <text x="225" y="91" class="copy">to full-band sets throughout the world</text>
+  <text x="450" y="68" class="join">+</text>
   <text x="675" y="31" class="heading">Passersby become part of the audience</text>
   <text x="675" y="67" class="copy">People stop at performances they discover</text>
   <text x="675" y="91" class="copy">and enjoy them together</text>
