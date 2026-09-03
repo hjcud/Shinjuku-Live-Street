@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  Singing and live music fill the streets, bringing people together around each performance.
+  When a performance begins on the street, passersby stop and enjoy it together.
 </p>
 
 <p align="center">
