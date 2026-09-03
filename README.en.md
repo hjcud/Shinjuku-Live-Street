@@ -26,9 +26,9 @@
 
 ## About the world
 
-Shinjuku Live Street is a VRChat social world built around street performances, where performers and audiences meet in the streets of Shinjuku.
+Shinjuku Live Street is a **VRChat social world centered on street performances**, set in the streets of Shinjuku.
 
-There is no single fixed stage. Performances begin throughout the streets, and passersby stop to enjoy them together.
+There is no fixed stage. Performers can set up anywhere along the streets, and passersby can stop to listen and join the audience.
 
 <table align="center">
   <tr>
@@ -38,8 +38,8 @@ There is no single fixed stage. Performances begin throughout the streets, and p
   </tr>
 </table>
 
-<p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team · Public since April 4, 2025 · Latest update August 31, 2026</sub></p>
-<p align="center"><sub>Figures as of September 3, 2026</sub></p>
+<p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team</sub></p>
+<p align="center"><sub>Visit and favorite counts · September 3, 2026</sub></p>
 
 ## Street performances and community
 

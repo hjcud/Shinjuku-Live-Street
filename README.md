@@ -26,9 +26,9 @@
 
 ## 어떤 월드인가요?
 
-신주쿠 라이브 스트리트는 신주쿠의 거리를 배경으로 공연자와 관객이 자연스럽게 만나는 **거리 공연 중심의 VRChat 소셜 월드**입니다.
+Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 중심의 VRChat 소셜 월드**입니다.
 
-정해진 무대 대신 거리 곳곳에서 공연이 시작됩니다. 지나가던 사람은 그 자리에 머물러 함께 공연을 즐깁니다.
+정해진 무대 없이 거리 곳곳에서 공연을 시작할 수 있습니다. 지나가던 사람도 잠시 멈춰 함께 듣고 즐길 수 있습니다.
 
 <table align="center">
   <tr>
@@ -38,8 +38,8 @@
   </tr>
 </table>
 
-<p align="center"><sub>VRChat 소셜 월드 · Unity / UdonSharp · 2인 제작 · 2025. 04. 04. 공개 · 최근 업데이트 2026. 08. 31.</sub></p>
-<p align="center"><sub>2026년 9월 3일 기준</sub></p>
+<p align="center"><sub>VRChat 소셜 월드 · Unity / UdonSharp · 2인 제작</sub></p>
+<p align="center"><sub>방문·즐겨찾기 수치 · 2026년 9월 3일 기준</sub></p>
 
 ## 거리 공연과 커뮤니티
 
