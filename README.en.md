@@ -30,7 +30,7 @@ Shinjuku Live Street brings the light, sound, and human density of a Shinjuku ni
 
 This is not a venue where visitors only watch a fixed stage. Performers choose their own spot, sing, or play an instrument, while people walking through the city naturally become the audience. After a set, performers and listeners talk, take group photos, and carry the night into the community.
 
-| Published | Platform | Capacity | My role |
+| Published | Platform | Capacity | Technology |
 | --- | --- | ---: | --- |
 | April 4, 2025 | VRChat | Up to 80 | Unity and UdonSharp world systems |
 
@@ -46,9 +46,9 @@ Some visitors arrive for a scheduled performance. Others follow a friend into th
 
 > Community performances and visit records can be found through the [#VRSJK search on X](https://x.com/search?q=%23VRSJK&src=typed_query&f=live).
 
-## What I built
+## Systems behind the world
 
-I focused on the systems that let people begin a performance without friction and experience the same moment together.
+Performance tools, shared interactions, and network systems work together so people can begin a performance without friction and experience the same moment together.
 
 ### Tools for starting a performance
 
@@ -97,7 +97,7 @@ flowchart LR
 
 ## Tooling for world production
 
-Manually entering lane arrays and discovering errors only at runtime does not scale with the world. I built an editor baker that converts scene lanes into runtime data, plus visualization tools for inspecting vehicles, sensors, and network state directly in the Scene view.
+Manually entering lane arrays and discovering errors only at runtime does not scale with the world. The project includes an editor baker that converts scene lanes into runtime data, plus visualization tools for inspecting vehicles, sensors, and network state directly in the Scene view.
 
 - Automatic lane sampling and connection generation
 - Validation for broken links and invalid settings
