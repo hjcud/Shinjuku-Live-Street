@@ -1,0 +1,67 @@
+name: 기능·개선 제안
+description: 새로운 기능이나 월드 이용 경험에 관한 의견을 남겨주세요.
+title: "[제안] "
+labels:
+  - enhancement
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        구현 방법을 정해두지 않아도 괜찮습니다. 불편했던 점이나 기대하는 경험을 중심으로 알려주세요.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 제안 분야
+      options:
+        - 공연과 장비
+        - 교통 시스템
+        - 월드 이용 경험
+        - 인터페이스와 안내
+        - 성능과 플랫폼 호환성
+        - 접근성
+        - 기타
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 제안 배경
+      description: 어떤 상황에서 필요하거나 불편하다고 느꼈는지 적어주세요.
+      placeholder: 제안하게 된 상황이나 현재의 불편한 점을 알려주세요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 제안 내용
+      description: 추가되거나 달라졌으면 하는 내용을 적어주세요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: 기대하는 변화
+      description: 제안이 반영되었을 때 어떤 점이 좋아지는지 적어주세요.
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 참고 자료
+      description: 참고할 이미지, 영상, 링크가 있다면 남겨주세요.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: 제출 전 확인
+      options:
+        - label: 같은 내용의 Issue가 이미 등록되어 있는지 확인했습니다.
+          required: true
