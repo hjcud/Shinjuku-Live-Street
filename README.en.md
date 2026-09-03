@@ -47,10 +47,6 @@ There is no single fixed stage. Performances begin throughout the streets, passe
 
 ## Street performances and community
 
-<p align="center">
-  <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved image area for community performance scenes" width="900">
-</p>
-
 <table>
   <tr>
     <td width="50%" valign="top"><strong>Every corner can become a stage</strong><br><sub>Solo vocals, instrumentals, and full-band sets beginning wherever performers choose</sub></td>
@@ -59,6 +55,10 @@ There is no single fixed stage. Performances begin throughout the streets, passe
 </table>
 
 Community performances and visit records can be found through the [#VRSJK search on X](https://x.com/search?q=%23VRSJK&src=typed_query&f=live).
+
+<p align="center">
+  <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved image area for community performance scenes" width="900">
+</p>
 
 ---
 
