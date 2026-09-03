@@ -9,7 +9,7 @@
   <h1>Shinjuku Live Street</h1>
 </div>
 
-<p align="center"><strong>This is a source-code portfolio with technical documentation, not a runnable Unity project.</strong></p>
+<p align="center"><strong>This repository publishes original source code and technical documentation; it is not a runnable Unity project.</strong></p>
 
 <p align="center">
   <picture>
@@ -184,7 +184,7 @@ Third-party components are not included in this repository. Their respective aut
 ## Copyright and usage
 
 > [!IMPORTANT]
-> This repository is a **source-available portfolio**, not an open-source project. Reproducing, modifying, redistributing, or commercially using the code beyond viewing and forking it on GitHub requires prior written permission.
+> This repository is **source-available**, not open source. Reproducing, modifying, redistributing, or commercially using the code beyond viewing and forking it on GitHub requires prior written permission.
 
 [Read the full copyright and usage terms](./COPYRIGHT.en.md) · [Request permission](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 

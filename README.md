@@ -9,7 +9,7 @@
   <h1>Shinjuku Live Street</h1>
 </div>
 
-<p align="center"><strong>이 저장소는 실행 가능한 Unity 프로젝트가 아닌, 자체 작성 코드와 기술 문서를 정리한 포트폴리오입니다.</strong></p>
+<p align="center"><strong>이 저장소는 실행 가능한 Unity 프로젝트가 아니며, 직접 작성한 코드와 기술 문서를 공개합니다.</strong></p>
 
 <p align="center">
   <picture>
@@ -184,7 +184,7 @@
 ## 저작권 및 이용 조건
 
 > [!IMPORTANT]
-> 이 저장소는 오픈 소스가 아닌 **소스 공개형(source-available) 포트폴리오**입니다. GitHub에서의 열람·포크를 넘어 코드를 복제·수정·재배포하거나 상업적으로 이용하려면 사전 서면 허가가 필요합니다.
+> 이 저장소는 오픈 소스가 아닌 **소스 공개형(source-available) 저장소**입니다. GitHub에서의 열람·포크를 넘어 코드를 복제·수정·재배포하거나 상업적으로 이용하려면 사전 서면 허가가 필요합니다.
 
 [저작권 및 이용 조건 자세히 보기](./COPYRIGHT.md) · [이용 허가 요청하기](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 
