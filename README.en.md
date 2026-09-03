@@ -34,11 +34,11 @@ Shinjuku Live Street is a VRChat social world built around street performances, 
 
 There is no single fixed stage. Performances begin throughout the streets, passersby stop to watch, and the night continues through conversations and group photos after each set.
 
-<table>
+<table align="center">
   <tr>
-    <td width="33%" align="center"><strong>1,693,697</strong><br><sub>Total visits</sub></td>
-    <td width="33%" align="center"><strong>64,453</strong><br><sub>Favorites</sub></td>
-    <td width="33%" align="center"><strong>Up to 80</strong><br><sub>Capacity</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697</strong><br><sub>Total visits</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>64,453</strong><br><sub>Favorites</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>Up to 80</strong><br><sub>Capacity</sub></td>
   </tr>
 </table>
 
