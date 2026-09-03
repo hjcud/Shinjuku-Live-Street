@@ -60,7 +60,7 @@
 
 <sub>As of September 3, 2026</sub>
 
-Live-equipment synchronization and the traffic simulation were redesigned to keep shared state consistent in crowded instances and reduce recurring CPU, physics, and GC overhead.
+Live-equipment synchronization and the traffic simulation were redesigned to keep shared state consistent in crowded instances while reducing CPU frame time, physics-simulation time, and per-frame GC allocation.
 
 ### Shared live equipment — reliable state from setup to return
 
@@ -74,7 +74,7 @@ All players now see the same equipment state, and returned equipment no longer k
 
 ### Traffic simulation — centralizing repeated per-vehicle work
 
-Each vehicle previously calculated its destination, ran a `BoxCast`, updated its Transform, and triggered serialization every frame. CPU, physics, and GC costs rose together as the number of vehicles and players increased.
+Each vehicle previously calculated its destination, ran a `BoxCast`, updated its Transform, and triggered serialization every frame. CPU frame time, physics-simulation time, and GC allocation rose together as the number of vehicles and players increased.
 
 <p align="center">
   <img src="./Docs/images/traffic-system-architecture.svg" alt="Traffic-state flow from editor data through the traffic owner and network to remote clients" width="900">
