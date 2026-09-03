@@ -1,0 +1,67 @@
+name: Suggest a feature or improvement (English)
+description: Share an idea for a new feature or a better world experience.
+title: "[Suggestion] "
+labels:
+  - enhancement
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You do not need to propose an implementation. Focus on what felt inconvenient or what experience you would like to have.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Live performances and equipment
+        - Traffic system
+        - World experience
+        - Interface and guidance
+        - Runtime performance and platform compatibility
+        - Accessibility
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: Context
+      description: Describe when you noticed the need or inconvenience.
+      placeholder: Tell us what prompted this suggestion or what currently feels inconvenient.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggestion
+      description: Describe what you would like to add or change.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: Expected impact
+      description: Describe how this change would improve the experience.
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Add any relevant images, videos, or links.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: duplicate-check
+    attributes:
+      label: Before submitting
+      options:
+        - label: I checked that no existing issue covers the same suggestion.
+          required: true
