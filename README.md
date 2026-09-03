@@ -9,9 +9,10 @@
   <h1>Shinjuku Live Street</h1>
 </div>
 
-<p align="center">
-  <strong>신주쿠의 밤거리에서 누구나 공연을 시작하고, 지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드</strong>
-</p>
+<h3 align="center">
+  <sup>“</sup> 신주쿠의 밤거리에서 누구나 공연을 시작하고,<br>
+  지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드 <sub>”</sub>
+</h3>
 
 <table align="center">
   <tr>
