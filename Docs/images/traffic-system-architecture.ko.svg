@@ -35,7 +35,7 @@
   </g>
 
   <text x="72" y="207" class="role">EDITOR</text><text x="72" y="243" class="card-title">차선 데이터 생성</text><text x="72" y="280" class="card-body">위치 · 연결 · 정지선</text><text x="72" y="306" class="card-body">실행 전에 미리 계산</text>
-  <text x="372" y="207" class="role">TRAFFIC OWNER</text><text x="372" y="243" class="card-title">차량 10대 계산</text><text x="372" y="280" class="card-body">고정 주기 시뮬레이션</text><text x="372" y="306" class="card-body">센서는 2대씩 나눠 검사</text>
+  <text x="372" y="207" class="role">TRAFFIC OWNER</text><text x="372" y="243" class="card-title">차량 10대를 통합 처리</text><text x="372" y="280" class="card-body">고정 주기 시뮬레이션</text><text x="372" y="306" class="card-body">센서는 2대씩 나눠 검사</text>
   <text x="672" y="207" class="role">NETWORK</text><text x="672" y="243" class="card-title">64비트 차량 상태</text><text x="672" y="280" class="card-body">0.25초마다 상태 전송</text><text x="672" y="306" class="card-body">중복 전송 요청 차단</text>
   <text x="972" y="207" class="role">REMOTE CLIENT</text><text x="972" y="243" class="card-title">차선 데이터로 복원</text><text x="972" y="280" class="card-body">위치·회전 매 프레임 보간</text><text x="972" y="306" class="card-body">끊김 없이 부드럽게 표시</text>
 
