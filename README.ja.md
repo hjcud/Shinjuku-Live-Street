@@ -64,6 +64,8 @@ Shinjuku Live Streetは、新宿の街を舞台に、**ストリートライブ�
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ja.svg" alt="意見を投稿する — 不具合の報告・機能改善の提案" width="49%"></a>
 </p>
 
+---
+
 ## 最近の改善
 
 <sub>2026年9月3日時点</sub>
