@@ -57,6 +57,8 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
   <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved space for photos of community performances" width="900">
 </p>
 
+---
+
 <p align="center">
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><img src="./Docs/images/issue-planned-work.en.svg" alt="View planned work — work in progress and planned improvements" width="49%"></a>
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.en.svg" alt="Share feedback — report a bug or suggest an improvement" width="49%"></a>
