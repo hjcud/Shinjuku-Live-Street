@@ -47,10 +47,6 @@
 
 ## 거리 공연과 커뮤니티
 
-<p align="center">
-  <img src="./Docs/images/community-gallery-placeholder.svg" alt="거리 공연과 커뮤니티의 실제 장면을 넣을 이미지 영역" width="900">
-</p>
-
 <table>
   <tr>
     <td width="50%" valign="top"><strong>거리 곳곳이 무대</strong><br><sub>솔로 보컬과 악기 연주부터 밴드 공연까지, 공연자가 고른 자리에서 시작되는 공연</sub></td>
@@ -59,6 +55,10 @@
 </table>
 
 사용자들이 남긴 실제 공연과 방문 기록은 [X의 #VRSJK 검색 결과](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)에서 볼 수 있습니다.
+
+<p align="center">
+  <img src="./Docs/images/community-gallery-placeholder.svg" alt="거리 공연과 커뮤니티의 실제 장면을 넣을 이미지 영역" width="900">
+</p>
 
 ---
 

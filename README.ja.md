@@ -47,10 +47,6 @@
 
 ## ストリートライブとコミュニティ
 
-<p align="center">
-  <img src="./Docs/images/community-gallery-placeholder.svg" alt="ストリートライブとコミュニティの実際の場面を入れる画像領域" width="900">
-</p>
-
 <table>
   <tr>
     <td width="50%" valign="top"><strong>街のどこでもステージに</strong><br><sub>ソロボーカルや楽器演奏、バンドライブが出演者の選んだ場所から始まる</sub></td>
@@ -59,6 +55,10 @@
 </table>
 
 実際のライブや訪問の記録は、[Xの#VRSJK検索結果](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)で確認できます。
+
+<p align="center">
+  <img src="./Docs/images/community-gallery-placeholder.svg" alt="ストリートライブとコミュニティの実際の場面を入れる画像領域" width="900">
+</p>
 
 ---
 
