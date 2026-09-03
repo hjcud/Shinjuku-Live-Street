@@ -60,8 +60,7 @@
 ---
 
 <p align="center">
-  <strong>今後の改善と提案</strong><br>
-  <sub>今後追加する機能の確認や改善案の提案は、GitHub Issuesから行えます。</sub><br><br>
+  <strong>今後の改善と提案</strong><br><br>
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>今後の作業を見る</strong></a>
   &nbsp;·&nbsp;
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>意見を送る</strong></a>

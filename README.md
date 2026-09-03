@@ -60,8 +60,7 @@
 ---
 
 <p align="center">
-  <strong>개선 제안과 예정된 작업</strong><br>
-  <sub>앞으로 추가할 기능과 개선 의견은 GitHub Issues에서 확인하거나 제안할 수 있습니다.</sub><br><br>
+  <strong>개선 제안과 예정된 작업</strong><br><br>
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>예정된 작업 보기</strong></a>
   &nbsp;·&nbsp;
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>의견 남기기</strong></a>

@@ -60,8 +60,7 @@ Community performances and visit records can be found through the [#VRSJK search
 ---
 
 <p align="center">
-  <strong>Planned improvements and suggestions</strong><br>
-  <sub>See upcoming work or share an idea through GitHub Issues.</sub><br><br>
+  <strong>Planned improvements and suggestions</strong><br><br>
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>View planned work</strong></a>
   &nbsp;·&nbsp;
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>Share feedback</strong></a>
