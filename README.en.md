@@ -99,15 +99,13 @@ The traffic owner calculates all ten vehicles through a single manager and sends
 
 ![Unity Profiler comparison between the initial and latest traffic-system snapshots](./Docs/images/traffic-performance-comparison.svg)
 
-Ten vehicles and 80 remote players simulated with ClientSim were concentrated in the same area. We captured 300 frames from both the initial and latest snapshots in the Unity Editor. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
-
-<p align="center"><sub>Results are a like-for-like comparison in Unity Editor with ClientSim; live VRChat instance performance may differ.</sub></p>
-
-Vehicle position and rotation are interpolated every frame so motion remains smooth between simulation updates.
+Ten vehicles and 80 remote players simulated with ClientSim were concentrated in the same area. We captured 300 frames from both the initial and latest snapshots in the Unity Editor. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%. Vehicle position and rotation are interpolated every frame so motion remains smooth between simulation updates.
 
 <p align="center">
   <a href="./Docs/optimization.en.md"><strong>View test conditions and implementation details →</strong></a>
 </p>
+
+<p align="center"><sub>Results are a like-for-like comparison in Unity Editor with ClientSim; live VRChat instance performance may differ.</sub></p>
 
 ---
 
