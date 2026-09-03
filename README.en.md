@@ -47,11 +47,14 @@ There is no single fixed stage. Performances begin throughout the streets, passe
 
 ## Street performances and community
 
+<p align="center">
+  <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved image area for community performance scenes" width="900">
+</p>
+
 <table>
   <tr>
-    <td width="33%" valign="top"><strong>Every corner can become a stage</strong><br><sub>Solo vocals, instrumentals, and full-band sets beginning wherever performers choose</sub></td>
-    <td width="33%" valign="top"><strong>Passersby become the audience</strong><br><sub>People stopping for an unfamiliar performance, then listening, dancing, and cheering together</sub></td>
-    <td width="33%" valign="top"><strong>The night continues afterward</strong><br><sub>Conversations and group photos carried beyond the world through #VRSJK</sub></td>
+    <td width="50%" valign="top"><strong>Every corner can become a stage</strong><br><sub>Solo vocals, instrumentals, and full-band sets beginning wherever performers choose</sub></td>
+    <td width="50%" valign="top"><strong>Passersby become the audience</strong><br><sub>People stopping for an unfamiliar performance, then listening, dancing, and cheering together</sub></td>
   </tr>
 </table>
 
