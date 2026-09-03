@@ -112,7 +112,7 @@ Ten vehicles and 80 remote players simulated with ClientSim were concentrated in
 ## Model and rendering optimization
 
 <p align="center">
-  <img src="./Docs/images/shinjuku-model-rendering-comparison.png" alt="Comparison of the normal render and wireframe view" width="900">
+  <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="Comparison of the normal render and wireframe view" width="900">
   <br>
   <sub>Left: normal render · Right: wireframe captured from the same camera</sub>
 </p>
@@ -176,6 +176,8 @@ This repository is not a complete, runnable Unity project. It contains original 
 - Models and environment resources from Atelier Rayrell, RIONESTA, Zelkova Tree, and other creators
 
 Third-party components are not included in this repository. Their respective authors and distributors retain all rights and define their own license terms.
+
+[View third-party license notices →](./Docs/THIRD_PARTY_NOTICES.md)
 
 </details>
 

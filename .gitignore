@@ -36,7 +36,7 @@
 # README에서 사용하는 자체 제작 이미지만 허용합니다.
 !/Docs/images/
 /Docs/images/*
-!/Docs/images/shinjuku-model-rendering-comparison.png
+!/Docs/images/shinjuku-model-rendering-comparison.webp
 !/Docs/images/shinjuku-traffic-system-debug.png
 !/Docs/images/traffic-performance-comparison.svg
 !/Docs/images/traffic-performance-comparison.ko.svg

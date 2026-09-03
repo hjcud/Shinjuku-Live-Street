@@ -112,7 +112,7 @@
 ## モデルと描画の最適化
 
 <p align="center">
-  <img src="./Docs/images/shinjuku-model-rendering-comparison.png" alt="通常レンダリングとワイヤーフレームの比較" width="900">
+  <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="通常レンダリングとワイヤーフレームの比較" width="900">
   <br>
   <sub>左：通常レンダリング · 右：同じカメラから撮影したワイヤーフレーム</sub>
 </p>
@@ -176,6 +176,8 @@
 - Atelier Rayrell、RIONESTA、Zelkova Tree、その他クリエイターによるモデル・環境素材
 
 外部コンポーネントはこのリポジトリに含まれていません。各コンポーネントの権利は作者・配布元に帰属し、利用にはそれぞれのライセンス条件が適用されます。
+
+[外部ライセンス表記を見る →](./Docs/THIRD_PARTY_NOTICES.md)
 
 </details>
 
