@@ -2,14 +2,20 @@
   <title id="title">今後の作業を見る</title>
   <desc id="desc">進行中の作業と改善予定を確認するリンク</desc>
   <style>
-    text { font-family: "Noto Sans JP", "Yu Gothic", "Segoe UI", sans-serif; text-anchor: middle; }
+    text { font-family: "Noto Sans JP", "Yu Gothic", "Segoe UI", sans-serif; }
     .link { fill: #0969da; font-size: 18px; font-weight: 700; }
-    .caption { fill: #57606a; font-size: 13px; font-weight: 500; }
+    .caption { fill: #59636e; font-size: 14px; font-weight: 550; text-anchor: middle; }
+    .icon { fill: none; stroke: #9a6700; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     @media (prefers-color-scheme: dark) {
       .link { fill: #58a6ff; }
-      .caption { fill: #8c959f; }
+      .caption { fill: #aeb6bf; }
+      .icon { stroke: #e3a341; }
     }
   </style>
-  <text x="220" y="30" class="link">今後の作業を見る →</text>
+  <g class="icon" transform="translate(116 11)">
+    <rect x="1" y="1" width="20" height="22" rx="3"/>
+    <path d="M5 8l2 2 4-4M14 8h3M5 16l2 2 4-4M14 16h3"/>
+  </g>
+  <text x="147" y="30" class="link">今後の作業を見る →</text>
   <text x="220" y="54" class="caption">進行中の作業と改善予定</text>
 </svg>

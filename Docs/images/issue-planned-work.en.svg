@@ -2,14 +2,20 @@
   <title id="title">View planned work</title>
   <desc id="desc">Link to work in progress and planned improvements</desc>
   <style>
-    text { font-family: Inter, "Segoe UI", sans-serif; text-anchor: middle; }
+    text { font-family: Inter, "Segoe UI", sans-serif; }
     .link { fill: #0969da; font-size: 18px; font-weight: 700; }
-    .caption { fill: #57606a; font-size: 13px; font-weight: 500; }
+    .caption { fill: #59636e; font-size: 14px; font-weight: 550; text-anchor: middle; }
+    .icon { fill: none; stroke: #9a6700; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     @media (prefers-color-scheme: dark) {
       .link { fill: #58a6ff; }
-      .caption { fill: #8c959f; }
+      .caption { fill: #aeb6bf; }
+      .icon { stroke: #e3a341; }
     }
   </style>
-  <text x="220" y="30" class="link">View planned work →</text>
+  <g class="icon" transform="translate(122 11)">
+    <rect x="1" y="1" width="20" height="22" rx="3"/>
+    <path d="M5 8l2 2 4-4M14 8h3M5 16l2 2 4-4M14 16h3"/>
+  </g>
+  <text x="153" y="30" class="link">View planned work →</text>
   <text x="220" y="54" class="caption">Work in progress and planned improvements</text>
 </svg>
