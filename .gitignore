@@ -1,0 +1,24 @@
+# 이 저장소는 의도적으로 소스 코드만 공개합니다.
+# 아래에서 명시적으로 허용하지 않은 최상위 프로젝트 항목은 모두 차단합니다.
+/*
+
+# 저장소 문서와 정책 파일입니다.
+!/.gitignore
+!/README.md
+
+# 직접 작성한 C# 소스가 있는 폴더만 허용합니다.
+!/Assets/
+/Assets/*
+!/Assets/Shinjuku Udon/
+!/Assets/Editor/
+
+# 신주쿠 Udon 폴더에 있는 자체 런타임 및 에디터 소스입니다.
+# 모든 Unity 에셋과 .meta 파일은 계속 제외합니다.
+/Assets/Shinjuku Udon/**/*
+!/Assets/Shinjuku Udon/**/
+!/Assets/Shinjuku Udon/**/*.cs
+
+# 신주쿠 Udon 폴더 밖에 있는 자체 제작 도구를 개별적으로 허용합니다.
+/Assets/Editor/*
+!/Assets/Editor/MaterialTextureAssigner.cs
+!/Assets/Editor/TrafficPlayerStressTestEditor.cs
