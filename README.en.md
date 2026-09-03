@@ -44,7 +44,7 @@
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved space for photos of community performances" width="900">
+  <img src="./Docs/images/community-gallery.png" alt="A street performance with space reserved for more community photos" width="900">
 </p>
 
 ---

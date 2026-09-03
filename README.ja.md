@@ -44,7 +44,7 @@
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery-placeholder.svg" alt="ストリートライブとコミュニティの写真掲載予定エリア" width="900">
+  <img src="./Docs/images/community-gallery.png" alt="ストリートライブの様子と今後追加するコミュニティ写真の掲載エリア" width="900">
 </p>
 
 ---
