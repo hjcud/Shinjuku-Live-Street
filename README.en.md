@@ -179,9 +179,12 @@ Third-party components are not included in this repository. Their respective aut
 
 </details>
 
-## Copyright
+## Copyright and usage
 
-No open-source license is granted for the original code in this repository. The code may not be used, modified, or redistributed without separate permission. Rights to third-party components and world assets remain with their respective authors.
+| Scope | Terms |
+| --- | --- |
+| **Original code** | No open-source license<br>Beyond viewing and forking on GitHub, reproduction, modification, and redistribution require prior permission. |
+| **Third-party components and assets** | Their respective creators' and distributors' licenses and terms apply. |
 
 ## Team
 
