@@ -19,11 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>Visit in VRChat</strong></a>
-  ·
-  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>Explore #VRSJK</strong></a>
-  ·
-  <a href="#code-map"><strong>Browse the code</strong></a>
+  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>Open the world in VRChat ↗</strong></a>
 </p>
 
 ---
@@ -43,7 +39,7 @@ There is no single fixed stage. Performances begin throughout the streets, and p
 </table>
 
 <p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team · Public since April 4, 2025 · Latest update August 31, 2026</sub></p>
-<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">Official VRChat world information</a> · Checked September 3, 2026</sub></p>
+<p align="center"><sub>Figures as of September 3, 2026</sub></p>
 
 ## Street performances and community
 
@@ -54,7 +50,7 @@ There is no single fixed stage. Performances begin throughout the streets, and p
   </tr>
 </table>
 
-Community performances and visit records can be found through the [#VRSJK search on X](https://x.com/search?q=%23VRSJK&src=typed_query&f=live).
+See performances and visit records on [#VRSJK ↗](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)
 
 <p align="center">
   <img src="./Docs/images/community-gallery-placeholder.svg" alt="Reserved image area for community performance scenes" width="900">
@@ -64,9 +60,9 @@ Community performances and visit records can be found through the [#VRSJK search
 
 <p align="center">
   <strong>Planned improvements and suggestions</strong><br><br>
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>View planned work</strong></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>View planned work →</strong></a>
   &nbsp;·&nbsp;
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>Share feedback</strong></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>Share feedback →</strong></a>
 </p>
 
 ---

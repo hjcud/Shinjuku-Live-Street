@@ -19,11 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatで訪れる</strong></a>
-  ·
-  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJKを見る</strong></a>
-  ·
-  <a href="#コード構成"><strong>コードを見る</strong></a>
+  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatでワールドを開く ↗</strong></a>
 </p>
 
 ---
@@ -43,7 +39,7 @@
 </table>
 
 <p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2人チーム · 2025. 04. 04.公開 · 最終更新 2026. 08. 31.</sub></p>
-<p align="center"><sub><a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">VRChat公式ワールド情報</a> · 2026年9月3日確認</sub></p>
+<p align="center"><sub>2026年9月3日時点</sub></p>
 
 ## ストリートライブとコミュニティ
 
@@ -54,7 +50,7 @@
   </tr>
 </table>
 
-実際のライブや訪問の記録は、[Xの#VRSJK検索結果](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)で確認できます。
+実際のライブや訪問の記録は、[#VRSJKで見る ↗](https://x.com/search?q=%23VRSJK&src=typed_query&f=live)
 
 <p align="center">
   <img src="./Docs/images/community-gallery-placeholder.svg" alt="ストリートライブとコミュニティの実際の場面を入れる画像領域" width="900">
@@ -64,9 +60,9 @@
 
 <p align="center">
   <strong>今後の改善と提案</strong><br><br>
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>今後の作業を見る</strong></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>今後の作業を見る →</strong></a>
   &nbsp;·&nbsp;
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>意見を送る</strong></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new"><strong>意見を送る →</strong></a>
 </p>
 
 ---
