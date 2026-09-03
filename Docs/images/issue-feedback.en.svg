@@ -12,9 +12,9 @@
       .icon { stroke: #56d4cf; }
     }
   </style>
-  <g class="icon" transform="translate(129 12)">
+  <g class="icon" transform="translate(130 12)">
     <path d="M3 2h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H10l-6 4v-4H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM8 10h8M12 6v8"/>
   </g>
-  <text x="161" y="30" class="link">Share feedback →</text>
+  <text x="162" y="30" class="link">Share feedback →</text>
   <text x="220" y="54" class="caption">Report a bug or suggest an improvement</text>
 </svg>

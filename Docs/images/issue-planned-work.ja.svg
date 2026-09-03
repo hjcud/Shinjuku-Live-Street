@@ -12,10 +12,10 @@
       .icon { stroke: #e3a341; }
     }
   </style>
-  <g class="icon" transform="translate(116 11)">
+  <g class="icon" transform="translate(122 11)">
     <rect x="1" y="1" width="20" height="22" rx="3"/>
     <path d="M5 8l2 2 4-4M14 8h3M5 16l2 2 4-4M14 16h3"/>
   </g>
-  <text x="147" y="30" class="link">今後の作業を見る →</text>
+  <text x="154" y="30" class="link">今後の作業を見る →</text>
   <text x="220" y="54" class="caption">進行中の作業と改善予定</text>
 </svg>
