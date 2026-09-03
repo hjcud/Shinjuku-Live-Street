@@ -126,9 +126,9 @@ Sending only four snapshots per second reduces network work, but directly applyi
 - Adjust render delay between 0.35 and 1.25 seconds from packet arrival timing
 - Predict for at most 0.15 seconds only after rendering passes the newest snapshot
 - Reconstruct position and rotation together from lane progress
-- Reuse bits inside the existing 64-bit record for lane changes, emergency avoidance, and reverse recovery
+- Pack lane changes, emergency avoidance, and reverse recovery into the same 64-bit vehicle state
 
-Smoother remote playback did not require additional synchronized fields. The per-vehicle state remained 64 bits after the maneuver features were added.
+Interpolation requires no additional synchronized fields, keeping the per-vehicle network payload unchanged as maneuver features were added.
 
 ## 4. Frame time spiked at a regular interval
 
