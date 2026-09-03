@@ -2,7 +2,7 @@ name: 버그 제보 (한국어)
 description: 월드에서 발생한 오류나 예상과 다른 동작을 알려주세요.
 title: "[버그] "
 labels:
-  - 결함
+  - bug
 assignees: []
 body:
   - type: markdown
