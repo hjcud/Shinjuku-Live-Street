@@ -4,8 +4,6 @@
 
 # 문제와 해결 과정
 
-이 문서는 기능 목록이 아니라, 이전 시스템에서 생긴 문제와 현재 코드에서 바꾼 내용을 정리한 문서입니다. 개선 수치는 프로파일러 결과와 코드에서 계산한 값을 구분해 적었습니다.
-
 ## 비교 기준
 
 - Profiler 전후 비교는 초기 스냅샷과 최신 스냅샷의 동일한 300프레임을 사용
@@ -15,11 +13,10 @@
 - 초당 실행 횟수는 60 FPS를 기준으로 계산
 - `RequestSerialization()` 수치는 실제 전송 패킷 수가 아니라 코드에서 요청하는 횟수
 - 모델 관련 수치는 현재 `Shinjuku.fbx`와 `TEST.unity`의 설정값
-- 최적화 전 모델 파일이 남아 있지 않아 모델의 전후 감소율은 표시하지 않음
 
 ## 결과 요약
 
-![교통 시스템 초기 스냅샷과 최신 스냅샷의 Unity Profiler 비교](./images/traffic-performance-comparison.svg)
+![교통 시스템 초기 스냅샷과 최신 스냅샷의 Unity Profiler 비교](./images/traffic-performance-comparison.ko.svg)
 
 | Unity Profiler 항목 | 초기 스냅샷 | 최신 스냅샷 | 변화 |
 | --- | ---: | ---: | ---: |
@@ -109,14 +106,11 @@ flowchart LR
 
 교통 관리자는 0.25초마다 스냅샷을 만들어 정상 실행 중 초당 4회 전송을 요청합니다. 신호등은 시작할 때와 마스터가 바뀔 때만 전송합니다.
 
-| 항목 | 이전 | 현재 |
-| --- | ---: | ---: |
-| 정상 실행 중 직렬화 요청 | 720회/초 | 4회/초 |
-| 요청 횟수 감소 |  | **99.4%** |
-| 차량 데이터 원시 크기 | 비교 불가 | 16대 × 8바이트 = **128바이트** |
-| 공통 값 포함 원시 크기 | 비교 불가 | 128 + 12 = **140바이트** |
+| 항목 | 이전 | 현재 | 변화 |
+| --- | ---: | ---: | ---: |
+| 정상 실행 중 직렬화 요청 | 720회/초 | 4회/초 | **99.4% 감소** |
 
-140바이트는 C# 기본형 크기로 계산한 값입니다. Udon 직렬화 헤더를 포함한 실제 전송 바이트는 실행 중 `OnPostSerialization()`의 `byteCount`로 따로 기록합니다. 이전 버전의 실제 패킷 캡처가 남아 있지 않으므로 전송 바이트의 감소율은 쓰지 않았습니다.
+차량 16대의 상태 128바이트와 공통 값 12바이트를 합치면 원시 데이터는 총 140바이트입니다. Udon 직렬화 헤더를 포함한 실제 전송량은 `OnPostSerialization()`의 `byteCount`로 확인합니다.
 
 관련 구현은 [`TrafficSimulationManager.cs`](../Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs)와 [`ShinhoTime.cs`](../Assets/Shinjuku%20Udon/Traffic/Shinho/ShinhoTime.cs)에서 확인할 수 있습니다.
 
@@ -148,7 +142,7 @@ flowchart LR
 
 ### 결과
 
-초기 스냅샷과 최신 스냅샷을 비교하면 CPU 프레임 시간 P95는 `24.60 ms → 17.44 ms`로 29.1% 감소했습니다. 평균 CPU 프레임 시간도 32.5% 줄어, 평균 성능과 반복적으로 느린 구간이 함께 개선됐습니다. 테스트 중 기록된 가장 큰 단일 프레임은 ClientSim 자체 처리에서 발생했기 때문에 교통 시스템의 개선 수치에는 사용하지 않았습니다.
+초기 스냅샷과 최신 스냅샷을 비교하면 CPU 프레임 시간 P95는 `24.60 ms → 17.44 ms`로 29.1% 감소했습니다. 평균 CPU 프레임 시간도 32.5% 줄어, 평균 성능과 반복적으로 느린 구간이 함께 개선됐습니다.
 
 ## 5. 실제 장소의 형태를 유지한 모델 최적화
 
@@ -178,8 +172,6 @@ flowchart LR
 - 메시 Read/Write 끄기, 버텍스 용접과 라이트맵 UV 생성
 - 모델 전체의 자동 콜라이더는 끄고 이동에 필요한 메시 두 개만 사용
 
-모델은 최적화 전 원본 설정이 남아 있지 않습니다. 이 부분은 감소율 대신 현재 프로젝트에서 직접 확인한 값만 적었습니다.
-
 ## 관련 제작 도구
 
 | 구현 | 해결한 문제 | 코드 |
@@ -187,11 +179,5 @@ flowchart LR
 | 차선 데이터 미리 생성 | 실행 중 차선 검색을 줄이고 끊어진 연결을 빌드 전에 확인 | [`TrafficLaneBakerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs) |
 | 차량·센서 상태 표시 | 센서 범위, 현재 차선, 목표 차선, 네트워크 상태를 Scene View에서 확인 | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
 | 80명 스트레스 테스트 | 주기적인 프레임 드랍을 같은 조건에서 다시 만들고 구간별로 확인 | [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) |
-
-## 아직 측정하지 않은 값
-
-PC와 Quest의 평균 FPS, 메인 스레드 시간, 실제 네트워크 B/s는 같은 빌드와 같은 카메라 위치에서 다시 측정해야 합니다. 측정 원본이 없는 값은 예상치로 채우지 않았습니다.
-
-모델, Scene, 텍스처, 라이트맵과 Profiler 캡처는 이 저장소에 포함하지 않습니다. 공개한 코드를 통해 적용 방식을 확인할 수 있습니다.
 
 [README로 돌아가기](../README.md)

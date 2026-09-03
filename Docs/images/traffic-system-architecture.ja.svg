@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="520" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
+  <title id="title">交通システムの初期構成と現在の構成</title><desc id="desc">車両ごとの毎フレーム処理を、中央シミュレーション、分散センサー、圧縮スナップショット、リモート補間へ変更した構成</desc>
+  <defs>
+    <linearGradient id="panelBackground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17191b"/><stop offset="0.55" stop-color="#101418"/><stop offset="1" stop-color="#17120f"/></linearGradient>
+    <radialGradient id="stationLight" cx="88%" cy="3%" r="76%"><stop offset="0" stop-color="#d69a50" stop-opacity="0.17"/><stop offset="0.42" stop-color="#a46531" stop-opacity="0.045"/><stop offset="1" stop-color="#000000" stop-opacity="0"/></radialGradient>
+    <linearGradient id="currentChip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#52261f"/><stop offset="1" stop-color="#30251d"/></linearGradient>
+    <pattern id="streetGrid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="#e9c08a" stroke-opacity="0.035"/></pattern>
+    <filter id="cardShadow" x="-8%" y="-12%" width="116%" height="130%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.24"/></filter>
+    <clipPath id="panelClip"><rect x="16" y="16" width="1248" height="488" rx="30"/></clipPath>
+    <style>
+      text { font-family: "Noto Sans JP", "Yu Gothic", "Segoe UI", sans-serif; }
+      .title { fill: #f4eee5; font-size: 34px; font-weight: 750; }
+      .section { fill: #ede8df; font-size: 19px; font-weight: 700; }
+      .chip { fill: #f2b16d; font-size: 14px; font-weight: 750; }
+      .node-title { fill: #ede8df; font-size: 15px; font-weight: 700; }
+      .node-detail { fill: #8f9aa1; font-size: 12px; font-weight: 600; }
+    </style>
+  </defs>
+  <g clip-path="url(#panelClip)">
+    <rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#panelBackground)"/><rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#stationLight)"/><rect x="16" y="16" width="1248" height="488" rx="30" fill="url(#streetGrid)"/>
+    <path d="M16 129 C290 123 445 137 664 128 C890 119 1055 121 1264 126" fill="none" stroke="#a83831" stroke-opacity="0.56" stroke-width="2"/><path d="M16 136 C295 130 456 144 675 135 C902 126 1068 128 1264 132" fill="none" stroke="#df9d53" stroke-opacity="0.16"/>
+    <path d="M16 472 C300 452 483 489 721 467 C943 447 1088 459 1264 450" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 494 C292 478 484 506 734 487 C951 470 1110 484 1264 472" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/><text x="1168" y="96" text-anchor="end" fill="#f0c98d" fill-opacity="0.055" font-size="86" font-weight="800">新宿</text>
+  </g>
+  <rect x="16.5" y="16.5" width="1247" height="487" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
+  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">新宿交通 · 構成改善</text>
+  <g filter="url(#cardShadow)"><rect x="48" y="154" width="390" height="304" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#5c4036" stroke-opacity="0.78"/><rect x="466" y="154" width="766" height="304" rx="18" fill="#14191d" fill-opacity="0.96" stroke="#355553" stroke-opacity="0.78"/></g>
+  <rect x="76" y="177" width="34" height="3" rx="1.5" fill="#c84036"/><text x="76" y="202" class="section">初期構成</text>
+  <rect x="76" y="222" width="334" height="58" rx="12" fill="#1b1b1e" stroke="#6b3c35" stroke-opacity="0.72"/><text x="96" y="246" class="node-title">毎フレーム判断</text><text x="96" y="268" class="node-detail">車両10台 · 毎秒600回</text>
+  <rect x="76" y="296" width="334" height="58" rx="12" fill="#1b1b1e" stroke="#6b3c35" stroke-opacity="0.72"/><text x="96" y="320" class="node-title">車両ごとにBoxCast</text><text x="96" y="342" class="node-detail">全センサーを同じフレームで実行</text>
+  <rect x="76" y="370" width="334" height="58" rx="12" fill="#1b1b1e" stroke="#6b3c35" stroke-opacity="0.72"/><text x="96" y="394" class="node-title">移動・直列化</text><text x="96" y="416" class="node-detail">毎秒720回要求</text><path d="M243 280 V296 M243 354 V370" stroke="#b84a3d" stroke-width="2"/>
+  <path d="M443 306 H461" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round"/><path d="M454 299 L461 306 L454 313" fill="none" stroke="#d79b54" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="494" y="177" width="34" height="3" rx="1.5" fill="#58c9c2"/><text x="494" y="202" class="section">現在の構成</text><rect x="1054" y="174" width="150" height="29" rx="14.5" fill="url(#currentChip)" stroke="#a85b3b" stroke-opacity="0.55"/><text x="1186" y="194" text-anchor="end" class="chip">要求99.4%削減</text>
+  <rect x="494" y="222" width="214" height="74" rx="12" fill="#1a1d1f" stroke="#42615e" stroke-opacity="0.72"/><text x="514" y="250" class="node-title">レーンデータを事前生成</text><text x="514" y="274" class="node-detail">エディタで生成</text>
+  <rect x="722" y="222" width="214" height="74" rx="12" fill="#1a1d1f" stroke="#42615e" stroke-opacity="0.72"/><text x="742" y="250" class="node-title">所有者1人 · 車両10台</text><text x="742" y="274" class="node-detail">中央シミュレーション</text>
+  <rect x="950" y="222" width="254" height="74" rx="12" fill="#1a1d1f" stroke="#42615e" stroke-opacity="0.72"/><text x="970" y="250" class="node-title">1フレーム2台のセンサー</text><text x="970" y="274" class="node-detail">物理判定を分散</text>
+  <rect x="494" y="320" width="330" height="74" rx="12" fill="#1a1d1f" stroke="#5b4b38" stroke-opacity="0.78"/><text x="514" y="348" class="node-title">車両1台64ビット</text><text x="514" y="372" class="node-detail">レーン · 距離 · 速度 · 状態</text>
+  <rect x="846" y="320" width="358" height="74" rx="12" fill="#1a1d1f" stroke="#5b4b38" stroke-opacity="0.78"/><text x="866" y="348" class="node-title">0.25秒スナップショット</text><text x="866" y="372" class="node-detail">毎レンダーフレームでリモート補間</text>
+  <g fill="none" stroke="#63cbc4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M712 259 H716"/><path d="M711 254 L716 259 L711 264"/><path d="M940 259 H944"/><path d="M939 254 L944 259 L939 264"/><path d="M1077 301 V306 H659 V314"/><path d="M654 309 L659 314 L664 309"/><path d="M828 357 H840"/><path d="M835 352 L840 357 L835 362"/></g>
+</svg>
