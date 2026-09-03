@@ -57,8 +57,6 @@ Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 
   <img src="./Docs/images/community-gallery-placeholder.svg" alt="거리 공연과 커뮤니티의 실제 장면을 넣을 이미지 영역" width="900">
 </p>
 
----
-
 <p align="center">
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><img src="./Docs/images/issue-planned-work.ko.svg" alt="예정된 작업 확인하기 — 진행 중인 작업과 개선 계획" width="49%"></a>
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ko.svg" alt="의견 남기기 — 버그 제보와 기능·개선 제안" width="49%"></a>
