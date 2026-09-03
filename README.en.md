@@ -30,7 +30,7 @@
 
 ## About the world
 
-Shinjuku Live Street is a VRChat social world built around street performances, where performers and audiences meet under the neon lights of Shinjuku.
+Shinjuku Live Street is a VRChat social world built around street performances, where performers and audiences meet in the streets of Shinjuku.
 
 There is no single fixed stage. Performances begin throughout the streets, passersby stop to watch, and the night continues through conversations and group photos after each set.
 
@@ -110,7 +110,7 @@ The calculation rate is reduced to `10 Hz`, while position and rotation are inte
   <sub>Left: normal render · Right: wireframe captured from the same camera</sub>
 </p>
 
-The environment is divided into sections so occlusion culling can skip areas outside the camera view. Static batching is applied to fixed objects, while neon signs and building lights use baked lighting.
+The environment is divided into sections so occlusion culling can skip areas outside the camera view. Static batching is applied to fixed objects, while street and building lights use baked lighting.
 
 <table>
   <tr>
