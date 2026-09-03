@@ -59,18 +59,10 @@ Shinjuku Live Streetは、新宿の街を舞台に、**ストリートライブ�
 
 ---
 
-<table align="center">
-  <tr>
-    <td width="300" align="center">
-      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><strong>今後の作業を見る →</strong></a><br>
-      <sub>進行中の作業と改善予定</sub>
-    </td>
-    <td width="300" align="center">
-      <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><strong>意見を投稿する →</strong></a><br>
-      <sub>不具合の報告・機能改善の提案</sub>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><img src="./Docs/images/issue-planned-work.ja.svg" alt="今後の作業を見る — 進行中の作業と改善予定" width="49%"></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ja.svg" alt="意見を投稿する — 不具合の報告・機能改善の提案" width="49%"></a>
+</p>
 
 ---
 

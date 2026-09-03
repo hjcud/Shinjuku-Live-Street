@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="96" viewBox="0 0 440 96" role="img" aria-labelledby="title desc">
+  <title id="title">의견 남기기</title>
+  <desc id="desc">버그를 제보하거나 기능과 개선 의견을 남기는 링크</desc>
+  <style>
+    text { font-family: "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif; text-anchor: middle; }
+    .link { fill: #0969da; font-size: 18px; font-weight: 700; }
+    .caption { fill: #57606a; font-size: 13px; font-weight: 500; }
+    @media (prefers-color-scheme: dark) {
+      .link { fill: #58a6ff; }
+      .caption { fill: #8c959f; }
+    }
+  </style>
+  <path d="M196 15H244" stroke="#3eb8b0" stroke-width="3" stroke-linecap="round"/>
+  <text x="220" y="45" class="link">의견 남기기 →</text>
+  <text x="220" y="72" class="caption">버그 제보와 기능·개선 제안</text>
+</svg>

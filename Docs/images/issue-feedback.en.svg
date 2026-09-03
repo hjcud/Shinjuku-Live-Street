@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="96" viewBox="0 0 440 96" role="img" aria-labelledby="title desc">
+  <title id="title">Share feedback</title>
+  <desc id="desc">Link to report a bug or suggest an improvement</desc>
+  <style>
+    text { font-family: Inter, "Segoe UI", sans-serif; text-anchor: middle; }
+    .link { fill: #0969da; font-size: 18px; font-weight: 700; }
+    .caption { fill: #57606a; font-size: 13px; font-weight: 500; }
+    @media (prefers-color-scheme: dark) {
+      .link { fill: #58a6ff; }
+      .caption { fill: #8c959f; }
+    }
+  </style>
+  <path d="M196 15H244" stroke="#3eb8b0" stroke-width="3" stroke-linecap="round"/>
+  <text x="220" y="45" class="link">Share feedback →</text>
+  <text x="220" y="72" class="caption">Report a bug or suggest an improvement</text>
+</svg>
