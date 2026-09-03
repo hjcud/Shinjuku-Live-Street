@@ -45,8 +45,8 @@ There is no fixed stage. Performers can set up anywhere along the streets, and p
 
 <table>
   <tr>
-    <td width="50%" valign="top"><strong>Every corner can become a stage</strong><br><sub>Solo vocals, instrumentals, and full-band sets beginning wherever performers choose</sub></td>
-    <td width="50%" valign="top"><strong>Passersby become the audience</strong><br><sub>People stopping for an unfamiliar performance, then listening, dancing, and cheering together</sub></td>
+    <td width="50%" valign="top"><strong>Perform anywhere along the street</strong><br><sub>Solo vocals, instrumentals, and full-band sets using different parts of the street as a stage</sub></td>
+    <td width="50%" valign="top"><strong>Passersby become the audience</strong><br><sub>People can stop at a performance they discover and enjoy it together</sub></td>
   </tr>
 </table>
 
@@ -120,19 +120,17 @@ The calculation rate is reduced to `10 Hz`, while position and rotation are inte
   <sub>Left: normal render · Right: wireframe captured from the same camera</sub>
 </p>
 
-The environment is divided into sections so occlusion culling can skip areas outside the camera view. Static batching is applied to fixed objects, while street and building lights use baked lighting.
+The environment is divided into sections so occlusion culling can exclude sections outside the camera view. Fixed objects use static batching, while street and building lighting is baked.
 
-<table>
+<table align="center">
   <tr>
-    <td align="center"><strong>246,921</strong><br><sub>Triangles</sub></td>
-    <td align="center"><strong>240</strong><br><sub>Environment meshes</sub></td>
-    <td align="center"><strong>392</strong><br><sub>Static-batched objects</sub></td>
-    <td align="center"><strong>330</strong><br><sub>Occluders</sub></td>
-    <td align="center"><strong>2</strong><br><sub>Mesh colliders</sub></td>
+    <td width="260" align="center"><strong>Model geometry</strong><br><sub>246,921 triangles · 240 environment meshes</sub></td>
+    <td width="260" align="center"><strong>Rendering</strong><br><sub>392 static-batched objects · 330 occluders</sub></td>
+    <td width="260" align="center"><strong>Collision</strong><br><sub>2 mesh colliders</sub></td>
   </tr>
 </table>
 
-Baked lighting covers approximately 220 meshes using three 4096 lightmaps and one 512 lightmap.
+Baked lighting is applied to approximately 220 meshes. The scene uses three 4096×4096 lightmaps and one 512×512 lightmap.
 
 ## Code map
 

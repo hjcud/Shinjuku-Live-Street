@@ -45,8 +45,8 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
 
 <table>
   <tr>
-    <td width="50%" valign="top"><strong>街のどこでもステージに</strong><br><sub>ソロボーカルや楽器演奏、バンドライブが出演者の選んだ場所から始まる</sub></td>
-    <td width="50%" valign="top"><strong>通りすがりの人が観客に</strong><br><sub>初めて出会った演奏に足を止め、一緒に聴き、踊り、声援を送る人々</sub></td>
+    <td width="50%" valign="top"><strong>好きな場所で始めるライブ</strong><br><sub>ボーカルや楽器演奏、バンドライブで街のあちこちをステージとして活用</sub></td>
+    <td width="50%" valign="top"><strong>通りすがりの人も観客に</strong><br><sub>偶然出会ったライブに足を止め、一緒に聴いて楽しむ体験</sub></td>
   </tr>
 </table>
 
@@ -120,19 +120,17 @@ Shinjuku Live Streetは、新宿の街を舞台にした**ストリートライ�
   <sub>左：通常レンダリング · 右：同じカメラから撮影したワイヤーフレーム</sub>
 </p>
 
-環境モデルを区域ごとに分け、カメラに映らない範囲はオクルージョンカリングで描画しないようにしました。固定オブジェクトにはスタティックバッチを適用し、街路と建物の照明はベイクで処理しています。
+環境モデルをエリアごとに分け、カメラに映らないエリアはオクルージョンカリングで描画対象から外しました。固定オブジェクトにはスタティックバッチを適用し、街路と建物の照明はベイクしています。
 
-<table>
+<table align="center">
   <tr>
-    <td align="center"><strong>246,921</strong><br><sub>三角形</sub></td>
-    <td align="center"><strong>240</strong><br><sub>環境メッシュ</sub></td>
-    <td align="center"><strong>392</strong><br><sub>スタティックバッチ対象</sub></td>
-    <td align="center"><strong>330</strong><br><sub>オクルーダー</sub></td>
-    <td align="center"><strong>2</strong><br><sub>Mesh Collider</sub></td>
+    <td width="260" align="center"><strong>モデル構成</strong><br><sub>三角形 246,921個 · 環境メッシュ 240個</sub></td>
+    <td width="260" align="center"><strong>描画最適化</strong><br><sub>スタティックバッチ対象 392個 · オクルーダー 330個</sub></td>
+    <td width="260" align="center"><strong>当たり判定</strong><br><sub>メッシュコライダー 2個</sub></td>
   </tr>
 </table>
 
-約220メッシュにベイク照明を適用し、4096ライトマップ3枚と512ライトマップ1枚を使用しています。
+ベイク照明は約220メッシュに適用しました。ライトマップは4096×4096を3枚、512×512を1枚使用しています。
 
 ## コード構成
 
