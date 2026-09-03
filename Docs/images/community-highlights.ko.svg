@@ -5,10 +5,12 @@
     text { font-family: Pretendard, "Noto Sans KR", "Segoe UI", sans-serif; text-anchor: middle; }
     .heading { fill: #f0f6fc; font-size: 23px; font-weight: 750; }
     .copy { fill: #aab2ba; font-size: 16px; font-weight: 600; }
+    .join { fill: #8c959f; font-size: 26px; font-weight: 500; }
   </style>
   <text x="225" y="31" class="heading">원하는 곳에서 시작하는 공연</text>
   <text x="225" y="67" class="copy">보컬과 악기 연주부터 밴드 공연까지,</text>
   <text x="225" y="91" class="copy">거리 곳곳을 무대로 활용</text>
+  <text x="450" y="68" class="join">+</text>
   <text x="675" y="31" class="heading">지나가던 사람도 관객으로</text>
   <text x="675" y="67" class="copy">우연히 발견한 공연 앞에 멈춰</text>
   <text x="675" y="91" class="copy">함께 듣고 즐기는 경험</text>

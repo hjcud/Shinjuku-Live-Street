@@ -5,10 +5,12 @@
     text { font-family: "Noto Sans JP", "Yu Gothic", "Segoe UI", sans-serif; text-anchor: middle; }
     .heading { fill: #1f2328; font-size: 23px; font-weight: 700; }
     .copy { fill: #57606a; font-size: 16px; font-weight: 600; }
+    .join { fill: #6e7781; font-size: 26px; font-weight: 500; }
   </style>
   <text x="225" y="31" class="heading">好きな場所で始めるライブ</text>
   <text x="225" y="67" class="copy">ソロボーカルや楽器演奏、バンドライブまで、</text>
   <text x="225" y="91" class="copy">街の各所がステージに</text>
+  <text x="450" y="68" class="join">+</text>
   <text x="675" y="31" class="heading">通りすがりの人も観客に</text>
   <text x="675" y="67" class="copy">偶然出会ったライブに足を止め、</text>
   <text x="675" y="91" class="copy">一緒に聴いて楽しむ体験</text>
