@@ -13,14 +13,6 @@
   <strong>A VRChat social world where anyone can start a street performance and passersby naturally become part of the audience.</strong>
 </p>
 
-<p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>Open the world in VRChat ↗</strong></a>
-</p>
-
----
-
-## World information
-
 <table align="center">
   <tr>
     <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697</strong><br><sub>Total visits</sub></td>
@@ -28,6 +20,10 @@
     <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>Up to 80</strong><br><sub>Capacity</sub></td>
   </tr>
 </table>
+
+<p align="center">
+  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>Open the world in VRChat ↗</strong></a>
+</p>
 
 <p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team</sub></p>
 <p align="center"><sub>Visits and favorites as of September 3, 2026</sub></p>

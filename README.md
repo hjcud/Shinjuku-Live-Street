@@ -13,14 +13,6 @@
   <strong>신주쿠의 밤거리에서 누구나 공연을 시작하고, 지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드</strong>
 </p>
 
-<p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChat에서 월드 열기 ↗</strong></a>
-</p>
-
----
-
-## 월드 정보
-
 <table align="center">
   <tr>
     <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697회</strong><br><sub>누적 방문</sub></td>
@@ -28,6 +20,10 @@
     <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>최대 80명</strong><br><sub>수용 인원</sub></td>
   </tr>
 </table>
+
+<p align="center">
+  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChat에서 월드 열기 ↗</strong></a>
+</p>
 
 <p align="center"><sub>VRChat 소셜 월드 · Unity / UdonSharp · 2인 제작</sub></p>
 <p align="center"><sub>방문·즐겨찾기 수치 · 2026년 9월 3일 기준</sub></p>
