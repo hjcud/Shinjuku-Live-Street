@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="112" viewBox="0 0 900 112" role="img" aria-labelledby="title desc">
+  <title id="title">About Shinjuku Live Street</title>
+  <desc id="desc">A VRChat world where anyone can perform on the streets, and passersby naturally become part of the audience.</desc>
+  <style>
+    .copy { fill: #1f2328; font-family: Inter, "Segoe UI", sans-serif; font-size: 25px; font-weight: 700; }
+    .quote { fill: #ffffff; stroke: #57606a; stroke-width: 1.5; paint-order: stroke fill; }
+  </style>
+  <path class="quote" transform="translate(-40 0)" d="M65 49c0-11 5-20 16-26l4 8c-6 3-9 7-10 12 6 0 10 4 10 10 0 6-4 10-10 10-7 0-10-6-10-14Zm23 0c0-11 5-20 16-26l4 8c-6 3-9 7-10 12 6 0 10 4 10 10 0 6-4 10-10 10-7 0-10-6-10-14Z"/>
+  <text x="450" y="45" text-anchor="middle" class="copy">A VRChat world where anyone can perform on the streets,</text>
+  <text x="450" y="80" text-anchor="middle" class="copy">and passersby naturally become part of the audience.</text>
+  <path class="quote" transform="translate(40 0)" d="M835 63c0 11-5 20-16 26l-4-8c6-3 9-7 10-12-6 0-10-4-10-10 0-6 4-10 10-10 7 0 10 6 10 14Zm-23 0c0 11-5 20-16 26l-4-8c6-3 9-7 10-12-6 0-10-4-10-10 0-6 4-10 10-10 7 0 10 6 10 14Z"/>
+</svg>
