@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="440" height="96" viewBox="0 0 440 96" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="64" viewBox="0 0 440 64" role="img" aria-labelledby="title desc">
   <title id="title">View planned work</title>
   <desc id="desc">Link to work in progress and planned improvements</desc>
   <style>
@@ -10,7 +10,7 @@
       .caption { fill: #8c959f; }
     }
   </style>
-  <path d="M196 15H244" stroke="#c84036" stroke-width="3" stroke-linecap="round"/>
-  <text x="220" y="45" class="link">View planned work →</text>
-  <text x="220" y="72" class="caption">Work in progress and planned improvements</text>
+  <path d="M196 5H244" stroke="#c84036" stroke-width="3" stroke-linecap="round"/>
+  <text x="220" y="30" class="link">View planned work →</text>
+  <text x="220" y="54" class="caption">Work in progress and planned improvements</text>
 </svg>

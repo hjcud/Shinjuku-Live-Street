@@ -64,8 +64,6 @@ Shinjuku Live Street는 신주쿠의 거리를 배경으로 한 **거리 공연 
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ko.svg" alt="의견 남기기 — 버그 제보와 기능·개선 제안" width="49%"></a>
 </p>
 
----
-
 ## 최근 개발과 개선
 
 <sub>2026년 9월 3일 기준</sub>
