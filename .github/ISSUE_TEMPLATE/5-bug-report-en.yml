@@ -2,7 +2,7 @@ name: Report a bug (English)
 description: Report an error or unexpected behavior in the world.
 title: "[Bug] "
 labels:
-  - 결함
+  - bug
 assignees: []
 body:
   - type: markdown
