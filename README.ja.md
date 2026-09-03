@@ -47,11 +47,14 @@
 
 ## ストリートライブとコミュニティ
 
+<p align="center">
+  <img src="./Docs/images/community-gallery-placeholder.svg" alt="ストリートライブとコミュニティの実際の場面を入れる画像領域" width="900">
+</p>
+
 <table>
   <tr>
-    <td width="33%" valign="top"><strong>街のどこでもステージに</strong><br><sub>ソロボーカルや楽器演奏、バンドライブが出演者の選んだ場所から始まる</sub></td>
-    <td width="33%" valign="top"><strong>通りすがりの人が観客に</strong><br><sub>初めて出会った演奏に足を止め、一緒に聴き、踊り、声援を送る人々</sub></td>
-    <td width="33%" valign="top"><strong>ライブのあとも続く記録</strong><br><sub>出演者と観客の会話や集合写真として残る#VRSJKの記録</sub></td>
+    <td width="50%" valign="top"><strong>街のどこでもステージに</strong><br><sub>ソロボーカルや楽器演奏、バンドライブが出演者の選んだ場所から始まる</sub></td>
+    <td width="50%" valign="top"><strong>通りすがりの人が観客に</strong><br><sub>初めて出会った演奏に足を止め、一緒に聴き、踊り、声援を送る人々</sub></td>
   </tr>
 </table>
 

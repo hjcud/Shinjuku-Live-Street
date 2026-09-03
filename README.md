@@ -47,11 +47,14 @@
 
 ## 거리 공연과 커뮤니티
 
+<p align="center">
+  <img src="./Docs/images/community-gallery-placeholder.svg" alt="거리 공연과 커뮤니티의 실제 장면을 넣을 이미지 영역" width="900">
+</p>
+
 <table>
   <tr>
-    <td width="33%" valign="top"><strong>거리 곳곳이 무대</strong><br><sub>솔로 보컬과 악기 연주부터 밴드 공연까지, 공연자가 고른 자리에서 시작되는 공연</sub></td>
-    <td width="33%" valign="top"><strong>지나가던 사람이 관객으로</strong><br><sub>처음 만난 연주 앞에 멈춰 함께 듣고 춤추고 응원하는 사람들</sub></td>
-    <td width="33%" valign="top"><strong>공연 뒤에도 이어지는 기록</strong><br><sub>연주자와 관객이 나눈 대화와 단체사진으로 이어지는 #VRSJK 기록</sub></td>
+    <td width="50%" valign="top"><strong>거리 곳곳이 무대</strong><br><sub>솔로 보컬과 악기 연주부터 밴드 공연까지, 공연자가 고른 자리에서 시작되는 공연</sub></td>
+    <td width="50%" valign="top"><strong>지나가던 사람이 관객으로</strong><br><sub>처음 만난 연주 앞에 멈춰 함께 듣고 춤추고 응원하는 사람들</sub></td>
   </tr>
 </table>
 
