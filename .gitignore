@@ -8,6 +8,20 @@
 !/README.en.md
 !/README.ja.md
 
+# 포트폴리오에서 연결하는 자체 기술 문서만 허용합니다.
+!/Docs/
+/Docs/*
+!/Docs/optimization.md
+!/Docs/optimization.en.md
+!/Docs/optimization.ja.md
+
+# README에서 사용하는 자체 촬영 비교 이미지만 허용합니다.
+!/Docs/images/
+/Docs/images/*
+!/Docs/images/shinjuku-model-rendering-comparison.png
+!/Docs/images/shinjuku-traffic-system-debug.png
+!/Docs/images/traffic-performance-comparison.svg
+
 # 직접 작성한 C# 소스가 있는 폴더만 허용합니다.
 !/Assets/
 /Assets/*
