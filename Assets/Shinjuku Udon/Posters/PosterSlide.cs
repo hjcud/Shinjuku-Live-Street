@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 
+/// <summary>
+/// 등록된 Sprite를 일정 간격으로 생성하고 좌우 이동으로 교체하는 포스터 슬라이드이다.
+/// </summary>
 public class PosterSlide : UdonSharpBehaviour
 {
     [Header("포스터 오브젝트 설정")]
@@ -14,8 +17,8 @@ public class PosterSlide : UdonSharpBehaviour
     public RectTransform createTarget;
 
     [Header("포스터 시간 설정")]
-    public float slideDuration = 1.0f; // 포스터 이동 시간
-    public float interval = 10.0f; // 포스터 생성 간격 (초)
+    public float slideDuration = 1.0f;
+    public float interval = 10.0f;
 
     private int currentIndex = 0;
     private GameObject currentPoster;
@@ -78,7 +81,7 @@ public class PosterSlide : UdonSharpBehaviour
     void StartSlide()
     {
         currentIndex = (currentIndex + 1) % sprites.Length;
-        nextPoster = CreatePoster(sprites[currentIndex], new Vector2(canvasWidth, 0)); // 오른쪽에서 시작
+        nextPoster = CreatePoster(sprites[currentIndex], new Vector2(canvasWidth, 0));
         isSliding = true;
         slideProgress = 0f;
     }

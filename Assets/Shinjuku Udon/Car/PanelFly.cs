@@ -6,6 +6,13 @@ using VRC.SDK3.UdonNetworkCalling;
 using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
 
+/// <summary>
+/// 교통 차량과 패널의 충돌을 감지하고 충돌 속도에 따라 반동 또는 별 비행 연출을 적용한다.
+/// </summary>
+/// <remarks>
+/// 물리 반응은 현재 소유권자만 결정한다. 고속 충돌의 표시 결과는 네트워크 호출로
+/// 전달하지만 파티클 자체는 각 클라이언트에서 로컬로 재생한다.
+/// </remarks>
 public class PanelFly : UdonSharpBehaviour
 {
     [Header("Collision Response")]
@@ -135,8 +142,8 @@ public class PanelFly : UdonSharpBehaviour
             )
         );
 
-        // A very small margin avoids missing contact between render frames
-        // without treating a visibly separated vehicle as a hit.
+        // 화면상 떨어진 차량까지 충돌로 보지 않으면서 프레임 사이의 접촉 누락만
+        // 보완할 수 있도록 매우 작은 여유를 더한다.
         halfExtents += new Vector3(0.015f, 0.015f, 0.015f);
 
         Vector3 probeCenter =
@@ -288,8 +295,8 @@ public class PanelFly : UdonSharpBehaviour
         nextImpactTime = Time.time +
             Mathf.Max(0.1f, repeatedImpactCooldown);
 
-        // The overlap-probe path is also used while a player is holding the
-        // panel. Release the pickup before applying force or respawning it.
+        // 플레이어가 패널을 든 상태에서도 겹침 검사가 실행되므로 힘을 적용하거나
+        // 원위치로 돌리기 전에 Pickup을 놓게 한다.
         if (pickup != null)
         {
             pickup.Drop();
@@ -445,6 +452,10 @@ public class PanelFly : UdonSharpBehaviour
         );
     }
 
+    /// <summary>
+    /// 충돌 다음 프레임에 패널의 월드 시작 위치와 정지 상태를 다시 확정한다.
+    /// </summary>
+    /// <remarks>소유권자에서 지연 이벤트로 호출되는 로컬 전용 진입점이다.</remarks>
     public void FinalizeWorldStartRespawn()
     {
         if (!Networking.IsOwner(gameObject))
@@ -479,6 +490,12 @@ public class PanelFly : UdonSharpBehaviour
         }
     }
 
+    /// <summary>
+    /// 모든 클라이언트에서 실제 패널을 숨기고 같은 시작 상태의 별 파티클을 재생한다.
+    /// </summary>
+    /// <param name="launchPosition">별 파티클의 월드 시작 위치이다.</param>
+    /// <param name="launchVelocity">별 파티클의 초기 월드 속도이다.</param>
+    /// <param name="launchRotation">별 파티클의 초기 월드 회전이다.</param>
     [NetworkCallable]
     public void RemoteStarLaunch(
         Vector3 launchPosition,
@@ -517,6 +534,9 @@ public class PanelFly : UdonSharpBehaviour
         );
     }
 
+    /// <summary>
+    /// 별 비행 연출이 끝난 뒤 패널의 Renderer, Collider, Rigidbody 상태를 복원한다.
+    /// </summary>
     public void RestorePanelAfterHighImpact()
     {
         SetPanelPresentationVisible(true);
@@ -593,6 +613,9 @@ public class PanelFly : UdonSharpBehaviour
         );
     }
 
+    /// <summary>
+    /// 별 비행이 끝나는 위치에서 주 섬광과 첫 번째 보조 섬광을 재생한다.
+    /// </summary>
     public void _PlayStarFlash()
     {
         if (starFlashParticle == null)
@@ -608,9 +631,8 @@ public class PanelFly : UdonSharpBehaviour
             0f
         );
 
-        // The first three satellites appear with the main star. The next
-        // bursts are staggered to create a short blue twinkle instead of one
-        // static flash.
+        // 첫 세 개의 보조 별은 주 섬광과 함께 표시하고, 나머지는 시간차를 두어
+        // 하나의 정적인 섬광이 아니라 짧은 파란 반짝임으로 보이게 한다.
         float smallSize = Mathf.Max(0.1f, starFlashSize * 0.28f);
         EmitFlashStar(
             pendingStarPosition + new Vector3(1.25f, 0.7f, 0f),
@@ -638,6 +660,9 @@ public class PanelFly : UdonSharpBehaviour
         );
     }
 
+    /// <summary>
+    /// 주 섬광 뒤에 시간차를 둔 작은 별을 순서대로 재생한다.
+    /// </summary>
     public void _PlaySmallStarTwinkle()
     {
         if (starFlashParticle == null || starTwinkleStep >= 3)

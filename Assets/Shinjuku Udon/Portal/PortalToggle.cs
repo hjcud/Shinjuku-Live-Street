@@ -4,6 +4,9 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
+/// <summary>
+/// 선택된 Portal 하나의 활성 상태를 로컬로 전환하고 나머지 Portal을 비활성화한다.
+/// </summary>
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class PortalToggle : UdonSharpBehaviour
 {

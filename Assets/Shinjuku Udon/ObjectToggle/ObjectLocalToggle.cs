@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 
+/// <summary>
+/// 여러 GameObject와 Switch 표시 상태를 로컬 사용자에게만 전환한다.
+/// </summary>
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class ObjectLocalToggle : UdonSharpBehaviour
 {
