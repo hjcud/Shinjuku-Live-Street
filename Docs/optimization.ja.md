@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="./optimization.md">한국어</a> · <a href="./optimization.en.md">English</a> · <strong>日本語</strong>
+  <a href="./optimization.md">한국어</a> · <strong>日本語</strong> · <a href="./optimization.en.md">English</a>
 </p>
 
 # 交通システムのパフォーマンス最適化

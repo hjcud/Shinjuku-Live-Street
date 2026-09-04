@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="./COPYRIGHT.md">한국어</a> · <strong>English</strong> · <a href="./COPYRIGHT.ja.md">日本語</a>
+  <a href="./COPYRIGHT.md">한국어</a> · <a href="./COPYRIGHT.ja.md">日本語</a> · <strong>English</strong>
 </p>
 
 # Copyright and usage terms
