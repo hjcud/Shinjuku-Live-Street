@@ -9,7 +9,7 @@
   <h1>Shinjuku Live Street</h1>
 </div>
 
-<p align="center"><strong>This repository publishes original source code and technical documentation; it is not a runnable Unity project.</strong></p>
+<p align="center"><strong>This repository is not a runnable Unity project; it presents selected code and key development work.</strong></p>
 
 <p align="center">
   <picture>
