@@ -9,7 +9,7 @@
   <h1>Shinjuku Live Street</h1>
 </div>
 
-<p align="center"><strong>이 저장소는 실행 가능한 Unity 프로젝트가 아니며, 작성한 코드와 주요 개발 내용을 정리해 공개합니다.</strong></p>
+<p align="center"><strong>실행 가능한 Unity 프로젝트는 포함되어 있지 않습니다. 작성한 코드와 주요 개발 내용을 정리해 공개하는 저장소입니다.</strong></p>
 
 <p align="center">
   <picture>
