@@ -49,7 +49,7 @@
   <img src="./Docs/images/community-gallery.png" alt="ストリートライブの様子と今後追加するコミュニティ写真の掲載エリア" width="900">
 </p>
 
-<p align="center"><strong>アンプ設置からライブまで</strong></p>
+<p align="center"><strong>ライブが始まるまで</strong></p>
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 

@@ -49,7 +49,7 @@
   <img src="./Docs/images/community-gallery.png" alt="A street performance with space reserved for more community photos" width="900">
 </p>
 
-<p align="center"><strong>From amp setup to live performance</strong></p>
+<p align="center"><strong>Before the performance begins</strong></p>
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
