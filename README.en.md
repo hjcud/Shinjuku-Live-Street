@@ -49,6 +49,12 @@
   <img src="./Docs/images/community-gallery.png" alt="A street performance with space reserved for more community photos" width="900">
 </p>
 
+<p align="center"><strong>From amp setup to live performance</strong></p>
+
+https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
+
+<p align="center"><sub>Video provided by <a href="https://x.com/KixiVRC">@KixiVRC</a> · Photos provided by <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a></sub></p>
+
 ---
 
 <p align="center">
