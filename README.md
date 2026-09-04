@@ -49,7 +49,7 @@
   <img src="./Docs/images/community-gallery.png" alt="거리 공연 장면과 추후 추가할 커뮤니티 사진 영역" width="900">
 </p>
 
-<p align="center"><strong>앰프 설치부터 공연까지</strong></p>
+<p align="center"><strong>공연이 시작되기까지</strong></p>
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
