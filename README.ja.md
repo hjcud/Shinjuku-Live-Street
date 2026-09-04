@@ -99,13 +99,13 @@
 
 ![交通システムの初期スナップショットと最新スナップショットのUnity Profiler比較](./Docs/images/traffic-performance-comparison.ja.svg)
 
+<p align="center"><sub>Unity Editor・ClientSim環境での同一条件比較であり、実際のVRChatインスタンスでは結果が異なる場合があります。</sub></p>
+
 車両10台とClientSimで再現したリモートプレイヤー80人を同じエリアに集め、Unity Editor上で初期・最新スナップショットをそれぞれ300フレーム計測しました。平均CPUフレーム時間は`17.65 ms → 11.92 ms`、P95フレーム時間は`24.60 ms → 17.44 ms`まで減少しました。物理処理時間は65.3%、1フレームあたりのGC割り当ては88.1%削減しています。車両の位置と回転を毎フレーム補間することで、シミュレーション更新の間も滑らかに見えるようにしました。
 
 <p align="center">
   <a href="./Docs/optimization.ja.md"><strong>測定条件と実装の詳細を見る →</strong></a>
 </p>
-
-<p align="center"><sub>Unity Editor・ClientSim環境での同一条件比較であり、実際のVRChatインスタンスでは結果が異なる場合があります。</sub></p>
 
 ---
 
