@@ -9,7 +9,7 @@
   <h1>新宿ライブストリート</h1>
 </div>
 
-<p align="center"><strong>このリポジトリは実行可能なUnityプロジェクトではなく、作成したコードと主な開発内容を整理して公開しています。</strong></p>
+<p align="center"><strong>実行可能なUnityプロジェクトは含まれていません。作成したコードと主な開発内容を整理して公開するリポジトリです。</strong></p>
 
 <p align="center">
   <picture>
