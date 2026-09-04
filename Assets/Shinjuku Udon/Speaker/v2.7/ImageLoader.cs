@@ -10,6 +10,9 @@ using VRC.SDK3.UdonNetworkCalling;
 using VRC.SDKBase;
 using VRC.Udon;
 
+/// <summary>
+/// 동기화된 URL의 이미지를 내려받아 화면 비율을 유지한 채 스피커 화면에 표시한다.
+/// </summary>
 public class ImageLoader : UdonSharpBehaviour
 {
     [UdonSynced] public VRCUrl syncedUrl;
@@ -33,6 +36,9 @@ public class ImageLoader : UdonSharpBehaviour
         maxHeight = rectTransform.rect.height;
     }
 
+    /// <summary>
+    /// 내려받은 Texture와 화면 표시를 모든 클라이언트에서 초기화한다.
+    /// </summary>
     [NetworkCallable]
     public void ResetTex()
     {
@@ -48,6 +54,9 @@ public class ImageLoader : UdonSharpBehaviour
         }
     }
 
+    /// <summary>
+    /// 입력된 URL의 소유권을 확보하고 이미지 다운로드와 직렬화를 시작한다.
+    /// </summary>
     public void OnEndUrlEdit()
     {
         if (!Networking.IsOwner(gameObject)) Networking.SetOwner(Networking.LocalPlayer, gameObject);
@@ -107,6 +116,9 @@ public class ImageLoader : UdonSharpBehaviour
         tex = null;
     }
 
+    /// <summary>
+    /// 다운로드 결과 안내가 표시된 뒤 상태 문구를 지운다.
+    /// </summary>
     public void resetSystemText() {
          systemText.text = "";
     }

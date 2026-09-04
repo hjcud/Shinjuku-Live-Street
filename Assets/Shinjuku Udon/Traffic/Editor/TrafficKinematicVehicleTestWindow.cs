@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// 선택한 차량의 복제본으로 전진, 후진, 조향, 차선 변경 동작을 Edit Mode에서 검증한다.
+/// </summary>
 public class TrafficKinematicVehicleTestWindow : EditorWindow
 {
     private const float MinimumDeltaTime = 0.0001f;

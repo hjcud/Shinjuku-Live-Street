@@ -4,7 +4,9 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using VRC.Udon;
 
-// 현재 교통 시스템의 Inspector와 Gizmo 시각화를 담당한다.
+/// <summary>
+/// 교통 시스템의 Inspector와 Scene Gizmo를 표시하고 차량 차체 범위를 베이크한다.
+/// </summary>
 [CustomEditor(typeof(TrafficSimulationManager))]
 public class TrafficSimulationManagerEditor : Editor
 {
@@ -1294,8 +1296,8 @@ public class TrafficSimulationManagerEditor : Editor
                 }
                 else if (!preparingLaneChange)
                 {
-                    // Runtime movement also holds while the fixed path is
-                    // unavailable. Keep the prediction on the actual pose.
+                    // 런타임 이동도 고정 경로를 사용할 수 없는 동안 멈추므로 예측
+                    // 표시를 절차적 위치로 옮기지 않고 실제 자세에 유지한다.
                     futurePosition = currentVisualPosition;
                     futureRotation = currentVisualRotation;
                 }

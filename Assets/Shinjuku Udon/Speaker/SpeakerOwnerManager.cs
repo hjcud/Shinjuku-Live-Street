@@ -7,6 +7,9 @@ using VRC.SDK3.Components;
 using VRC.SDKBase;
 using VRC.Udon;
 
+/// <summary>
+/// 동기화된 사용자 ID를 기준으로 스피커 Pickup의 사용 가능 여부와 소유자 표시를 관리한다.
+/// </summary>
 public class SpeakerOwnerManager : UdonSharpBehaviour
 {
     [UdonSynced] public int ownerId = 0;
@@ -84,7 +87,6 @@ public class SpeakerOwnerManager : UdonSharpBehaviour
 
     public override void OnPlayerLeft(VRCPlayerApi player)
     {
-        //if (!Networking.IsOwner(this.gameObject)) return;
         if (ownerId == player.playerId)
         {
             ownerId = 0;

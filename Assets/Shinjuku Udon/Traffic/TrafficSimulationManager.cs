@@ -3,9 +3,20 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon.Common;
 
+/// <summary>
+/// 소유권자에서 교통 흐름을 계산하고 동기화된 차량 상태를 원격 클라이언트에 표시한다.
+/// </summary>
+/// <remarks>
+/// 소유권자만 차량 상태와 장애물 감지를 갱신한다. 원격 클라이언트는 수신한
+/// 스냅샷을 보간하며, 지연된 스냅샷 때문에 이미 표시한 차량 위치를 되돌리지 않는다.
+/// </remarks>
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class TrafficSimulationManager : UdonSharpBehaviour
 {
+    // -------------------------------------------------------------------------
+    // 네트워크 레이아웃과 공통 상수
+    // -------------------------------------------------------------------------
+
     private const int NetworkSlotCapacity = 16;
     private const int MaximumLaneChangeRules = 16;
     private const int ManeuverPathSampleCount = 49;
@@ -23,9 +34,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private const int PositionShift = 4;
     private const int SpeedShift = 21;
     private const int SignalCommitBit = 1 << 30;
-    // Bit 30 is only used by SignalCommitBit while no lane change is active.
-    // Reuse it during a normal lane change so every client renders the same
-    // short emergency path without increasing the synchronized payload.
+    // 차선 변경이 없을 때만 SignalCommitBit가 사용하는 30번 비트를 일반 차선 변경
+    // 중에는 긴급 기동 표시에 재사용한다. 동기화 크기를 늘리지 않고 모든 클라이언트가
+    // 같은 짧은 회피 경로를 표시하기 위한 패킹 규칙이다.
     private const int LaneChangeEmergencyManeuverBit = 1 << 30;
     private const int LaneChangeActiveBit = 1 << 19;
     private const int LaneChangeTargetShift = 20;
@@ -44,6 +55,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private const float RecoveryPhaseCompletionRotationTolerance = 2f;
     private const float RecoveryPhaseCompletionPhysicalMargin = 0.02f;
 
+    /// <summary>
+    /// 충돌한 Transform이 활성 차량에 속하면 해당 차량의 표시 속도를 반환한다.
+    /// </summary>
+    /// <param name="collidedTransform">충돌 판정에서 전달된 Transform이다.</param>
+    /// <returns>
+    /// 일치하는 활성 차량의 월드 속도이며, 차량을 찾지 못하면 <see cref="Vector3.zero"/>이다.
+    /// </returns>
     public Vector3 GetCollisionVehicleVelocity(
         Transform collidedTransform)
     {
@@ -87,6 +105,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         return Vector3.zero;
     }
+
+    // -------------------------------------------------------------------------
+    // Inspector 설정
+    // -------------------------------------------------------------------------
 
     [Header("References")]
     public TrafficLaneDatabase laneDatabase;
@@ -448,6 +470,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     [Range(3f, 15f)]
     public float authorityTakeoverTimeout = 6f;
 
+    // -------------------------------------------------------------------------
+    // 동기화 상태와 런타임 버퍼
+    // -------------------------------------------------------------------------
+
     [UdonSynced]
     private int syncedAuthorityEpoch;
 
@@ -618,10 +644,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private float[] laneChangeCurveSpeedLimits = new float[0];
     private float[] laneChangeReverseStartS = new float[0];
 
-    // A manoeuvre is generated once at the position where it starts. Every
-    // runtime consumer (motion, body rotation, steering and obstacle sweep)
-    // samples this same path instead of rebuilding a slightly different
-    // curve from the current lane separation every frame.
+    // 기동 경로는 시작 위치에서 한 번만 생성한다. 이동, 차체 회전, 조향, 장애물 검사가
+    // 모두 같은 경로를 사용하여 프레임마다 달라진 차선 간격으로 서로 다른 곡선을
+    // 생성하지 않도록 한다.
     private bool[] maneuverPathValid = new bool[0];
     private int[] maneuverPathSourceLaneIds = new int[0];
     private int[] maneuverPathTargetLaneIds = new int[0];
@@ -705,6 +730,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private bool refreshAudioVisualsThisFrame = true;
     private bool initialized;
     private bool running;
+
+    // -------------------------------------------------------------------------
+    // 생명주기와 소유권 제어
+    // -------------------------------------------------------------------------
 
     private void Start()
     {
@@ -799,11 +828,17 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (simulationAccumulator >= stepDuration)
         {
-            // 긴 프레임 이후 누적 시뮬레이션 폭주 방지
+            // 긴 프레임 이후에도 한 프레임에서 처리할 시뮬레이션 단계 수를 제한한다.
             simulationAccumulator = 0f;
         }
     }
 
+    /// <summary>
+    /// 소유권 이전이 안정된 다음 동기화 상태를 복원하고 권한자 시뮬레이션을 시작한다.
+    /// </summary>
+    /// <remarks>
+    /// Udon 지연 이벤트로 호출되는 로컬 전용 진입점이다.
+    /// </remarks>
     public void _BeginAuthority()
     {
         if (!initialized ||
@@ -871,6 +906,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
         TryRequestNetworkSnapshot();
     }
+
+    // -------------------------------------------------------------------------
+    // 스냅샷 직렬화와 원격 버퍼
+    // -------------------------------------------------------------------------
 
     private void UpdateNetworkSender()
     {
@@ -1796,6 +1835,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
+    // -------------------------------------------------------------------------
+    // 초기화와 런타임 저장소
+    // -------------------------------------------------------------------------
+
     private void EnsureNetworkBuffers()
     {
         if (syncedVehicleStateA == null ||
@@ -2176,6 +2219,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
     }
 
+    // -------------------------------------------------------------------------
+    // 소유권자 시뮬레이션
+    // -------------------------------------------------------------------------
+
     private void SimulateStep(float deltaTime)
     {
         int nextSignalState;
@@ -2536,9 +2583,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             leaderIndex
         );
 
-        // A newly-created reverse recovery path starts by moving backward.
-        // Do not let the remainder of this forward-driving tick remap that
-        // non-monotonic path from the vehicle's source-lane coordinate.
+        // 새로 만든 후진 회복 경로는 뒤로 이동하면서 시작한다. 현재 전진 처리 단계의
+        // 나머지 계산이 차량의 출발 차선 좌표를 기준으로 비단조 경로를 다시 매핑하지
+        // 않도록 여기에서 처리를 끝낸다.
         if (!laneChangeWasActive &&
             laneChangeActive[vehicleIndex] &&
             laneChangeReverseManeuver[vehicleIndex])
@@ -2718,9 +2765,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     }
                     else
                     {
-                        // Keep both lanes reserved and wait in the source
-                        // lane. Entering a no-longer-clear curve would force
-                        // either a lateral slide or an overlap.
+                        // 출발 차선에서 기다리며 두 차선을 계속 예약한다. 안전하지 않은
+                        // 곡선에 진입하면 차체가 옆으로 미끄러지거나 다른 차량과 겹친다.
                         targetSpeed = 0f;
                     }
                 }
@@ -3115,9 +3161,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
             else
             {
-                // A manoeuvre has one authoritative trajectory. If its fixed
-                // path is temporarily unavailable, hold this tick instead of
-                // generating a second procedural motion.
+                // 하나의 기동은 하나의 기준 경로만 사용한다. 고정 경로를 일시적으로
+                // 사용할 수 없으면 별도의 절차적 이동을 만들지 않고 이번 단계를 유지한다.
                 candidateProgress = laneChangeProgress[vehicleIndex];
                 newS = oldS;
                 newSpeed = 0f;
@@ -3168,6 +3213,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             DeactivateVehicle(vehicleIndex);
         }
     }
+
+    // -------------------------------------------------------------------------
+    // 물리 장애물 감지와 재출발 제어
+    // -------------------------------------------------------------------------
 
     private float GetPlayerStopS(
         int vehicleIndex,
@@ -3931,8 +3980,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (detectedStopS >= 0f &&
             detectedClearance < requiredClearance)
         {
-            // Do not follow an obstacle that only moved a short distance.
-            // The full reaction sequence starts again after stable clearance.
+            // 장애물이 잠시 움직인 것만으로 바로 따라가지 않는다. 전방 공간이 안정적으로
+            // 확보된 다음 전체 반응 절차를 다시 시작한다.
             ResetPhysicalObstacleRestartTimers(vehicleIndex);
             return true;
         }
@@ -4822,9 +4871,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             laneChangePlayerSafetyMargin
         );
 
-        // Only the extra safety band on the source side may be ignored. A
-        // collider touching the actual body envelope, or anything occupying
-        // the target side, must still stop the manoeuvre.
+        // 출발 차선 쪽의 추가 안전 여유만 예외로 처리한다. 실제 차체 범위에 닿은
+        // Collider나 목표 차선을 점유한 물체가 있으면 기동을 계속 중지한다.
         if (!IsPhysicsPoseBlockedByObstacle(
                 vehicleIndex,
                 vehiclePosition,
@@ -5066,9 +5114,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 laneChangeProgress[vehicleIndex]
             ))
         {
-            // A reversing vehicle yields to every occupied footprint. The
-            // reverse-escape exception later ignores only the blocker that is
-            // positively in front, never a vehicle behind or beside it.
+            // 후진 차량은 점유된 모든 차체 범위에 양보한다. 이후의 후진 탈출 예외는
+            // 전방에 있다고 확인된 장애물만 무시하며 뒤쪽이나 옆 차량은 무시하지 않는다.
             return true;
         }
 
@@ -5364,6 +5411,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         return centerDistance > radiusA + radiusB;
     }
+
+    // -------------------------------------------------------------------------
+    // 공유 기동 경로 생성과 샘플링
+    // -------------------------------------------------------------------------
 
     private int GetManeuverPathOffset(int vehicleIndex)
     {
@@ -5832,9 +5883,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (reverseManeuver)
             {
-                // The reverse and forward preparation arcs share one exact
-                // kinematic heading. This keeps the body angle continuous
-                // while the vehicle is stationary at the gear change.
+                // 후진과 전진 준비 곡선은 동일한 기구학적 진행 방향을 사용한다.
+                // 기어를 바꾸며 정지한 동안 차체 각도가 연속적으로 유지된다.
                 maneuverPathRotations[offset + sample] =
                     GetRecoveryKinematicWorldRotation(
                         vehicleIndex,
@@ -6628,8 +6678,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float distanceToStop =
             stopS - currentS;
 
-        // 정지선을 실제로 통과한 차량만 계속 진행
-        // 정확히 정지선에 도착한 차량은 신호가 바뀔 때까지 유지
+        // 정지선을 실제로 통과한 차량만 계속 진행한다. 정확히 정지선에 도착한
+        // 차량은 신호가 바뀔 때까지 현재 위치를 유지한다.
         if (distanceToStop < 0f)
         {
             return -1f;
@@ -6654,7 +6704,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 (2f * brakingRate) +
                 yellowDecisionMargin;
 
-            // 황색 전환 시 너무 가까우면 급정지하지 않고 통과
+            // 황색 전환 시 정지선과 너무 가까우면 급정지하지 않고 통과한다.
             if (distanceToStop <=
                 requiredBrakingDistance)
             {
@@ -6908,6 +6958,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             1.25f
         );
     }
+
+    // -------------------------------------------------------------------------
+    // 차선 매핑, 점유, 차량 매개변수
+    // -------------------------------------------------------------------------
 
     private void BuildLaneChangeRuleMappings()
     {
@@ -7316,9 +7370,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return false;
         }
 
-        // A confined-space recovery reserves the adjacent lane before the
-        // first reverse movement. This prevents a rear vehicle from entering
-        // the shunt box while the subject changes gear and swings its body.
+        // 제한 공간 회복은 첫 후진 전에 인접 차선을 예약한다. 대상 차량이 기어를
+        // 바꾸고 차체를 돌리는 동안 뒤 차량이 기동 공간에 진입하지 못하게 한다.
         if (laneChangeReverseManeuver[vehicleIndex])
         {
             return true;
@@ -7399,9 +7452,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (laneChangeActive[vehicleIndex] &&
             laneChangeReverseManeuver[vehicleIndex])
         {
-            // Keep the rear edge of the manoeuvring box fixed at the
-            // furthest planned reverse pose. A following vehicle therefore
-            // cannot enter the space when the subject moves forward again.
+            // 기동 점유 영역의 뒤쪽 끝을 예정된 최대 후진 자세에 고정한다. 대상 차량이
+            // 다시 전진할 때 뒤 차량이 확보된 공간에 들어오지 못하게 한다.
             sourceS = laneChangeReverseStartS[vehicleIndex] -
                 Mathf.Max(
                     MinimumReverseRecoveryDistance,
@@ -7489,6 +7541,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         return nearestIndex;
     }
+
+    // -------------------------------------------------------------------------
+    // 차선 변경 및 제한 공간 회복 판단
+    // -------------------------------------------------------------------------
 
     private float GetLaneChangeSafetyScore(
         int vehicleIndex,
@@ -7659,10 +7715,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
         float maximumCurvature = 0f;
 
-        // The normal lane-change path is x = Lp,
-        // y = D(6p^5 - 15p^4 + 10p^3). Sample its curvature once when
-        // evaluating/preparing a manoeuvre and cap speed by lateral
-        // acceleration instead of rotating the body at cruise speed.
+        // 일반 차선 변경 경로는 x = Lp, y = D(6p^5 - 15p^4 + 10p^3)이다.
+        // 기동을 평가하고 준비할 때 곡률을 한 번 샘플링하며, 순항 속도에서 차체만
+        // 회전시키지 않도록 횡가속도를 기준으로 속도를 제한한다.
         for (int sample = 1; sample < 16; sample++)
         {
             float progress = sample / 16f;
@@ -8548,9 +8603,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            // This is a short, low-speed recovery manoeuvre. Requiring the
-            // normal following gap here prevents every useful reverse in a
-            // compact queue and creates a permanent bottleneck.
+            // 짧은 저속 회복 기동이므로 일반 추종 간격을 그대로 요구하지 않는다.
+            // 밀집된 대기열에서 필요한 후진이 모두 막혀 영구 정체가 생기는 것을 피한다.
             float rearGap = Mathf.Max(
                 0.25f,
                 reverseRearClearance
@@ -8753,10 +8807,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             1f - startLateral
         );
 
-        // Preserve the exact escape heading while keeping the cubic merge
-        // monotonic. A long fixed 22m merge required clamping the starting
-        // tangent, which snapped a 30~35 degree body angle down to ~20
-        // degrees at the phase boundary.
+        // 3차 합류 곡선을 단조롭게 유지하면서 정확한 탈출 방향을 보존한다. 고정된
+        // 22m 합류 경로는 시작 접선을 제한해야 했고, 단계 경계에서 30~35도인 차체
+        // 각도가 약 20도로 갑자기 바뀌었다.
         float maximumNormalizedTangent = Mathf.Min(
             2.5f,
             2.4f * remainingLateral
@@ -8828,9 +8881,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         float t = Mathf.Clamp01(progress);
 
-        // Start the forward gear from rest, but leave the preparation arc
-        // with unit velocity. The old quintic ease reached zero velocity at
-        // both ends, creating a visible pause before the final merge.
+        // 전진 기어는 정지 상태에서 시작하되 준비 곡선은 단위 속도로 빠져나온다.
+        // 이전 5차 완화 곡선은 양 끝에서 속도가 0이 되어 최종 합류 전에 멈춤이 보였다.
         return t * t * (2f - t);
     }
 
@@ -8896,9 +8948,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 18f,
                 38f
             ) /
-            // The unified recovery path has one full reverse arc followed by
-            // one shorter forward arc. Limit the combined heading change to
-            // the configured body angle.
+            // 통합 회복 경로는 하나의 전체 후진 곡선과 더 짧은 전진 곡선으로 구성된다.
+            // 두 곡선의 방향 변화 합계를 설정된 차체 각도로 제한한다.
             Mathf.Max(
                 0.1f,
                 distance *
@@ -9031,10 +9082,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return false;
         }
 
-        // The normal sweep includes the configurable comfort margin. Near a
-        // gear boundary that margin can leave a vehicle a few centimetres
-        // short forever. Complete only when the real bodies, plus a very
-        // small physical margin, still do not overlap at the phase endpoint.
+        // 일반 검사는 설정 가능한 여유 간격을 포함한다. 기어 전환 경계에서는 이 여유로
+        // 차량이 몇 cm를 남긴 채 계속 멈출 수 있다. 단계 끝점에서 실제 차체와 최소
+        // 물리 여유가 겹치지 않을 때만 단계를 완료한다.
         return !IsLaneChangePoseBlockedByVehicleWithMargin(
             vehicleIndex,
             phaseEndPosition,
@@ -9160,9 +9210,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     recoveryDistance
                 ))
             {
-                // Change gear from the phase endpoint instead of waiting for
-                // a comfort-margin overlap to disappear. Player and road
-                // boundary blocks never use this exception.
+                // 여유 간격의 겹침이 사라질 때까지 기다리지 않고 단계 끝점에서 기어를
+                // 바꾼다. 플레이어 및 도로 경계 장애에는 이 예외를 적용하지 않는다.
                 newS = laneChangeReverseStartS[vehicleIndex] +
                     GetRecoveryLongitudinalOffset(
                         vehicleIndex,
@@ -9223,8 +9272,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
-        // The unified recovery has exactly one gear change: reverse away
-        // from the obstacle, then drive forward onto the normal merge curve.
+        // 통합 회복은 한 번만 기어를 바꾼다. 장애물에서 후진한 다음 일반 합류 곡선을
+        // 따라 전진한다.
         laneChangeRecoveryGearHoldRemaining[vehicleIndex] =
             Mathf.Max(0.15f, blockedRecoveryGearShiftPause);
         vehicleSpeeds[vehicleIndex] = 0f;
@@ -9339,6 +9388,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             Mathf.Max(0.0001f, pathAdvance)
         );
     }
+
+    // -------------------------------------------------------------------------
+    // 차량 수와 배치
+    // -------------------------------------------------------------------------
 
     private void TryFillVehicleSlots()
     {
@@ -10000,6 +10053,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
+    // -------------------------------------------------------------------------
+    // 로컬 및 원격 차량 표현
+    // -------------------------------------------------------------------------
+
     private void ApplyNetworkVisuals()
     {
         if (localIsAuthority && authorityReady)
@@ -10427,9 +10484,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (renderedManeuverContextChanged)
             {
-                // A later manoeuvre may use the same lane pair as the old
-                // one. Do not let that new manoeuvre inherit the old fixed
-                // path anchor on a remote client.
+                // 이후 기동이 이전 기동과 같은 차선 조합을 사용할 수 있다. 원격
+                // 클라이언트에서 새 기동이 이전 고정 경로 기준점을 이어받지 않게 한다.
                 InvalidateManeuverPath(i);
             }
 
@@ -10446,10 +10502,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 }
             }
 
-            // Non-authority clients do not run the vehicle simulation arrays.
-            // Populate the visual lane-change context before evaluating the
-            // recovery curve so its position and body heading use the same
-            // source lane, target lane, and rule as the decoded snapshot.
+            // 비권한 클라이언트는 차량 시뮬레이션 배열을 갱신하지 않는다. 회복 곡선을
+            // 평가하기 전에 표시용 차선 변경 정보를 채워 위치와 차체 방향이 디코딩된
+            // 스냅샷과 같은 출발 차선, 목표 차선, 규칙을 사용하게 한다.
             vehicleLaneIds[i] = laneId;
             vehicleS[i] = renderS;
             laneChangeActive[i] = renderLaneChangeActive;
@@ -10563,10 +10618,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
                 if (signedRenderedAdvance < 0f)
                 {
-                    // Never visibly rewind a remote car for a late or
-                    // quantized snapshot. Hold the complete path pose until
-                    // authority catches up; advancing lateral progress while
-                    // only S is held makes the body pivot and slide sideways.
+                    // 늦게 도착했거나 양자화된 스냅샷 때문에 원격 차량을 화면에서 뒤로
+                    // 이동시키지 않는다. 소유권자 상태가 따라올 때까지 전체 경로 자세를
+                    // 유지한다. S만 유지하고 횡진행도를 늘리면 차체가 회전하며 옆으로 미끄러진다.
                     renderS = previousRenderedS;
 
                     if (sameRenderedLaneChange)
@@ -10583,8 +10637,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     else if (renderLaneChangeActive &&
                              !previousLaneChangeActive)
                     {
-                        // Do not begin a newly received manoeuvre with a
-                        // lateral-only correction.
+                        // 새로 수신한 기동을 횡방향 보정만으로 시작하지 않는다.
                         renderLaneChangeProgress = 0f;
                     }
                 }
@@ -10849,7 +10902,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             else if (childName == "Wheel_FR" ||
                      childName == "Wheel_FB")
             {
-                // Serena의 Wheel_FB 오타를 오른쪽 앞바퀴로 취급
+                // Serena 프리팹의 기존 Wheel_FB 이름을 오른쪽 앞바퀴로 취급한다.
                 wheelIndex = 1;
             }
             else if (childName == "Wheel_BL")

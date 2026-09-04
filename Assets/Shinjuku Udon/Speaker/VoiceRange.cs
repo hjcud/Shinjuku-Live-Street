@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 
+/// <summary>
+/// 무대 사용자의 음성 거리와 증폭값 변경을 사용자 ID와 함께 동기화한다.
+/// </summary>
 public class VoiceRange : UdonSharpBehaviour
 {
     [Header("소리 범위 설정")]
@@ -22,6 +25,9 @@ public class VoiceRange : UdonSharpBehaviour
     public bool OnStageLocal = false;
     [UdonSynced] string SyncedUserId;
 
+    /// <summary>
+    /// 로컬 사용자의 무대 상태를 바꾸고 사용자 ID가 포함된 상태를 직렬화한다.
+    /// </summary>
     public void ButtonTrigger()
     {
         if (!Networking.IsOwner(Networking.LocalPlayer, this.gameObject))
@@ -75,6 +81,9 @@ public class VoiceRange : UdonSharpBehaviour
         ChangeVoiceGlobal();
     }
 
+    /// <summary>
+    /// 동기화된 사용자 ID에 해당하는 플레이어의 음성 거리와 증폭값을 적용한다.
+    /// </summary>
     public void ChangeVoiceGlobal()
     {
         var players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()]; 
