@@ -105,7 +105,7 @@ The traffic owner calculates all ten vehicles through a single manager and sends
 
 <p align="center"><sub>Results are a like-for-like comparison in Unity Editor with ClientSim; live VRChat instance performance may differ.</sub></p>
 
-Ten vehicles and 80 remote players simulated with ClientSim were concentrated in the same area. We captured 300 frames from both the initial and latest snapshots in the Unity Editor. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%. Vehicle position and rotation are interpolated every frame so motion remains smooth between simulation updates.
+Ten vehicles and 80 remote players simulated with ClientSim were concentrated in the same area. We captured 300 frames from both the initial and latest snapshots in the Unity Editor. Average CPU frame time fell from `17.65 ms to 11.92 ms`, while P95 frame time fell from `24.60 ms to 17.44 ms`. Physics time fell by 65.3%, and GC allocation per frame by 88.1%.
 
 <p align="center">
   <a href="./Docs/optimization.en.md"><strong>View test conditions and implementation details →</strong></a>
@@ -145,7 +145,7 @@ The environment is divided into sections, with occlusion culling, static batchin
 
 ## Repository scope
 
-This repository is not a complete, runnable Unity project. It contains original C# and UdonSharp code, technical documentation, and original images created for the README. Unity scenes, prefabs, models, textures, audio, video, materials, animations, shaders, `.meta` files, and third-party assets required to run the world are not included.
+This repository is not a complete, runnable Unity project. It shares our C# and UdonSharp code, development documentation, and images and videos created by us or contributed by others to introduce the world. Unity scenes, prefabs, models, textures, audio, video, materials, animations, shaders, `.meta` files, and third-party assets required to run the world are not included.
 
 <details>
 <summary><strong>SDKs, packages, and third-party components</strong></summary>
