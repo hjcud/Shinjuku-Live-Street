@@ -105,7 +105,7 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 <p align="center"><sub>Unity Editor·ClientSim에서 동일 조건으로 비교한 결과이며, 실제 VRChat 인스턴스 성능과는 다를 수 있습니다.</sub></p>
 
-차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, Unity Editor에서 초기·최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다. 차량 위치와 회전은 매 프레임 보간해 계산 사이에서도 움직임이 끊기지 않도록 했습니다.
+차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, Unity Editor에서 초기·최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다.
 
 <p align="center">
   <a href="./Docs/optimization.md"><strong>측정 조건과 문제별 적용 내용을 자세히 보기 →</strong></a>
@@ -145,7 +145,7 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 ## 저장소 안내
 
-이 저장소는 월드를 실행할 수 있는 완전한 Unity 프로젝트가 아닙니다. 직접 작성한 C#·UdonSharp 코드, 기술 문서와 README용 자체 제작 이미지만 공개합니다. 월드 구동에 필요한 Unity 씬·Prefab·모델·텍스처·음원·영상·머티리얼·애니메이션·셰이더·`.meta` 파일과 외부 에셋은 포함하지 않습니다.
+이 저장소는 월드를 실행할 수 있는 완전한 Unity 프로젝트가 아닙니다. 작성한 C#·UdonSharp 코드와 개발 문서, 직접 제작하거나 제공받은 소개용 이미지·영상을 공개합니다. 월드 구동에 필요한 Unity 씬·Prefab·모델·텍스처·음원·영상·머티리얼·애니메이션·셰이더·`.meta` 파일과 외부 에셋은 포함하지 않습니다.
 
 <details>
 <summary><strong>사용한 SDK·패키지·외부 구성요소</strong></summary>
