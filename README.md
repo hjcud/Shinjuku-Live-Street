@@ -46,12 +46,12 @@
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery.png" alt="거리 공연 장면과 추후 추가할 커뮤니티 사진 영역" width="900">
+  <img src="./Docs/images/community-gallery.png" alt="세 장의 거리 공연 사진과 추후 추가할 커뮤니티 사진 영역" width="900">
 </p>
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
-<p align="center"><sub>영상 제공: <a href="https://x.com/KixiVRC">@KixiVRC</a> · 사진 제공: <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a></sub></p>
+<p align="center"><sub>영상·사진 제공: <a href="https://x.com/KixiVRC">@KixiVRC</a> · 사진 제공: <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a></sub></p>
 
 ---
 

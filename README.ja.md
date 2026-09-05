@@ -46,12 +46,12 @@
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery.png" alt="ストリートライブの様子と今後追加するコミュニティ写真の掲載エリア" width="900">
+  <img src="./Docs/images/community-gallery.png" alt="3枚のストリートライブ写真と今後追加するコミュニティ写真の掲載エリア" width="900">
 </p>
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
-<p align="center"><sub>動画提供：<a href="https://x.com/KixiVRC">@KixiVRC</a> · 写真提供：<a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a></sub></p>
+<p align="center"><sub>動画・写真提供：<a href="https://x.com/KixiVRC">@KixiVRC</a> · 写真提供：<a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a></sub></p>
 
 ---
 
