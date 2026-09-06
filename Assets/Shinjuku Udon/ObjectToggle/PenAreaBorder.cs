@@ -9,7 +9,7 @@ using VRC.Udon;
 namespace QvPen.UdonScript
 {
     /// <summary>
-    /// Pen이 지정 구역을 벗어나면 QvPen Manager를 통해 원래 위치로 되돌린다.
+    /// Pen이 지정 구역을 벗어나면 QvPen Manager를 통해 원래 위치로 복귀
     /// </summary>
     public class PenAreaBorder : UdonSharpBehaviour
     {

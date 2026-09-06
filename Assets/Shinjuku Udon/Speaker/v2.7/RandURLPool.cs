@@ -5,7 +5,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 /// <summary>
-/// 등록된 VRCUrl 목록에서 임의의 주소를 선택해 제공한다.
+/// 등록된 VRCUrl 목록에서 임의의 주소 선택 및 제공
 /// </summary>
 public class RandURLPool : UdonSharpBehaviour
 {
@@ -13,9 +13,9 @@ public class RandURLPool : UdonSharpBehaviour
     public VRCUrl[] vrcUrlPool;
 
     /// <summary>
-    /// URL 목록에서 임의의 항목을 반환한다.
+    /// URL 목록에서 임의의 항목 반환
     /// </summary>
-    /// <returns>선택된 VRCUrl이다.</returns>
+    /// <returns>선택된 VRCUrl</returns>
     public VRCUrl GetRandUrl()
     {
         int index = Random.Range(0, vrcUrlPool.Length - 1);

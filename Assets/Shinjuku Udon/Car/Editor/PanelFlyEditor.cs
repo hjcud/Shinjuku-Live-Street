@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 using VRC.SDK3.Components;
 
 /// <summary>
-/// PanelFly 설정을 표시하고 고속 충돌 연출의 Scene 구성을 수동으로 실행한다.
+/// PanelFly 설정 표시 및 고속 충돌 연출의 Scene 구성 수동 실행
 /// </summary>
 [CustomEditor(typeof(PanelFly))]
 public class PanelFlyEditor : Editor
@@ -25,7 +25,7 @@ public class PanelFlyEditor : Editor
 }
 
 /// <summary>
-/// 패널 파티클 Asset과 차량 충돌 Proxy를 생성하고 열린 Scene의 참조를 연결한다.
+/// 패널 파티클 Asset과 차량 충돌 Proxy 생성 및 열린 Scene의 참조 연결
 /// </summary>
 [InitializeOnLoad]
 public static class PanelFlySceneSetup
@@ -57,7 +57,7 @@ public static class PanelFlySceneSetup
     }
 
     /// <summary>
-    /// 메뉴에서 열린 Scene의 패널 충돌 연출 구성을 강제로 다시 적용한다.
+    /// 메뉴를 통해 열린 Scene의 패널 충돌 연출 구성 강제 재적용
     /// </summary>
     [MenuItem("Tools/Shinjuku/Setup Panel Star Effects")]
     public static void SetupFromMenu()
@@ -66,9 +66,9 @@ public static class PanelFlySceneSetup
     }
 
     /// <summary>
-    /// 열린 Scene의 패널, 파티클, 차량 충돌 Proxy 참조를 생성하거나 복구한다.
+    /// 열린 Scene의 패널, 파티클, 차량 충돌 Proxy 참조 생성 또는 복구
     /// </summary>
-    /// <param name="forceReconfigure">기존 참조가 있어도 다시 구성할지 여부이다.</param>
+    /// <param name="forceReconfigure">기존 참조가 있어도 다시 구성할지 여부</param>
     public static void SetupOpenScenes(bool forceReconfigure)
     {
         TrafficSimulationManager manager =
@@ -457,9 +457,8 @@ public static class PanelFlySceneSetup
                 Undo.RecordObject(proxy, "Configure vehicle collision proxy");
                 proxy.center = desiredCenter;
                 proxy.size = desiredSize;
-                // 중앙 교통 차량은 Transform으로 이동한다. 차량마다 Rigidbody 연산을
-                // 추가하거나 불안정한 정적 Collider 이벤트에 의존하지 않도록 PanelFly가
-                // 조회할 Trigger Proxy를 구성한다.
+                // Transform으로 이동하는 중앙 교통 차량에 PanelFly 조회용 Trigger Proxy 구성
+                // 차량별 Rigidbody 연산 추가 및 불안정한 정적 Collider 이벤트 의존 방지
                 proxy.isTrigger = true;
                 proxy.enabled = true;
                 proxy.includeLayers = 0;

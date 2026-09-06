@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 도로 Mesh와 배치 Marker에서 차선 샘플 및 차선 변경 규칙을 생성하고 Scene에 미리 표시한다.
+/// 도로 Mesh와 배치 Marker에서 차선 샘플 및 차선 변경 규칙 생성 후 Scene에 미리 표시
 /// </summary>
 public class TrafficLaneBakerEditor : EditorWindow
 {
@@ -921,7 +921,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             ).laneS;
         }
 
-        // R4_BRANCH는 합류 전용 차선이므로 차량을 직접 생성하지 않는다.
+        // 합류 전용 차선인 R4_BRANCH에서 차량 직접 생성 제외
         result[TrafficLaneDatabase.LaneR4Branch] = -1f;
 
         return result;

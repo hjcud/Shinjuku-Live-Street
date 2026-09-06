@@ -6,7 +6,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 /// <summary>
-/// 기본, 저품질, 고품질 거울을 로컬 사용자에게만 순환 전환한다.
+/// 로컬 사용자에게만 기본, 저품질, 고품질 거울 순환 전환
 /// </summary>
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class MirrorLocalToggle : UdonSharpBehaviour

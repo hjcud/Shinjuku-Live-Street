@@ -6,7 +6,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 /// <summary>
-/// 등록된 Sprite를 일정 간격으로 생성하고 좌우 이동으로 교체하는 포스터 슬라이드이다.
+/// 등록된 Sprite를 일정 간격으로 생성하고 좌우 이동으로 교체하는 포스터 슬라이드
 /// </summary>
 public class PosterSlide : UdonSharpBehaviour
 {

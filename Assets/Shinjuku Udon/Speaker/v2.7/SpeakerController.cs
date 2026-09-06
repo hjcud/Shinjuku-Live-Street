@@ -11,11 +11,11 @@ using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;  
 
 /// <summary>
-/// 배치된 스피커의 소유자, 위치, 음량, 연결된 미디어 기능의 초기화를 관리한다.
+/// 배치된 스피커의 소유자, 위치, 음량 및 연결된 미디어 기능의 초기화 관리
 /// </summary>
 /// <remarks>
-/// 스피커를 반환하는 상태 변경은 소유권자만 시작한다. 배치와 반환 결과는 네트워크
-/// 호출로 적용하며, 늦게 참가한 사용자는 자신을 대상으로 전달된 위치를 복원한다.
+/// 스피커 반환 상태 변경의 시작 권한을 소유권자로 제한
+/// 배치와 반환 결과는 네트워크 호출로 적용하고, 늦게 참가한 사용자는 자신을 대상으로 전달된 위치 복원
 /// </remarks>
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class SpeakerController : UdonSharpBehaviour
@@ -75,12 +75,12 @@ public class SpeakerController : UdonSharpBehaviour
             }
         }
 
-        // 배치 직후 반환 입력을 막는 대기 시간을 매 프레임 줄인다.
+        // 배치 직후 반환 입력 방지용 대기 시간을 매 프레임 감소
         if (despawnWaitTime > 0f) despawnWaitTime -= Time.deltaTime;
     }
 
     /// <summary>
-    /// UI 슬라이더 값을 현재 스피커 소유자의 음성 증폭값에 적용한다.
+    /// UI 슬라이더 값을 현재 스피커 소유자의 음성 증폭값에 적용
     /// </summary>
     public void ChangeVolume()
     {
@@ -105,9 +105,9 @@ public class SpeakerController : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 버튼 입력으로 스피커 반환을 요청한다.
+    /// 버튼 입력에 따른 스피커 반환 요청
     /// </summary>
-    /// <remarks>현재 소유권자이며 배치 직후 대기 시간이 끝난 경우에만 처리한다.</remarks>
+    /// <remarks>현재 소유권자이며 배치 직후 대기 시간이 끝난 경우에만 처리</remarks>
     public void SpeakerReturnTrigger()
     {
         if (!Networking.IsOwner(Networking.LocalPlayer, this.gameObject)) return;
@@ -118,7 +118,7 @@ public class SpeakerController : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 소유권자에서 연결된 기능을 초기화하고 전체 클라이언트에 반환 상태를 전달한다.
+    /// 소유권자에서 연결된 기능 초기화 및 전체 클라이언트에 반환 상태 전달
     /// </summary>
     public void SpeakerReturn()
     {
@@ -129,14 +129,14 @@ public class SpeakerController : UdonSharpBehaviour
         }
 
         Debug.Log("[SpeakerController] Speaker Returning");
-        // 스피커와 연결된 공유 기능을 먼저 끈 다음 표시 상태를 반환한다.
+        // 스피커와 연결된 공유 기능을 먼저 끈 다음 표시 상태 반환
         speakerRevToggle.SendCustomNetworkEvent(NetworkEventTarget.Owner, "OwnerDisableTarget");
         sketchGlobalToggle.SendCustomNetworkEvent(NetworkEventTarget.Owner, "OwnerDisableTarget");
         screenGlobalToggle.SendCustomNetworkEvent(NetworkEventTarget.Owner, "OwnerDisableTarget");
         imageLoader.SendCustomNetworkEvent(NetworkEventTarget.All, "ResetTex");
         Debug.Log("[SpeakerController] Toggle Object turned off");
 
-        // 다음 사용자가 이전 스트림을 이어받지 않도록 TopazChat 상태와 URL을 초기화한다.
+        // 이전 스트림의 승계 방지를 위해 TopazChat 상태와 URL 초기화
         topazURLSync.ResetPlayer();
         VRCUrl baseUrl = topazPlayer.GetPlatformDefaultStreamURL(Platform.Windows);
         urlInputField.SetUrl(baseUrl);
@@ -147,7 +147,7 @@ public class SpeakerController : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 모든 클라이언트에서 스피커를 원래 위치로 되돌리고 로컬 표시 상태를 초기화한다.
+    /// 모든 클라이언트에서 스피커 원위치 복귀 및 로컬 표시 상태 초기화
     /// </summary>
     [NetworkCallable]
     public void SpeakerReturnAll()
@@ -159,7 +159,7 @@ public class SpeakerController : UdonSharpBehaviour
         tempTransform.rotation = parent.rotation;
         isSpeakerTaken = false;
 
-        // 이 클라이언트에서 변경했던 소유자의 음성 증폭값만 기본값으로 되돌린다.
+        // 이 클라이언트에서 변경했던 소유자의 음성 증폭값만 기본값으로 복원
         if (localOwnerId != 0)
         {
             VRCPlayerApi targetPlayer = VRCPlayerApi.GetPlayerById(localOwnerId);
@@ -177,7 +177,7 @@ public class SpeakerController : UdonSharpBehaviour
 
     public override void OnPlayerJoined(VRCPlayerApi player)
     {
-        // 원격 수신자가 없으면 위치를 다시 전송할 필요가 없다.
+        // 원격 수신자가 없으면 위치 재전송 생략
         if (VRCPlayerApi.GetPlayerCount() <= 1) return;
 
         if (Networking.IsOwner(Networking.LocalPlayer, this.gameObject))
@@ -190,13 +190,13 @@ public class SpeakerController : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 네트워크로 전달된 위치에 스피커를 배치하고 소유자 정보를 갱신한다.
+    /// 네트워크로 전달된 위치에 스피커 배치 및 소유자 정보 갱신
     /// </summary>
     /// <param name="playerId">
-    /// 양수이면 늦게 참가한 해당 사용자만 위치를 적용한다. 0 이하이면 최초 배치이다.
+    /// 양수이면 늦게 참가한 해당 사용자만 위치 적용. 0 이하이면 최초 배치
     /// </param>
-    /// <param name="targetPosition">적용할 스피커의 월드 위치이다.</param>
-    /// <param name="targetRotation">적용할 스피커의 월드 회전이다.</param>
+    /// <param name="targetPosition">적용할 스피커의 월드 위치</param>
+    /// <param name="targetRotation">적용할 스피커의 월드 회전</param>
     [NetworkCallable]
     public void PlaceSpeaker(int playerId, Vector3 targetPosition, Quaternion targetRotation)
     {

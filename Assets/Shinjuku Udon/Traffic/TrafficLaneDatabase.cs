@@ -2,11 +2,11 @@
 using UnityEngine;
 
 /// <summary>
-/// 베이크된 차선 샘플과 차선 변경 규칙을 런타임 교통 시뮬레이션에 제공한다.
+/// 베이크된 차선 샘플과 차선 변경 규칙을 런타임 교통 시뮬레이션에 제공
 /// </summary>
 /// <remarks>
-/// 배열의 인덱스와 길이는 베이커가 함께 생성하는 데이터 계약이다. 런타임에서는
-/// 데이터를 변경하지 않으며, 모든 거리는 차선 시작점을 기준으로 한 m 단위이다.
+/// 배열의 인덱스와 길이는 베이커에서 함께 생성하고 런타임에서는 데이터 변경 없이 사용
+/// 모든 거리는 차선 시작점 기준의 m 단위
 /// </remarks>
 [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
 public class TrafficLaneDatabase : UdonSharpBehaviour
@@ -55,10 +55,10 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     [HideInInspector] public int[] changeVehicleMasks = new int[0];
 
     /// <summary>
-    /// 교통 관리자에서 사용할 수 있도록 베이크 데이터의 배열 구조를 검증한다.
+    /// 교통 관리자에서 사용할 베이크 데이터의 배열 구조 검증
     /// </summary>
-    /// <returns>필수 배열과 차선별 데이터 길이가 유효하면 <c>true</c>이다.</returns>
-    /// <remarks>관리자 초기화 시 한 번만 호출하며 매 프레임 호출하지 않는다.</remarks>
+    /// <returns>필수 배열과 차선별 데이터 길이가 유효하면 <c>true</c> 반환</returns>
+    /// <remarks>매 프레임 호출 없이 관리자 초기화 시 한 번만 호출</remarks>
     public bool IsReady()
     {
         if (laneCount != FixedLaneCount ||
@@ -131,15 +131,14 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 차선 거리와 맞닿은 두 샘플 중 앞쪽 샘플의 전역 배열 인덱스를 찾는다.
+    /// 차선 거리와 맞닿은 두 샘플 중 앞쪽 샘플의 전역 배열 인덱스 조회
     /// </summary>
-    /// <param name="laneId">조회할 차선의 인덱스이다.</param>
-    /// <param name="laneS">차선 시작점부터의 거리이다. 단위는 m이다.</param>
-    /// <param name="sampleHint">이전 조회에서 반환된 전역 샘플 인덱스이다.</param>
-    /// <returns>보간 구간의 첫 샘플 인덱스이며, 데이터가 유효하지 않으면 -1이다.</returns>
+    /// <param name="laneId">조회할 차선의 인덱스</param>
+    /// <param name="laneS">차선 시작점부터의 거리(m)</param>
+    /// <param name="sampleHint">이전 조회에서 반환된 전역 샘플 인덱스</param>
+    /// <returns>보간 구간의 첫 샘플 인덱스 반환. 데이터가 유효하지 않으면 -1 반환</returns>
     /// <remarks>
-    /// 연속 프레임에서는 이전 반환값을 <paramref name="sampleHint"/>로 전달하여
-    /// 전체 샘플을 다시 탐색하지 않는다.
+    /// 연속 프레임에서는 이전 반환값을 <paramref name="sampleHint"/>로 전달해 전체 샘플 재탐색 방지
     /// </remarks>
     public int FindSampleIndex(
         int laneId,
@@ -203,12 +202,12 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 베이크된 인접 샘플을 보간하여 차선의 월드 위치를 구한다.
+    /// 베이크된 인접 샘플 보간을 통한 차선의 월드 위치 계산
     /// </summary>
-    /// <param name="laneId">조회할 차선의 인덱스이다.</param>
-    /// <param name="laneS">차선 시작점부터의 거리이다. 단위는 m이다.</param>
-    /// <param name="sampleHint">이전 프레임에 사용한 전역 샘플 인덱스이다.</param>
-    /// <returns>보간된 월드 위치이며, 데이터가 유효하지 않으면 <see cref="Vector3.zero"/>이다.</returns>
+    /// <param name="laneId">조회할 차선의 인덱스</param>
+    /// <param name="laneS">차선 시작점부터의 거리(m)</param>
+    /// <param name="sampleHint">이전 프레임에 사용한 전역 샘플 인덱스</param>
+    /// <returns>보간된 월드 위치 반환. 데이터가 유효하지 않으면 <see cref="Vector3.zero"/> 반환</returns>
     public Vector3 GetLanePosition(
         int laneId,
         float laneS,
@@ -244,12 +243,12 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 베이크된 인접 샘플을 보간하여 차선의 월드 회전을 구한다.
+    /// 베이크된 인접 샘플 보간을 통한 차선의 월드 회전 계산
     /// </summary>
-    /// <param name="laneId">조회할 차선의 인덱스이다.</param>
-    /// <param name="laneS">차선 시작점부터의 거리이다. 단위는 m이다.</param>
-    /// <param name="sampleHint">이전 프레임에 사용한 전역 샘플 인덱스이다.</param>
-    /// <returns>보간된 월드 회전이며, 데이터가 유효하지 않으면 단위 회전이다.</returns>
+    /// <param name="laneId">조회할 차선의 인덱스</param>
+    /// <param name="laneS">차선 시작점부터의 거리(m)</param>
+    /// <param name="sampleHint">이전 프레임에 사용한 전역 샘플 인덱스</param>
+    /// <returns>보간된 월드 회전 반환. 데이터가 유효하지 않으면 단위 회전 반환</returns>
     public Quaternion GetLaneRotation(
         int laneId,
         float laneS,
@@ -285,12 +284,12 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 지정한 차량 유형이 현재 차선 거리에서 차선 변경 규칙을 사용할 수 있는지 확인한다.
+    /// 지정한 차량 유형의 현재 차선 거리에서 차선 변경 규칙 사용 가능 여부 확인
     /// </summary>
-    /// <param name="ruleIndex">베이크된 차선 변경 규칙의 인덱스이다.</param>
-    /// <param name="laneS">출발 차선 시작점부터의 거리이다. 단위는 m이다.</param>
-    /// <param name="vehicleMask">차량 유형을 나타내는 비트 마스크이다.</param>
-    /// <returns>거리 범위와 차량 마스크가 모두 일치하면 <c>true</c>이다.</returns>
+    /// <param name="ruleIndex">베이크된 차선 변경 규칙의 인덱스</param>
+    /// <param name="laneS">출발 차선 시작점부터의 거리(m)</param>
+    /// <param name="vehicleMask">차량 유형을 나타내는 비트 마스크</param>
+    /// <returns>거리 범위와 차량 마스크가 모두 일치하면 <c>true</c> 반환</returns>
     public bool IsChangeAllowed(
         int ruleIndex,
         float laneS,

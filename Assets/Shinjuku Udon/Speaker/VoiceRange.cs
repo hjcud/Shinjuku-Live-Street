@@ -7,7 +7,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 /// <summary>
-/// 무대 사용자의 음성 거리와 증폭값 변경을 사용자 ID와 함께 동기화한다.
+/// 무대 사용자의 음성 거리와 증폭값 변경을 사용자 ID와 함께 동기화
 /// </summary>
 public class VoiceRange : UdonSharpBehaviour
 {
@@ -26,7 +26,7 @@ public class VoiceRange : UdonSharpBehaviour
     [UdonSynced] string SyncedUserId;
 
     /// <summary>
-    /// 로컬 사용자의 무대 상태를 바꾸고 사용자 ID가 포함된 상태를 직렬화한다.
+    /// 로컬 사용자의 무대 상태 변경 및 사용자 ID가 포함된 상태 직렬화
     /// </summary>
     public void ButtonTrigger()
     {
@@ -82,7 +82,7 @@ public class VoiceRange : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 동기화된 사용자 ID에 해당하는 플레이어의 음성 거리와 증폭값을 적용한다.
+    /// 동기화된 사용자 ID에 해당하는 플레이어의 음성 거리와 증폭값 적용
     /// </summary>
     public void ChangeVoiceGlobal()
     {
