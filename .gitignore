@@ -33,6 +33,17 @@
 !/Docs/optimization.ja.md
 !/Docs/THIRD_PARTY_NOTICES.md
 
+# 300프레임 비교 문서와 공개용 측정 자료만 허용합니다.
+!/Docs/benchmarks/
+/Docs/benchmarks/*
+!/Docs/benchmarks/traffic-300-frames/
+/Docs/benchmarks/traffic-300-frames/*
+!/Docs/benchmarks/traffic-300-frames/.gitattributes
+!/Docs/benchmarks/traffic-300-frames/README.md
+!/Docs/benchmarks/traffic-300-frames/Shinjuku_300프레임_성능비교.xlsx
+!/Docs/benchmarks/traffic-300-frames/test1_data.data.frames.csv
+!/Docs/benchmarks/traffic-300-frames/test5_data.data.frames.csv
+
 # README에서 사용하는 자체 제작 이미지만 허용합니다.
 !/Docs/images/
 /Docs/images/*

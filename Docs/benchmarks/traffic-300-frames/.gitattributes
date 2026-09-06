@@ -1,0 +1,3 @@
+# Preserve extracted CSV bytes so the documented SHA-256 values remain valid.
+test1_data.data.frames.csv -text
+test5_data.data.frames.csv -text
