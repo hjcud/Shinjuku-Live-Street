@@ -36,6 +36,8 @@
 
 ## 결과 요약
 
+[300프레임 비교표와 측정 데이터](./benchmarks/traffic-300-frames/): 엑셀 비교표, 초기/개선 CSV, 측정 조건과 계산 방법을 확인할 수 있습니다.
+
 ![교통 시스템 초기 스냅샷과 최신 스냅샷의 Unity Profiler 비교](./images/traffic-performance-comparison.ko.svg)
 
 | Unity Profiler 항목 | 초기 스냅샷 | 최신 스냅샷 | 변화 |
