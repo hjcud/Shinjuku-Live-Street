@@ -5,14 +5,14 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 /// <summary>
-/// 대상 GameObject의 활성 상태를 네트워크 이벤트로 전환하고 새 참가자에게 현재 상태를 전달한다.
+/// 네트워크 이벤트를 통한 대상 GameObject의 활성 상태 전환 및 새 참가자에게 현재 상태 전달
 /// </summary>
 public class ObjectToggle : UdonSharpBehaviour
 {
     [SerializeField] private GameObject targetObject;
 
     /// <summary>
-    /// 모든 사용자에게 대상의 활성 상태 전환을 요청한다.
+    /// 모든 사용자에게 대상의 활성 상태 전환 요청
     /// </summary>
     public void ButtonTrigger()
     {
@@ -35,7 +35,7 @@ public class ObjectToggle : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 현재 로컬 대상의 활성 상태를 반전한다.
+    /// 현재 로컬 대상의 활성 상태 반전
     /// </summary>
     public void ToggleObject()
     {
@@ -43,7 +43,7 @@ public class ObjectToggle : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 새 참가자 상태 복원에 사용할 활성화 이벤트이다.
+    /// 새 참가자 상태 복원용 활성화 이벤트
     /// </summary>
     public void ToggleTargetTrue()
     {
@@ -51,7 +51,7 @@ public class ObjectToggle : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 새 참가자 상태 복원에 사용할 비활성화 이벤트이다.
+    /// 새 참가자 상태 복원용 비활성화 이벤트
     /// </summary>
     public void ToggleTargetFalse()
     {

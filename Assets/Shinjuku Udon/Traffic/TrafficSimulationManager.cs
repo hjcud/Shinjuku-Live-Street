@@ -4,11 +4,11 @@ using VRC.SDKBase;
 using VRC.Udon.Common;
 
 /// <summary>
-/// 소유권자에서 교통 흐름을 계산하고 동기화된 차량 상태를 원격 클라이언트에 표시한다.
+/// 소유권자에서 교통 흐름 계산 및 원격 클라이언트에 동기화된 차량 상태 표시
 /// </summary>
 /// <remarks>
-/// 소유권자만 차량 상태와 장애물 감지를 갱신한다. 원격 클라이언트는 수신한
-/// 스냅샷을 보간하며, 지연된 스냅샷 때문에 이미 표시한 차량 위치를 되돌리지 않는다.
+/// 차량 상태와 장애물 감지의 갱신 권한을 소유권자로 제한
+/// 원격 클라이언트에서 수신 스냅샷 보간 및 지연된 스냅샷에 의한 차량 표시 위치 되감기 방지
 /// </remarks>
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class TrafficSimulationManager : UdonSharpBehaviour
@@ -34,9 +34,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private const int PositionShift = 4;
     private const int SpeedShift = 21;
     private const int SignalCommitBit = 1 << 30;
-    // 차선 변경이 없을 때만 SignalCommitBit가 사용하는 30번 비트를 일반 차선 변경
-    // 중에는 긴급 기동 표시에 재사용한다. 동기화 크기를 늘리지 않고 모든 클라이언트가
-    // 같은 짧은 회피 경로를 표시하기 위한 패킹 규칙이다.
+    // 차선 변경이 없을 때 SignalCommitBit가 사용하는 30번 비트를 일반 차선 변경 중 긴급 기동 표시에 재사용
+    // 동기화 크기 증가 없이 모든 클라이언트에 동일한 짧은 회피 경로를 표시하기 위한 패킹 규칙
     private const int LaneChangeEmergencyManeuverBit = 1 << 30;
     private const int LaneChangeActiveBit = 1 << 19;
     private const int LaneChangeTargetShift = 20;
@@ -56,11 +55,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private const float RecoveryPhaseCompletionPhysicalMargin = 0.02f;
 
     /// <summary>
-    /// 충돌한 Transform이 활성 차량에 속하면 해당 차량의 표시 속도를 반환한다.
+    /// 충돌한 Transform이 활성 차량에 속하면 해당 차량의 표시 속도 반환
     /// </summary>
-    /// <param name="collidedTransform">충돌 판정에서 전달된 Transform이다.</param>
+    /// <param name="collidedTransform">충돌 판정에서 전달된 Transform</param>
     /// <returns>
-    /// 일치하는 활성 차량의 월드 속도이며, 차량을 찾지 못하면 <see cref="Vector3.zero"/>이다.
+    /// 일치하는 활성 차량의 월드 속도 반환. 차량을 찾지 못하면 <see cref="Vector3.zero"/> 반환
     /// </returns>
     public Vector3 GetCollisionVehicleVelocity(
         Transform collidedTransform)
@@ -114,10 +113,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     public TrafficLaneDatabase laneDatabase;
     public ShinhoTime mainSignal;
 
-    [Tooltip("다점 기동 중 차량 뒤쪽이 벗어나면 안 되는 도로 범위입니다. TEST.unity의 RoadArea BoxCollider를 사용합니다.")]
+    [Tooltip("다점 기동 중 차량 뒤쪽의 이탈을 제한할 도로 범위. TEST.unity의 RoadArea BoxCollider 사용")]
     public BoxCollider recoveryRoadArea;
 
-    [Tooltip("Truck을 슬롯 0에 두고 CHR부터 Zest까지 순서대로 등록합니다.")]
+    [Tooltip("Truck을 슬롯 0에 배치하고 CHR부터 Zest까지 순서대로 등록")]
     public Transform[] vehicleRoots = new Transform[0];
 
     [Header("Population")]
@@ -165,15 +164,15 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     public float truckSpawnClearance = 12f;
     public float spawnInitialSpeed = 3f;
 
-    [Tooltip("한 차선이 신호 대기 차량을 독점하지 않도록 동시에 배치할 최대 차량 수입니다. 차선 변경 중인 차량은 출발/도착 차선 양쪽에 포함됩니다.")]
+    [Tooltip("신호 대기 차량의 한 차선 집중을 방지하기 위한 동시 배치 최대 차량 수. 차선 변경 차량은 출발/도착 차선 양쪽에 포함")]
     [Range(1, 6)]
     public int maximumVehiclesPerSpawnLane = 2;
 
-    [Tooltip("빈 슬롯을 한꺼번에 채우지 않고 한 대씩 보충하는 간격입니다.")]
+    [Tooltip("빈 슬롯을 한 대씩 보충하는 간격. 차량 일괄 보충 방지")]
     [Range(0.15f, 2f)]
     public float respawnInterval = 0.4f;
 
-    [Tooltip("첫 권한자가 새 교통 상태를 만들 때 차량을 차선 전체에 분산 배치합니다.")]
+    [Tooltip("첫 권한자의 새 교통 상태 생성 시 차량을 차선 전체에 분산 배치")]
     public bool distributeVehiclesOnStartup = true;
 
     [Range(5f, 40f)]
@@ -191,64 +190,64 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     public float playerFrontBuffer = 2f;
     public float playerComfortDeceleration = 4f;
 
-    [Tooltip("권한자만 실행하는 플레이어 물리 검사입니다. 신호는 베이크된 정지선과 동기화된 신호 상태로 처리하고, 원격 클라이언트는 동기화된 차량 상태만 표시합니다.")]
+    [Tooltip("권한자 전용 플레이어 물리 검사. 신호는 베이크된 정지선과 동기화된 신호 상태로 처리하고 원격 클라이언트는 동기화된 차량 상태만 표시")]
     public bool enableAuthorityPhysicsObstacles = true;
 
-    [Tooltip("Player(9), PlayerLocal(10), 고정 장애물 ObstacleCollider(25)를 포함합니다. 신호와 차량 간 판정은 각각 정지선/차선 좌표 계산을 사용합니다.")]
+    [Tooltip("Player(9), PlayerLocal(10), 고정 장애물 ObstacleCollider(25) 포함. 신호 판정은 정지선 계산, 차량 간 판정은 차선 좌표 계산 사용")]
     public int authorityObstacleLayerMask =
         (1 << 9) | (1 << 10) | (1 << 25);
 
-    [Tooltip("한 렌더 프레임에 플레이어 감지를 갱신할 차량 수입니다. 차량들을 순환하며 분산 처리합니다.")]
+    [Tooltip("한 렌더 프레임에 플레이어 감지를 갱신할 차량 수. 차량별 순환을 통한 분산 처리")]
     [Range(1, 4)]
     public int authorityObstacleVehiclesPerFrame = 2;
 
-    [Tooltip("일반 주행 전방 BoxCast가 확보할 최소 거리입니다.")]
+    [Tooltip("일반 주행 전방 BoxCast가 확보할 최소 거리")]
     [Range(2f, 15f)]
     public float minimumObstacleLookAhead = 5f;
 
-    [Tooltip("원격 플레이어 위치 지연을 보완하기 위해 현재 속도에 곱하는 추가 예측 시간입니다.")]
+    [Tooltip("원격 플레이어 위치 지연 보완을 위해 현재 속도에 곱하는 추가 예측 시간")]
     [Range(0f, 0.75f)]
     public float obstacleNetworkLookAheadTime = 0.35f;
 
-    [Tooltip("물리 검사 상자의 높이입니다. 플레이어 캡슐과 승용차/트럭 장애물을 함께 감지합니다.")]
+    [Tooltip("물리 검사 상자 높이. 플레이어 캡슐과 승용차/트럭 장애물 동시 감지")]
     [Range(0.8f, 3f)]
     public float authorityObstacleCastHeight = 1.6f;
 
-    [Tooltip("차량 기준점에서 물리 검사 상자 중심까지의 위쪽 거리입니다.")]
+    [Tooltip("차량 기준점에서 물리 검사 상자 중심까지의 위쪽 거리")]
     [Range(0.3f, 1.5f)]
     public float authorityObstacleCastVerticalOffset = 0.8f;
 
-    [Tooltip("실제 플레이어 캡슐과 차량 차체 사이에 추가하는 수평 안전 여유입니다.")]
+    [Tooltip("실제 플레이어 캡슐과 차량 차체 사이에 추가하는 수평 안전 여유")]
     [Range(0f, 0.5f)]
     public float authorityObstacleSafetyMargin = 0.2f;
 
-    [Tooltip("플레이어 점유가 순간적으로 사라져도 마지막 정지점을 유지하는 시간입니다.")]
+    [Tooltip("플레이어 점유가 순간적으로 사라져도 마지막 정지점을 유지하는 시간")]
     [Range(0.1f, 2f)]
     public float playerObstacleReleaseHold = 0.6f;
 
-    [Tooltip("사람이나 물리 장애물 때문에 완전히 멈춘 차량이 출발을 검토하기 위해 먼저 확보해야 하는 전방 거리입니다.")]
+    [Tooltip("사람이나 물리 장애물로 완전히 정지한 차량의 재출발 검토에 필요한 전방 확보 거리")]
     [Range(0.5f, 4f)]
     public float physicalObstacleRestartClearance = 1.5f;
 
-    [Tooltip("확보된 전방 공간이 깜빡이지 않고 유지되어야 하는 시간입니다. 이후 Stop And Go Reaction의 재출발 반응 시간이 적용됩니다.")]
+    [Tooltip("전방 공간이 연속으로 확보되어야 하는 시간. 이후 Stop And Go Reaction의 재출발 반응 시간 적용")]
     [Range(0.1f, 1f)]
     public float physicalObstacleClearConfirmationTime = 0.35f;
 
-    [Tooltip("차선 변경 중 차체가 플레이어를 통과하지 않도록 다음 이동 구간을 월드 좌표에서 검사합니다.")]
+    [Tooltip("차선 변경 중 플레이어 관통 방지를 위한 다음 이동 구간의 월드 좌표 검사")]
     public bool enableLaneChangePlayerSweep = true;
 
-    [Tooltip("차선 변경 차체와 플레이어 사이에 추가하는 안전 여유입니다.")]
+    [Tooltip("차선 변경 차체와 플레이어 사이에 추가하는 안전 여유")]
     [Range(0.05f, 0.5f)]
     public float laneChangePlayerSafetyMargin = 0.2f;
 
-    [Tooltip("현재 위치부터 다음 시뮬레이션 위치까지 검사할 차체 자세 수입니다.")]
+    [Tooltip("현재 위치부터 다음 시뮬레이션 위치까지 검사할 차체 자세 수")]
     [Range(2, 5)]
     public int laneChangeObstacleSweepSamples = 3;
 
-    [Tooltip("차선 변경 중 다른 차량의 회전 차체와 다음 이동 구간이 겹치는지 검사합니다.")]
+    [Tooltip("차선 변경 중 다른 차량의 회전 차체와 다음 이동 구간의 겹침 검사")]
     public bool enableLaneChangeVehicleSweep = true;
 
-    [Tooltip("차선 변경 차량끼리 또는 목표 차선 차량과 유지할 추가 차체 여유입니다.")]
+    [Tooltip("차선 변경 차량끼리 또는 목표 차선 차량과 유지할 추가 차체 여유")]
     [Range(0.05f, 0.75f)]
     public float laneChangeVehicleSafetyMargin = 0.25f;
 
@@ -262,15 +261,15 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     [Range(0.05f, 0.5f)]
     public float stoppedSpeedThreshold = 0.15f;
 
-    [Tooltip("정지 목표에 가까워졌을 때 저속 수렴을 시작하는 거리입니다.")]
+    [Tooltip("정지 목표 접근 시 저속 수렴 시작 거리")]
     [Range(0.5f, 2.5f)]
     public float stopSmoothingDistance = 1.2f;
 
-    [Tooltip("마지막 정지 구간에서 남은 거리를 속도로 변환하는 시간 상수입니다.")]
+    [Tooltip("마지막 정지 구간에서 남은 거리를 속도로 변환하는 시간 상수")]
     [Range(0.25f, 1f)]
     public float stopSmoothingTime = 0.45f;
 
-    [Tooltip("이 거리와 속도보다 작아지면 눈에 띄지 않는 범위에서 정확한 정지 위치로 고정합니다.")]
+    [Tooltip("남은 거리와 속도가 각각 설정값보다 작아지면 눈에 띄지 않는 범위에서 정확한 정지 위치로 고정")]
     [Range(0.005f, 0.1f)]
     public float stopSnapDistance = 0.025f;
 
@@ -294,16 +293,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     public float wheelRadius = 0.32f;
     public float truckWheelRadius = 0.52f;
 
-    [Tooltip("경로 곡률에 맞춰 앞바퀴가 꺾일 수 있는 최대 시각 조향각입니다.")]
+    [Tooltip("경로 곡률에 따른 앞바퀴의 최대 시각 조향각")]
     [Range(20f, 40f)]
     public float maximumFrontWheelSteeringAngle = 34f;
 
-    [Tooltip("앞바퀴가 목표 조향각을 따라가는 초당 회전 속도입니다.")]
+    [Tooltip("앞바퀴가 목표 조향각을 따라가는 초당 회전 속도")]
     [Range(90f, 360f)]
     public float frontWheelSteeringResponse = 240f;
 
     [Header("Motion Visual Update")]
-    [Tooltip("엔진음 볼륨과 피치를 갱신하는 간격입니다.")]
+    [Tooltip("엔진음 볼륨과 피치 갱신 간격")]
     [Range(0.05f, 0.25f)]
     public float audioVisualUpdateInterval = 0.1f;
 
@@ -321,72 +320,72 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     public float overtakeSpeedAdvantage = 0.75f;
     public float laneChangeBenefitDistance = 8f;
 
-    [Tooltip("차선 변경이 가능한 구간에서 플레이어/고정 장애물을 미리 찾는 거리입니다. 기존 BoxCast를 확장하므로 물리 호출 횟수는 증가하지 않습니다.")]
+    [Tooltip("차선 변경 가능 구간의 플레이어/고정 장애물 사전 탐색 거리. 기존 BoxCast 확장으로 물리 호출 횟수 증가 방지")]
     [Range(20f, 35f)]
     public float laneChangePlanningLookAhead = 28f;
 
-    [Tooltip("일반 차선 변경에서 한 차선을 완전히 옮기는 전진거리입니다.")]
+    [Tooltip("일반 차선 변경에서 한 차선을 완전히 옮기는 전진 거리")]
     [Range(12f, 22f)]
     public float normalLaneChangeTravelDistance = 16f;
 
-    [Tooltip("장애물 접촉 예상 지점이 이 거리 안이면 짧은 긴급 회피 경로를 사용합니다.")]
+    [Tooltip("장애물 접촉 예상 지점이 이 거리 안이면 짧은 긴급 회피 경로 사용")]
     [Range(6f, 16f)]
     public float emergencyLaneChangeTriggerDistance = 12f;
 
-    [Tooltip("바로 앞 장애물을 피할 때 한 차선을 완전히 옮기는 전진거리입니다.")]
+    [Tooltip("바로 앞 장애물 회피 시 한 차선을 완전히 옮기는 전진 거리")]
     [Range(8f, 14f)]
     public float emergencyLaneChangeTravelDistance = 10f;
 
-    [Tooltip("10m 긴급 회피 경로에서 허용되는 최대 차체 방향각입니다.")]
+    [Tooltip("10m 긴급 회피 경로의 허용 최대 차체 방향각")]
     [Range(24f, 38f)]
     public float emergencyLaneChangeSteeringAngle = 31f;
 
-    [Tooltip("차선 변경 곡선에서 허용할 최대 횡가속도입니다. 곡률이 큰 10m 긴급 경로는 이 값에 맞춰 먼저 감속합니다.")]
+    [Tooltip("차선 변경 곡선의 허용 최대 횡가속도. 곡률이 큰 10m 긴급 경로는 이 값에 맞춰 사전 감속")]
     [Range(1.5f, 4f)]
     public float laneChangeMaximumLateralAcceleration = 2.5f;
 
-    [Tooltip("곡선 제한 속도에 이 값만큼 가까워지면 직진 감속 준비를 끝내고 횡이동을 시작합니다.")]
+    [Tooltip("곡선 제한 속도에 이 값만큼 가까워지면 직진 감속 준비 종료 및 횡이동 시작")]
     [Range(0.05f, 0.4f)]
     public float laneChangePreparationSpeedTolerance = 0.15f;
 
-    [Tooltip("차선 변경을 시작하기 전에 전체 경로를 검사할 지점 수입니다. 시작할 때만 실행됩니다.")]
+    [Tooltip("차선 변경 전 전체 경로를 검사할 지점 수. 차선 변경 시작 시에만 검사")]
     [Range(6, 12)]
     public int laneChangePreflightSamples = 10;
 
     [Range(12f, 35f)]
     public float maximumLaneChangeSteeringAngle = 20f;
 
-    [Tooltip("저속 막힘 회복 뒤 최종 합류에서 확보할 최소 전진거리입니다.")]
+    [Tooltip("저속 막힘 회복 후 최종 합류에서 확보할 최소 전진 거리")]
     [Range(12f, 24f)]
     public float laneChangeMinimumTravelDistance = 22f;
 
-    [Tooltip("차량 중심이 이 비율만큼 옆으로 이동한 뒤부터 목표 차선의 장애물로 등록합니다.")]
+    [Tooltip("차량 중심이 이 비율만큼 옆으로 이동한 시점부터 목표 차선의 장애물로 등록")]
     [Range(0.02f, 0.3f)]
     public float targetLaneOccupancyStart = 0.15f;
 
-    [Tooltip("차선 변경 차량이 이전 차선의 선행 장애물 판정에서 완전히 벗어나는 횡이동 비율입니다. 0.55는 일반 차량 폭을 고려한 중앙선 통과 여유입니다.")]
+    [Tooltip("차선 변경 차량이 이전 차선의 선행 장애물 판정에서 완전히 벗어나는 횡이동 비율. 0.55는 일반 차량 폭을 고려한 중앙선 통과 여유")]
     [Range(0.45f, 0.7f)]
     public float laneChangeSourceConstraintEnd = 0.55f;
 
-    [Tooltip("뒤 차량이 차선 변경 차량을 이전 차선의 장애물로 유지하는 횡이동 비율입니다.")]
+    [Tooltip("뒤 차량이 차선 변경 차량을 이전 차선의 장애물로 유지하는 횡이동 비율")]
     [Range(0.7f, 0.95f)]
     public float laneChangeSourceOccupancyEnd = 0.85f;
 
     [Range(10f, 80f)]
     public float signalQueueLaneChangeBlockDistance = 45f;
 
-    [Tooltip("녹색 전환 뒤 대기열이 이 속도에 도달할 때까지 신호 대기 차량의 추월 차선 변경을 막습니다.")]
+    [Tooltip("녹색 전환 후 대기열이 이 속도에 도달할 때까지 신호 대기 차량의 추월 차선 변경 제한")]
     [Range(1f, 5f)]
     public float signalQueueReleaseSpeed = 2.5f;
 
-    [Tooltip("녹색 전환 직후 대기열이 출발하는 동안 저속 선행 차량을 추월하지 않도록 보호하는 시간입니다.")]
+    [Tooltip("녹색 전환 직후 대기열 출발 중 저속 선행 차량에 대한 추월 방지 시간")]
     [Range(0.5f, 8f)]
     public float signalQueueReleaseGraceTime = 3f;
 
     [Header("Blocked Lane Change Recovery - Normal Cars")]
     public bool enableBlockedLaneChangeReverse = true;
 
-    [Tooltip("이 속도 이하에서 앞이 막히면 일반 차선 변경 대신 제한 공간 다점 기동을 사용합니다.")]
+    [Tooltip("이 속도 이하에서 전방이 막히면 일반 차선 변경 대신 제한 공간 다점 기동 사용")]
     [Range(0.1f, 2.5f)]
     public float reverseMaximumStartSpeed = 1.5f;
 
@@ -399,51 +398,51 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     [Range(0.5f, 2f)]
     public float laneChangeReverseSpeed = 1.2f;
 
-    [Tooltip("고정 회피 경로의 전진 조향 구간 속도입니다.")]
+    [Tooltip("고정 회피 경로의 전진 조향 구간 속도")]
     [Range(0.5f, 2f)]
     public float blockedRecoveryForwardSpeed = 1f;
 
-    [Tooltip("한 번의 후진과 전진 사이에서 기어를 바꾸며 잠시 정지하는 시간입니다.")]
+    [Tooltip("한 번의 후진과 전진 사이에서 기어 전환을 위한 일시 정지 시간")]
     [Range(0.15f, 0.75f)]
     public float blockedRecoveryGearShiftPause = 0.15f;
 
-    [Tooltip("저속 후진 복구 중 뒤 차량 범퍼와 유지할 간격입니다.")]
+    [Tooltip("저속 후진 복구 중 뒤 차량 범퍼와 유지할 간격")]
     [Range(0.25f, 2f)]
     public float reverseRearClearance = 0.6f;
 
     [Range(0.15f, 0.4f)]
     public float reversePhaseFraction = 0.25f;
 
-    [Tooltip("막힘 회피 시 목표 차선 반대쪽으로 후진하는 차선 폭 비율입니다. 0.12는 약 40cm 정도의 옆 이동입니다.")]
+    [Tooltip("막힘 회피 시 목표 차선 반대쪽으로 후진하는 차선 폭 비율. 0.12 설정 시 약 40cm 옆 이동")]
     [Range(0.05f, 0.25f)]
     public float reverseLateralProgress = 0.12f;
 
     [Range(0f, 1f)]
     public float r4BranchProbability = 0.35f;
 
-    [Tooltip("막힘 회복 기동에만 허용되는 앞바퀴 최대 조향각입니다.")]
+    [Tooltip("막힘 회복 기동에만 허용되는 앞바퀴 최대 조향각")]
     [Range(20f, 40f)]
     public float blockedRecoveryMaximumSteeringAngle = 34f;
 
-    [Tooltip("다점 기동 준비 중 차체가 차선 방향에서 벗어날 수 있는 최대 각도입니다. 일반 차선 변경 각도와 별개입니다.")]
+    [Tooltip("다점 기동 준비 중 차체가 차선 방향에서 벗어날 수 있는 최대 각도. 일반 차선 변경 각도와 별도 설정")]
     [Range(18f, 38f)]
     public float blockedRecoveryMaximumBodyAngle = 35f;
 
     [Header("Visual")]
-    [Tooltip("일반 차량 모델에만 적용되는 시각 크기 보정입니다. TEST 월드 실측 절충값은 1.02이며 주행 좌표와 네트워크 데이터에는 영향을 주지 않습니다.")]
+    [Tooltip("일반 차량 모델 전용 시각 크기 보정. TEST 월드 실측 절충값 1.02 적용, 주행 좌표와 네트워크 데이터는 변경 없이 유지")]
     [Range(0.8f, 1.25f)]
     public float normalCarVisualScale = 1.02f;
 
-    [Tooltip("트럭 모델에만 적용되는 시각 크기 보정입니다.")]
+    [Tooltip("트럭 모델 전용 시각 크기 보정")]
     [Range(0.8f, 1.25f)]
     public float truckVisualScale = 1f;
 
     [Header("Baked Vehicle Bounds")]
-    [Tooltip("차체 외곽에 추가할 앞/뒤 보정 거리입니다. 차간 안전거리는 별도 주행 설정으로 처리하므로 기본값은 0입니다.")]
+    [Tooltip("차체 외곽에 추가할 앞/뒤 보정 거리. 차간 안전거리는 별도 주행 설정으로 처리하므로 기본값 0 적용")]
     [Range(0f, 0.3f)]
     public float vehicleBoundsLongitudinalMargin;
 
-    [Tooltip("차체 외곽에 추가할 좌/우 보정 거리입니다. 차선 변경 안전 여유와 분리하기 위해 기본값은 0입니다.")]
+    [Tooltip("차체 외곽에 추가할 좌/우 보정 거리. 차선 변경 안전 여유와 분리하기 위해 기본값 0 적용")]
     [Range(0f, 0.3f)]
     public float vehicleBoundsLateralMargin;
 
@@ -644,9 +643,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private float[] laneChangeCurveSpeedLimits = new float[0];
     private float[] laneChangeReverseStartS = new float[0];
 
-    // 기동 경로는 시작 위치에서 한 번만 생성한다. 이동, 차체 회전, 조향, 장애물 검사가
-    // 모두 같은 경로를 사용하여 프레임마다 달라진 차선 간격으로 서로 다른 곡선을
-    // 생성하지 않도록 한다.
+    // 시작 위치에서 기동 경로를 한 번만 생성하고 이동, 차체 회전, 조향, 장애물 검사에서 공유
+    // 프레임마다 달라진 차선 간격으로 서로 다른 곡선이 생성되는 문제 방지
     private bool[] maneuverPathValid = new bool[0];
     private int[] maneuverPathSourceLaneIds = new int[0];
     private int[] maneuverPathTargetLaneIds = new int[0];
@@ -828,16 +826,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (simulationAccumulator >= stepDuration)
         {
-            // 긴 프레임 이후에도 한 프레임에서 처리할 시뮬레이션 단계 수를 제한한다.
+            // 긴 프레임 이후에도 한 프레임에서 처리할 시뮬레이션 단계 수 제한
             simulationAccumulator = 0f;
         }
     }
 
     /// <summary>
-    /// 소유권 이전이 안정된 다음 동기화 상태를 복원하고 권한자 시뮬레이션을 시작한다.
+    /// 소유권 이전 안정화 후 동기화 상태 복원 및 권한자 시뮬레이션 시작
     /// </summary>
     /// <remarks>
-    /// Udon 지연 이벤트로 호출되는 로컬 전용 진입점이다.
+    /// Udon 지연 이벤트로 호출되는 로컬 전용 진입점
     /// </remarks>
     public void _BeginAuthority()
     {
@@ -2583,9 +2581,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             leaderIndex
         );
 
-        // 새로 만든 후진 회복 경로는 뒤로 이동하면서 시작한다. 현재 전진 처리 단계의
-        // 나머지 계산이 차량의 출발 차선 좌표를 기준으로 비단조 경로를 다시 매핑하지
-        // 않도록 여기에서 처리를 끝낸다.
+        // 새 후진 회복 경로는 후진으로 시작하므로 현재 전진 처리 단계를 여기서 종료
+        // 남은 전진 계산에서 출발 차선 좌표 기준으로 비단조 경로를 다시 매핑하는 문제 방지
         if (!laneChangeWasActive &&
             laneChangeActive[vehicleIndex] &&
             laneChangeReverseManeuver[vehicleIndex])
@@ -2765,8 +2762,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     }
                     else
                     {
-                        // 출발 차선에서 기다리며 두 차선을 계속 예약한다. 안전하지 않은
-                        // 곡선에 진입하면 차체가 옆으로 미끄러지거나 다른 차량과 겹친다.
+                        // 출발 차선에서 대기하며 두 차선의 예약 유지
+                        // 안전하지 않은 곡선 진입에 따른 차체의 옆 미끄러짐 및 차량 겹침 방지
                         targetSpeed = 0f;
                     }
                 }
@@ -3161,8 +3158,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
             else
             {
-                // 하나의 기동은 하나의 기준 경로만 사용한다. 고정 경로를 일시적으로
-                // 사용할 수 없으면 별도의 절차적 이동을 만들지 않고 이번 단계를 유지한다.
+                // 하나의 기동에서 하나의 기준 경로만 사용
+                // 고정 경로를 일시적으로 사용할 수 없으면 별도의 절차적 이동 없이 이번 단계 유지
                 candidateProgress = laneChangeProgress[vehicleIndex];
                 newS = oldS;
                 newSpeed = 0f;
@@ -3980,8 +3977,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (detectedStopS >= 0f &&
             detectedClearance < requiredClearance)
         {
-            // 장애물이 잠시 움직인 것만으로 바로 따라가지 않는다. 전방 공간이 안정적으로
-            // 확보된 다음 전체 반응 절차를 다시 시작한다.
+            // 장애물의 일시적인 움직임에 따른 즉시 출발 방지
+            // 전방 공간의 안정적인 확보 후 전체 반응 절차 재시작
             ResetPhysicalObstacleRestartTimers(vehicleIndex);
             return true;
         }
@@ -4871,8 +4868,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             laneChangePlayerSafetyMargin
         );
 
-        // 출발 차선 쪽의 추가 안전 여유만 예외로 처리한다. 실제 차체 범위에 닿은
-        // Collider나 목표 차선을 점유한 물체가 있으면 기동을 계속 중지한다.
+        // 출발 차선 쪽의 추가 안전 여유만 예외 처리
+        // 실제 차체 범위에 닿은 Collider나 목표 차선을 점유한 물체가 있으면 기동 중지 유지
         if (!IsPhysicsPoseBlockedByObstacle(
                 vehicleIndex,
                 vehiclePosition,
@@ -5114,8 +5111,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 laneChangeProgress[vehicleIndex]
             ))
         {
-            // 후진 차량은 점유된 모든 차체 범위에 양보한다. 이후의 후진 탈출 예외는
-            // 전방에 있다고 확인된 장애물만 무시하며 뒤쪽이나 옆 차량은 무시하지 않는다.
+            // 후진 차량은 점유된 모든 차체 범위에 양보
+            // 후진 탈출 예외는 전방으로 확인된 장애물에만 적용하고 뒤쪽 및 옆 차량은 계속 검사
             return true;
         }
 
@@ -5883,8 +5880,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (reverseManeuver)
             {
-                // 후진과 전진 준비 곡선은 동일한 기구학적 진행 방향을 사용한다.
-                // 기어를 바꾸며 정지한 동안 차체 각도가 연속적으로 유지된다.
+                // 후진과 전진 준비 곡선에 동일한 기구학적 진행 방향 사용
+                // 기어 전환을 위해 정지한 동안 차체 각도의 연속성 유지
                 maneuverPathRotations[offset + sample] =
                     GetRecoveryKinematicWorldRotation(
                         vehicleIndex,
@@ -6678,8 +6675,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float distanceToStop =
             stopS - currentS;
 
-        // 정지선을 실제로 통과한 차량만 계속 진행한다. 정확히 정지선에 도착한
-        // 차량은 신호가 바뀔 때까지 현재 위치를 유지한다.
+        // 정지선을 실제로 통과한 차량만 계속 진행
+        // 정확히 정지선에 도착한 차량은 신호 변경까지 현재 위치 유지
         if (distanceToStop < 0f)
         {
             return -1f;
@@ -6704,7 +6701,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 (2f * brakingRate) +
                 yellowDecisionMargin;
 
-            // 황색 전환 시 정지선과 너무 가까우면 급정지하지 않고 통과한다.
+            // 황색 전환 시 정지선과 너무 가까우면 급정지 없이 통과
             if (distanceToStop <=
                 requiredBrakingDistance)
             {
@@ -7370,8 +7367,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return false;
         }
 
-        // 제한 공간 회복은 첫 후진 전에 인접 차선을 예약한다. 대상 차량이 기어를
-        // 바꾸고 차체를 돌리는 동안 뒤 차량이 기동 공간에 진입하지 못하게 한다.
+        // 제한 공간 회복의 첫 후진 전에 인접 차선 예약
+        // 대상 차량의 기어 전환과 차체 회전 중 뒤 차량의 기동 공간 진입 방지
         if (laneChangeReverseManeuver[vehicleIndex])
         {
             return true;
@@ -7452,8 +7449,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (laneChangeActive[vehicleIndex] &&
             laneChangeReverseManeuver[vehicleIndex])
         {
-            // 기동 점유 영역의 뒤쪽 끝을 예정된 최대 후진 자세에 고정한다. 대상 차량이
-            // 다시 전진할 때 뒤 차량이 확보된 공간에 들어오지 못하게 한다.
+            // 기동 점유 영역의 뒤쪽 끝을 예정된 최대 후진 자세에 고정
+            // 대상 차량의 재전진 중 뒤 차량의 확보 공간 진입 방지
             sourceS = laneChangeReverseStartS[vehicleIndex] -
                 Mathf.Max(
                     MinimumReverseRecoveryDistance,
@@ -7715,9 +7712,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
         float maximumCurvature = 0f;
 
-        // 일반 차선 변경 경로는 x = Lp, y = D(6p^5 - 15p^4 + 10p^3)이다.
-        // 기동을 평가하고 준비할 때 곡률을 한 번 샘플링하며, 순항 속도에서 차체만
-        // 회전시키지 않도록 횡가속도를 기준으로 속도를 제한한다.
+        // 일반 차선 변경 경로: x = Lp, y = D(6p^5 - 15p^4 + 10p^3)
+        // 기동 평가 및 준비 시 곡률을 한 번 샘플링하고 횡가속도 기준으로 속도 제한
+        // 순항 속도에서 차체만 회전하는 문제 방지
         for (int sample = 1; sample < 16; sample++)
         {
             float progress = sample / 16f;
@@ -8603,8 +8600,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            // 짧은 저속 회복 기동이므로 일반 추종 간격을 그대로 요구하지 않는다.
-            // 밀집된 대기열에서 필요한 후진이 모두 막혀 영구 정체가 생기는 것을 피한다.
+            // 짧은 저속 회복 기동에서는 일반 추종 간격 요구 완화
+            // 밀집된 대기열에서 필요한 후진이 모두 막혀 발생하는 영구 정체 방지
             float rearGap = Mathf.Max(
                 0.25f,
                 reverseRearClearance
@@ -8807,9 +8804,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             1f - startLateral
         );
 
-        // 3차 합류 곡선을 단조롭게 유지하면서 정확한 탈출 방향을 보존한다. 고정된
-        // 22m 합류 경로는 시작 접선을 제한해야 했고, 단계 경계에서 30~35도인 차체
-        // 각도가 약 20도로 갑자기 바뀌었다.
+        // 3차 합류 곡선의 단조성 유지 및 정확한 탈출 방향 보존
+        // 기존 고정 22m 합류 경로의 시작 접선 제한으로 인해 단계 경계에서 발생하던
+        // 차체 각도 급변(30~35도에서 약 20도) 방지
         float maximumNormalizedTangent = Mathf.Min(
             2.5f,
             2.4f * remainingLateral
@@ -8881,8 +8878,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         float t = Mathf.Clamp01(progress);
 
-        // 전진 기어는 정지 상태에서 시작하되 준비 곡선은 단위 속도로 빠져나온다.
-        // 이전 5차 완화 곡선은 양 끝에서 속도가 0이 되어 최종 합류 전에 멈춤이 보였다.
+        // 전진 기어는 정지 상태에서 시작하고 준비 곡선의 끝에서는 단위 속도 유지
+        // 기존 5차 완화 곡선 양 끝의 속도 0으로 인해 최종 합류 전에 보이던 멈춤 방지
         return t * t * (2f - t);
     }
 
@@ -8948,8 +8945,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 18f,
                 38f
             ) /
-            // 통합 회복 경로는 하나의 전체 후진 곡선과 더 짧은 전진 곡선으로 구성된다.
-            // 두 곡선의 방향 변화 합계를 설정된 차체 각도로 제한한다.
+            // 통합 회복 경로를 하나의 전체 후진 곡선과 더 짧은 전진 곡선으로 구성
+            // 두 곡선의 방향 변화 합계를 설정된 차체 각도로 제한
             Mathf.Max(
                 0.1f,
                 distance *
@@ -9082,9 +9079,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return false;
         }
 
-        // 일반 검사는 설정 가능한 여유 간격을 포함한다. 기어 전환 경계에서는 이 여유로
-        // 차량이 몇 cm를 남긴 채 계속 멈출 수 있다. 단계 끝점에서 실제 차체와 최소
-        // 물리 여유가 겹치지 않을 때만 단계를 완료한다.
+        // 일반 검사는 설정 가능한 여유 간격을 포함하므로 기어 전환 경계에서 수 cm를 남긴 채 정지할 가능성 존재
+        // 단계 끝점에서 실제 차체와 최소 물리 여유에 겹침이 없을 때만 단계 완료
         return !IsLaneChangePoseBlockedByVehicleWithMargin(
             vehicleIndex,
             phaseEndPosition,
@@ -9210,8 +9206,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     recoveryDistance
                 ))
             {
-                // 여유 간격의 겹침이 사라질 때까지 기다리지 않고 단계 끝점에서 기어를
-                // 바꾼다. 플레이어 및 도로 경계 장애에는 이 예외를 적용하지 않는다.
+                // 여유 간격의 겹침 해제를 기다리지 않고 단계 끝점에서 기어 전환
+                // 플레이어 및 도로 경계 장애에는 예외 적용 제외
                 newS = laneChangeReverseStartS[vehicleIndex] +
                     GetRecoveryLongitudinalOffset(
                         vehicleIndex,
@@ -9272,8 +9268,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
-        // 통합 회복은 한 번만 기어를 바꾼다. 장애물에서 후진한 다음 일반 합류 곡선을
-        // 따라 전진한다.
+        // 통합 회복의 기어 전환은 한 번으로 제한
+        // 장애물에서 후진한 다음 일반 합류 곡선을 따라 전진
         laneChangeRecoveryGearHoldRemaining[vehicleIndex] =
             Mathf.Max(0.15f, blockedRecoveryGearShiftPause);
         vehicleSpeeds[vehicleIndex] = 0f;
@@ -10484,8 +10480,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (renderedManeuverContextChanged)
             {
-                // 이후 기동이 이전 기동과 같은 차선 조합을 사용할 수 있다. 원격
-                // 클라이언트에서 새 기동이 이전 고정 경로 기준점을 이어받지 않게 한다.
+                // 이후 기동이 이전 기동과 같은 차선 조합을 사용하는 경우에도
+                // 원격 클라이언트의 새 기동이 이전 고정 경로 기준점을 이어받는 문제 방지
                 InvalidateManeuverPath(i);
             }
 
@@ -10502,9 +10498,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 }
             }
 
-            // 비권한 클라이언트는 차량 시뮬레이션 배열을 갱신하지 않는다. 회복 곡선을
-            // 평가하기 전에 표시용 차선 변경 정보를 채워 위치와 차체 방향이 디코딩된
-            // 스냅샷과 같은 출발 차선, 목표 차선, 규칙을 사용하게 한다.
+            // 비권한 클라이언트에서는 차량 시뮬레이션 배열 갱신 없이 표시용 차선 변경 정보 사용
+            // 회복 곡선 평가 전에 정보를 채워 위치와 차체 방향 계산에 디코딩된 스냅샷과
+            // 동일한 출발 차선, 목표 차선, 규칙 적용
             vehicleLaneIds[i] = laneId;
             vehicleS[i] = renderS;
             laneChangeActive[i] = renderLaneChangeActive;
@@ -10618,9 +10614,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
                 if (signedRenderedAdvance < 0f)
                 {
-                    // 늦게 도착했거나 양자화된 스냅샷 때문에 원격 차량을 화면에서 뒤로
-                    // 이동시키지 않는다. 소유권자 상태가 따라올 때까지 전체 경로 자세를
-                    // 유지한다. S만 유지하고 횡진행도를 늘리면 차체가 회전하며 옆으로 미끄러진다.
+                    // 지연되거나 양자화된 스냅샷에 의한 원격 차량의 화면상 위치 되감기 방지
+                    // 소유권자 상태가 따라올 때까지 전체 경로 자세 유지
+                    // S만 유지한 채 횡진행도를 늘릴 때 발생하는 차체 회전과 옆 미끄러짐 방지
                     renderS = previousRenderedS;
 
                     if (sameRenderedLaneChange)
@@ -10637,7 +10633,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     else if (renderLaneChangeActive &&
                              !previousLaneChangeActive)
                     {
-                        // 새로 수신한 기동을 횡방향 보정만으로 시작하지 않는다.
+                        // 새로 수신한 기동이 횡방향 보정만으로 시작되는 문제 방지
                         renderLaneChangeProgress = 0f;
                     }
                 }
@@ -10902,7 +10898,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             else if (childName == "Wheel_FR" ||
                      childName == "Wheel_FB")
             {
-                // Serena 프리팹의 기존 Wheel_FB 이름을 오른쪽 앞바퀴로 취급한다.
+                // Serena 프리팹의 기존 Wheel_FB 이름을 오른쪽 앞바퀴로 처리
                 wheelIndex = 1;
             }
             else if (childName == "Wheel_BL")

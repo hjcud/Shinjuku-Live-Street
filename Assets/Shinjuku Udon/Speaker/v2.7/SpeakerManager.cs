@@ -9,11 +9,11 @@ using VRC.Udon.Common;
 using VRC.Udon.Common.Interfaces;  
 
 /// <summary>
-/// VR과 데스크톱 입력을 받아 스피커 설치 위치를 미리 보여주고 사용 가능한 스피커를 배치한다.
+/// VR과 데스크톱 입력에 따른 스피커 설치 위치 미리 표시 및 사용 가능한 스피커 배치
 /// </summary>
 /// <remarks>
-/// 실제 스피커 상태와 소유권은 각 <see cref="SpeakerController"/>가 관리한다.
-/// 이 클래스는 로컬 설치 입력과 전체 인스턴스의 사용 가능 수 표시를 조정한다.
+/// 실제 스피커 상태와 소유권은 각 <see cref="SpeakerController"/>에서 관리
+/// 이 클래스에서는 로컬 설치 입력과 전체 인스턴스의 사용 가능 수 표시 조정
 /// </remarks>
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class SpeakerManager : UdonSharpBehaviour
@@ -222,15 +222,15 @@ public class SpeakerManager : UdonSharpBehaviour
         float angle = Vector3.Angle(surfaceNormal, Vector3.up);
         if (angle > 30f)
         {
-            SetHoloStatus(true, 1); // Animator 상태 1은 경사면 경고이다.
+            SetHoloStatus(true, 1); // Animator 상태 1: 경사면 경고 표시
         }
         else if (UsableSpeakerCount < 1)
         {
-            SetHoloStatus(true, 2); // Animator 상태 2는 전체 수량 초과 경고이다.
+            SetHoloStatus(true, 2); // Animator 상태 2: 전체 수량 초과 경고 표시
         }
         else if (speakerOwned)
         {
-            SetHoloStatus(true, 3); // Animator 상태 3은 개인 수량 초과 경고이다.
+            SetHoloStatus(true, 3); // Animator 상태 3: 개인 수량 초과 경고 표시
         }
         else
         {
@@ -268,7 +268,7 @@ public class SpeakerManager : UdonSharpBehaviour
             float t = i / (float)steps;
             Vector3 point = (1 - t) * (1 - t) * start +
                             2 * (1 - t) * t * control +
-                            t * t * end; // 반복 호출 비용을 줄이기 위해 Mathf.Pow를 사용하지 않는다.
+                            t * t * end; // 반복 호출 비용 절감을 위해 Mathf.Pow 대신 곱셈 사용
             lineRenderer.SetPosition(i, point);
         }
     }
@@ -295,7 +295,7 @@ public class SpeakerManager : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 스피커 배치가 확정된 모든 클라이언트에서 사용 가능 수를 하나 줄인다.
+    /// 스피커 배치가 확정된 모든 클라이언트에서 사용 가능 수 1 감소
     /// </summary>
     [NetworkCallable]
     public void DecreaseUsableCount()
@@ -309,7 +309,7 @@ public class SpeakerManager : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 현재 비어 있는 스피커 슬롯을 다시 세어 로컬 사용 가능 수를 복구한다.
+    /// 현재 비어 있는 스피커 슬롯을 다시 세어 로컬 사용 가능 수 복구
     /// </summary>
     public void RecalculateUsableCount()
     {

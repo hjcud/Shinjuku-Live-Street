@@ -7,47 +7,47 @@ using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
 
 /// <summary>
-/// 교통 차량과 패널의 충돌을 감지하고 충돌 속도에 따라 반동 또는 별 비행 연출을 적용한다.
+/// 교통 차량과 패널의 충돌 감지 및 충돌 속도에 따른 반동 또는 별 비행 연출 적용
 /// </summary>
 /// <remarks>
-/// 물리 반응은 현재 소유권자만 결정한다. 고속 충돌의 표시 결과는 네트워크 호출로
-/// 전달하지만 파티클 자체는 각 클라이언트에서 로컬로 재생한다.
+/// 물리 반응 결정 권한을 현재 소유권자로 제한
+/// 고속 충돌의 표시 결과는 네트워크 호출로 전달하고 파티클은 각 클라이언트에서 로컬 재생
 /// </remarks>
 public class PanelFly : UdonSharpBehaviour
 {
     [Header("Collision Response")]
     public float bounceForce = 25f;
 
-    [Tooltip("이 속도 이상의 정면 충돌은 실제 패널 대신 별이 되는 로컬 3D 파티클을 재생합니다.")]
+    [Tooltip("이 속도 이상의 정면 충돌 시 실제 패널 대신 별로 변하는 로컬 3D 파티클 재생")]
     public float highImpactThresholdKmh = 18f;
 
-    [Tooltip("고속 연출이 시작된 뒤 같은 패널에서 다시 고속 충돌을 받지 않는 시간입니다.")]
+    [Tooltip("고속 연출 시작 후 같은 패널의 고속 충돌 재처리 방지 시간")]
     public float highImpactCooldown = 2.5f;
 
-    [Tooltip("Transform으로 이동하는 중앙 교통 차량과의 겹침을 확인하는 간격입니다.")]
+    [Tooltip("Transform으로 이동하는 중앙 교통 차량과의 겹침 검사 간격")]
     public float vehicleProbeInterval = 0.08f;
 
-    [Tooltip("한 차량이 패널을 통과하는 동안 같은 충돌을 반복 처리하지 않는 시간입니다.")]
+    [Tooltip("한 차량이 패널을 통과하는 동안 같은 충돌의 반복 처리 방지 시간")]
     public float repeatedImpactCooldown = 0.4f;
 
-    [Tooltip("검사 사이에 차량이 이동한 구간을 보완하는 최소 여유 거리입니다.")]
+    [Tooltip("검사 사이에 차량이 이동한 구간을 보완하는 최소 여유 거리")]
     public float vehicleProbeSweepPadding = 0.1f;
 
-    [Tooltip("한 번의 검사에서 보완할 최대 차량 이동 거리입니다.")]
+    [Tooltip("한 번의 검사에서 보완할 최대 차량 이동 거리")]
     public float maximumVehicleProbeSweep = 1.2f;
 
     [Header("High Impact Effect")]
     public TrafficSimulationManager trafficManager;
     public ParticleSystem starPanelParticle;
     public ParticleSystem starFlashParticle;
-    [Tooltip("등신대가 솟구칠 때 남기는 약한 수평 이동 속도입니다.")]
+    [Tooltip("등신대가 솟구칠 때 남기는 약한 수평 이동 속도")]
     public float starHorizontalSpeed = 3.5f;
 
-    [Tooltip("등신대가 화면 위의 하늘까지 올라가는 수직 속도입니다.")]
+    [Tooltip("등신대가 화면 위의 하늘까지 올라가는 수직 속도")]
     public float starUpwardSpeed = 28f;
 
     public float starFlightDuration = 2.6f;
-    [Tooltip("고속 충돌 뒤 실제 등신대를 숨겨 두는 시간입니다. 별 비행 시간보다 짧게 설정해도 별 비행이 끝날 때까지는 나타나지 않습니다.")]
+    [Tooltip("고속 충돌 후 실제 등신대 숨김 시간. 별 비행 시간보다 짧게 설정해도 별 비행 종료까지 숨김 유지")]
     public float highImpactHiddenDuration = 2.6f;
     public float starFlashSize = 2.25f;
 
@@ -142,8 +142,8 @@ public class PanelFly : UdonSharpBehaviour
             )
         );
 
-        // 화면상 떨어진 차량까지 충돌로 보지 않으면서 프레임 사이의 접촉 누락만
-        // 보완할 수 있도록 매우 작은 여유를 더한다.
+        // 프레임 사이의 접촉 누락 보완을 위한 작은 여유 추가
+        // 화면상 떨어진 차량까지 충돌로 판정하지 않도록 여유 크기 제한
         halfExtents += new Vector3(0.015f, 0.015f, 0.015f);
 
         Vector3 probeCenter =
@@ -295,8 +295,8 @@ public class PanelFly : UdonSharpBehaviour
         nextImpactTime = Time.time +
             Mathf.Max(0.1f, repeatedImpactCooldown);
 
-        // 플레이어가 패널을 든 상태에서도 겹침 검사가 실행되므로 힘을 적용하거나
-        // 원위치로 돌리기 전에 Pickup을 놓게 한다.
+        // 플레이어가 패널을 든 상태에서도 겹침 검사 실행
+        // 힘 적용 또는 원위치 복귀 전에 Pickup 해제
         if (pickup != null)
         {
             pickup.Drop();
@@ -356,7 +356,7 @@ public class PanelFly : UdonSharpBehaviour
 
             HidePanelForHighImpact();
 
-            // 숨긴 실제 패널 대신 같은 외형의 파티클이 날아간다.
+            // 숨긴 실제 패널 대신 같은 외형의 파티클 비행
             EmitStarPanel(
                 launchPosition,
                 launchVelocity,
@@ -425,13 +425,13 @@ public class PanelFly : UdonSharpBehaviour
 
         if (objectSync != null)
         {
-            // VRCObjectSync가 보관한 실제 월드 시작 위치를 사용한다.
+            // VRCObjectSync가 보관한 실제 월드 시작 위치 사용
             objectSync.Respawn();
             objectSync.FlagDiscontinuity();
         }
         else
         {
-            // ObjectSync가 없는 예외적인 패널만 Start 시점 좌표를 사용한다.
+            // ObjectSync가 없는 예외적인 패널에만 Start 시점 좌표 사용
             transform.SetPositionAndRotation(
                 initialPosition,
                 initialRotation
@@ -444,8 +444,8 @@ public class PanelFly : UdonSharpBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
-        // 충돌이 발생한 물리 프레임과 Rigidbody 보간이 방금 복구한 위치를
-        // 다시 덮어쓰지 못하도록 다음 프레임에 복귀를 확정한다.
+        // 다음 프레임에 복귀를 확정해 충돌 물리 프레임과 Rigidbody 보간에 의한
+        // 복구 위치 덮어쓰기 방지
         SendCustomEventDelayedFrames(
             nameof(FinalizeWorldStartRespawn),
             1
@@ -453,9 +453,9 @@ public class PanelFly : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 충돌 다음 프레임에 패널의 월드 시작 위치와 정지 상태를 다시 확정한다.
+    /// 충돌 다음 프레임에 패널의 월드 시작 위치와 정지 상태 재확정
     /// </summary>
-    /// <remarks>소유권자에서 지연 이벤트로 호출되는 로컬 전용 진입점이다.</remarks>
+    /// <remarks>소유권자에서 지연 이벤트로 호출되는 로컬 전용 진입점</remarks>
     public void FinalizeWorldStartRespawn()
     {
         if (!Networking.IsOwner(gameObject))
@@ -491,11 +491,11 @@ public class PanelFly : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 모든 클라이언트에서 실제 패널을 숨기고 같은 시작 상태의 별 파티클을 재생한다.
+    /// 모든 클라이언트에서 실제 패널 숨김 및 동일한 시작 상태의 별 파티클 재생
     /// </summary>
-    /// <param name="launchPosition">별 파티클의 월드 시작 위치이다.</param>
-    /// <param name="launchVelocity">별 파티클의 초기 월드 속도이다.</param>
-    /// <param name="launchRotation">별 파티클의 초기 월드 회전이다.</param>
+    /// <param name="launchPosition">별 파티클의 월드 시작 위치</param>
+    /// <param name="launchVelocity">별 파티클의 초기 월드 속도</param>
+    /// <param name="launchRotation">별 파티클의 초기 월드 회전</param>
     [NetworkCallable]
     public void RemoteStarLaunch(
         Vector3 launchPosition,
@@ -535,7 +535,7 @@ public class PanelFly : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 별 비행 연출이 끝난 뒤 패널의 Renderer, Collider, Rigidbody 상태를 복원한다.
+    /// 별 비행 연출 종료 후 패널의 Renderer, Collider, Rigidbody 상태 복원
     /// </summary>
     public void RestorePanelAfterHighImpact()
     {
@@ -614,7 +614,7 @@ public class PanelFly : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 별 비행이 끝나는 위치에서 주 섬광과 첫 번째 보조 섬광을 재생한다.
+    /// 별 비행 종료 위치에서 주 섬광과 첫 번째 보조 섬광 재생
     /// </summary>
     public void _PlayStarFlash()
     {
@@ -631,8 +631,8 @@ public class PanelFly : UdonSharpBehaviour
             0f
         );
 
-        // 첫 세 개의 보조 별은 주 섬광과 함께 표시하고, 나머지는 시간차를 두어
-        // 하나의 정적인 섬광이 아니라 짧은 파란 반짝임으로 보이게 한다.
+        // 첫 세 개의 보조 별은 주 섬광과 함께 표시
+        // 나머지는 시간차를 두어 정적인 섬광 대신 짧은 파란 반짝임으로 표현
         float smallSize = Mathf.Max(0.1f, starFlashSize * 0.28f);
         EmitFlashStar(
             pendingStarPosition + new Vector3(1.25f, 0.7f, 0f),
@@ -661,7 +661,7 @@ public class PanelFly : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 주 섬광 뒤에 시간차를 둔 작은 별을 순서대로 재생한다.
+    /// 주 섬광 이후 시간차를 둔 작은 별 순차 재생
     /// </summary>
     public void _PlaySmallStarTwinkle()
     {

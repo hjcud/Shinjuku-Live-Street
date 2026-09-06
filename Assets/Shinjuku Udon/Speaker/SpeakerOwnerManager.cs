@@ -8,7 +8,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 /// <summary>
-/// 동기화된 사용자 ID를 기준으로 스피커 Pickup의 사용 가능 여부와 소유자 표시를 관리한다.
+/// 동기화된 사용자 ID를 기준으로 스피커 Pickup의 사용 가능 여부와 소유자 표시 관리
 /// </summary>
 public class SpeakerOwnerManager : UdonSharpBehaviour
 {

@@ -5,7 +5,7 @@ using UnityEngine;
 using VRC.Udon;
 
 /// <summary>
-/// 교통 시스템의 Inspector와 Scene Gizmo를 표시하고 차량 차체 범위를 베이크한다.
+/// 교통 시스템의 Inspector와 Scene Gizmo 표시 및 차량 차체 범위 베이크
 /// </summary>
 [CustomEditor(typeof(TrafficSimulationManager))]
 public class TrafficSimulationManagerEditor : Editor
@@ -15,7 +15,7 @@ public class TrafficSimulationManagerEditor : Editor
     private const string VehicleShadowAssetGuid =
         "3e42b0132c6212841a6954d4cdbc2d22";
 
-    // Udon 실행 객체에서 읽어 Inspector에 실시간 네트워크 상태를 표시한다.
+    // Udon 실행 객체에서 읽은 실시간 네트워크 상태를 Inspector에 표시
     public override void OnInspectorGUI()
     {
         if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target))
@@ -1296,8 +1296,8 @@ public class TrafficSimulationManagerEditor : Editor
                 }
                 else if (!preparingLaneChange)
                 {
-                    // 런타임 이동도 고정 경로를 사용할 수 없는 동안 멈추므로 예측
-                    // 표시를 절차적 위치로 옮기지 않고 실제 자세에 유지한다.
+                    // 고정 경로를 사용할 수 없는 동안 런타임 이동 중지
+                    // 예측 표시도 절차적 위치로 옮기지 않고 실제 자세에 유지
                     futurePosition = currentVisualPosition;
                     futureRotation = currentVisualRotation;
                 }

@@ -3,11 +3,11 @@ using UnityEngine;
 using VRC.SDKBase;
 
 /// <summary>
-/// 서버 시간을 기준으로 신호 주기를 계산하고 모든 클라이언트의 신호 Animator를 맞춘다.
+/// 서버 시간 기준 신호 주기 계산 및 모든 클라이언트의 신호 Animator 동기화
 /// </summary>
 /// <remarks>
-/// 최초 Master가 주기 시작 시간을 동기화하며, Master가 바뀌어도 기존 시작 시간을
-/// 유지한다. 동기화가 끝나기 전에는 차량이 진입하지 않도록 적색 신호를 반환한다.
+/// 최초 Master에서 주기 시작 시간 동기화 및 Master 변경 시 기존 시작 시간 유지
+/// 동기화 완료 전 차량 진입 방지를 위해 적색 신호 반환
 /// </remarks>
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class ShinhoTime : UdonSharpBehaviour
@@ -93,14 +93,14 @@ public class ShinhoTime : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 현재 서버 시간에 해당하는 신호 상태를 반환한다.
+    /// 현재 서버 시간에 해당하는 신호 상태 반환
     /// </summary>
-    /// <returns>적색, 녹색, 황색 중 하나의 신호 상수이다.</returns>
+    /// <returns>적색, 녹색, 황색 중 하나의 신호 상수</returns>
     public int GetSignalState()
     {
         if (!cycleInitialized)
         {
-            // 동기화 전에는 차량이 교차로에 진입하지 않도록 적색으로 처리한다.
+            // 동기화 전 교차로 진입 방지를 위해 적색 신호 처리
             return SignalRed;
         }
 
@@ -121,9 +121,9 @@ public class ShinhoTime : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 현재 신호 주기의 진행도를 Animator에서 사용할 0~1 범위로 반환한다.
+    /// 현재 신호 주기의 진행도를 Animator에서 사용할 0~1 범위로 반환
     /// </summary>
-    /// <returns>정규화된 신호 주기 진행도이다.</returns>
+    /// <returns>정규화된 신호 주기 진행도</returns>
     public float GetNormalizedTime()
     {
         if (loopTime <= 0.01f)

@@ -6,7 +6,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 /// <summary>
-/// 스피커의 AudioReverbFilter 활성 상태를 소유권자가 변경하고 동기화한다.
+/// 소유권자가 스피커의 AudioReverbFilter 활성 상태를 변경하고 동기화
 /// </summary>
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class SpeakerRevToggle : UdonSharpBehaviour
@@ -30,7 +30,7 @@ public class SpeakerRevToggle : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 로컬 사용자가 소유권을 확보한 뒤 Reverb 상태를 바꾸고 직렬화를 요청한다.
+    /// 로컬 사용자의 소유권 확보 후 Reverb 상태 변경 및 직렬화 요청
     /// </summary>
     public void ButtonTrigger()
     {
@@ -45,7 +45,7 @@ public class SpeakerRevToggle : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 스피커 반환 과정에서 Reverb를 기본 활성 상태로 복구하고 직렬화한다.
+    /// 스피커 반환 과정에서 Reverb의 기본 활성 상태 복구 및 직렬화
     /// </summary>
     public void OwnerDisableTarget()
     {
@@ -60,7 +60,7 @@ public class SpeakerRevToggle : UdonSharpBehaviour
     }
 
     /// <summary>
-    /// 동기화된 상태를 모든 AudioReverbFilter와 버튼 색상에 로컬로 반영한다.
+    /// 동기화된 상태를 모든 AudioReverbFilter와 버튼 색상에 로컬 반영
     /// </summary>
     public void ToggleTarget()
     {

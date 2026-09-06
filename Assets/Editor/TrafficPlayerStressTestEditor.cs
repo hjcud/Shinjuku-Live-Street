@@ -8,11 +8,11 @@ using VRC.SDK3.ClientSim;
 using VRC.SDKBase;
 
 /// <summary>
-/// ClientSim 원격 플레이어 80명의 배치를 바꾸며 교통 시스템의 Profiler 구간을 기록한다.
+/// ClientSim 원격 플레이어 80명의 배치를 바꾸며 교통 시스템의 Profiler 구간 기록
 /// </summary>
 /// <remarks>
-/// WAIT, DIST, CROWD 상태를 각각 600프레임씩 세 번 반복한다. 각 상태의 첫
-/// 60프레임은 워밍업이며 구간 정보는 Temp/TrafficPlayerStressPhases.csv에 기록한다.
+/// WAIT, DIST, CROWD 상태를 각각 600프레임씩 세 번 반복
+/// 각 상태의 첫 60프레임을 워밍업으로 사용하고 구간 정보는 Temp/TrafficPlayerStressPhases.csv에 기록
 /// </remarks>
 [InitializeOnLoad]
 public static class TrafficPlayerStressTestEditor
@@ -94,7 +94,7 @@ public static class TrafficPlayerStressTestEditor
     }
 
     /// <summary>
-    /// Play Mode에서 원격 플레이어 준비를 시작하고 전체 측정 주기를 실행한다.
+    /// Play Mode에서 원격 플레이어 준비 시작 및 전체 측정 주기 실행
     /// </summary>
     [MenuItem(
         "Tools/Traffic V1 Test/Profiler/Start WAIT-DIST-CROWD Cycle _F8"
@@ -117,7 +117,7 @@ public static class TrafficPlayerStressTestEditor
     }
 
     /// <summary>
-    /// 진행 중인 측정을 중단하고 완료된 구간을 부분 결과로 기록한다.
+    /// 진행 중인 측정 중단 및 완료된 구간의 부분 결과 기록
     /// </summary>
     [MenuItem(
         "Tools/Traffic V1 Test/Profiler/Stop Profile Cycle #F8"

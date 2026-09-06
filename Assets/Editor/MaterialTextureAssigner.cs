@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 /// <summary>
-/// 파일 이름 접미사를 기준으로 Texture를 같은 이름의 Material 속성에 연결하는 Editor 도구이다.
+/// 파일 이름 접미사를 기준으로 Texture를 같은 이름의 Material 속성에 연결하는 Editor 도구
 /// </summary>
 public class MaterialTextureAssigner : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class MaterialTextureAssigner : MonoBehaviour
         {
             foreach (Texture tex in textures)
             {
-                // Material 이름과 접미사 규칙이 일치하는 Texture만 자동으로 연결한다.
+                // Material 이름과 접미사 규칙이 일치하는 Texture만 자동 연결
                 if (tex.name.StartsWith(mat.name))
                 {
                     if (tex.name.EndsWith("_BaseColor"))
