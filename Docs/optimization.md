@@ -1,5 +1,5 @@
 <p align="center">
-  <strong>한국어</strong> · <a href="./optimization.ja.md">日本語</a> · <a href="./optimization.en.md">English</a>
+  <a href="./optimization.ja.md">日本語</a> · <strong>한국어</strong> · <a href="./optimization.en.md">English</a>
 </p>
 
 # 교통 시스템 성능 최적화
@@ -166,4 +166,4 @@ flowchart LR
 | 차량·센서 상태 표시 | 센서 범위, 현재 차선, 목표 차선, 네트워크 상태를 Scene View에서 확인 | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
 | 80명 스트레스 테스트 | 주기적인 프레임 드랍을 같은 조건에서 다시 만들고 구간별로 확인 | [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) |
 
-[README로 돌아가기](../README.md)
+[README로 돌아가기](../README.ko.md)

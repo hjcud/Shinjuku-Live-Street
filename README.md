@@ -1,163 +1,163 @@
 <p align="center">
-  <strong>한국어</strong> · <a href="./README.ja.md">日本語</a> · <a href="./README.en.md">English</a>
+  <strong>日本語</strong> · <a href="./README.ko.md">한국어</a> · <a href="./README.en.md">English</a>
 </p>
 
 <div align="center">
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info">
-    <img src="./Docs/images/shinjuku-live-street-hero.png" alt="신주쿠 라이브 스트리트 대표 이미지" width="900">
+    <img src="./Docs/images/shinjuku-live-street-hero.png" alt="新宿ライブストリートのメインビジュアル" width="900">
   </a>
-  <h1>Shinjuku Live Street</h1>
+  <h1>新宿ライブストリート</h1>
 </div>
 
-<p align="center"><strong>실행 가능한 Unity 프로젝트는 포함되어 있지 않습니다. 작성한 코드와 주요 개발 내용을 정리해 공개하는 저장소입니다.</strong></p>
+<p align="center"><strong>実行可能なUnityプロジェクトは含まれていません。作成したコードと主な開発内容を整理して公開するリポジトリです。</strong></p>
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/world-intro.ko.svg">
-    <img src="./Docs/images/world-intro.ko.light.svg" alt="신주쿠의 밤거리에서 누구나 공연을 시작하고, 지나가던 사람이 자연스럽게 관객이 되는 VRChat 소셜 월드" width="900">
+    <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/world-intro.ja.svg">
+    <img src="./Docs/images/world-intro.ja.light.svg" alt="新宿の夜の街角で誰もがライブを始められ、通りかかった人が自然と観客になるVRChatソーシャルワールド" width="900">
   </picture>
 </p>
 
 <table align="center">
   <tr>
-    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697회</strong><br><sub>누적 방문</sub></td>
-    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>64,453명</strong><br><sub>즐겨찾기</sub></td>
-    <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>최대 80명</strong><br><sub>수용 인원</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697回</strong><br><sub>累計訪問数</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>64,453人</strong><br><sub>お気に入り</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>最大80人</strong><br><sub>定員</sub></td>
   </tr>
 </table>
 
 <p align="center">
-  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChat에서 월드 열기 ↗</strong></a>
+  <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatでワールドを開く ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChat 소셜 월드 · Unity / UdonSharp · 2인 제작<br>방문·즐겨찾기 수치 · 2026년 9월 3일 기준</sub></p>
+<p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2名で制作<br>訪問数・お気に入り数 · 2026年9月3日時点</sub></p>
 
-## 거리 공연과 커뮤니티
+## ストリートライブとコミュニティ
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/community-highlights.ko.svg">
-    <img src="./Docs/images/community-highlights.ko.light.svg" alt="원하는 곳에서 시작하는 공연과 지나가던 사람도 관객이 되는 경험" width="900">
+    <source media="(prefers-color-scheme: dark)" srcset="./Docs/images/community-highlights.ja.svg">
+    <img src="./Docs/images/community-highlights.ja.light.svg" alt="好きな場所で始めるライブと通りすがりの人も観客になる体験" width="900">
   </picture>
 </p>
 
 <p align="center">
-  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJK에서 실제 공연과 방문 기록 보기 ↗</strong></a>
+  <a href="https://x.com/search?q=%23VRSJK&src=typed_query&f=live"><strong>#VRSJKで実際のライブやワールドの様子を見る ↗</strong></a>
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery.png" alt="세 장의 거리 공연 사진과 추후 추가할 커뮤니티 사진 영역" width="900">
+  <img src="./Docs/images/community-gallery.png" alt="3枚のストリートライブ写真と今後追加するコミュニティ写真の掲載エリア" width="900">
 </p>
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
-<p align="center"><sub>영상 제공: <a href="https://x.com/KixiVRC">@KixiVRC</a> · 사진 제공: <a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a></sub></p>
+<p align="center"><sub>動画提供：<a href="https://x.com/KixiVRC">@KixiVRC</a> · 写真提供：<a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a></sub></p>
 
 ---
 
 <p align="center">
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><img src="./Docs/images/issue-planned-work.ko.svg" alt="예정된 작업 확인하기 — 진행 중인 작업과 개선 계획" width="49%"></a>
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ko.svg" alt="의견 남기기 — 버그 제보와 기능·개선 제안" width="49%"></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><img src="./Docs/images/issue-planned-work.ja.svg" alt="今後の作業を見る — 進行中の作業と改善予定" width="49%"></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ja.svg" alt="意見を投稿する — 不具合の報告・機能改善の提案" width="49%"></a>
 </p>
 
 ---
 
-## 최근 개발과 개선
+## 最近の改善
 
-<sub>2026년 9월 3일 기준</sub>
+<sub>2026年9月3日時点</sub>
 
-공연 장비 동기화와 교통 시뮬레이션을 다시 설계했습니다. 여러 사용자가 동시에 접속한 상황에서도 장비 상태가 안정적으로 동기화되도록 했으며, CPU 프레임 시간과 물리 연산 시간, 프레임당 GC 할당량을 줄였습니다.
+ライブ機材の同期と交通シミュレーションを再設計しました。同時接続が多い場面でも機材の状態を安定して共有できるようにし、CPUフレーム時間、物理演算時間、1フレームあたりのGC割り当てを削減しました。
 
-### 공연 장비 동기화 — 배치부터 반납까지 상태를 일관되게 관리
+### ライブ機材の同期 — 設置から返却まで状態を一貫して管理
 
-스피커를 반납하거나 사용자가 자리를 떠난 뒤 일부 기능의 상태가 남고, 중간 입장자에게 이미 설치된 스피커가 보이지 않는 문제가 있었습니다.
-
-<p align="center">
-  <img src="./Docs/images/live-performance-sync.ko.svg" alt="공연 장비의 기존 동기화 문제와 개선 결과" width="900">
-</p>
-
-모든 사용자가 같은 장비 상태를 확인할 수 있고, 반납한 장비에는 이전 사용자의 설정이 남지 않도록 했습니다.
-
-### 교통 시뮬레이션 — 차량별 반복 계산을 중앙 처리로 통합
-
-차량마다 매 프레임 목적지 계산, `BoxCast`, Transform 이동과 직렬화를 실행해 차량과 사용자가 늘수록 CPU 프레임 시간과 물리 연산 시간, GC 할당량이 함께 증가했습니다.
+スピーカーの返却後や利用者が離れたあとに一部機能の状態が残り、途中参加したユーザーには設置済みのスピーカーが見えない問題がありました。
 
 <p align="center">
-  <img src="./Docs/images/traffic-system-architecture.ko.svg" alt="에디터, 교통 소유자, 네트워크와 원격 사용자로 이어지는 교통 상태 처리 구조" width="900">
+  <img src="./Docs/images/live-performance-sync.ja.svg" alt="ライブ機材で発生していた同期の問題と改善結果" width="900">
 </p>
 
-교통 소유자가 차량 10대의 주행 상태를 한 곳에서 계산하고, 차량 상태는 64비트로 압축해 전송합니다. 원격 클라이언트는 같은 차선 데이터에서 차량을 복원하고 매 프레임 보간해 끊김을 줄였습니다.
+すべてのユーザーに同じ機材の状態が反映され、返却後の機材には前の利用者の設定が残らないようにしました。
+
+### 交通シミュレーション — 車両ごとの重複処理を中央へ集約
+
+各車両が毎フレーム、目的地の計算、`BoxCast`、Transformの更新、シリアライズ要求を個別に行っていたため、車両とユーザーが増えるほどCPUフレーム時間、物理演算時間、GC割り当ても増えていました。
+
+<p align="center">
+  <img src="./Docs/images/traffic-system-architecture.ja.svg" alt="エディタ、オーナー、ネットワーク、リモートユーザーへ続く交通状態の処理構成" width="900">
+</p>
+
+交通オーナーが10台の走行状態を1つの管理スクリプトで計算し、各車両の状態を64ビットに圧縮して送信します。リモート側は同じレーンデータから車両を再現し、毎フレーム補間して滑らかな動きを保ちます。
 
 <details>
-<summary><strong>실행 중 디버그 화면 보기</strong></summary>
+<summary><strong>実行時のデバッグ表示を見る</strong></summary>
 
 <p align="center">
-  <img src="./Docs/images/shinjuku-traffic-system-debug.png" alt="실행 중인 교통 시스템의 차선과 차량 디버그 화면" width="900">
+  <img src="./Docs/images/shinjuku-traffic-system-debug.png" alt="実行中の交通システムにおけるレーンと車両のデバッグ画面" width="900">
   <br>
-  <sub>차선 데이터와 차량별 점유 영역·예상 위치·장애물 센서 범위</sub>
+  <sub>レーンデータ、車両の占有範囲、予測位置、障害物センサー範囲</sub>
 </p>
 
 </details>
 
-### 성능 개선 결과
+### パフォーマンス改善結果
 
-![교통 시스템 초기 스냅샷과 최신 스냅샷의 Unity Profiler 비교](./Docs/images/traffic-performance-comparison.ko.svg)
+![交通システムの初期スナップショットと最新スナップショットのUnity Profiler比較](./Docs/images/traffic-performance-comparison.ja.svg)
 
-<p align="center"><sub>Unity Editor·ClientSim에서 동일 조건으로 비교한 결과이며, 실제 VRChat 인스턴스 성능과는 다를 수 있습니다.</sub></p>
+<p align="center"><sub>Unity Editor・ClientSim環境での同一条件比較であり、実際のVRChatインスタンスでは結果が異なる場合があります。</sub></p>
 
-차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, Unity Editor에서 초기·최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다.
+車両10台とClientSimで再現したリモートプレイヤー80人を同じエリアに集め、Unity Editor上で初期・最新スナップショットをそれぞれ300フレーム計測しました。平均CPUフレーム時間は`17.65 ms → 11.92 ms`、P95フレーム時間は`24.60 ms → 17.44 ms`まで減少しました。物理処理時間は65.3%、1フレームあたりのGC割り当ては88.1%削減しています。
 
 <p align="center">
-  <a href="./Docs/optimization.md"><strong>측정 조건과 문제별 적용 내용을 자세히 보기 →</strong></a>
+  <a href="./Docs/optimization.ja.md"><strong>測定条件と実装の詳細を見る →</strong></a>
 </p>
 
 ---
 
-## 모델과 렌더링 최적화
+## モデルと描画の最適化
 
 <p align="center">
-  <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="기본 렌더링과 와이어프레임 비교" width="900">
+  <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="通常レンダリングとワイヤーフレームの比較" width="900">
   <br>
-  <sub>왼쪽: 기본 렌더링 · 오른쪽: 동일 카메라에서 촬영한 와이어프레임</sub>
+  <sub>左：通常レンダリング · 右：同じカメラから撮影したワイヤーフレーム</sub>
 </p>
 
-환경 모델을 구역별로 분리하고, 오클루전 컬링·정적 배칭·베이크 조명을 적용해 실시간 처리 범위를 줄였습니다.
+環境モデルをエリアごとに分割し、オクルージョンカリング、スタティックバッチング、ベイクドライティングを適用して、リアルタイムの描画負荷を抑えました。
 
 <table align="center">
   <tr>
-    <td width="260" align="center"><strong>모델 구성</strong><br><sub>삼각형 246,921개<br>환경 메시 240개<br>메시 콜라이더 2개</sub></td>
-    <td width="260" align="center"><strong>렌더링 처리</strong><br><sub>정적 배칭 대상 392개<br>오클루더 설정 330개</sub></td>
-    <td width="260" align="center"><strong>베이크 조명</strong><br><sub>적용 메시 약 220개<br>4096×4096 3장<br>512×512 1장</sub></td>
+    <td width="260" align="center"><strong>モデル構成</strong><br><sub>三角形 246,921個<br>環境メッシュ 240個<br>メッシュコライダー 2個</sub></td>
+    <td width="260" align="center"><strong>描画処理</strong><br><sub>スタティックバッチング 392個<br>オクルーダー 330個</sub></td>
+    <td width="260" align="center"><strong>ベイクドライティング</strong><br><sub>適用メッシュ 約220個<br>4096×4096 3枚<br>512×512 1枚</sub></td>
   </tr>
 </table>
 
-## 코드 구성
+## コード構成
 
-| 영역 | 주요 파일 | 역할 |
+| 分野 | 主なファイル | 役割 |
 | --- | --- | --- |
-| 공연 장비 | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | 스피커 배치, 검증, 소유권, 중간 입장자 동기화와 초기화 |
-| 무대 음성 | [`VoiceRange.cs`](./Assets/Shinjuku%20Udon/Speaker/VoiceRange.cs) | 공연자의 음성 거리와 음량 공유 |
-| 공유 상호작용 | [`ObjectGlobalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectGlobalToggle.cs), [`ObjectLocalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectLocalToggle.cs) | 전역 상태와 개인 상태 분리 |
-| 교통 실행 | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | 차량 계산, 상태 압축, 전송과 원격 차량 복원 |
-| 차선 데이터 | [`TrafficLaneDatabase.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficLaneDatabase.cs) | 베이크된 차선 정보 조회와 차량 자세 복원 |
-| 제작 도구 | [`TrafficLaneBakerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) | 차선 베이킹, 설정 검사와 시각화 |
-| 월드 기능 | [`PosterSlide.cs`](./Assets/Shinjuku%20Udon/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/Shinjuku%20Udon/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/Shinjuku%20Udon/Teleport/CollisionTeleport.cs) | 포스터 전환, 포털과 이동 처리 |
+| ライブ機材 | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | スピーカー設置、検証、所有権、途中参加者との同期、初期化 |
+| ステージ音声 | [`VoiceRange.cs`](./Assets/Shinjuku%20Udon/Speaker/VoiceRange.cs) | 出演者のボイス範囲とゲインの同期 |
+| 共有操作 | [`ObjectGlobalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectGlobalToggle.cs), [`ObjectLocalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectLocalToggle.cs) | グローバル状態とローカル状態の分離 |
+| 交通処理 | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | 車両計算、状態圧縮、送信、リモート車両の復元 |
+| レーンデータ | [`TrafficLaneDatabase.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficLaneDatabase.cs) | ベイク済みレーンの参照と車両姿勢の復元 |
+| エディターツール | [`TrafficLaneBakerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) | レーンのベイク、検証、可視化 |
+| ワールド機能 | [`PosterSlide.cs`](./Assets/Shinjuku%20Udon/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/Shinjuku%20Udon/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/Shinjuku%20Udon/Teleport/CollisionTeleport.cs) | ポスター切り替え、ポータル、テレポート |
 
-## 저장소 안내
+## リポジトリについて
 
-이 저장소는 월드를 실행할 수 있는 완전한 Unity 프로젝트가 아닙니다. 작성한 C#·UdonSharp 코드와 개발 문서, 직접 제작하거나 제공받은 소개용 이미지·영상을 공개합니다. 월드 구동에 필요한 Unity 씬·Prefab·모델·텍스처·음원·영상·머티리얼·애니메이션·셰이더·`.meta` 파일과 외부 에셋은 포함하지 않습니다.
+このリポジトリは、ワールドを実行できる完全なUnityプロジェクトではありません。作成したC#・UdonSharpコードと開発資料に加え、自作または提供いただいた紹介用の画像・動画を公開しています。ワールドの動作に必要なUnityシーン、Prefab、モデル、テクスチャ、音声、動画、マテリアル、アニメーション、シェーダー、`.meta`ファイル、外部アセットは含まれていません。
 
 <details>
-<summary><strong>사용한 SDK·패키지·외부 구성요소</strong></summary>
+<summary><strong>使用したSDK・パッケージ・外部コンポーネント</strong></summary>
 
-### 개발 환경
+### 開発環境
 
 - Unity `2022.3.22f1`
 - VRChat SDK - Worlds `3.8.1`
 - UdonSharp
 - TextMesh Pro
 
-### 월드에서 사용한 외부 구성요소
+### ワールドで使用した外部コンポーネント
 
 - Topaz Chat `0.1.6`
 - lilToon `1.10.3`
@@ -177,24 +177,24 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 - Prototype Collection
 - AllSkyFree
 - Noriben Lunch shader assets
-- Atelier Rayrell, RIONESTA, Zelkova Tree 및 기타 모델·환경 리소스
+- Atelier Rayrell、RIONESTA、Zelkova Tree、その他クリエイターによるモデル・環境素材
 
-외부 구성요소는 이 저장소에 포함하지 않습니다. 각 항목의 저작권과 라이선스는 원 저작자 및 배포처의 정책을 따릅니다.
+外部コンポーネントはこのリポジトリに含まれていません。各コンポーネントの権利は作者・配布元に帰属し、利用にはそれぞれのライセンス条件が適用されます。
 
-[외부 라이선스 고지 보기 →](./Docs/THIRD_PARTY_NOTICES.md)
+[外部ライセンス表記を見る →](./Docs/THIRD_PARTY_NOTICES.md)
 
 </details>
 
-## 저작권 및 이용 조건
+## 著作権と利用条件
 
 > [!IMPORTANT]
-> 이 저장소는 오픈 소스가 아닌 **소스 공개형(source-available) 저장소**입니다. GitHub에서의 열람·포크를 넘어 코드를 복제·수정·재배포하거나 상업적으로 이용하려면 사전 서면 허가가 필요합니다.
+> このリポジトリはオープンソースではなく、**ソースコード公開型（source-available）**です。GitHub上での閲覧・フォークを超えて、コードを複製・改変・再配布・商用利用する場合は、事前の書面による許可が必要です。
 
-[저작권 및 이용 조건 자세히 보기](./COPYRIGHT.md) · [이용 허가 요청하기](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
+[著作権と利用条件の詳細](./COPYRIGHT.ja.md) · [利用許可を申請する](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 
-## 팀
+## チーム
 
-| 구성원 | 담당 |
+| メンバー | 担当 |
 | --- | --- |
-| [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 기획 · 그래픽 · 3D 모델링 |
-| [hjcud](https://github.com/hjcud) | Unity·UdonSharp 시스템 개발 및 최적화 |
+| [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 企画 · グラフィック · 3Dモデリング |
+| [hjcud](https://github.com/hjcud) | Unity・UdonSharpシステムの開発・最適化 |

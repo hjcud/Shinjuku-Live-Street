@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="./optimization.md">한국어</a> · <strong>日本語</strong> · <a href="./optimization.en.md">English</a>
+  <strong>日本語</strong> · <a href="./optimization.md">한국어</a> · <a href="./optimization.en.md">English</a>
 </p>
 
 # 交通システムのパフォーマンス最適化
@@ -164,4 +164,4 @@ flowchart LR
 | 車両・センサーの可視化 | センサー範囲、現在レーン、目標レーン、ネットワーク状態をSceneビューで確認 | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
 | 80人負荷テスト | 周期的なフレームドロップを同じ配置条件で再現し、計測区間を記録 | [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) |
 
-[READMEへ戻る](../README.ja.md)
+[READMEへ戻る](../README.md)
