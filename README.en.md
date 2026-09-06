@@ -46,12 +46,12 @@
 </p>
 
 <p align="center">
-  <img src="./Docs/images/community-gallery.png" alt="Three street performance photos with space reserved for one more community photo" width="900">
+  <img src="./Docs/images/community-gallery.png" alt="Four photos of street performances and their audiences" width="900">
 </p>
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
-<p align="center"><sub>Video provided by <a href="https://x.com/KixiVRC">@KixiVRC</a> · Photos provided by <a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a></sub></p>
+<p align="center"><sub>Video provided by <a href="https://x.com/KixiVRC">@KixiVRC</a> · Photos provided by <a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a>, <a href="https://x.com/Samp1e_vd7">@Samp1e_vd7</a></sub></p>
 
 ---
 
