@@ -463,6 +463,9 @@ public class TrafficLaneBakerEditor : EditorWindow
         }
     }
 
+    /// <summary>
+    /// 자식 웨이포인트 순서로 곡선 생성 후 거리 기준 재샘플링 및 노면 위치와 회전 저장
+    /// </summary>
     private LaneData BakeLane(
         Transform laneSource,
         List<string> warnings)
@@ -552,6 +555,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             normals[i] = hit.normal.normalized;
         }
 
+        // 노면 투영으로 달라진 샘플 간 거리를 반영하기 위해 최종 위치에서 누적 거리 재계산
         float[] distances =
             BuildCumulativeDistances(positions);
 
@@ -580,6 +584,9 @@ public class TrafficLaneBakerEditor : EditorWindow
         return lane;
     }
 
+    /// <summary>
+    /// 거리 기준 재샘플링에 사용할 조밀한 Catmull-Rom 곡선 생성
+    /// </summary>
     private List<Vector3> BuildDenseCurve(
         List<Vector3> controls)
     {
@@ -593,6 +600,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             Vector3 p1 = controls[segmentIndex];
             Vector3 p2 = controls[segmentIndex + 1];
 
+            // 양 끝의 부족한 제어점을 인접 구간 연장으로 보완해 시작과 끝의 진행 방향 유지
             Vector3 p0 = segmentIndex > 0
                 ? controls[segmentIndex - 1]
                 : p1 + (p1 - p2);
@@ -673,6 +681,7 @@ public class TrafficLaneBakerEditor : EditorWindow
         Vector3 start,
         Vector3 end)
     {
+        // 제어점 간 거리의 제곱근으로 매개변수 간격 설정. 중복 위치의 간격 0 방지
         return Mathf.Max(
             0.0001f,
             Mathf.Sqrt(Vector3.Distance(start, end))
@@ -703,6 +712,10 @@ public class TrafficLaneBakerEditor : EditorWindow
         );
     }
 
+    /// <summary>
+    /// 곡선 매개변수 대신 누적 거리(m)를 기준으로 일정 간격의 샘플 위치 생성
+    /// </summary>
+    /// <remarks>끝점 누락 방지를 위해 마지막 구간은 설정 간격보다 짧게 허용</remarks>
     private List<Vector3> ResampleCurve(
         List<Vector3> denseCurve,
         float spacing)
@@ -1238,6 +1251,13 @@ public class TrafficLaneBakerEditor : EditorWindow
         return result;
     }
 
+    /// <summary>
+    /// 차선별 샘플과 변경 규칙을 평탄화 배열로 저장하고 Udon 데이터에 반영
+    /// </summary>
+    /// <remarks>
+    /// 런타임의 차선별 조회를 위해 각 배열의 시작 인덱스와 개수를 함께 저장
+    /// 변경 규칙은 출발 차선 ID 순서로 묶인 상태를 전제로 처리
+    /// </remarks>
     private void ApplyBake(
         LaneData[] lanes,
         float[] spawnS,

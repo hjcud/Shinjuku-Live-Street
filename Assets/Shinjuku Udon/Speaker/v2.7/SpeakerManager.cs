@@ -171,6 +171,9 @@ public class SpeakerManager : UdonSharpBehaviour
         speakerPlacements.SetActive(false);
     }
 
+    /// <summary>
+    /// 손 또는 시선 기준으로 설치 후보 위치를 탐색하고 홀로그램과 안내선 갱신
+    /// </summary>
     private void UpdatePlacementPosition()
     {
         var trackingType = isVrUser ? VRCPlayerApi.TrackingDataType.RightHand : VRCPlayerApi.TrackingDataType.Head;
@@ -180,10 +183,12 @@ public class SpeakerManager : UdonSharpBehaviour
 
         if (isVrUser)
         {
+            // 오른손 추적 회전에 로컬 Y축 40도 보정을 적용해 설치 레이 방향 설정
             rotation *= Quaternion.AngleAxis(40f, Vector3.up);
         }
         else
         {
+            // 시선 기준 아래쪽과 오른쪽으로 시작점 이동 후 로컬 Y축 -3도 방향 보정
             origin.y -= 0.1f;
             origin += rotation * Vector3.right * 0.1f;
             rotation *= Quaternion.AngleAxis(3f, Vector3.down);
@@ -194,6 +199,8 @@ public class SpeakerManager : UdonSharpBehaviour
 
         RaycastHit hit;
         bool didHit = Physics.Raycast(origin, direction, out hit, rayMaxDistance, rayLayerMask);
+        // 전방에 닿는 면이 없으면 최대 거리 지점 아래의 설치면 탐색
+        // 직선과 곡선 안내선 구분을 위해 didHit은 전방 검사 결과로 유지
         if (!didHit && Physics.Raycast(endPoint, Vector3.down, out hit, Mathf.Infinity, rayLayerMask))
         {
             endPoint = hit.point;
@@ -212,6 +219,7 @@ public class SpeakerManager : UdonSharpBehaviour
 
     private void SetHoloRotation(Vector3 from, Vector3 to, Vector3 normal)
     {
+        // 사용자 쪽 방향을 설치면에 투영해 바닥 기울기에 맞춘 홀로그램 회전 적용
         var direction = (from - to).normalized;
         var rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(direction, normal), normal);
         holoSpeaker.transform.rotation = rotation;
