@@ -32,6 +32,7 @@ public class SpeakerController : UdonSharpBehaviour
     [SerializeField] private float distanceLimit = 5f;
     private int localOwnerId;
     public float despawnWaitTime;
+    private float nextDistanceCheckTime;
 
     [Header("스피커 음량 설정")]
     [SerializeField] Slider volumeSlider;
@@ -62,20 +63,24 @@ public class SpeakerController : UdonSharpBehaviour
 
     void Update()
     {
-        if (isSpeakerTaken && Networking.IsOwner(Networking.LocalPlayer, this.gameObject))
-        {
-            Vector3 playerPosition = Networking.LocalPlayer.GetPosition();
-            float currentDistance = (playerPosition - gameObject.transform.position).magnitude;
+        // 배치 직후 반환 입력 방지용 대기 시간은 거리 검사 주기와 별도로 유지
+        if (despawnWaitTime > 0f) despawnWaitTime -= Time.deltaTime;
 
-            if (distanceLimit < currentDistance)
+        // Cuding Edit: 소유자 거리 검사는 0.2초 간격으로 제한하고 제곱 거리 사용
+        if (Time.time < nextDistanceCheckTime) return;
+        nextDistanceCheckTime = Time.time + 0.2f;
+        VRCPlayerApi localPlayer = Networking.LocalPlayer;
+        if (isSpeakerTaken && Utilities.IsValid(localPlayer) && Networking.IsOwner(localPlayer, this.gameObject))
+        {
+            Vector3 playerPosition = localPlayer.GetPosition();
+            float sqrDistance = (playerPosition - transform.position).sqrMagnitude;
+
+            if (distanceLimit * distanceLimit < sqrDistance)
             {
                 speakerManager.speakerOwned = false;
                 SpeakerReturn();
             }
         }
-
-        // 배치 직후 반환 입력 방지용 대기 시간을 매 프레임 감소
-        if (despawnWaitTime > 0f) despawnWaitTime -= Time.deltaTime;
     }
 
     /// <summary>
@@ -212,6 +217,7 @@ public class SpeakerController : UdonSharpBehaviour
         }
 
         isSpeakerTaken = true;
+        nextDistanceCheckTime = 0f;
         Transform tempTransform = transform;
         tempTransform.position = targetPosition;
         tempTransform.rotation = targetRotation;
