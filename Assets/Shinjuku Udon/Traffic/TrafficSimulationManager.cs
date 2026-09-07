@@ -20,14 +20,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private const int NetworkSlotCapacity = 16;
     private const int MaximumLaneChangeRules = 16;
     private const int ManeuverPathSampleCount = 49;
+    private const int PendingRemoteSnapshotCapacity = 6;
 
     private const float PositionQuantum = 0.02f;
     private const float SpeedQuantum = 0.05f;
     private const float AccelerationQuantum = 0.1f;
-    private const float MinimumRemoteRenderDelay = 0.35f;
-    private const float MaximumRemoteRenderDelay = 1.25f;
-    private const float RemoteDelayAdjustmentSpeed = 0.05f;
-    private const float RemoteExtrapolationLimit = 0.15f;
+    private const float MinimumRemoteRenderDelay = 0.75f;
 
     private const int ActiveBit = 1;
     private const int LaneShift = 1;
@@ -482,6 +480,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     [UdonSynced]
     private int syncedRandomState;
 
+    // 2026-09-08: 전송 시각이 아닌 차량 상태의 계산 시각을 스냅샷 전체에 한 번만 동기화
+    [UdonSynced]
+    private double syncedSimulationTime;
+
     [UdonSynced]
     private int[] syncedVehicleStateA =
         new int[NetworkSlotCapacity];
@@ -637,6 +639,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private bool[] snapshotNextReverseManeuver = new bool[0];
     private int[] snapshotBufferedStateA = new int[0];
     private int[] snapshotBufferedStateB = new int[0];
+    private double[] snapshotBufferedTimes =
+        new double[PendingRemoteSnapshotCapacity];
     private bool[] laneChangeReverseManeuver = new bool[0];
     private bool[] laneChangeEmergencyManeuver = new bool[0];
     private bool[] laneChangePreparing = new bool[0];
@@ -697,6 +701,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private float signalQueueReleaseHoldRemaining;
 
     private float simulationAccumulator;
+    private double simulationStateTime;
 
     private float laneChangeObstacleSweepSafeS;
     private float laneChangeObstacleSweepSafeProgress;
@@ -704,23 +709,18 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private float respawnTimer;
     private float timeSinceLastSnapshot;
     private float ownershipRecoveryTimer;
-    private float snapshotPreviousSendTime;
-    private float snapshotNextSendTime;
-    private float snapshotBufferedSendTime;
+    private double snapshotPreviousTime;
+    private double snapshotNextTime;
+    private double lastAcceptedSnapshotTime;
     private float remoteRenderDelay;
-    private float remoteTargetRenderDelay;
-    private float remoteTransitTimeEstimate;
-    private float remoteTransitJitterEstimate;
-    private float remoteSnapshotIntervalEstimate;
     private float audioVisualUpdateTimer;
 
     private int acceptedAuthorityEpoch = -1;
-    private int serializedSequence;
     private int remoteSnapshotCount;
+    private int snapshotBufferedHead;
 
     private bool authorityReady;
     private bool hasReceivedSnapshot;
-    private bool remoteTimingInitialized;
     private bool serializationPending;
     private bool networkStateDirty;
     private bool laneVehicleCacheReady;
@@ -808,9 +808,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             0.25f
         );
 
-        simulationAccumulator += Mathf.Min(
-            Time.deltaTime,
-            0.25f
+        float frameDuration = Mathf.Min(Time.deltaTime, 0.25f);
+        simulationAccumulator += frameDuration;
+
+        // 2026-09-08: 평상시에는 위치와 시각을 동일한 고정 단계로 진행
+        // 긴 프레임에서 계산하지 않은 시간만 반영하여 서버 시각과의 누적 지연 방지
+        simulationStateTime += Mathf.Max(
+            0f,
+            Time.unscaledDeltaTime - frameDuration
         );
 
         int completedSteps = 0;
@@ -819,6 +824,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                completedSteps < maximumStepsPerFrame)
         {
             SimulateStep(stepDuration);
+            simulationStateTime += stepDuration;
 
             simulationAccumulator -= stepDuration;
             completedSteps++;
@@ -827,6 +833,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (simulationAccumulator >= stepDuration)
         {
             // 긴 프레임 이후에도 한 프레임에서 처리할 시뮬레이션 단계 수 제한
+            simulationStateTime += simulationAccumulator;
             simulationAccumulator = 0f;
         }
     }
@@ -893,11 +900,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
 
         simulationAccumulator = 0f;
+        simulationStateTime = Networking.GetServerTimeInSeconds();
         respawnTimer = 0f;
         networkSnapshotTimer = 0f;
         authorityReady = true;
 
-        PackNetworkSnapshot();
+        networkStateDirty = true;
         networkSnapshotTimer = Mathf.Max(
             0.2f,
             networkSnapshotInterval
@@ -920,14 +928,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 networkSnapshotInterval
             );
 
-            PackNetworkSnapshot();
+            networkStateDirty = true;
         }
 
         TryRequestNetworkSnapshot();
     }
 
     /// <summary>
-    /// 차량별 주행 상태를 두 개의 32비트 정수로 압축하고 전송 대기 상태로 등록
+    /// 실제 전송 직전 차량별 주행 상태와 공통 계산 시각을 스냅샷에 기록
     /// </summary>
     /// <remarks>
     /// 위치는 0.02m 단위로 0~2621.42m, 속도는 0.05m/s 단위로 0~25.55m/s 표현
@@ -940,6 +948,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         syncedSnapshotSequence++;
         syncedRandomState = randomState;
+        syncedSimulationTime = simulationStateTime;
 
         for (int i = 0;
              i < NetworkSlotCapacity;
@@ -1071,8 +1080,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             syncedVehicleStateA[i] = stateA;
             syncedVehicleStateB[i] = stateB;
         }
-
-        networkStateDirty = true;
     }
 
     private void TryRequestNetworkSnapshot()
@@ -1092,7 +1099,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     public override void OnPreSerialization()
     {
-        serializedSequence = syncedSnapshotSequence;
+        // 2026-09-08: RequestSerialization의 대기 시간과 무관하게 최신 계산 상태를 전송
+        if (!localIsAuthority || !authorityReady)
+        {
+            return;
+        }
+
+        PackNetworkSnapshot();
+        networkStateDirty = false;
     }
 
     public override void OnPostSerialization(
@@ -1102,13 +1116,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         lastSerializationSucceeded = result.success;
         lastSerializationBytes = result.byteCount;
 
-        if (result.success &&
-            serializedSequence ==
-            syncedSnapshotSequence)
-        {
-            networkStateDirty = false;
-        }
-        else
+        if (!result.success)
         {
             networkStateDirty = true;
         }
@@ -1123,11 +1131,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
-        AcceptSyncedSnapshot(
-            result.sendTime,
-            result.receiveTime,
-            result.isFromStorage
-        );
+        AcceptSyncedSnapshot();
     }
 
     public override void OnOwnershipTransferred(
@@ -1388,187 +1392,85 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private void ResetRemoteSnapshotBuffer()
     {
         remoteSnapshotCount = 0;
-        snapshotPreviousSendTime = 0f;
-        snapshotNextSendTime = 0f;
-        snapshotBufferedSendTime = 0f;
-        remoteTransitTimeEstimate = 0f;
-        remoteTransitJitterEstimate = 0f;
-        remoteSnapshotIntervalEstimate = Mathf.Max(
-            0.2f,
-            networkSnapshotInterval
-        );
-        remoteTargetRenderDelay = Mathf.Clamp(
-            remoteSnapshotIntervalEstimate + 0.1f,
+        snapshotBufferedHead = 0;
+        snapshotPreviousTime = 0d;
+        snapshotNextTime = 0d;
+        lastAcceptedSnapshotTime = 0d;
+
+        // 2026-09-08: 수신마다 지연을 바꾸면 재생 속도까지 변하므로 고정 지연 사용
+        // 세 전송 간격의 여유를 두고 수신한 두 상태 사이에서만 선형 보간
+        remoteRenderDelay = Mathf.Max(
             MinimumRemoteRenderDelay,
-            MaximumRemoteRenderDelay
+            Mathf.Max(0.2f, networkSnapshotInterval) * 3f
         );
-        remoteRenderDelay = remoteTargetRenderDelay;
-        remoteTimingInitialized = false;
         hasReceivedSnapshot = false;
     }
 
-    private void AcceptSyncedSnapshot(
-        float sendTime,
-        float receiveTime,
-        bool isFromStorage)
+    private void AcceptSyncedSnapshot()
     {
         if (syncedVehicleStateA == null ||
             syncedVehicleStateB == null ||
             syncedVehicleStateA.Length < slotCount ||
-            syncedVehicleStateB.Length < slotCount)
+            syncedVehicleStateB.Length < slotCount ||
+            syncedAuthorityEpoch < acceptedAuthorityEpoch)
         {
             return;
         }
 
-        bool newerEpoch =
-            syncedAuthorityEpoch > acceptedAuthorityEpoch;
-
-        if (newerEpoch)
+        if (syncedAuthorityEpoch > acceptedAuthorityEpoch)
         {
             ResetRemoteSnapshotBuffer();
         }
 
         if (hasReceivedSnapshot &&
-            !newerEpoch &&
-            syncedAuthorityEpoch == acceptedAuthorityEpoch &&
             syncedSnapshotSequence <= lastReceivedSequence)
         {
             return;
         }
 
-        float localReceiveTime = receiveTime;
+        acceptedAuthorityEpoch = syncedAuthorityEpoch;
+        lastReceivedSequence = syncedSnapshotSequence;
+        timeSinceLastSnapshot = 0f;
 
-        if (localReceiveTime <= 0f)
+        // 같은 계산 상태의 재전송을 가상의 1ms 이동 구간으로 만들지 않음
+        // 저장된 초기 상태도 실제 계산 시각을 유지하며 새 상태와 구별
+        if (hasReceivedSnapshot &&
+            Networking.CalculateServerDeltaTime(
+                syncedSimulationTime,
+                lastAcceptedSnapshotTime
+            ) <= 0d)
         {
-            localReceiveTime = Time.realtimeSinceStartup;
-        }
-
-        float effectiveSendTime = isFromStorage
-            ? localReceiveTime
-            : sendTime;
-
-        float latestSendTime = snapshotNextSendTime;
-
-        if (remoteSnapshotCount >= 3)
-        {
-            latestSendTime = snapshotBufferedSendTime;
-        }
-
-        if (remoteSnapshotCount > 0)
-        {
-            float observedInterval =
-                effectiveSendTime - latestSendTime;
-
-            if (observedInterval > 0.001f)
-            {
-                float clampedInterval = Mathf.Clamp(
-                    observedInterval,
-                    0.05f,
-                    2f
-                );
-
-                remoteSnapshotIntervalEstimate = Mathf.Lerp(
-                    remoteSnapshotIntervalEstimate,
-                    clampedInterval,
-                    0.2f
-                );
-            }
-            else
-            {
-                effectiveSendTime = latestSendTime + 0.001f;
-            }
-        }
-
-        if (!isFromStorage)
-        {
-            float transitTime = Mathf.Clamp(
-                localReceiveTime - effectiveSendTime,
-                0f,
-                2.5f
-            );
-
-            if (!remoteTimingInitialized)
-            {
-                remoteTransitTimeEstimate = transitTime;
-                remoteTransitJitterEstimate = 0f;
-                remoteTimingInitialized = true;
-            }
-            else
-            {
-                float timingError = Mathf.Abs(
-                    transitTime - remoteTransitTimeEstimate
-                );
-
-                remoteTransitTimeEstimate = Mathf.Lerp(
-                    remoteTransitTimeEstimate,
-                    transitTime,
-                    0.12f
-                );
-                remoteTransitJitterEstimate = Mathf.Lerp(
-                    remoteTransitJitterEstimate,
-                    timingError,
-                    0.15f
-                );
-            }
-
-            float intervalReserve = Mathf.Max(
-                Mathf.Max(0.2f, networkSnapshotInterval),
-                remoteSnapshotIntervalEstimate
-            );
-            float jitterReserve = Mathf.Max(
-                0.05f,
-                remoteTransitJitterEstimate * 2f
-            );
-
-            remoteTargetRenderDelay = Mathf.Clamp(
-                remoteTransitTimeEstimate +
-                    intervalReserve +
-                    jitterReserve,
-                MinimumRemoteRenderDelay,
-                MaximumRemoteRenderDelay
-            );
-
-            if (remoteSnapshotCount == 0)
-            {
-                remoteRenderDelay = remoteTargetRenderDelay;
-            }
+            return;
         }
 
         if (remoteSnapshotCount == 0)
         {
             DecodeStateToNextSnapshot(
                 syncedVehicleStateA,
-                syncedVehicleStateB
+                syncedVehicleStateB,
+                0
             );
             CopyNextSnapshotToPrevious();
-            snapshotPreviousSendTime = effectiveSendTime;
-            snapshotNextSendTime = effectiveSendTime;
+            snapshotPreviousTime = syncedSimulationTime;
+            snapshotNextTime = syncedSimulationTime;
             remoteSnapshotCount = 1;
         }
         else if (remoteSnapshotCount == 1)
         {
             DecodeStateToNextSnapshot(
                 syncedVehicleStateA,
-                syncedVehicleStateB
+                syncedVehicleStateB,
+                0
             );
-            snapshotNextSendTime = effectiveSendTime;
+            snapshotNextTime = syncedSimulationTime;
             remoteSnapshotCount = 2;
         }
         else
         {
-            if (remoteSnapshotCount >= 3)
-            {
-                PromoteBufferedSnapshotToPair();
-            }
-
             CopySyncedStateToBufferedSnapshot();
-            snapshotBufferedSendTime = effectiveSendTime;
-            remoteSnapshotCount = 3;
         }
 
-        acceptedAuthorityEpoch = syncedAuthorityEpoch;
-        lastReceivedSequence = syncedSnapshotSequence;
-        timeSinceLastSnapshot = 0f;
+        lastAcceptedSnapshotTime = syncedSimulationTime;
         hasReceivedSnapshot = true;
     }
 
@@ -1606,12 +1508,26 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void CopySyncedStateToBufferedSnapshot()
     {
+        // 2026-09-08: 현재 재생 중인 두 상태는 수신 이벤트에서 교체하지 않음
+        // 대기 큐가 가득 차도 가장 먼 미래 상태만 갱신하여 현재 보간 구간 보존
+        int pendingCount = remoteSnapshotCount - 2;
+        int writeIndex = (snapshotBufferedHead +
+            Mathf.Min(pendingCount, PendingRemoteSnapshotCapacity - 1)) %
+            PendingRemoteSnapshotCapacity;
+        int offset = writeIndex * slotCount;
+
         for (int i = 0; i < slotCount; i++)
         {
-            snapshotBufferedStateA[i] =
+            snapshotBufferedStateA[offset + i] =
                 syncedVehicleStateA[i];
-            snapshotBufferedStateB[i] =
+            snapshotBufferedStateB[offset + i] =
                 syncedVehicleStateB[i];
+        }
+
+        snapshotBufferedTimes[writeIndex] = syncedSimulationTime;
+        if (pendingCount < PendingRemoteSnapshotCapacity)
+        {
+            remoteSnapshotCount++;
         }
     }
 
@@ -1623,25 +1539,55 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         CopyNextSnapshotToPrevious();
-        snapshotPreviousSendTime = snapshotNextSendTime;
+        snapshotPreviousTime = snapshotNextTime;
 
         DecodeStateToNextSnapshot(
             snapshotBufferedStateA,
-            snapshotBufferedStateB
+            snapshotBufferedStateB,
+            snapshotBufferedHead * slotCount
         );
-        snapshotNextSendTime = snapshotBufferedSendTime;
-        snapshotBufferedSendTime = 0f;
-        remoteSnapshotCount = 2;
+        snapshotNextTime = snapshotBufferedTimes[snapshotBufferedHead];
+        snapshotBufferedHead = (snapshotBufferedHead + 1) %
+            PendingRemoteSnapshotCapacity;
+        remoteSnapshotCount--;
+    }
+
+    /// <summary>
+    /// 재생 시각이 통과한 스냅샷만 소비하고 실제 계산 시각 사이의 선형 보간 비율 반환
+    /// </summary>
+    private float AdvanceRemoteSnapshotPair(double renderTime)
+    {
+        while (remoteSnapshotCount > 2 &&
+               Networking.CalculateServerDeltaTime(renderTime, snapshotNextTime) >= 0d)
+        {
+            PromoteBufferedSnapshotToPair();
+        }
+
+        if (remoteSnapshotCount < 2)
+        {
+            return 1f;
+        }
+
+        double duration = Networking.CalculateServerDeltaTime(
+            snapshotNextTime,
+            snapshotPreviousTime
+        );
+        double elapsed = Networking.CalculateServerDeltaTime(
+            renderTime,
+            snapshotPreviousTime
+        );
+        return Mathf.Clamp01((float)(elapsed / duration));
     }
 
     private void DecodeStateToNextSnapshot(
         int[] stateAValues,
-        int[] stateBValues)
+        int[] stateBValues,
+        int offset)
     {
         for (int i = 0; i < slotCount; i++)
         {
-            int stateA = stateAValues[i];
-            int stateB = stateBValues[i];
+            int stateA = stateAValues[offset + i];
+            int stateB = stateBValues[offset + i];
 
             bool active =
                 (stateA & ActiveBit) != 0;
@@ -2060,8 +2006,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         snapshotNextEmergencyManeuver = new bool[slotCount];
         snapshotPreviousReverseManeuver = new bool[slotCount];
         snapshotNextReverseManeuver = new bool[slotCount];
-        snapshotBufferedStateA = new int[slotCount];
-        snapshotBufferedStateB = new int[slotCount];
+        snapshotBufferedStateA =
+            new int[slotCount * PendingRemoteSnapshotCapacity];
+        snapshotBufferedStateB =
+            new int[slotCount * PendingRemoteSnapshotCapacity];
 
         baseLocalScales = new Vector3[slotCount];
         previousVisualPositions = new Vector3[slotCount];
@@ -2210,8 +2158,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             snapshotNextEmergencyManeuver[i] = false;
             snapshotPreviousReverseManeuver[i] = false;
             snapshotNextReverseManeuver[i] = false;
-            snapshotBufferedStateA[i] = 0;
-            snapshotBufferedStateB[i] = 0;
             previousVisualPositions[i] = Vector3.zero;
             previousVisualPositionValid[i] = false;
             vehicleCollisionVelocities[i] = Vector3.zero;
@@ -10091,44 +10037,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
-        float delayAdjustmentSpeed =
-            remoteTargetRenderDelay > remoteRenderDelay
-                ? RemoteDelayAdjustmentSpeed * 4f
-                : RemoteDelayAdjustmentSpeed;
-
-        remoteRenderDelay = Mathf.MoveTowards(
-            remoteRenderDelay,
-            remoteTargetRenderDelay,
-            Time.unscaledDeltaTime * delayAdjustmentSpeed
+        float interpolation = AdvanceRemoteSnapshotPair(
+            Networking.GetServerTimeInSeconds() - remoteRenderDelay
         );
-
-        float renderTime =
-            Time.realtimeSinceStartup - remoteRenderDelay;
-
-        if (remoteSnapshotCount >= 3 &&
-            renderTime >= snapshotNextSendTime)
-        {
-            PromoteBufferedSnapshotToPair();
-        }
-
-        float snapshotDuration = Mathf.Max(
-            0.001f,
-            snapshotNextSendTime - snapshotPreviousSendTime
-        );
-        float interpolation = remoteSnapshotCount <= 1
-            ? 1f
-            : Mathf.Clamp01(
-                (renderTime - snapshotPreviousSendTime) /
-                snapshotDuration
-              );
-        float extrapolationTime =
-            remoteSnapshotCount >= 2 &&
-            renderTime > snapshotNextSendTime
-                ? Mathf.Min(
-                    RemoteExtrapolationLimit,
-                    renderTime - snapshotNextSendTime
-                  )
-                : 0f;
 
         int renderedActiveCount = 0;
         int renderedLaneChangeCount = 0;
@@ -10267,24 +10178,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                         snapshotPreviousRecoveryDistance[i];
                     renderTargetLaneId =
                         snapshotNextLaneIds[i];
-                    float completedSourceS =
-                        MapTargetToSourceSUnclamped(
-                            completionRuleIndex,
-                            snapshotNextS[i]
-                        );
-
-                    renderLaneChangeProgress =
-                        renderReverseManeuver
-                            ? Mathf.Lerp(
-                                snapshotPreviousLaneChangeProgress[i],
-                                1f,
-                                interpolation
-                              )
-                            : Mathf.Lerp(
-                                snapshotPreviousLaneChangeProgress[i],
-                                1f,
-                                interpolation
-                              );
+                    renderLaneChangeProgress = Mathf.Lerp(
+                        snapshotPreviousLaneChangeProgress[i],
+                        1f,
+                        interpolation
+                    );
                 }
                 else
                 {
@@ -10305,18 +10203,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                             snapshotNextRecoveryDistance[i];
                         renderTargetLaneId =
                             snapshotNextTargetLaneIds[i];
-                        renderLaneChangeProgress =
-                            renderReverseManeuver
-                                ? Mathf.Lerp(
-                                    snapshotPreviousLaneChangeProgress[i],
-                                    snapshotNextLaneChangeProgress[i],
-                                    interpolation
-                                  )
-                                : Mathf.Lerp(
-                                    snapshotPreviousLaneChangeProgress[i],
-                                    snapshotNextLaneChangeProgress[i],
-                                    interpolation
-                                  );
+                        renderLaneChangeProgress = Mathf.Lerp(
+                            snapshotPreviousLaneChangeProgress[i],
+                            snapshotNextLaneChangeProgress[i],
+                            interpolation
+                        );
                     }
                     else if (snapshotNextLaneChangeActive[i])
                     {
@@ -10388,85 +10279,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 }
             }
 
-            if (extrapolationTime > 0f &&
-                snapshotNextActive[i] &&
-                useNextIdentity)
-            {
-                float nextSpeed =
-                    snapshotNextSpeeds[i];
-                float nextAcceleration =
-                    snapshotNextAccelerations[i];
-                float predictionDuration = extrapolationTime;
-
-                if (nextAcceleration < -0.001f)
-                {
-                    float timeToStop = nextSpeed /
-                        -nextAcceleration;
-
-                    predictionDuration = Mathf.Min(
-                        predictionDuration,
-                        timeToStop
-                    );
-                }
-
-                float predictedSpeed = Mathf.Max(
-                    0f,
-                    nextSpeed +
-                        nextAcceleration * predictionDuration
-                );
-                float predictedDistance = Mathf.Max(
-                    0f,
-                    nextSpeed * predictionDuration +
-                        0.5f * nextAcceleration *
-                        predictionDuration * predictionDuration
-                );
-                bool nextSnapshotIsReversing =
-                    IsReversePhase(
-                        snapshotNextReverseManeuver[i],
-                        snapshotNextLaneChangeProgress[i]
-                    );
-
-                renderS += predictedDistance *
-                    (nextSnapshotIsReversing ? -1f : 1f);
-                renderSpeed = predictedSpeed;
-
-                if (renderLaneChangeActive &&
-                    completionRuleIndex < 0 &&
-                    predictedSpeed > 0.001f)
-                {
-                    float progressRate = 0f;
-                    bool continuesSameLaneChange =
-                        snapshotPreviousLaneChangeActive[i] &&
-                        snapshotNextLaneChangeActive[i] &&
-                        snapshotPreviousLaneIds[i] ==
-                            snapshotNextLaneIds[i] &&
-                        snapshotPreviousTargetLaneIds[i] ==
-                            snapshotNextTargetLaneIds[i];
-
-                    if (continuesSameLaneChange)
-                    {
-                        progressRate = Mathf.Max(
-                            0f,
-                            (snapshotNextLaneChangeProgress[i] -
-                             snapshotPreviousLaneChangeProgress[i]) /
-                                snapshotDuration
-                        );
-                    }
-                    else if (snapshotNextLaneChangeActive[i])
-                    {
-                        progressRate = Mathf.Max(
-                            0f,
-                            snapshotNextLaneChangeProgress[i] /
-                                snapshotDuration
-                        );
-                    }
-
-                    renderLaneChangeProgress = Mathf.Clamp01(
-                        renderLaneChangeProgress +
-                            progressRate * extrapolationTime
-                    );
-                }
-            }
+            // 2026-09-08: 위치와 차선 변경 진행도를 별도로 외삽하지 않음
+            // 다음 상태가 늦으면 마지막 수신 자세를 유지하여 예측 초과 후 되감기 방지
 
             int previousRenderedLaneId = vehicleLaneIds[i];
             float previousRenderedS = vehicleS[i];
