@@ -25,7 +25,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private const float PositionQuantum = 0.02f;
     private const float SpeedQuantum = 0.05f;
     private const float AccelerationQuantum = 0.1f;
-    private const float MinimumRemoteRenderDelay = 0.75f;
+    // 2026-09-08: 드문 수신 공백에 대비해 최소 재생 여유를 0.75초에서 1초로 확대
+    private const float MinimumRemoteRenderDelay = 1f;
 
     private const int ActiveBit = 1;
     private const int LaneShift = 1;
@@ -1398,7 +1399,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         lastAcceptedSnapshotTime = 0d;
 
         // 2026-09-08: 수신마다 지연을 바꾸면 재생 속도까지 변하므로 고정 지연 사용
-        // 세 전송 간격의 여유를 두고 수신한 두 상태 사이에서만 선형 보간
+        // 최소 1초 및 세 전송 간격의 여유를 확보하고 수신한 두 상태 사이에서만 선형 보간
         remoteRenderDelay = Mathf.Max(
             MinimumRemoteRenderDelay,
             Mathf.Max(0.2f, networkSnapshotInterval) * 3f
