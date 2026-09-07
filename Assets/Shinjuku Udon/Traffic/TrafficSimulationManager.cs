@@ -926,6 +926,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         TryRequestNetworkSnapshot();
     }
 
+    /// <summary>
+    /// 차량별 주행 상태를 두 개의 32비트 정수로 압축하고 전송 대기 상태로 등록
+    /// </summary>
+    /// <remarks>
+    /// 위치는 0.02m 단위로 0~2621.42m, 속도는 0.05m/s 단위로 0~25.55m/s 표현
+    /// 가속도는 0.1m/s² 단위로 -12.8~12.7m/s² 표현. 범위를 벗어난 값은 경계값으로 제한
+    /// 비트 배치나 양자화 단위 변경 시 수신 측 Decode 함수도 함께 변경 필요
+    /// </remarks>
     private void PackNetworkSnapshot()
     {
         EnsureNetworkBuffers();
@@ -966,6 +974,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 511
             );
 
+            // A: 활성 0, 차선 1~3, 위치 4~20, 속도 21~29번 비트 사용
+            // 30번은 신호 통과 또는 긴급 회피, 31번은 후진 회복 표시에 사용
             int stateA = ActiveBit |
                 (laneId << LaneShift) |
                 (positionValue << PositionShift) |
@@ -1008,6 +1018,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 127
             ) & 255;
 
+            // B: 속도 배율 0~7, 부호 있는 가속도 8~15, 차선 16~18번 비트 사용
+            // 차선 변경 활성 19, 목표 차선 20~22, 진행도 23~30, 재생성 구분 31번 비트 사용
             int stateB =
                 speedFactorValue |
                 (accelerationValue << 8) |
@@ -1026,6 +1038,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     7
                 );
 
+                // 후진 회복은 진행도를 23~28번으로 제한하고 29~30번에 회복 거리 4단계 저장
+                // 일반 차선 변경과 동일한 전송 크기를 유지하기 위한 비트 재사용
                 bool recoveryManeuver =
                     laneChangeReverseManeuver[i];
                 int progressMaximum = recoveryManeuver
@@ -1708,6 +1722,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         int value = (stateB >> 8) & 255;
 
+        // 마스크로 추출한 8비트 값의 부호 복원 후 감속을 포함한 가속도 계산
         if (value >= 128)
         {
             value -= 256;
