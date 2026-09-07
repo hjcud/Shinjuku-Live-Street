@@ -3255,6 +3255,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return physicsObstacleHitS[vehicleIndex];
     }
 
+    /// <summary>
+    /// 활성 차량의 물리 검사를 프레임별 예산 안에서 순환 처리
+    /// </summary>
     private void UpdateAuthorityPhysicsObstacleSensorsFrame()
     {
         authorityPhysicsQueryCount = 0;
@@ -3273,6 +3276,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
+        // 한 프레임에 갱신할 차량 수 제한. CheckBox와 BoxCast의 개별 호출 수와는 구분
         int budget = Mathf.Clamp(
             authorityObstacleVehiclesPerFrame,
             1,
@@ -3281,6 +3285,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int checkedSlots = 0;
         int updatedVehicles = 0;
 
+        // 이전 프레임의 다음 슬롯부터 재개하고 비활성 차량은 갱신 예산에서 제외
         while (checkedSlots < slotCount &&
                updatedVehicles < budget)
         {
@@ -3391,10 +3396,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             castDirection.Normalize();
         }
 
+        // 현재 속도에서 일정한 감속도로 정지하는 데 필요한 거리: v² / (2a)
         float brakingDistance =
             currentSpeed * currentSpeed /
             (2f * Mathf.Max(0.1f, playerComfortDeceleration));
 
+        // 제동 거리에 전방 여유와 네트워크 지연 예상 시간 동안의 이동 거리를 추가
+        // 저속에서도 최소 감지 거리는 유지
         float castDistance = Mathf.Max(
             Mathf.Max(0.5f, minimumObstacleLookAhead),
             brakingDistance +
@@ -3455,6 +3463,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         authorityPhysicsQueryCount++;
 
+        // 검사 시작 영역에 이미 겹친 장애물을 먼저 확인
         bool blocked = Physics.CheckBox(
             boxCenter,
             halfExtents,
@@ -3463,6 +3472,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
 
         float hitDistance = 0f;
+        // 시작 영역이 비어 있을 때만 전방을 검사해 추가 물리 쿼리 실행
         if (!blocked && castDistance > 0.001f)
         {
             RaycastHit hit;
