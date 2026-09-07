@@ -3,7 +3,6 @@ using Nomlas.TopazChat;
 using TMPro;
 using UdonSharp;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using VRC.SDK3.Components;
 using VRC.SDK3.UdonNetworkCalling;
@@ -37,16 +36,16 @@ public class SpeakerController : UdonSharpBehaviour
     [Header("스피커 음량 설정")]
     [SerializeField] Slider volumeSlider;
 
-    [FormerlySerializedAs("SpeakerRevToggle")]
     [Header("토글 초기화 대상 스크립트")]
-    [SerializeField] SpeakerRevToggle speakerRevToggle;
     [SerializeField] ObjectGlobalToggle sketchGlobalToggle;
     [SerializeField] ObjectGlobalToggle screenGlobalToggle;
     [SerializeField] ImageLoader imageLoader;
 
     [Header("초기화 대상 토파즈쳇")]
     [SerializeField] private Player topazPlayer;
-    [SerializeField] private URLSync topazURLSync;
+    // Cuding Edit: 0.3.0에서 URLSync가 Player로 통합됨. 기존 참조 필드 이름 유지
+    // Assembly-CSharp에서 참조하므로 TopazChat 런타임 asmdef의 Auto Referenced 활성 필요
+    [SerializeField] private Player topazURLSync;
     [SerializeField] private VRCUrlInputField urlInputField;
     [SerializeField] private TextMeshProUGUI urlAddress;
 
@@ -130,7 +129,6 @@ public class SpeakerController : UdonSharpBehaviour
 
         Debug.Log("[SpeakerController] Speaker Returning");
         // 스피커와 연결된 공유 기능을 먼저 끈 다음 표시 상태 반환
-        speakerRevToggle.SendCustomNetworkEvent(NetworkEventTarget.Owner, "OwnerDisableTarget");
         sketchGlobalToggle.SendCustomNetworkEvent(NetworkEventTarget.Owner, "OwnerDisableTarget");
         screenGlobalToggle.SendCustomNetworkEvent(NetworkEventTarget.Owner, "OwnerDisableTarget");
         imageLoader.SendCustomNetworkEvent(NetworkEventTarget.All, "ResetTex");
@@ -138,7 +136,7 @@ public class SpeakerController : UdonSharpBehaviour
 
         // 이전 스트림의 승계 방지를 위해 TopazChat 상태와 URL 초기화
         topazURLSync.ResetPlayer();
-        VRCUrl baseUrl = topazPlayer.GetPlatformDefaultStreamURL(Platform.Windows);
+        VRCUrl baseUrl = topazPlayer.DefaultStreamURL;
         urlInputField.SetUrl(baseUrl);
         urlAddress.text = "";
         Debug.Log("[SpeakerController] topazchat　Reset");
