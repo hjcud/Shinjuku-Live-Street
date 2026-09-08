@@ -33,6 +33,7 @@ public class SpeakerController : UdonSharpBehaviour
     private int localOwnerId;
     public float despawnWaitTime;
     private float nextDistanceCheckTime;
+    private int placementOwnerId;
 
     [Header("스피커 음량 설정")]
     [SerializeField] Slider volumeSlider;
@@ -70,7 +71,7 @@ public class SpeakerController : UdonSharpBehaviour
         if (Time.time < nextDistanceCheckTime) return;
         nextDistanceCheckTime = Time.time + 0.2f;
         VRCPlayerApi localPlayer = Networking.LocalPlayer;
-        if (isSpeakerTaken && Utilities.IsValid(localPlayer) && Networking.IsOwner(localPlayer, this.gameObject))
+        if (isSpeakerTaken && Utilities.IsValid(localPlayer) && localPlayer.playerId == placementOwnerId && Networking.IsOwner(localPlayer, this.gameObject))
         {
             Vector3 playerPosition = localPlayer.GetPosition();
             float sqrDistance = (playerPosition - transform.position).sqrMagnitude;
@@ -101,7 +102,12 @@ public class SpeakerController : UdonSharpBehaviour
     {
         if (isSpeakerTaken)
         {
-            if (Networking.IsOwner(Networking.LocalPlayer, this.gameObject))
+            if (newOwner.playerId == placementOwnerId)
+            {
+                UpdateSpeakerData();
+                return;
+            }
+            if (Networking.IsOwner(Networking.LocalPlayer, this.gameObject) && newOwner.playerId != placementOwnerId)
             {
                 SpeakerReturn();
             }
@@ -147,6 +153,7 @@ public class SpeakerController : UdonSharpBehaviour
         Debug.Log("[SpeakerController] topazchat　Reset");
 
         SendCustomNetworkEvent(NetworkEventTarget.All, nameof(SpeakerReturnAll));
+        speakerManager._ReleaseSpeaker(this);
     }
 
     /// <summary>
@@ -155,12 +162,18 @@ public class SpeakerController : UdonSharpBehaviour
     [NetworkCallable]
     public void SpeakerReturnAll()
     {
+        // Cuding Edit: 이전 소유자의 늦은 반환 이벤트가 새 공연자의 스피커를 되돌리지 않음
+        VRCPlayerApi caller = NetworkCalling.CallingPlayer;
+        if (!Utilities.IsValid(caller)) return;
+        if (caller.playerId != placementOwnerId &&
+            (Utilities.IsValid(VRCPlayerApi.GetPlayerById(placementOwnerId)) || caller != Networking.GetOwner(gameObject))) return;
         Debug.Log("[SpeakerController] Speaker Local Returning");
         Transform tempTransform = transform;
         var parent = tempTransform.parent;
         tempTransform.position = parent.position;
         tempTransform.rotation = parent.rotation;
         isSpeakerTaken = false;
+        placementOwnerId = 0;
 
         // 이 클라이언트에서 변경했던 소유자의 음성 증폭값만 기본값으로 복원
         if (localOwnerId != 0)
@@ -177,6 +190,17 @@ public class SpeakerController : UdonSharpBehaviour
     #endregion
 
     #region Speaker Sync
+
+    // Cuding Edit: 매니저 승인 후에만 소유권 확보. 비동기 소유권 콜백에서 자동 반환하지 않도록 기록
+    public bool _PlaceGrantedSpeaker(Vector3 position, Quaternion rotation)
+    {
+        placementOwnerId = Networking.LocalPlayer.playerId;
+        isSpeakerTaken = false;
+        Networking.SetOwner(Networking.LocalPlayer, gameObject);
+        if (!Networking.IsOwner(gameObject)) return false;
+        SendCustomNetworkEvent(NetworkEventTarget.All, nameof(PlaceSpeaker), 0, position, rotation);
+        return true;
+    }
 
     public override void OnPlayerJoined(VRCPlayerApi player)
     {
@@ -203,6 +227,8 @@ public class SpeakerController : UdonSharpBehaviour
     [NetworkCallable]
     public void PlaceSpeaker(int playerId, Vector3 targetPosition, Quaternion targetRotation)
     {
+        VRCPlayerApi caller = NetworkCalling.CallingPlayer;
+        if (!Utilities.IsValid(caller)) return;
         Debug.Log("[SpeakerController] Placing Speaker...");
         if (playerId > 0)
         {
@@ -217,6 +243,8 @@ public class SpeakerController : UdonSharpBehaviour
         }
 
         isSpeakerTaken = true;
+        // Cuding Edit: 위치 이벤트와 SDK 소유권 전파 순서가 달라도 실제 배치 요청자를 기준으로 표시
+        placementOwnerId = caller.playerId;
         nextDistanceCheckTime = 0f;
         Transform tempTransform = transform;
         tempTransform.position = targetPosition;
@@ -229,18 +257,21 @@ public class SpeakerController : UdonSharpBehaviour
         if (isSpeakerTaken)
         {
             speakerObject.SetActive(true);
-            ownerUsernameTM.text = Networking.GetOwner(gameObject).displayName;
+            VRCPlayerApi performer = VRCPlayerApi.GetPlayerById(placementOwnerId);
+            ownerUsernameTM.text = Utilities.IsValid(performer) ? performer.displayName : "";
             Debug.Log("[SpeakerController] Speaker Placed!");
         }
         else
         {
             speakerObject.SetActive(false);
             ownerUsernameTM.text = "";
-            speakerManager.RecalculateUsableCount();
             Debug.Log("[SpeakerController] Speaker Hide");
         }
 
-        if (isSpeakerTaken && Networking.IsOwner(Networking.LocalPlayer, this.gameObject))
+        // Cuding Edit: 최초 배치/반환/늦은 참가자 복원 모두 실제 슬롯 상태에서 수량 계산
+        speakerManager.RecalculateUsableCount();
+
+        if (IsLocalPerformer() && Networking.IsOwner(Networking.LocalPlayer, this.gameObject))
         {
             foreach (GameObject obj in ownerObjects)
                 obj.SetActive(true);
@@ -250,6 +281,11 @@ public class SpeakerController : UdonSharpBehaviour
             foreach (GameObject obj in ownerObjects)
                 obj.SetActive(false);
         }
+    }
+
+    public bool IsLocalPerformer()
+    {
+        return isSpeakerTaken && Utilities.IsValid(Networking.LocalPlayer) && Networking.LocalPlayer.playerId == placementOwnerId;
     }
 
     #endregion
