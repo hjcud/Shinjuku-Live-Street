@@ -1,8 +1,6 @@
 ﻿
-using TMPro;
 using UdonSharp;
 using UnityEngine;
-using UnityEngine.Serialization;
 using VRC.SDK3.UdonNetworkCalling;
 using VRC.SDKBase;
 using VRC.Udon.Common;
@@ -22,6 +20,10 @@ public class SpeakerManager : UdonSharpBehaviour
 
     [Header("스피커 오브젝트 설정")]
     [SerializeField] private SpeakerController[] speakerControllers;
+
+    // Cuding Edit: 매니저 소유자가 슬롯 배정을 직렬 처리. 배정 중인 슬롯도 빈자리로 재사용하지 않음
+    [UdonSynced] private int[] allocatedPlayerIds = new int[0];
+    private bool placementPending;
 
     private int UsableSpeakerCount = 0;
     private bool isVrUser;
@@ -60,8 +62,12 @@ public class SpeakerManager : UdonSharpBehaviour
     {
         isVrUser = Networking.LocalPlayer.IsUserInVR();
         speakerOwned = false;
-        UsableSpeakerCount = speakerControllers.Length;
-        RequestSerialization();
+        if (Networking.IsOwner(gameObject))
+        {
+            EnsureAllocationTable();
+            RequestSerialization();
+        }
+        RecalculateUsableCount();
     }
 
     private void Update()
@@ -158,7 +164,9 @@ public class SpeakerManager : UdonSharpBehaviour
 
     private void ConfirmPlacement()
     {
-        if (isHoloDisabled) return;
+        // 확인 입력 직전에도 설치면과 가용 상태를 다시 검사
+        UpdatePlacementPosition();
+        if (isHoloDisabled || placementPending) return;
 
         isPlacingSpeaker = false;
         speakerPlacements.SetActive(false);
@@ -199,10 +207,12 @@ public class SpeakerManager : UdonSharpBehaviour
 
         RaycastHit hit;
         bool didHit = Physics.Raycast(origin, direction, out hit, rayMaxDistance, rayLayerMask);
+        bool hasSurface = didHit;
         // 전방에 닿는 면이 없으면 최대 거리 지점 아래의 설치면 탐색
         // 직선과 곡선 안내선 구분을 위해 didHit은 전방 검사 결과로 유지
         if (!didHit && Physics.Raycast(endPoint, Vector3.down, out hit, Mathf.Infinity, rayLayerMask))
         {
+            hasSurface = true;
             endPoint = hit.point;
         }
         else if (didHit)
@@ -211,6 +221,13 @@ public class SpeakerManager : UdonSharpBehaviour
         }
 
         holoSpeaker.transform.position = endPoint;
+        // Cuding Edit: 두 Raycast가 모두 실패하면 영벡터를 설치면으로 취급하지 않음
+        if (!hasSurface)
+        {
+            SetHoloStatus(true, 1);
+            SetLineRenderer(didHit, origin, direction, endPoint);
+            return;
+        }
         SetHoloRotation(origin, endPoint, hit.normal);
 
         ValidatePlacement(hit.normal);
@@ -221,7 +238,10 @@ public class SpeakerManager : UdonSharpBehaviour
     {
         // 사용자 쪽 방향을 설치면에 투영해 바닥 기울기에 맞춘 홀로그램 회전 적용
         var direction = (from - to).normalized;
-        var rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(direction, normal), normal);
+        Vector3 forward = Vector3.ProjectOnPlane(direction, normal);
+        if (forward.sqrMagnitude < 0.0001f) forward = Vector3.ProjectOnPlane(Vector3.forward, normal);
+        if (forward.sqrMagnitude < 0.0001f) forward = Vector3.ProjectOnPlane(Vector3.right, normal);
+        var rotation = Quaternion.LookRotation(forward, normal);
         holoSpeaker.transform.rotation = rotation;
     }
 
@@ -236,7 +256,7 @@ public class SpeakerManager : UdonSharpBehaviour
         {
             SetHoloStatus(true, 2); // Animator 상태 2: 전체 수량 초과 경고 표시
         }
-        else if (speakerOwned)
+        else if (speakerOwned || placementPending)
         {
             SetHoloStatus(true, 3); // Animator 상태 3: 개인 수량 초과 경고 표시
         }
@@ -283,37 +303,119 @@ public class SpeakerManager : UdonSharpBehaviour
 
     private void TryPlacingSpeaker()
     {
-        foreach (var speaker in speakerControllers)
-        {
-            if (!speaker.isSpeakerTaken)
-            {
-                Networking.SetOwner(Networking.LocalPlayer, speaker.gameObject);
-
-                Transform targetTransform = holoSpeaker.transform;
-                speaker.SendCustomNetworkEvent(NetworkEventTarget.All, nameof(speaker.PlaceSpeaker), 0, targetTransform.position, targetTransform.rotation);
-                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(DecreaseUsableCount));
-                speakerOwned = true;
-                Debug.Log("[SpeakerManager] speakerController found and placed");
-
-                return;
-            }
-        }
-
-        Debug.Log("[SpeakerManager] No speakerController found");
+        if (placementPending || speakerOwned) return;
+        placementPending = true;
+        Transform target = holoSpeaker.transform;
+        SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestPlacement), target.position, target.rotation);
     }
 
-    /// <summary>
-    /// 스피커 배치가 확정된 모든 클라이언트에서 사용 가능 수 1 감소
-    /// </summary>
-    [NetworkCallable]
-    public void DecreaseUsableCount()
+    private void EnsureAllocationTable()
     {
-        if (UsableSpeakerCount > 0)
+        if (allocatedPlayerIds != null && allocatedPlayerIds.Length == speakerControllers.Length) return;
+        allocatedPlayerIds = new int[speakerControllers.Length];
+        for (int i = 0; i < speakerControllers.Length; i++)
         {
-            UsableSpeakerCount--;
-            Debug.Log("[SpeakerManager] UsableSpeakerCount Decreased");
+            if (speakerControllers[i].isSpeakerTaken)
+                allocatedPlayerIds[i] = Networking.GetOwner(speakerControllers[i].gameObject).playerId;
         }
-        else Debug.LogError("[SpeakerManager] UsableSpeakerCount Cannot Be Decreased");
+    }
+
+    /// <summary>요청자의 빈 슬롯을 소유권자 한 명이 확정한 뒤 결과 전달</summary>
+    [NetworkCallable]
+    public void RequestPlacement(Vector3 position, Quaternion rotation)
+    {
+        if (!Networking.IsOwner(gameObject)) return;
+        VRCPlayerApi caller = NetworkCalling.CallingPlayer;
+        if (!Utilities.IsValid(caller)) return;
+        EnsureAllocationTable();
+        int slot = -1;
+        for (int i = 0; i < speakerControllers.Length; i++)
+        {
+            if (allocatedPlayerIds[i] == caller.playerId)
+            {
+                // 매니저 소유권 이전 중 응답을 놓친 요청은 기존 예약 슬롯으로 재응답
+                slot = speakerControllers[i].isSpeakerTaken ? -1 : i;
+                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, slot, position, rotation);
+                return;
+            }
+            if (speakerControllers[i].isSpeakerTaken && Networking.GetOwner(speakerControllers[i].gameObject) == caller)
+            {
+                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, -1, position, rotation);
+                return;
+            }
+            if (slot < 0 && allocatedPlayerIds[i] == 0 && !speakerControllers[i].isSpeakerTaken) slot = i;
+        }
+        if (slot >= 0)
+        {
+            allocatedPlayerIds[slot] = caller.playerId;
+            RequestSerialization();
+            RecalculateUsableCount();
+        }
+        SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, slot, position, rotation);
+    }
+
+    /// <summary>매니저가 승인한 사용자만 해당 스피커 소유권을 확보하고 위치 전달</summary>
+    [NetworkCallable]
+    public void ReceivePlacement(int playerId, int slot, Vector3 position, Quaternion rotation)
+    {
+        if (NetworkCalling.CallingPlayer != Networking.GetOwner(gameObject)) return;
+        if (Networking.LocalPlayer.playerId != playerId || !placementPending) return;
+        placementPending = false;
+        if (slot >= 0 && slot < speakerControllers.Length)
+        {
+            if (!speakerControllers[slot]._PlaceGrantedSpeaker(position, rotation))
+                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), slot);
+        }
+        RecalculateUsableCount();
+    }
+
+    public void _ReleaseSpeaker(SpeakerController speaker)
+    {
+        for (int i = 0; i < speakerControllers.Length; i++)
+            if (speakerControllers[i] == speaker)
+            {
+                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), i);
+                return;
+            }
+    }
+
+    [NetworkCallable]
+    public void ReleaseAllocation(int slot)
+    {
+        if (!Networking.IsOwner(gameObject) || slot < 0 || slot >= speakerControllers.Length) return;
+        VRCPlayerApi caller = NetworkCalling.CallingPlayer;
+        if (!Utilities.IsValid(caller)) return;
+        EnsureAllocationTable();
+        int allocated = allocatedPlayerIds[slot];
+        if (allocated == 0) return;
+        if (allocated != caller.playerId &&
+            (Utilities.IsValid(VRCPlayerApi.GetPlayerById(allocated)) || caller != Networking.GetOwner(speakerControllers[slot].gameObject))) return;
+        allocatedPlayerIds[slot] = 0;
+        RequestSerialization();
+        RecalculateUsableCount();
+    }
+
+    public override void OnDeserialization() { RecalculateUsableCount(); }
+
+    public override void OnOwnershipTransferred(VRCPlayerApi player)
+    {
+        placementPending = false;
+        if (Networking.IsOwner(gameObject))
+        {
+            EnsureAllocationTable();
+            RequestSerialization();
+        }
+        RecalculateUsableCount();
+    }
+
+    public override void OnPlayerLeft(VRCPlayerApi player)
+    {
+        if (!Networking.IsOwner(gameObject)) return;
+        EnsureAllocationTable();
+        bool changed = false;
+        for (int i = 0; i < allocatedPlayerIds.Length; i++)
+            if (allocatedPlayerIds[i] == player.playerId) { allocatedPlayerIds[i] = 0; changed = true; }
+        if (changed) { RequestSerialization(); RecalculateUsableCount(); }
     }
 
     /// <summary>
@@ -322,14 +424,15 @@ public class SpeakerManager : UdonSharpBehaviour
     public void RecalculateUsableCount()
     {
         int count = 0;
-        foreach (var speaker in speakerControllers)
+        bool localOwned = false;
+        for (int i = 0; i < speakerControllers.Length; i++)
         {
-            if (!speaker.isSpeakerTaken)
-            {
-                count++;
-            }
+            SpeakerController speaker = speakerControllers[i];
+            bool reserved = allocatedPlayerIds != null && i < allocatedPlayerIds.Length && allocatedPlayerIds[i] != 0;
+            if (!speaker.isSpeakerTaken && !reserved) count++;
+            if (speaker.IsLocalPerformer()) localOwned = true;
         }
         UsableSpeakerCount = count;
-        Debug.Log("[SpeakerManager] UsableSpeakerCount recalculated: " + count);
+        speakerOwned = localOwned;
     }
 }
