@@ -91,7 +91,9 @@ public class SpeakerController : UdonSharpBehaviour
     {
         if (isSpeakerTaken)
         {
-            VRCPlayerApi targetPlayer = Networking.GetOwner(gameObject);
+            // Cuding Edit: SDK 소유권 전파가 늦어도 표시된 공연자에게만 음량 적용
+            VRCPlayerApi targetPlayer = VRCPlayerApi.GetPlayerById(placementOwnerId);
+            if (!Utilities.IsValid(targetPlayer)) return;
             localOwnerId = targetPlayer.playerId;
             float targetGain = Mathf.Lerp(0f, 24f, volumeSlider.value);
             targetPlayer.SetVoiceGain(targetGain);
