@@ -1,5 +1,5 @@
 <p align="center">
-  <strong>日本語</strong> · <a href="./optimization.md">한국어</a> · <a href="./optimization.en.md">English</a>
+  <strong>日本語</strong> / <a href="./optimization.md">한국어</a> / <a href="./optimization.en.md">English</a>
 </p>
 
 # 交通システムのパフォーマンス最適化
@@ -8,14 +8,14 @@
 
 | 項目 | 条件 |
 | --- | --- |
-| 計測機材 | Intel Core i5-13400F · NVIDIA GeForce RTX 3080 Ti 12GB · RAM 32GB |
-| ソフトウェア | Unity `2022.3.22f1` · VRChat SDK - Worlds `3.8.1` |
-| 実行環境 | Unity EditorのPlay Mode · ClientSim · PCビルドおよびVRChat Build & Testでは未計測 |
-| 負荷条件 | 稼働車両10台 · ClientSimのリモートプレイヤー80人を同じ地点に配置 |
-| 比較対象 | 初期: 車両ごとに毎フレーム処理 · 最新: 中央管理とセンサー判定の分散 |
+| 計測機材 | Intel Core i5-13400F / NVIDIA GeForce RTX 3080 Ti 12GB / RAM 32GB |
+| ソフトウェア | Unity `2022.3.22f1` / VRChat SDK - Worlds `3.8.1` |
+| 実行環境 | Unity EditorのPlay Mode / ClientSim / PCビルドおよびVRChat Build & Testでは未計測 |
+| 負荷条件 | 稼働車両10台 / ClientSimのリモートプレイヤー80人を同じ地点に配置 |
+| 比較対象 | 初期: 車両ごとに毎フレーム処理 / 最新: 中央管理とセンサー判定の分散 |
 | 収集区間 | 初期・最新スナップショットから各300フレーム |
-| 集計方法 | フレーム単位の標本から算術平均とP95を算出 · 1秒あたりの回数は60 FPSを前提 |
-| Profiler項目 | CPUフレーム時間 · PlayerLoop · Udon · Physics.Simulate · GC Alloc |
+| 集計方法 | フレーム単位の標本から算術平均とP95を算出 / 1秒あたりの回数は60 FPSを前提 |
+| Profiler項目 | CPUフレーム時間 / PlayerLoop / Udon / Physics.Simulate / GC Alloc |
 
 当時の計測記録には、Deep Profileの設定、個別のウォームアップ時間、反復回数が残っていません。初期実装は公開リポジトリ作成前のローカルスナップショットのため、対応するコミットハッシュもありません。現在の実装は自作コードを初めて公開したコミット[`e212623`](https://github.com/hjcud/Shinjuku-Live-Street/commit/e212623)に含まれますが、表の数値はコミット間のベンチマークではなく、2つのローカルスナップショットを比較したものです。
 

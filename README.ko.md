@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="./README.md">日本語</a> · <strong>한국어</strong> · <a href="./README.en.md">English</a>
+  <a href="./README.md">日本語</a> / <strong>한국어</strong> / <a href="./README.en.md">English</a>
 </p>
 
 <div align="center">
@@ -30,7 +30,7 @@
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChat에서 월드 열기 ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChat 소셜 월드 · Unity / UdonSharp · 2인 제작<br>방문·즐겨찾기 수치 · 2026년 9월 3일 기준</sub></p>
+<p align="center"><sub>VRChat 소셜 월드 / Unity / UdonSharp / 2인 제작<br>방문, 즐겨찾기 수치 / 2026년 9월 3일 기준</sub></p>
 
 ## 거리 공연과 커뮤니티
 
@@ -51,13 +51,13 @@
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
-<p align="center"><sub>영상 제공: <a href="https://x.com/KixiVRC">@KixiVRC</a> · 사진 제공: <a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a>, <a href="https://x.com/Samp1e_vd7">@Samp1e_vd7</a></sub></p>
+<p align="center"><sub>영상 제공: <a href="https://x.com/KixiVRC">@KixiVRC</a> / 사진 제공: <a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a>, <a href="https://x.com/Samp1e_vd7">@Samp1e_vd7</a></sub></p>
 
 ---
 
 <p align="center">
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><img src="./Docs/images/issue-planned-work.ko.svg" alt="예정된 작업 확인하기 — 진행 중인 작업과 개선 계획" width="49%"></a>
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ko.svg" alt="의견 남기기 — 버그 제보와 기능·개선 제안" width="49%"></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ko.svg" alt="의견 남기기 — 버그 제보와 기능, 개선 제안" width="49%"></a>
 </p>
 
 ---
@@ -94,7 +94,7 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 <p align="center">
   <img src="./Docs/images/shinjuku-traffic-system-debug.png" alt="실행 중인 교통 시스템의 차선과 차량 디버그 화면" width="900">
   <br>
-  <sub>차선 데이터와 차량별 점유 영역·예상 위치·장애물 센서 범위</sub>
+  <sub>차선 데이터와 차량별 점유 영역, 예상 위치, 장애물 센서 범위</sub>
 </p>
 
 </details>
@@ -103,9 +103,9 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 ![교통 시스템 초기 스냅샷과 최신 스냅샷의 Unity Profiler 비교](./Docs/images/traffic-performance-comparison.ko.svg)
 
-<p align="center"><sub>Unity Editor·ClientSim에서 동일 조건으로 비교한 결과이며, 실제 VRChat 인스턴스 성능과는 다를 수 있습니다.</sub></p>
+<p align="center"><sub>Unity Editor, ClientSim에서 동일 조건으로 비교한 결과이며, 실제 VRChat 인스턴스 성능과는 다를 수 있습니다.</sub></p>
 
-차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, Unity Editor에서 초기·최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다.
+차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, Unity Editor에서 초기, 최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다.
 
 <p align="center">
   <a href="./Docs/optimization.md"><strong>측정 조건과 문제별 적용 내용을 자세히 보기 →</strong></a>
@@ -118,10 +118,10 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 <p align="center">
   <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="기본 렌더링과 와이어프레임 비교" width="900">
   <br>
-  <sub>왼쪽: 기본 렌더링 · 오른쪽: 동일 카메라에서 촬영한 와이어프레임</sub>
+  <sub>왼쪽: 기본 렌더링 / 오른쪽: 동일 카메라에서 촬영한 와이어프레임</sub>
 </p>
 
-환경 모델을 구역별로 분리하고, 오클루전 컬링·정적 배칭·베이크 조명을 적용해 실시간 처리 범위를 줄였습니다.
+환경 모델을 구역별로 분리하고, 오클루전 컬링, 정적 배칭, 베이크 조명을 적용해 실시간 처리 범위를 줄였습니다.
 
 <table align="center">
   <tr>
@@ -145,10 +145,10 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 ## 저장소 안내
 
-이 저장소는 월드를 실행할 수 있는 완전한 Unity 프로젝트가 아닙니다. 작성한 C#·UdonSharp 코드와 개발 문서, 직접 제작하거나 제공받은 소개용 이미지·영상을 공개합니다. 월드 구동에 필요한 Unity 씬·Prefab·모델·텍스처·음원·영상·머티리얼·애니메이션·셰이더·`.meta` 파일과 외부 에셋은 포함하지 않습니다.
+이 저장소는 월드를 실행할 수 있는 완전한 Unity 프로젝트가 아닙니다. 작성한 C#, UdonSharp 코드와 개발 문서, 직접 제작하거나 제공받은 소개용 이미지, 영상을 공개합니다. 월드 구동에 필요한 Unity 씬, Prefab, 모델, 텍스처, 음원, 영상, 머티리얼, 애니메이션, 셰이더, `.meta` 파일과 외부 에셋은 포함하지 않습니다.
 
 <details>
-<summary><strong>사용한 SDK·패키지·외부 구성요소</strong></summary>
+<summary><strong>사용한 SDK, 패키지, 외부 구성요소</strong></summary>
 
 ### 개발 환경
 
@@ -177,7 +177,7 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 - Prototype Collection
 - AllSkyFree
 - Noriben Lunch shader assets
-- Atelier Rayrell, RIONESTA, Zelkova Tree 및 기타 모델·환경 리소스
+- Atelier Rayrell, RIONESTA, Zelkova Tree 및 기타 모델, 환경 리소스
 
 외부 구성요소는 이 저장소에 포함하지 않습니다. 각 항목의 저작권과 라이선스는 원 저작자 및 배포처의 정책을 따릅니다.
 
@@ -188,13 +188,13 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 ## 저작권 및 이용 조건
 
 > [!IMPORTANT]
-> 이 저장소는 오픈 소스가 아닌 **소스 공개형(source-available) 저장소**입니다. GitHub에서의 열람·포크를 넘어 코드를 복제·수정·재배포하거나 상업적으로 이용하려면 사전 서면 허가가 필요합니다.
+> 이 저장소는 오픈 소스가 아닌 **소스 공개형(source-available) 저장소**입니다. GitHub에서의 열람, 포크를 넘어 코드를 복제, 수정, 재배포하거나 상업적으로 이용하려면 사전 서면 허가가 필요합니다.
 
-[저작권 및 이용 조건 자세히 보기](./COPYRIGHT.md) · [이용 허가 요청하기](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
+[저작권 및 이용 조건 자세히 보기](./COPYRIGHT.md) / [이용 허가 요청하기](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 
 ## 팀
 
 | 구성원 | 담당 |
 | --- | --- |
-| [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 기획 · 그래픽 · 3D 모델링 |
-| [hjcud](https://github.com/hjcud) | Unity·UdonSharp 시스템 개발 및 최적화 |
+| [Artistoid](https://github.com/Artistoid) / [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 기획 / 그래픽 / 3D 모델링 |
+| [hjcud](https://github.com/hjcud) | Unity, UdonSharp 시스템 개발 및 최적화 |

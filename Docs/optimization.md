@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="./optimization.ja.md">日本語</a> · <strong>한국어</strong> · <a href="./optimization.en.md">English</a>
+  <a href="./optimization.ja.md">日本語</a> / <strong>한국어</strong> / <a href="./optimization.en.md">English</a>
 </p>
 
 # 교통 시스템 성능 최적화
@@ -8,14 +8,14 @@
 
 | 항목 | 조건 |
 | --- | --- |
-| 측정 장비 | Intel Core i5-13400F · NVIDIA GeForce RTX 3080 Ti 12GB · RAM 32GB |
-| 소프트웨어 | Unity `2022.3.22f1` · VRChat SDK - Worlds `3.8.1` |
-| 실행 환경 | Unity Editor Play Mode · ClientSim · PC 빌드와 VRChat Build & Test는 측정하지 않음 |
-| 부하 조건 | 활성 차량 10대 · ClientSim 원격 플레이어 80명을 같은 지점에 배치 |
-| 비교 대상 | 초기: 차량별 매 프레임 실행 · 최신: 중앙 관리자와 분산 센서 적용 |
-| 수집 구간 | 초기·최신 스냅샷에서 각각 300프레임 |
-| 집계 | 프레임별 표본의 산술 평균과 P95 · 초당 실행 횟수는 60 FPS 기준 |
-| Profiler 항목 | CPU frame time · PlayerLoop · Udon · Physics.Simulate · GC Alloc |
+| 측정 장비 | Intel Core i5-13400F / NVIDIA GeForce RTX 3080 Ti 12GB / RAM 32GB |
+| 소프트웨어 | Unity `2022.3.22f1` / VRChat SDK - Worlds `3.8.1` |
+| 실행 환경 | Unity Editor Play Mode / ClientSim / PC 빌드와 VRChat Build & Test는 측정하지 않음 |
+| 부하 조건 | 활성 차량 10대 / ClientSim 원격 플레이어 80명을 같은 지점에 배치 |
+| 비교 대상 | 초기: 차량별 매 프레임 실행 / 최신: 중앙 관리자와 분산 센서 적용 |
+| 수집 구간 | 초기, 최신 스냅샷에서 각각 300프레임 |
+| 집계 | 프레임별 표본의 산술 평균과 P95 / 초당 실행 횟수는 60 FPS 기준 |
+| Profiler 항목 | CPU frame time / PlayerLoop / Udon / Physics.Simulate / GC Alloc |
 
 당시 측정 기록에는 Deep Profile 설정, 별도 워밍업 시간과 반복 측정 횟수가 남아 있지 않습니다. 초기 구현은 공개 저장소를 만들기 전의 로컬 스냅샷이므로 비교 가능한 커밋 해시도 없습니다. 현재 구현은 자체 작성 코드를 처음 공개한 커밋 [`e212623`](https://github.com/hjcud/Shinjuku-Live-Street/commit/e212623)에 포함되어 있지만, 표의 수치는 커밋 간 벤치마크가 아닌 두 로컬 스냅샷의 비교입니다.
 
@@ -26,13 +26,13 @@
 
 [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs)는 위 300프레임 결과를 산출한 도구가 아니라, 이후 반복 측정을 위해 추가한 Editor 전용 스트레스 테스트입니다.
 
-- `WAIT`·`DIST`·`CROWD` 세 상태를 각각 600프레임 실행
+- `WAIT`, `DIST`, `CROWD` 세 상태를 각각 600프레임 실행
 - 상태 전환 후 처음 60프레임은 워밍업으로 분리하고 나머지 540프레임을 측정 구간으로 표시
 - 세 상태를 한 사이클로 묶어 3회 반복해 총 9개 측정 구간 생성
-- Custom Profiler marker로 상태와 워밍업·측정 구간을 구분
+- Custom Profiler marker로 상태와 워밍업, 측정 구간을 구분
 - 실행할 때마다 `Temp/TrafficPlayerStressPhases.csv`에 Unity frame과 Profiler frame 대응 기록 저장
 
-이 도구로 새 결과를 기록할 때는 동일한 빌드·Profiler 설정을 사용하고, 세 사이클의 중앙값이나 평균처럼 집계 방식을 함께 명시해야 합니다.
+이 도구로 새 결과를 기록할 때는 동일한 빌드, Profiler 설정을 사용하고, 세 사이클의 중앙값이나 평균처럼 집계 방식을 함께 명시해야 합니다.
 
 ## 결과 요약
 
@@ -140,7 +140,7 @@ flowchart LR
 - 실제 패킷 도착 간격에 맞춰 표시 지연을 0.35~1.25초 사이에서 조정
 - 보간 범위를 벗어났을 때만 최대 0.15초 예측
 - 차선 진행 거리를 기준으로 위치와 회전을 함께 복원
-- 차선 변경·긴급 회피·후진 복구 상태까지 차량당 64비트로 압축
+- 차선 변경, 긴급 회피, 후진 복구 상태까지 차량당 64비트로 압축
 
 동기화 데이터는 늘리지 않고, 차량 위치와 회전은 매 프레임 보간해 끊겨 보이지 않도록 했습니다.
 
@@ -163,7 +163,7 @@ flowchart LR
 | 구현 | 해결한 문제 | 코드 |
 | --- | --- | --- |
 | 차선 데이터 베이킹 | 실행 중 차선 검색을 줄이고 끊어진 연결을 빌드 전에 확인 | [`TrafficLaneBakerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs) |
-| 차량·센서 상태 표시 | 센서 범위, 현재 차선, 목표 차선, 네트워크 상태를 Scene View에서 확인 | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
+| 차량, 센서 상태 표시 | 센서 범위, 현재 차선, 목표 차선, 네트워크 상태를 Scene View에서 확인 | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
 | 80명 스트레스 테스트 | 주기적인 프레임 드랍을 같은 조건에서 다시 만들고 구간별로 확인 | [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) |
 
 [README로 돌아가기](../README.ko.md)

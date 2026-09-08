@@ -24,7 +24,7 @@
     <path d="M16 452 C300 432 483 469 721 447 C943 427 1088 439 1264 430" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 474 C292 458 484 486 734 467 C951 450 1110 464 1264 452" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
   </g>
   <rect x="16.5" y="16.5" width="1247" height="467" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
-  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">ライブ機材 · 状態同期の改善</text>
+  <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/><text x="72" y="77" class="title">ライブ機材 / 状態同期の改善</text>
   <g filter="url(#cardShadow)"><rect x="48" y="154" width="342" height="232" rx="18" fill="#17171a" fill-opacity="0.97" stroke="#6b3c35" stroke-opacity="0.82"/><rect x="430" y="154" width="802" height="232" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.82"/></g>
   <text x="72" y="204" class="section">以前の問題</text>
   <rect x="72" y="226" width="294" height="62" rx="12" fill="#1c1a1c" stroke="#6b3c35" stroke-opacity="0.72"/><text x="92" y="251" class="item-title">返却後も状態が残る</text><text x="92" y="274" class="item-body">画面・ペン・メディア設定</text>
