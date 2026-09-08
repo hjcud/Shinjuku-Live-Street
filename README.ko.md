@@ -57,7 +57,7 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 <p align="center">
   <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues"><img src="./Docs/images/issue-planned-work.ko.svg" alt="예정된 작업 확인하기 — 진행 중인 작업과 개선 계획" width="49%"></a>
-  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ko.svg" alt="의견 남기기 — 버그 제보와 기능, 개선 제안" width="49%"></a>
+  <a href="https://github.com/hjcud/Shinjuku-Live-Street/issues/new/choose"><img src="./Docs/images/issue-feedback.ko.svg" alt="의견 남기기 — 버그 제보와 기능 개선 제안" width="49%"></a>
 </p>
 
 ---
