@@ -1,9 +1,7 @@
 ﻿
-using TMPro;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
-using VRC.Core;
 using VRC.SDK3.Components;
 using VRC.SDK3.Image;
 using VRC.SDK3.UdonNetworkCalling;
@@ -13,45 +11,57 @@ using VRC.Udon;
 /// <summary>
 /// 동기화된 URL의 이미지를 내려받아 화면 비율을 유지한 채 스피커 화면에 표시
 /// </summary>
+[UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class ImageLoader : UdonSharpBehaviour
 {
-    [UdonSynced] public VRCUrl syncedUrl;
+    [UdonSynced] public VRCUrl syncedUrl = VRCUrl.Empty;
+    [UdonSynced] private int imageRevision;
     [SerializeField] private VRCUrlInputField inputField;
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private Text systemText;
     private VRCImageDownloader imageDownloader;
-    private Material material;
+    private RawImage image;
     private UdonBehaviour udon;
     private IVRCImageDownload downloadInfo;
-    private Texture2D tex;
     private float maxWidth;
     private float maxHeight;
+    private bool initialized;
+    private int appliedRevision = -1;
+    private string appliedUrl = "";
+    private float messageUntil;
 
     public void Start()
     {
-        rectTransform.GetComponent<RawImage>().enabled = false;
-        imageDownloader = new VRCImageDownloader();
-        udon = transform.GetComponent<UdonBehaviour>();
-        maxWidth = rectTransform.rect.width;
-        maxHeight = rectTransform.rect.height;
+        LoadImage();
+    }
+
+    // Cuding Edit: 입장/역직렬화 순서와 관계없이 출력 참조와 원래 표시 크기를 한 번만 준비
+    private bool Initialize()
+    {
+        if (initialized) return true;
+        if (!Utilities.IsValid(rectTransform)) return false;
+        image = rectTransform.GetComponent<RawImage>();
+        if (!Utilities.IsValid(image)) return false;
+        image.enabled = false;
+        udon = (UdonBehaviour)GetComponent(typeof(UdonBehaviour));
+        maxWidth = Mathf.Max(1f, rectTransform.rect.width);
+        maxHeight = Mathf.Max(1f, rectTransform.rect.height);
+        initialized = true;
+        return true;
     }
 
     /// <summary>
-    /// 모든 클라이언트에서 내려받은 Texture와 화면 표시 초기화
+    /// 소유권자가 빈 URL을 동기화하여 현재 사용자와 늦은 참가자 모두 이미지 초기화
     /// </summary>
     [NetworkCallable]
     public void ResetTex()
     {
-        rectTransform.GetComponent<RawImage>().enabled = false;
-        tex = null;
-    }
-    
-    public override void OnPlayerJoined(VRCPlayerApi player)
-    {
-        if(Networking.LocalPlayer == player)
-        {
-            LoadImage();
-        }
+        // Cuding Edit: All 이벤트를 받아도 이미지 소유자 한 명만 영속 상태 변경
+        if (!Networking.IsOwner(gameObject)) return;
+        syncedUrl = VRCUrl.Empty;
+        imageRevision++;
+        LoadImage();
+        RequestSerialization();
     }
 
     /// <summary>
@@ -59,8 +69,11 @@ public class ImageLoader : UdonSharpBehaviour
     /// </summary>
     public void OnEndUrlEdit()
     {
+        if (!Utilities.IsValid(inputField) || !Utilities.IsValid(Networking.LocalPlayer)) return;
         if (!Networking.IsOwner(gameObject)) Networking.SetOwner(Networking.LocalPlayer, gameObject);
+        if (!Networking.IsOwner(gameObject)) return;
         syncedUrl = inputField.GetUrl();
+        imageRevision++;
         
         LoadImage();
         RequestSerialization();
@@ -73,23 +86,40 @@ public class ImageLoader : UdonSharpBehaviour
 
     private void LoadImage()
     {
-        if ((syncedUrl == null) || (syncedUrl == VRCUrl.Empty)) return;
-        else if (syncedUrl.ToString().Length < 11) return;
-        else if (syncedUrl.ToString().Substring(0, 4) != "http") return;
-        else
+        if (!Initialize()) return;
+        string url = Utilities.IsValid(syncedUrl) ? syncedUrl.ToString() : "";
+        if (appliedRevision == imageRevision && appliedUrl == url) return;
+        appliedRevision = imageRevision;
+        appliedUrl = url;
+
+        // Cuding Edit: 이전 요청과 텍스처는 교체 시 해제. 같은 URL 재요청도 새 핸들로 구분
+        ClearDownload();
+        if (url == "")
         {
-            downloadInfo = imageDownloader.DownloadImage(syncedUrl, material, udon);
+            if (Utilities.IsValid(inputField)) inputField.SetUrl(VRCUrl.Empty);
+            SetMessage("");
+            return;
         }
+        if (!url.StartsWith("https://") && !url.StartsWith("http://"))
+        {
+            SetMessage("Invalid image URL");
+            return;
+        }
+        if (imageDownloader == null) imageDownloader = new VRCImageDownloader();
+        SetMessage("Downloading...");
+        downloadInfo = imageDownloader.DownloadImage(syncedUrl, null, udon);
     }
     
     public override void OnImageLoadSuccess(IVRCImageDownload result) {
-        downloadInfo = null;
-        rectTransform.GetComponent<RawImage>().enabled = true;
-        systemText.text = "Download Complete";
-        SendCustomEventDelayedSeconds("resetSystemText", 5f);
-        inputField.SetUrl(VRCUrl.Empty);
-        tex = result.Result;
-        rectTransform.GetComponent<RawImage>().texture = tex;
+        // Cuding Edit: 취소/초기화 전의 늦은 응답은 출력과 입력 UI를 변경하지 않음
+        if (result == null) return;
+        if (result != downloadInfo) { result.Dispose(); return; }
+        Texture2D tex = result.Result;
+        if (!Utilities.IsValid(tex)) { ClearDownload(); SetMessage("Image is unavailable"); return; }
+        image.texture = tex;
+        image.enabled = true;
+        SetMessage("Download Complete");
+        ClearSubmittedInput();
 
         float texWidth = tex.width;
         float texHeight = tex.height;
@@ -108,18 +138,47 @@ public class ImageLoader : UdonSharpBehaviour
     }
 
     public override void OnImageLoadError(IVRCImageDownload result) {
+        if (result == null) return;
+        if (result != downloadInfo) { result.Dispose(); return; }
+        string error = result.ErrorMessage;
+        ClearDownload();
+        SetMessage("Error(" + error + ")");
+        ClearSubmittedInput();
+    }
+
+    private void ClearSubmittedInput()
+    {
+        if (Utilities.IsValid(inputField) && inputField.GetUrl().ToString() == appliedUrl)
+            inputField.SetUrl(VRCUrl.Empty);
+    }
+
+    private void ClearDownload()
+    {
+        if (Utilities.IsValid(image)) { image.enabled = false; image.texture = null; }
+        IVRCImageDownload previous = downloadInfo;
         downloadInfo = null;
-        rectTransform.GetComponent<RawImage>().enabled = false;
-        systemText.text = "Error(" + result.ErrorMessage + ")";
-        SendCustomEventDelayedSeconds("resetSystemText", 5f);
-        inputField.SetUrl(VRCUrl.Empty);
-        tex = null;
+        if (previous != null) previous.Dispose();
+    }
+
+    private void OnDestroy()
+    {
+        ClearDownload();
+        if (imageDownloader != null) imageDownloader.Dispose();
+    }
+
+    private void SetMessage(string message)
+    {
+        if (!Utilities.IsValid(systemText)) return;
+        systemText.text = message;
+        messageUntil = Time.time + 5f;
+        if (message != "") SendCustomEventDelayedSeconds(nameof(resetSystemText), 5f);
     }
 
     /// <summary>
     /// 다운로드 결과 안내 표시 후 상태 문구 제거
     /// </summary>
     public void resetSystemText() {
-         systemText.text = "";
+        // 이전 안내의 예약 이벤트가 새 안내까지 지우지 않도록 표시 기한 확인
+        if (Utilities.IsValid(systemText) && Time.time >= messageUntil) systemText.text = "";
     }
 }
