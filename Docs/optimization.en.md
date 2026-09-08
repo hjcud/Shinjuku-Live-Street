@@ -24,7 +24,7 @@ The original capture record does not preserve the Deep Profile setting, a separa
 
 ## Reproducibility tool provided today
 
-[`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) did not produce the 300-frame results above. It is an Editor-only stress test added later to make future captures repeatable.
+[`TrafficPlayerStressTestEditor.cs`](../Assets/_Shinjuku/Editor/TrafficPlayerStressTestEditor.cs) did not produce the 300-frame results above. It is an Editor-only stress test added later to make future captures repeatable.
 
 - Runs `WAIT`, `DIST`, and `CROWD` for 600 frames each
 - Marks the first 60 frames after each transition as warm-up and the remaining 540 frames as the measurement window
@@ -124,7 +124,7 @@ The traffic manager creates a snapshot every 0.25 seconds and normally requests 
 
 The state for 16 vehicles uses 128 bytes, plus 12 bytes of shared metadata, for a total raw size of 140 bytes.
 
-The implementation is in [`TrafficSimulationManager.cs`](../Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) and [`ShinhoTime.cs`](../Assets/Shinjuku%20Udon/Traffic/Shinho/ShinhoTime.cs).
+The implementation is in [`TrafficSimulationManager.cs`](../Assets/_Shinjuku/Scripts/Traffic/TrafficSimulationManager.cs) and [`ShinhoTime.cs`](../Assets/_Shinjuku/Scripts/Traffic/Shinho/ShinhoTime.cs).
 
 ## 3. Remote vehicles appeared to jump between snapshots
 
@@ -160,8 +160,8 @@ Between the initial and latest snapshots, CPU frame-time P95 fell from `24.60 ms
 
 | Tool | Problem addressed | Code |
 | --- | --- | --- |
-| Lane-data baking | Avoid runtime lane discovery and catch broken links before a build | [`TrafficLaneBakerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs) |
-| Vehicle and sensor visualization | Inspect sensor ranges, current lanes, target lanes, and network state in the Scene view | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
-| 80-player stress test | Reproduce periodic frame drops with a consistent layout and mark each capture range | [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) |
+| Lane-data baking | Avoid runtime lane discovery and catch broken links before a build | [`TrafficLaneBakerEditor.cs`](../Assets/_Shinjuku/Editor/Traffic/TrafficLaneBakerEditor.cs) |
+| Vehicle and sensor visualization | Inspect sensor ranges, current lanes, target lanes, and network state in the Scene view | [`TrafficSimulationManagerEditor.cs`](../Assets/_Shinjuku/Editor/Traffic/TrafficSimulationManagerEditor.cs) |
+| 80-player stress test | Reproduce periodic frame drops with a consistent layout and mark each capture range | [`TrafficPlayerStressTestEditor.cs`](../Assets/_Shinjuku/Editor/TrafficPlayerStressTestEditor.cs) |
 
 [Back to the README](../README.en.md)

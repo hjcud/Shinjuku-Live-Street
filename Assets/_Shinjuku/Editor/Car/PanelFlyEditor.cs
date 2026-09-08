@@ -35,7 +35,7 @@ public static class PanelFlySceneSetup
     private const string FlashParticleName =
         "PanelStarFlashParticle";
     private const string AssetFolder =
-        "Assets/Shinjuku Udon/Car/StarEffect";
+        "Assets/_Shinjuku/Art/Effects/PanelStar";
     private const string StarMeshPath =
         AssetFolder + "/PanelStarMesh.asset";
     private const string StarMaterialPath =
@@ -851,8 +851,8 @@ public static class PanelFlySceneSetup
         }
 
         AssetDatabase.CreateFolder(
-            "Assets/Shinjuku Udon/Car",
-            "StarEffect"
+            "Assets/_Shinjuku/Art/Effects",
+            "PanelStar"
         );
     }
 }

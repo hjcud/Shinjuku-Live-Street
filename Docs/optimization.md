@@ -24,7 +24,7 @@
 
 ## 현재 제공되는 재현 도구
 
-[`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs)는 위 300프레임 결과를 산출한 도구가 아니라, 이후 반복 측정을 위해 추가한 Editor 전용 스트레스 테스트입니다.
+[`TrafficPlayerStressTestEditor.cs`](../Assets/_Shinjuku/Editor/TrafficPlayerStressTestEditor.cs)는 위 300프레임 결과를 산출한 도구가 아니라, 이후 반복 측정을 위해 추가한 Editor 전용 스트레스 테스트입니다.
 
 - `WAIT`, `DIST`, `CROWD` 세 상태를 각각 600프레임 실행
 - 상태 전환 후 처음 60프레임은 워밍업으로 분리하고 나머지 540프레임을 측정 구간으로 표시
@@ -126,7 +126,7 @@ flowchart LR
 
 차량 16대의 상태 128바이트와 공통 값 12바이트를 합쳐 원시 데이터를 총 140바이트로 구성했습니다.
 
-관련 구현은 [`TrafficSimulationManager.cs`](../Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs)와 [`ShinhoTime.cs`](../Assets/Shinjuku%20Udon/Traffic/Shinho/ShinhoTime.cs)에서 확인할 수 있습니다.
+관련 구현은 [`TrafficSimulationManager.cs`](../Assets/_Shinjuku/Scripts/Traffic/TrafficSimulationManager.cs)와 [`ShinhoTime.cs`](../Assets/_Shinjuku/Scripts/Traffic/Shinho/ShinhoTime.cs)에서 확인할 수 있습니다.
 
 ## 3. 낮은 전송 주기에서 차량이 끊겨 보이던 문제
 
@@ -162,8 +162,8 @@ flowchart LR
 
 | 구현 | 해결한 문제 | 코드 |
 | --- | --- | --- |
-| 차선 데이터 베이킹 | 실행 중 차선 검색을 줄이고 끊어진 연결을 빌드 전에 확인 | [`TrafficLaneBakerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs) |
-| 차량, 센서 상태 표시 | 센서 범위, 현재 차선, 목표 차선, 네트워크 상태를 Scene View에서 확인 | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
-| 80명 스트레스 테스트 | 주기적인 프레임 드랍을 같은 조건에서 다시 만들고 구간별로 확인 | [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) |
+| 차선 데이터 베이킹 | 실행 중 차선 검색을 줄이고 끊어진 연결을 빌드 전에 확인 | [`TrafficLaneBakerEditor.cs`](../Assets/_Shinjuku/Editor/Traffic/TrafficLaneBakerEditor.cs) |
+| 차량, 센서 상태 표시 | 센서 범위, 현재 차선, 목표 차선, 네트워크 상태를 Scene View에서 확인 | [`TrafficSimulationManagerEditor.cs`](../Assets/_Shinjuku/Editor/Traffic/TrafficSimulationManagerEditor.cs) |
+| 80명 스트레스 테스트 | 주기적인 프레임 드랍을 같은 조건에서 다시 만들고 구간별로 확인 | [`TrafficPlayerStressTestEditor.cs`](../Assets/_Shinjuku/Editor/TrafficPlayerStressTestEditor.cs) |
 
 [README로 돌아가기](../README.ko.md)

@@ -24,7 +24,7 @@
 
 ## 現在提供している再現用ツール
 
-[`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs)は、上記の300フレーム計測に使用したものではありません。今後の計測を同じ条件で繰り返せるよう、後から追加したEditor専用の負荷テストです。
+[`TrafficPlayerStressTestEditor.cs`](../Assets/_Shinjuku/Editor/TrafficPlayerStressTestEditor.cs)は、上記の300フレーム計測に使用したものではありません。今後の計測を同じ条件で繰り返せるよう、後から追加したEditor専用の負荷テストです。
 
 - `WAIT`・`DIST`・`CROWD`の3状態を各600フレーム実行
 - 状態遷移後の最初の60フレームをウォームアップとして分離し、残り540フレームを計測区間として記録
@@ -124,7 +124,7 @@ flowchart LR
 
 車両16台の状態に128バイト、共通値に12バイトを使い、生データを合計140バイトにまとめました。
 
-実装は[`TrafficSimulationManager.cs`](../Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs)と[`ShinhoTime.cs`](../Assets/Shinjuku%20Udon/Traffic/Shinho/ShinhoTime.cs)にあります。
+実装は[`TrafficSimulationManager.cs`](../Assets/_Shinjuku/Scripts/Traffic/TrafficSimulationManager.cs)と[`ShinhoTime.cs`](../Assets/_Shinjuku/Scripts/Traffic/Shinho/ShinhoTime.cs)にあります。
 
 ## 3. 更新間隔が長く、リモート車両がカクつく問題
 
@@ -160,8 +160,8 @@ flowchart LR
 
 | ツール | 用途 | コード |
 | --- | --- | --- |
-| レーンデータのベイク | 実行時のレーン探索を不要にし、切れた接続をビルド前に検出 | [`TrafficLaneBakerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs) |
-| 車両・センサーの可視化 | センサー範囲、現在レーン、目標レーン、ネットワーク状態をSceneビューで確認 | [`TrafficSimulationManagerEditor.cs`](../Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) |
-| 80人負荷テスト | 周期的なフレームドロップを同じ配置条件で再現し、計測区間を記録 | [`TrafficPlayerStressTestEditor.cs`](../Assets/Editor/TrafficPlayerStressTestEditor.cs) |
+| レーンデータのベイク | 実行時のレーン探索を不要にし、切れた接続をビルド前に検出 | [`TrafficLaneBakerEditor.cs`](../Assets/_Shinjuku/Editor/Traffic/TrafficLaneBakerEditor.cs) |
+| 車両・センサーの可視化 | センサー範囲、現在レーン、目標レーン、ネットワーク状態をSceneビューで確認 | [`TrafficSimulationManagerEditor.cs`](../Assets/_Shinjuku/Editor/Traffic/TrafficSimulationManagerEditor.cs) |
+| 80人負荷テスト | 周期的なフレームドロップを同じ配置条件で再現し、計測区間を記録 | [`TrafficPlayerStressTestEditor.cs`](../Assets/_Shinjuku/Editor/TrafficPlayerStressTestEditor.cs) |
 
 [READMEへ戻る](../README.md)
