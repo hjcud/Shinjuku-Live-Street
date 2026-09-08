@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 /// <summary>
 /// 파일 이름 접미사를 기준으로 Texture를 같은 이름의 Material 속성에 연결하는 Editor 도구
@@ -12,35 +13,51 @@ public class MaterialTextureAssigner : MonoBehaviour
         string textureFolderPath = "Assets/model/MAT/Texture";
         string materialFolderPath = "Assets/model/MAT";
 
-        Texture[] textures = Resources.LoadAll<Texture>(textureFolderPath);
-        Material[] materials = Resources.LoadAll<Material>(materialFolderPath);
-
-        foreach (Material mat in materials)
+        if (!AssetDatabase.IsValidFolder(textureFolderPath) || !AssetDatabase.IsValidFolder(materialFolderPath))
         {
-            foreach (Texture tex in textures)
-            {
-                // Material 이름과 접미사 규칙이 일치하는 Texture만 자동 연결
-                if (tex.name.StartsWith(mat.name))
-                {
-                    if (tex.name.EndsWith("_BaseColor"))
-                    {
-                        mat.SetTexture("_MainTex", tex);
-                        Debug.Log($"Applied {tex.name} as _MainTex to {mat.name}");
-                    }
-                    else if (tex.name.EndsWith("_Normal"))
-                    {
-                        mat.SetTexture("_BumpMap", tex);
-                        Debug.Log($"Applied {tex.name} as _BumpMap to {mat.name}");
-                    }
-                    else if (tex.name.EndsWith("_Metallic"))
-                    {
-                        mat.SetTexture("_MetallicGlossMap", tex);
-                        Debug.Log($"Applied {tex.name} as _MetallicGlossMap to {mat.name}");
-                    }
-                }
-            }
+            Debug.LogWarning("[MaterialTextureAssigner] Material or texture folder is missing.");
+            return;
         }
 
-        AssetDatabase.SaveAssets();
+        // Cuding Edit: Resources 외부의 에셋은 AssetDatabase로 검색하고 이름을 한 번만 색인
+        var textures = new Dictionary<string, Texture>();
+        var duplicates = new HashSet<string>();
+        foreach (string guid in AssetDatabase.FindAssets("t:Texture", new[] { textureFolderPath }))
+        {
+            var texture = AssetDatabase.LoadAssetAtPath<Texture>(AssetDatabase.GUIDToAssetPath(guid));
+            if (texture == null) continue;
+            if (textures.ContainsKey(texture.name)) duplicates.Add(texture.name);
+            else textures.Add(texture.name, texture);
+        }
+        string[] suffixes = { "_BaseColor", "_Normal", "_Metallic" };
+        string[] properties = { "_MainTex", "_BumpMap", "_MetallicGlossMap" };
+        int changedCount = 0;
+
+        foreach (string guid in AssetDatabase.FindAssets("t:Material", new[] { materialFolderPath }))
+        {
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
+            if (mat == null) continue;
+            bool changed = false;
+            for (int i = 0; i < suffixes.Length; i++)
+            {
+                // 이름 접두사가 비슷한 다른 Material의 텍스처를 잘못 연결하지 않음
+                string name = mat.name + suffixes[i];
+                if (duplicates.Contains(name))
+                {
+                    Debug.LogWarning($"[MaterialTextureAssigner] Duplicate texture skipped: {name}");
+                    continue;
+                }
+                if (!mat.HasProperty(properties[i]) || !textures.TryGetValue(name, out Texture tex)) continue;
+                if (mat.GetTexture(properties[i]) == tex) continue;
+                if (!changed) Undo.RecordObject(mat, "Assign Material Textures");
+                mat.SetTexture(properties[i], tex);
+                changed = true;
+            }
+            if (!changed) continue;
+            EditorUtility.SetDirty(mat);
+            AssetDatabase.SaveAssetIfDirty(mat);
+            changedCount++;
+        }
+        Debug.Log($"[MaterialTextureAssigner] Updated {changedCount} materials.");
     }
 }
