@@ -226,6 +226,13 @@ public class PanelFly : UdonSharpBehaviour
                 {
                     continue;
                 }
+
+                // Cuding Edit: 다른 차량에 맞은 Cast를 현재 후보의 충돌로 사용하지 않음
+                // 실제로 맞은 Collider는 자신의 후보 검사에서 해당 차량 속도로 처리
+                if (sweepHit.collider != hit)
+                {
+                    continue;
+                }
             }
 
             bestSpeedSquared = speedSquared;
