@@ -24,6 +24,10 @@ public class SpeakerManager : UdonSharpBehaviour
     // Cuding Edit: 매니저 소유자가 슬롯 배정을 직렬 처리. 배정 중인 슬롯도 빈자리로 재사용하지 않음
     [UdonSynced] private int[] allocatedPlayerIds = new int[0];
     private bool placementPending;
+    private int placementRequestId;
+    private Vector3 pendingPlacementPosition;
+    private Quaternion pendingPlacementRotation;
+    private float nextPlacementRetryTime;
 
     private int UsableSpeakerCount = 0;
     private bool isVrUser;
@@ -305,8 +309,23 @@ public class SpeakerManager : UdonSharpBehaviour
     {
         if (placementPending || speakerOwned) return;
         placementPending = true;
+        placementRequestId++;
         Transform target = holoSpeaker.transform;
-        SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestPlacement), target.position, target.rotation);
+        pendingPlacementPosition = target.position;
+        pendingPlacementRotation = target.rotation;
+        nextPlacementRetryTime = 0f;
+        _RetryPlacement();
+    }
+
+    // Cuding Edit: 소유권 전환 중 승인을 놓쳐도 같은 요청/위치로 재확인. 새 슬롯을 중복 예약하지 않음
+    public void _RetryPlacement()
+    {
+        if (!placementPending || Time.time < nextPlacementRetryTime) return;
+        SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestPlacement),
+            placementRequestId, pendingPlacementPosition, pendingPlacementRotation);
+        if (!placementPending) return; // 로컬 소유자의 즉시 응답이면 재시도 불필요
+        nextPlacementRetryTime = Time.time + 3f;
+        SendCustomEventDelayedSeconds(nameof(_RetryPlacement), 3f);
     }
 
     private void EnsureAllocationTable()
@@ -322,7 +341,7 @@ public class SpeakerManager : UdonSharpBehaviour
 
     /// <summary>요청자의 빈 슬롯을 소유권자 한 명이 확정한 뒤 결과 전달</summary>
     [NetworkCallable]
-    public void RequestPlacement(Vector3 position, Quaternion rotation)
+    public void RequestPlacement(int requestId, Vector3 position, Quaternion rotation)
     {
         if (!Networking.IsOwner(gameObject)) return;
         VRCPlayerApi caller = NetworkCalling.CallingPlayer;
@@ -335,12 +354,12 @@ public class SpeakerManager : UdonSharpBehaviour
             {
                 // 매니저 소유권 이전 중 응답을 놓친 요청은 기존 예약 슬롯으로 재응답
                 slot = speakerControllers[i].isSpeakerTaken ? -1 : i;
-                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, slot, position, rotation);
+                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, slot, position, rotation);
                 return;
             }
             if (speakerControllers[i].isSpeakerTaken && Networking.GetOwner(speakerControllers[i].gameObject) == caller)
             {
-                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, -1, position, rotation);
+                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, -1, position, rotation);
                 return;
             }
             if (slot < 0 && allocatedPlayerIds[i] == 0 && !speakerControllers[i].isSpeakerTaken) slot = i;
@@ -351,15 +370,16 @@ public class SpeakerManager : UdonSharpBehaviour
             RequestSerialization();
             RecalculateUsableCount();
         }
-        SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, slot, position, rotation);
+        SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, slot, position, rotation);
     }
 
     /// <summary>매니저가 승인한 사용자만 해당 스피커 소유권을 확보하고 위치 전달</summary>
     [NetworkCallable]
-    public void ReceivePlacement(int playerId, int slot, Vector3 position, Quaternion rotation)
+    public void ReceivePlacement(int playerId, int requestId, int slot, Vector3 position, Quaternion rotation)
     {
         if (NetworkCalling.CallingPlayer != Networking.GetOwner(gameObject)) return;
-        if (Networking.LocalPlayer.playerId != playerId || !placementPending) return;
+        // 이전 요청의 늦은 승인으로 새 요청 위치가 덮어써지지 않도록 요청 번호 확인
+        if (Networking.LocalPlayer.playerId != playerId || !placementPending || requestId != placementRequestId) return;
         placementPending = false;
         if (slot >= 0 && slot < speakerControllers.Length)
         {
@@ -399,7 +419,7 @@ public class SpeakerManager : UdonSharpBehaviour
 
     public override void OnOwnershipTransferred(VRCPlayerApi player)
     {
-        placementPending = false;
+        // Cuding Edit: 대기 중 요청은 유지. 예약된 마지막 슬롯도 UI 재입력 없이 새 소유자에게 재확인
         if (Networking.IsOwner(gameObject))
         {
             EnsureAllocationTable();
