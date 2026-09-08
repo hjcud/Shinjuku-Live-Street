@@ -135,13 +135,13 @@ The environment is divided into sections, with occlusion culling, static batchin
 
 | Area | Key files | Responsibility |
 | --- | --- | --- |
-| Live equipment | [`SpeakerManager.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/Shinjuku%20Udon/Speaker/v2.7/SpeakerController.cs) | Speaker placement, validation, ownership, late-join sync, and reset |
-| Stage voice | [`VoiceRange.cs`](./Assets/Shinjuku%20Udon/Speaker/VoiceRange.cs) | Shared performer voice range and gain |
-| Shared interactions | [`ObjectGlobalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectGlobalToggle.cs), [`ObjectLocalToggle.cs`](./Assets/Shinjuku%20Udon/ObjectToggle/ObjectLocalToggle.cs) | Separation of global and local state |
-| Traffic runtime | [`TrafficSimulationManager.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficSimulationManager.cs) | Simulation, state packing, transfer, and remote reconstruction |
-| Lane data | [`TrafficLaneDatabase.cs`](./Assets/Shinjuku%20Udon/Traffic/TrafficLaneDatabase.cs) | Baked lane lookup and vehicle pose reconstruction |
-| Editor tooling | [`TrafficLaneBakerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/Shinjuku%20Udon/Traffic/Editor/TrafficSimulationManagerEditor.cs) | Lane baking, validation, and visualization |
-| World utilities | [`PosterSlide.cs`](./Assets/Shinjuku%20Udon/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/Shinjuku%20Udon/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/Shinjuku%20Udon/Teleport/CollisionTeleport.cs) | Poster transitions, portals, and teleportation |
+| Live equipment | [`SpeakerManager.cs`](./Assets/_Shinjuku/Scripts/Speaker/SpeakerManager.cs), [`SpeakerController.cs`](./Assets/_Shinjuku/Scripts/Speaker/SpeakerController.cs) | Speaker placement, validation, ownership, late-join sync, and reset |
+| Stage voice | [`VoiceRange.cs`](./Assets/_Shinjuku/Scripts/Speaker/VoiceRange.cs) | Shared performer voice range and gain |
+| Shared interactions | [`ObjectGlobalToggle.cs`](./Assets/_Shinjuku/Scripts/ObjectToggle/ObjectGlobalToggle.cs), [`ObjectLocalToggle.cs`](./Assets/_Shinjuku/Scripts/ObjectToggle/ObjectLocalToggle.cs) | Separation of global and local state |
+| Traffic runtime | [`TrafficSimulationManager.cs`](./Assets/_Shinjuku/Scripts/Traffic/TrafficSimulationManager.cs) | Simulation, state packing, transfer, and remote reconstruction |
+| Lane data | [`TrafficLaneDatabase.cs`](./Assets/_Shinjuku/Scripts/Traffic/TrafficLaneDatabase.cs) | Baked lane lookup and vehicle pose reconstruction |
+| Editor tooling | [`TrafficLaneBakerEditor.cs`](./Assets/_Shinjuku/Editor/Traffic/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/_Shinjuku/Editor/Traffic/TrafficSimulationManagerEditor.cs) | Lane baking, validation, and visualization |
+| World utilities | [`PosterSlide.cs`](./Assets/_Shinjuku/Scripts/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/_Shinjuku/Scripts/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/_Shinjuku/Scripts/Teleport/CollisionTeleport.cs) | Poster transitions, portals, and teleportation |
 
 ## Repository scope
 

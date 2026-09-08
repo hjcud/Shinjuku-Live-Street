@@ -33,6 +33,7 @@
 !/Docs/optimization.en.md
 !/Docs/optimization.ja.md
 !/Docs/THIRD_PARTY_NOTICES.md
+!/Docs/project-structure.md
 
 # 300프레임 비교 문서와 공개용 측정 자료만 허용합니다.
 !/Docs/benchmarks/
@@ -68,16 +69,16 @@
 # 직접 작성한 C# 소스가 있는 폴더만 허용합니다.
 !/Assets/
 /Assets/*
-!/Assets/Shinjuku Udon/
-!/Assets/Editor/
+!/Assets/_Shinjuku/
+/Assets/_Shinjuku/*
+!/Assets/_Shinjuku/Scripts/
+!/Assets/_Shinjuku/Editor/
 
-# 신주쿠 Udon 폴더에 있는 자체 런타임 및 에디터 소스입니다.
-# 모든 Unity 에셋과 .meta 파일은 계속 제외합니다.
-/Assets/Shinjuku Udon/**/*
-!/Assets/Shinjuku Udon/**/
-!/Assets/Shinjuku Udon/**/*.cs
-
-# 신주쿠 Udon 폴더 밖에 있는 자체 제작 도구를 개별적으로 허용합니다.
-/Assets/Editor/*
-!/Assets/Editor/MaterialTextureAssigner.cs
-!/Assets/Editor/TrafficPlayerStressTestEditor.cs
+# 자체 런타임과 에디터 소스만 공개합니다.
+# 씬, 모델, 음원, 프리팹, Udon 프로그램 에셋 및 .meta는 기존 정책대로 제외합니다.
+/Assets/_Shinjuku/Scripts/**/*
+!/Assets/_Shinjuku/Scripts/**/
+!/Assets/_Shinjuku/Scripts/**/*.cs
+/Assets/_Shinjuku/Editor/**/*
+!/Assets/_Shinjuku/Editor/**/
+!/Assets/_Shinjuku/Editor/**/*.cs
