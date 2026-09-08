@@ -25,7 +25,7 @@
     <path d="M16 412 C300 392 483 429 721 407 C943 387 1088 399 1264 390" fill="none" stroke="#54c9c2" stroke-opacity="0.18" stroke-width="1.5"/><path d="M16 434 C292 418 484 446 734 427 C951 410 1110 424 1264 412" fill="none" stroke="#b34236" stroke-opacity="0.22" stroke-width="2"/>
   </g>
   <rect x="16.5" y="16.5" width="1247" height="427" rx="29.5" fill="none" stroke="#b98a55" stroke-opacity="0.26"/><path d="M46 17 H288" stroke="#c74137" stroke-width="3"/><path d="M288 17 H410" stroke="#dca45f" stroke-width="3"/>
-  <rect x="52" y="43" width="4" height="76" rx="2" fill="#c84036"/><text x="72" y="77" class="title">교통 상태 · 계산과 전송 구조</text><text x="72" y="108" class="subtitle">차량마다 처리하던 계산과 전송을 역할별로 분리</text>
+  <rect x="52" y="43" width="4" height="76" rx="2" fill="#c84036"/><text x="72" y="77" class="title">교통 상태 / 계산과 전송 구조</text><text x="72" y="108" class="subtitle">차량마다 처리하던 계산과 전송을 역할별로 분리</text>
 
   <g filter="url(#cardShadow)">
     <rect x="48" y="158" width="252" height="184" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#5b4b38" stroke-opacity="0.78"/>
@@ -34,10 +34,10 @@
     <rect x="948" y="158" width="284" height="184" rx="18" fill="#14191d" fill-opacity="0.97" stroke="#355553" stroke-opacity="0.78"/>
   </g>
 
-  <text x="72" y="207" class="role">EDITOR</text><text x="72" y="243" class="card-title">차선 데이터 생성</text><text x="72" y="280" class="card-body">위치 · 연결 · 정지선</text><text x="72" y="306" class="card-body">실행 전에 미리 계산</text>
+  <text x="72" y="207" class="role">EDITOR</text><text x="72" y="243" class="card-title">차선 데이터 생성</text><text x="72" y="280" class="card-body">위치 / 연결 / 정지선</text><text x="72" y="306" class="card-body">실행 전에 미리 계산</text>
   <text x="372" y="207" class="role">TRAFFIC OWNER</text><text x="372" y="243" class="card-title">차량 10대를 통합 처리</text><text x="372" y="280" class="card-body">고정 주기 시뮬레이션</text><text x="372" y="306" class="card-body">센서는 2대씩 나눠 검사</text>
   <text x="672" y="207" class="role">NETWORK</text><text x="672" y="243" class="card-title">64비트 차량 상태</text><text x="672" y="280" class="card-body">0.25초마다 상태 전송</text><text x="672" y="306" class="card-body">중복 전송 요청 차단</text>
-  <text x="972" y="207" class="role">REMOTE CLIENT</text><text x="972" y="243" class="card-title">차선 데이터로 복원</text><text x="972" y="280" class="card-body">위치·회전 매 프레임 보간</text><text x="972" y="306" class="card-body">끊김 없이 부드럽게 표시</text>
+  <text x="972" y="207" class="role">REMOTE CLIENT</text><text x="972" y="243" class="card-title">차선 데이터로 복원</text><text x="972" y="280" class="card-body">위치, 회전 매 프레임 보간</text><text x="972" y="306" class="card-body">끊김 없이 부드럽게 표시</text>
 
   <g fill="none" stroke="#63cbc4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M307 250 H340"/><path d="M333 243 L340 250 L333 257"/><path d="M607 250 H640"/><path d="M633 243 L640 250 L633 257"/><path d="M907 250 H940"/><path d="M933 243 L940 250 L933 257"/></g>
 

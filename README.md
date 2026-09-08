@@ -1,5 +1,5 @@
 <p align="center">
-  <strong>日本語</strong> · <a href="./README.ko.md">한국어</a> · <a href="./README.en.md">English</a>
+  <strong>日本語</strong> / <a href="./README.ko.md">한국어</a> / <a href="./README.en.md">English</a>
 </p>
 
 <div align="center">
@@ -30,7 +30,7 @@
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatでワールドを開く ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChatソーシャルワールド · Unity / UdonSharp · 2名で制作<br>訪問数・お気に入り数 · 2026年9月3日時点</sub></p>
+<p align="center"><sub>VRChatソーシャルワールド / Unity / UdonSharp / 2名で制作<br>訪問数・お気に入り数 / 2026年9月3日時点</sub></p>
 
 ## ストリートライブとコミュニティ
 
@@ -51,7 +51,7 @@
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
-<p align="center"><sub>動画提供：<a href="https://x.com/KixiVRC">@KixiVRC</a> · 写真提供：<a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a>, <a href="https://x.com/Samp1e_vd7">@Samp1e_vd7</a></sub></p>
+<p align="center"><sub>動画提供：<a href="https://x.com/KixiVRC">@KixiVRC</a> / 写真提供：<a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a>, <a href="https://x.com/Samp1e_vd7">@Samp1e_vd7</a></sub></p>
 
 ---
 
@@ -118,7 +118,7 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 <p align="center">
   <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="通常レンダリングとワイヤーフレームの比較" width="900">
   <br>
-  <sub>左：通常レンダリング · 右：同じカメラから撮影したワイヤーフレーム</sub>
+  <sub>左：通常レンダリング / 右：同じカメラから撮影したワイヤーフレーム</sub>
 </p>
 
 環境モデルをエリアごとに分割し、オクルージョンカリング、スタティックバッチング、ベイクドライティングを適用して、リアルタイムの描画負荷を抑えました。
@@ -190,11 +190,11 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 > [!IMPORTANT]
 > このリポジトリはオープンソースではなく、**ソースコード公開型（source-available）**です。GitHub上での閲覧・フォークを超えて、コードを複製・改変・再配布・商用利用する場合は、事前の書面による許可が必要です。
 
-[著作権と利用条件の詳細](./COPYRIGHT.ja.md) · [利用許可を申請する](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
+[著作権と利用条件の詳細](./COPYRIGHT.ja.md) / [利用許可を申請する](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 
 ## チーム
 
 | メンバー | 担当 |
 | --- | --- |
-| [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 企画 · グラフィック · 3Dモデリング |
+| [Artistoid](https://github.com/Artistoid) / [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | 企画 / グラフィック / 3Dモデリング |
 | [hjcud](https://github.com/hjcud) | Unity・UdonSharpシステムの開発・最適化 |

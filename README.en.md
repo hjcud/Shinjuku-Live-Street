@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="./README.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <strong>English</strong>
+  <a href="./README.md">日本語</a> / <a href="./README.ko.md">한국어</a> / <strong>English</strong>
 </p>
 
 <div align="center">
@@ -30,7 +30,7 @@
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>Open the world in VRChat ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChat social world · Unity / UdonSharp · Two-person team<br>Visits and favorites as of September 3, 2026</sub></p>
+<p align="center"><sub>VRChat social world / Unity / UdonSharp / Two-person team<br>Visits and favorites as of September 3, 2026</sub></p>
 
 ## Street performances and community
 
@@ -51,7 +51,7 @@
 
 https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
-<p align="center"><sub>Video provided by <a href="https://x.com/KixiVRC">@KixiVRC</a> · Photos provided by <a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a>, <a href="https://x.com/Samp1e_vd7">@Samp1e_vd7</a></sub></p>
+<p align="center"><sub>Video provided by <a href="https://x.com/KixiVRC">@KixiVRC</a> / Photos provided by <a href="https://x.com/KixiVRC">@KixiVRC</a>, <a href="https://x.com/aoiaoitabi">@aoiaoitabi</a>, <a href="https://x.com/taque_0409">@taque_0409</a>, <a href="https://x.com/ponhayate_vrc">@ponhayate_vrc</a>, <a href="https://x.com/Samp1e_vd7">@Samp1e_vd7</a></sub></p>
 
 ---
 
@@ -118,7 +118,7 @@ Ten vehicles and 80 remote players simulated with ClientSim were concentrated in
 <p align="center">
   <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="Comparison of the normal render and wireframe view" width="900">
   <br>
-  <sub>Left: normal render · Right: wireframe captured from the same camera</sub>
+  <sub>Left: normal render / Right: wireframe captured from the same camera</sub>
 </p>
 
 The environment is divided into sections, with occlusion culling, static batching, and baked lighting used to reduce real-time rendering work.
@@ -190,11 +190,11 @@ Third-party components are not included in this repository. Their respective aut
 > [!IMPORTANT]
 > This repository is **source-available**, not open source. Reproducing, modifying, redistributing, or commercially using the code beyond viewing and forking it on GitHub requires prior written permission.
 
-[Read the full copyright and usage terms](./COPYRIGHT.en.md) · [Request permission](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
+[Read the full copyright and usage terms](./COPYRIGHT.en.md) / [Request permission](https://github.com/hjcud/Shinjuku-Live-Street/issues/new?template=7-usage-permission-request.yml)
 
 ## Team
 
 | Member | Role |
 | --- | --- |
-| [Artistoid](https://github.com/Artistoid) · [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | Planning · Graphics · 3D modeling |
+| [Artistoid](https://github.com/Artistoid) / [X @Artistoid_VRC](https://x.com/Artistoid_VRC) | Planning / Graphics / 3D modeling |
 | [hjcud](https://github.com/hjcud) | Unity/UdonSharp systems and optimization |

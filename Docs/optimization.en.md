@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="./optimization.ja.md">日本語</a> · <a href="./optimization.md">한국어</a> · <strong>English</strong>
+  <a href="./optimization.ja.md">日本語</a> / <a href="./optimization.md">한국어</a> / <strong>English</strong>
 </p>
 
 # Traffic system performance optimization
@@ -8,14 +8,14 @@
 
 | Item | Condition |
 | --- | --- |
-| Hardware | Intel Core i5-13400F · NVIDIA GeForce RTX 3080 Ti 12GB · 32GB RAM |
-| Software | Unity `2022.3.22f1` · VRChat SDK - Worlds `3.8.1` |
-| Runtime | Unity Editor Play Mode · ClientSim · no PC build or VRChat Build & Test capture |
-| Load | Ten active vehicles · 80 ClientSim remote players concentrated at the same location |
-| Comparison | Initial: per-vehicle work every frame · Latest: central manager with staggered sensor checks |
+| Hardware | Intel Core i5-13400F / NVIDIA GeForce RTX 3080 Ti 12GB / 32GB RAM |
+| Software | Unity `2022.3.22f1` / VRChat SDK - Worlds `3.8.1` |
+| Runtime | Unity Editor Play Mode / ClientSim / no PC build or VRChat Build & Test capture |
+| Load | Ten active vehicles / 80 ClientSim remote players concentrated at the same location |
+| Comparison | Initial: per-vehicle work every frame / Latest: central manager with staggered sensor checks |
 | Capture window | 300 frames from each of the initial and latest snapshots |
-| Aggregation | Arithmetic mean and P95 of per-frame samples · per-second counts assume 60 FPS |
-| Profiler metrics | CPU frame time · PlayerLoop · Udon · Physics.Simulate · GC Alloc |
+| Aggregation | Arithmetic mean and P95 of per-frame samples / per-second counts assume 60 FPS |
+| Profiler metrics | CPU frame time / PlayerLoop / Udon / Physics.Simulate / GC Alloc |
 
 The original capture record does not preserve the Deep Profile setting, a separate warm-up duration, or the number of repeated runs. The initial implementation is a local snapshot from before the public repository was created, so there is no matching commit hash. The current implementation appears in the first public source commit, [`e212623`](https://github.com/hjcud/Shinjuku-Live-Street/commit/e212623), but the table compares two local snapshots rather than two repository commits.
 

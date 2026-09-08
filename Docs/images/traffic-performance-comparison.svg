@@ -72,8 +72,8 @@
 
   <!-- Header -->
   <rect x="52" y="43" width="4" height="69" rx="2" fill="#c84036"/>
-  <text x="72" y="77" class="title">SHINJUKU TRAFFIC · PERFORMANCE</text>
-  <text x="72" y="108" class="subtitle">10 CARS · 80 REMOTE PLAYERS · 300 FRAMES</text>
+  <text x="72" y="77" class="title">SHINJUKU TRAFFIC / PERFORMANCE</text>
+  <text x="72" y="108" class="subtitle">10 CARS / 80 REMOTE PLAYERS / 300 FRAMES</text>
 
   <!-- Metric cards -->
   <g filter="url(#cardShadow)">
@@ -84,7 +84,7 @@
   </g>
 
   <!-- 평균 CPU 프레임 시간 -->
-  <text x="76" y="192" class="card-title">CPU FRAME · AVG</text>
+  <text x="76" y="192" class="card-title">CPU FRAME / AVG</text>
   <rect x="496" y="165" width="104" height="34" rx="17" fill="url(#latestChip)" stroke="#a85b3b" stroke-opacity="0.55"/>
   <text x="548" y="189" text-anchor="middle" class="delta">−32.5%</text>
   <text x="76" y="236" class="label">INITIAL</text>
@@ -95,7 +95,7 @@
   <text x="600" y="283" text-anchor="end" class="value">11.92 ms</text>
 
   <!-- 느린 프레임 P95 -->
-  <text x="680" y="192" class="card-title">FRAME TIME · P95</text>
+  <text x="680" y="192" class="card-title">FRAME TIME / P95</text>
   <rect x="1100" y="165" width="104" height="34" rx="17" fill="url(#latestChip)" stroke="#a85b3b" stroke-opacity="0.55"/>
   <text x="1152" y="189" text-anchor="middle" class="delta">−29.1%</text>
   <text x="680" y="236" class="label">INITIAL</text>
@@ -106,7 +106,7 @@
   <text x="1204" y="283" text-anchor="end" class="value">17.44 ms</text>
 
   <!-- 물리 처리 -->
-  <text x="76" y="394" class="card-title">PHYSICS · AVG</text>
+  <text x="76" y="394" class="card-title">PHYSICS / AVG</text>
   <rect x="496" y="367" width="104" height="34" rx="17" fill="url(#latestChip)" stroke="#a85b3b" stroke-opacity="0.55"/>
   <text x="548" y="391" text-anchor="middle" class="delta">−65.3%</text>
   <text x="76" y="438" class="label">INITIAL</text>
