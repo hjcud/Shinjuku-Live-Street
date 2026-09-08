@@ -43,10 +43,10 @@ public class SpeakerController : UdonSharpBehaviour
     [SerializeField] ImageLoader imageLoader;
 
     [Header("초기화 대상 토파즈쳇")]
-    [SerializeField] private Player topazPlayer;
-    // Cuding Edit: 0.3.0에서 URLSync가 Player로 통합됨. 기존 참조 필드 이름 유지
+    // Cuding Edit: 0.3.0의 재생/URL 초기화는 스피커별 Player 참조 하나로 처리
+    // 기존 topazPlayer 연결을 유지하여 각 공연자의 독립 URL 재생과 소유권 보존
     // Assembly-CSharp에서 참조하므로 TopazChat 런타임 asmdef의 Auto Referenced 활성 필요
-    [SerializeField] private Player topazURLSync;
+    [SerializeField] private Player topazPlayer;
     [SerializeField] private VRCUrlInputField urlInputField;
     [SerializeField] private TextMeshProUGUI urlAddress;
 
@@ -139,8 +139,8 @@ public class SpeakerController : UdonSharpBehaviour
         imageLoader.SendCustomNetworkEvent(NetworkEventTarget.All, "ResetTex");
         Debug.Log("[SpeakerController] Toggle Object turned off");
 
-        // 이전 스트림의 승계 방지를 위해 TopazChat 상태와 URL 초기화
-        topazURLSync.ResetPlayer();
+        // Cuding Edit: 반환하는 스피커의 Player만 초기화하며 다른 스피커의 스트림은 유지
+        topazPlayer.ResetPlayer();
         VRCUrl baseUrl = topazPlayer.DefaultStreamURL;
         urlInputField.SetUrl(baseUrl);
         urlAddress.text = "";
