@@ -633,32 +633,18 @@ public class PanelFly : UdonSharpBehaviour
         starFlashParticle.Play(false);
         EmitFlashStar(
             pendingStarPosition,
+            Vector3.zero,
             Mathf.Max(0.1f, starFlashSize),
-            1f,
-            0f
+            1.3f,
+            0f,
+            new Color(0.96f, 0.91f, 0.80f, 1f)
         );
 
-        // 첫 세 개의 보조 별은 주 섬광과 함께 표시
-        // 나머지는 시간차를 두어 정적인 섬광 대신 짧은 파란 반짝임으로 표현
-        float smallSize = Mathf.Max(0.1f, starFlashSize * 0.28f);
-        EmitFlashStar(
-            pendingStarPosition + new Vector3(1.25f, 0.7f, 0f),
-            smallSize,
-            0.6f,
-            18f
-        );
-        EmitFlashStar(
-            pendingStarPosition + new Vector3(-1.1f, 0.45f, 0f),
-            smallSize * 0.8f,
-            0.48f,
-            -25f
-        );
-        EmitFlashStar(
-            pendingStarPosition + new Vector3(0.2f, -1f, 0f),
-            smallSize * 0.7f,
-            0.52f,
-            40f
-        );
+        // Cuding Edit: 한 평면의 고정 섬광 대신 구형으로 퍼지는 별을 방출.
+        // 동일한 인덱스로 방향/색을 정해 원격에서도 같은 연출을 재생하고,
+        // 방출 이후 이동은 ParticleSystem에 맡겨 매 프레임 Udon 계산을 피한다.
+        // Cuding Edit: 주 별을 가볍게 꾸미는 6개만 사용 (처음 3개 + 시간차 3개).
+        EmitFlashBurst(0, 3);
 
         starTwinkleStep = 0;
         SendCustomEventDelayedSeconds(
@@ -679,27 +665,7 @@ public class PanelFly : UdonSharpBehaviour
 
         starTwinkleStep++;
         starFlashParticle.Play(false);
-        float angle = 0.75f + starTwinkleStep * 1.85f;
-        float radius = 1.1f + starTwinkleStep * 0.28f;
-        float smallSize = Mathf.Max(0.1f, starFlashSize * 0.24f);
-        Vector3 offset = new Vector3(
-            Mathf.Cos(angle) * radius,
-            Mathf.Sin(angle) * radius,
-            0f
-        );
-
-        EmitFlashStar(
-            pendingStarPosition + offset,
-            smallSize,
-            0.45f,
-            starTwinkleStep * 31f
-        );
-        EmitFlashStar(
-            pendingStarPosition - offset * 0.8f,
-            smallSize * 0.72f,
-            0.38f,
-            -starTwinkleStep * 27f
-        );
+        EmitFlashBurst(2 + starTwinkleStep, 1);
 
         if (starTwinkleStep < 3)
         {
@@ -710,19 +676,51 @@ public class PanelFly : UdonSharpBehaviour
         }
     }
 
+    private void EmitFlashBurst(int first, int count)
+    {
+        for (int i = first; i < first + count; i++)
+        {
+            // Cuding Edit: 방출 순서를 섞어 첫 섬광부터 구의 한쪽에 몰리지 않도록 한다.
+            int sample = (i * 5) % 6;
+            float y = 1f - 2f * (sample + 0.5f) / 6f;
+            float radius = Mathf.Sqrt(Mathf.Max(0f, 1f - y * y));
+            float angle = sample * 2.399963f;
+            Vector3 direction = new Vector3(
+                Mathf.Cos(angle) * radius, y, Mathf.Sin(angle) * radius);
+            float variation = (i % 5) / 4f;
+            float tint = sample / 5f;
+            // Cuding Edit: 역 건물의 따뜻한 조명에 맞춘 저채도 골드~아이보리~하늘색.
+            Color gold = new Color(0.88f, 0.75f, 0.55f, 1f);
+            Color ivory = new Color(0.96f, 0.91f, 0.80f, 1f);
+            Color sky = new Color(0.67f, 0.77f, 0.84f, 1f);
+            Color color = tint < 0.5f
+                ? Color.Lerp(gold, ivory, tint * 2f)
+                : Color.Lerp(ivory, sky, (tint - 0.5f) * 2f);
+            EmitFlashStar(
+                pendingStarPosition + direction * 0.15f,
+                direction * (1.4f + variation * 0.6f),
+                Mathf.Max(0.1f, starFlashSize * (0.16f + variation * 0.06f)),
+                1.4f + variation * 0.4f,
+                sample * 31f,
+                color);
+        }
+    }
+
     private void EmitFlashStar(
         Vector3 position,
+        Vector3 velocity,
         float size,
         float lifetime,
-        float rotationDegrees)
+        float rotationDegrees,
+        Color color)
     {
         ParticleSystem.EmitParams emitParams =
             new ParticleSystem.EmitParams();
         emitParams.position = position;
-        emitParams.velocity = Vector3.zero;
+        emitParams.velocity = velocity;
         emitParams.startLifetime = lifetime;
         emitParams.startSize = size;
-        emitParams.startColor = Color.white;
+        emitParams.startColor = color;
         emitParams.rotation3D = new Vector3(
             0f,
             0f,

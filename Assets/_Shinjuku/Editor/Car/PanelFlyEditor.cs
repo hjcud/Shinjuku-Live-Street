@@ -694,11 +694,24 @@ public static class PanelFlySceneSetup
         Mesh starMesh,
         Material starMaterial)
     {
-        ConfigureCommonParticle(particle, 1.1f, 12);
+        ConfigureCommonParticle(particle, 1.8f, 32);
 
         ParticleSystem.MainModule main = particle.main;
         main.gravityModifier = 0f;
         main.startColor = Color.white;
+        main.scalingMode = ParticleSystemScalingMode.Shape;
+
+        // Cuding Edit: 방출 속도와 개별 색을 유지하며 퍼진 별을 부드럽게 사라지게 한다.
+        ParticleSystem.VelocityOverLifetimeModule velocity = particle.velocityOverLifetime;
+        velocity.enabled = false;
+        ParticleSystem.ColorOverLifetimeModule color = particle.colorOverLifetime;
+        color.enabled = true;
+        Gradient fade = new Gradient();
+        fade.SetKeys(
+            new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+            new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.12f),
+                new GradientAlphaKey(1f, 0.55f), new GradientAlphaKey(0f, 1f) });
+        color.color = new ParticleSystem.MinMaxGradient(fade);
 
         ParticleSystem.SizeOverLifetimeModule size =
             particle.sizeOverLifetime;
@@ -724,6 +737,8 @@ public static class PanelFlySceneSetup
             particle.GetComponent<ParticleSystemRenderer>();
         renderer.renderMode = ParticleSystemRenderMode.Mesh;
         renderer.mesh = starMesh;
+        // Cuding Edit: 평면에 가까운 별 메시가 옆에서 선처럼 보이지 않도록 시점을 향한다.
+        renderer.alignment = ParticleSystemRenderSpace.View;
         renderer.sharedMaterial = starMaterial;
         renderer.shadowCastingMode = ShadowCastingMode.Off;
         renderer.receiveShadows = false;
@@ -813,33 +828,28 @@ public static class PanelFlySceneSetup
 
     private static Material GetOrCreateStarMaterial()
     {
-        Material existing = AssetDatabase.LoadAssetAtPath<Material>(
+        Material material = AssetDatabase.LoadAssetAtPath<Material>(
             StarMaterialPath
         );
-        if (existing != null)
-        {
-            Color blue = new Color(0.56f, 0.85f, 0.97f, 1f);
-            if (existing.color != blue)
-            {
-                existing.color = blue;
-                EditorUtility.SetDirty(existing);
-            }
-            return existing;
-        }
-
-        EnsureAssetFolder();
-        Shader shader = Shader.Find("Unlit/Color");
+        // Cuding Edit: Unlit/Color는 파티클별 정점 색을 무시하므로 전용 셰이더를 사용.
+        // 중립 틴트로 골드~아이보리~하늘색의 개별 색과 알파 페이드를 그대로 전달한다.
+        Shader shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended");
         if (shader == null)
         {
-            shader = Shader.Find("Standard");
+            throw new System.InvalidOperationException("Panel star particle shader is missing.");
         }
-
-        Material material = new Material(shader)
+        if (material == null)
         {
-            name = "PanelStarMaterial",
-            color = new Color(0.56f, 0.85f, 0.97f, 1f)
-        };
-        AssetDatabase.CreateAsset(material, StarMaterialPath);
+            EnsureAssetFolder();
+            material = new Material(shader) { name = "PanelStarMaterial" };
+            AssetDatabase.CreateAsset(material, StarMaterialPath);
+        }
+        if (material.shader != shader || material.GetColor("_TintColor") != new Color(0.5f, 0.5f, 0.5f, 0.5f))
+        {
+            material.shader = shader;
+            material.SetColor("_TintColor", new Color(0.5f, 0.5f, 0.5f, 0.5f));
+            EditorUtility.SetDirty(material);
+        }
         return material;
     }
 
