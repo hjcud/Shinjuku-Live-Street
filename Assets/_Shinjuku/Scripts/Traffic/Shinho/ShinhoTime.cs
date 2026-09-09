@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 
@@ -59,31 +59,23 @@ public class ShinhoTime : UdonSharpBehaviour
         ApplyAnimator();
     }
 
-    public override void OnMasterTransferred(
-        VRCPlayerApi newMaster)
+    public override void OnMasterTransferred(VRCPlayerApi newMaster)
     {
-        if (newMaster == null ||
-            !newMaster.isLocal)
+        if (newMaster == null || !newMaster.isLocal)
         {
             return;
         }
 
-        VRCPlayerApi localPlayer =
-            Networking.LocalPlayer;
+        VRCPlayerApi localPlayer = Networking.LocalPlayer;
 
-        if (localPlayer != null &&
-            !Networking.IsOwner(gameObject))
+        if (localPlayer != null && !Networking.IsOwner(gameObject))
         {
-            Networking.SetOwner(
-                localPlayer,
-                gameObject
-            );
+            Networking.SetOwner(localPlayer, gameObject);
         }
 
         if (!cycleInitialized)
         {
-            cycleStartServerTime =
-                Networking.GetServerTimeInSeconds();
+            cycleStartServerTime = Networking.GetServerTimeInSeconds();
 
             cycleInitialized = true;
         }
@@ -106,8 +98,7 @@ public class ShinhoTime : UdonSharpBehaviour
 
         float cycleTime = GetCycleTime();
 
-        if (cycleTime < redEndTime ||
-            cycleTime >= redStartTime)
+        if (cycleTime < redEndTime || cycleTime >= redStartTime)
         {
             return SignalRed;
         }
@@ -131,27 +122,19 @@ public class ShinhoTime : UdonSharpBehaviour
             return 0f;
         }
 
-        return Mathf.Clamp01(
-            GetCycleTime() / loopTime
-        );
+        return Mathf.Clamp01(GetCycleTime() / loopTime);
     }
 
     private void InitializeAsMaster()
     {
-        VRCPlayerApi localPlayer =
-            Networking.LocalPlayer;
+        VRCPlayerApi localPlayer = Networking.LocalPlayer;
 
-        if (localPlayer != null &&
-            !Networking.IsOwner(gameObject))
+        if (localPlayer != null && !Networking.IsOwner(gameObject))
         {
-            Networking.SetOwner(
-                localPlayer,
-                gameObject
-            );
+            Networking.SetOwner(localPlayer, gameObject);
         }
 
-        cycleStartServerTime =
-            Networking.GetServerTimeInSeconds();
+        cycleStartServerTime = Networking.GetServerTimeInSeconds();
 
         cycleInitialized = true;
 
@@ -160,18 +143,14 @@ public class ShinhoTime : UdonSharpBehaviour
 
     private float GetCycleTime()
     {
-        if (!cycleInitialized ||
-            loopTime <= 0.01f)
+        if (!cycleInitialized || loopTime <= 0.01f)
         {
             return 0f;
         }
 
-        double elapsed =
-            Networking.GetServerTimeInSeconds() -
-            cycleStartServerTime;
+        double elapsed = Networking.GetServerTimeInSeconds() - cycleStartServerTime;
 
-        double wrapped =
-            elapsed % loopTime;
+        double wrapped = elapsed % loopTime;
 
         if (wrapped < 0.0)
         {

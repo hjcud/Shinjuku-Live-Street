@@ -25,8 +25,7 @@ public class TrafficSimulationManagerEditor : Editor
 
         DrawDefaultInspector();
 
-        TrafficSimulationManager manager =
-            (TrafficSimulationManager)target;
+        TrafficSimulationManager manager = (TrafficSimulationManager)target;
 
         DrawVehicleBoundsInspector(manager);
 
@@ -143,8 +142,7 @@ public class TrafficSimulationManagerEditor : Editor
         );
     }
 
-    private static void DrawVehicleBoundsInspector(
-        TrafficSimulationManager manager)
+    private static void DrawVehicleBoundsInspector(TrafficSimulationManager manager)
     {
         EditorGUILayout.Space();
         EditorGUILayout.LabelField(
@@ -152,13 +150,8 @@ public class TrafficSimulationManagerEditor : Editor
             EditorStyles.boldLabel
         );
 
-        int rootCount = manager.vehicleRoots != null
-            ? manager.vehicleRoots.Length
-            : 0;
-        bool boundsReady = HasCompleteVehicleBounds(
-            manager,
-            rootCount
-        );
+        int rootCount = manager.vehicleRoots != null ? manager.vehicleRoots.Length : 0;
+        bool boundsReady = HasCompleteVehicleBounds(manager, rootCount);
 
         EditorGUILayout.HelpBox(
             boundsReady
@@ -173,9 +166,7 @@ public class TrafficSimulationManagerEditor : Editor
                 : MessageType.Warning
         );
 
-        using (new EditorGUI.DisabledScope(
-            Application.isPlaying || rootCount == 0
-        ))
+        using (new EditorGUI.DisabledScope(Application.isPlaying || rootCount == 0))
         {
             if (GUILayout.Button(
                 "Bake Vehicle Bounds",
@@ -187,12 +178,9 @@ public class TrafficSimulationManagerEditor : Editor
         }
     }
 
-    private static bool HasCompleteVehicleBounds(
-        TrafficSimulationManager manager,
-        int rootCount)
+    private static bool HasCompleteVehicleBounds(TrafficSimulationManager manager, int rootCount)
     {
-        if (manager == null || rootCount <= 0 ||
-            manager.bakedVehicleFrontExtents == null ||
+        if (manager == null || rootCount <= 0 || manager.bakedVehicleFrontExtents == null ||
             manager.bakedVehicleRearExtents == null ||
             manager.bakedVehicleWidths == null ||
             manager.bakedVehicleFrontExtents.Length != rootCount ||
@@ -204,8 +192,7 @@ public class TrafficSimulationManagerEditor : Editor
 
         for (int i = 0; i < rootCount; i++)
         {
-            if (manager.bakedVehicleFrontExtents[i] <= 0.01f ||
-                manager.bakedVehicleRearExtents[i] <= 0.01f ||
+            if (manager.bakedVehicleFrontExtents[i] <= 0.01f || manager.bakedVehicleRearExtents[i] <= 0.01f ||
                 manager.bakedVehicleWidths[i] <= 0.01f)
             {
                 return false;
@@ -215,9 +202,7 @@ public class TrafficSimulationManagerEditor : Editor
         return true;
     }
 
-    private static void BakeVehicleBounds(
-        TrafficSimulationManager manager,
-        bool recordUndo)
+    private static void BakeVehicleBounds(TrafficSimulationManager manager, bool recordUndo)
     {
         if (manager == null || manager.vehicleRoots == null)
         {
@@ -234,14 +219,8 @@ public class TrafficSimulationManagerEditor : Editor
             Undo.RecordObject(manager, "Bake Vehicle Bounds");
         }
 
-        float longitudinalMargin = Mathf.Max(
-            0f,
-            manager.vehicleBoundsLongitudinalMargin
-        );
-        float lateralMargin = Mathf.Max(
-            0f,
-            manager.vehicleBoundsLateralMargin
-        );
+        float longitudinalMargin = Mathf.Max(0f, manager.vehicleBoundsLongitudinalMargin);
+        float lateralMargin = Mathf.Max(0f, manager.vehicleBoundsLateralMargin);
 
         for (int vehicleIndex = 0;
              vehicleIndex < rootCount;
@@ -260,41 +239,19 @@ public class TrafficSimulationManagerEditor : Editor
             Vector3 minimum;
             Vector3 maximum;
 
-            if (root != null &&
-                TryGetRendererBoundsInRootSpace(
-                    root,
-                    out minimum,
-                    out maximum
-                ))
+            if (root != null && TryGetRendererBoundsInRootSpace(root, out minimum, out maximum))
             {
                 Vector3 rootScale = root.lossyScale;
-                float widthScale =
-                    Mathf.Abs(rootScale.x) * visualScale;
-                float lengthScale =
-                    Mathf.Abs(rootScale.z) * visualScale;
+                float widthScale = Mathf.Abs(rootScale.x) * visualScale;
+                float lengthScale = Mathf.Abs(rootScale.z) * visualScale;
 
-                frontExtents[vehicleIndex] = Mathf.Max(
-                    0.05f,
-                    maximum.z * lengthScale
-                ) + longitudinalMargin;
-                rearExtents[vehicleIndex] = Mathf.Max(
-                    0.05f,
-                    -minimum.z * lengthScale
-                ) + longitudinalMargin;
+                frontExtents[vehicleIndex] = Mathf.Max(0.05f, maximum.z * lengthScale) + longitudinalMargin;
+                rearExtents[vehicleIndex] = Mathf.Max(0.05f, -minimum.z * lengthScale) + longitudinalMargin;
 
-                float rendererWidth = Mathf.Max(
-                    0.1f,
-                    (maximum.x - minimum.x) * widthScale
-                );
+                float rendererWidth = Mathf.Max(0.1f, (maximum.x - minimum.x) * widthScale);
                 widths[vehicleIndex] = Mathf.Max(
                     0.1f,
-                    GetVehicleBodyWidthWithoutMirrors(
-                        manager,
-                        vehicleIndex,
-                        root,
-                        visualScale,
-                        rendererWidth
-                    ) +
+                    GetVehicleBodyWidthWithoutMirrors(manager, vehicleIndex, root, visualScale, rendererWidth) +
                     lateralMargin * 2f
                 );
             }
@@ -313,14 +270,9 @@ public class TrafficSimulationManagerEditor : Editor
                         : manager.vehicleWidth
                 ) * visualScale;
 
-                frontExtents[vehicleIndex] =
-                    fallbackLength * 0.5f +
-                    longitudinalMargin;
-                rearExtents[vehicleIndex] =
-                    fallbackLength * 0.5f +
-                    longitudinalMargin;
-                widths[vehicleIndex] =
-                    fallbackWidth + lateralMargin * 2f;
+                frontExtents[vehicleIndex] = fallbackLength * 0.5f + longitudinalMargin;
+                rearExtents[vehicleIndex] = fallbackLength * 0.5f + longitudinalMargin;
+                widths[vehicleIndex] = fallbackWidth + lateralMargin * 2f;
             }
         }
 
@@ -328,14 +280,10 @@ public class TrafficSimulationManagerEditor : Editor
         manager.bakedVehicleRearExtents = rearExtents;
         manager.bakedVehicleWidths = widths;
 
-        UdonSharpEditorUtility.CopyProxyToUdon(
-            manager,
-            ProxySerializationPolicy.All
-        );
+        UdonSharpEditorUtility.CopyProxyToUdon(manager, ProxySerializationPolicy.All);
         EditorUtility.SetDirty(manager);
 
-        UdonBehaviour backingBehaviour =
-            UdonSharpEditorUtility.GetBackingUdonBehaviour(manager);
+        UdonBehaviour backingBehaviour = UdonSharpEditorUtility.GetBackingUdonBehaviour(manager);
 
         if (backingBehaviour != null)
         {
@@ -344,9 +292,7 @@ public class TrafficSimulationManagerEditor : Editor
 
         if (manager.gameObject.scene.IsValid())
         {
-            EditorSceneManager.MarkSceneDirty(
-                manager.gameObject.scene
-            );
+            EditorSceneManager.MarkSceneDirty(manager.gameObject.scene);
         }
 
     }
@@ -360,18 +306,12 @@ public class TrafficSimulationManagerEditor : Editor
     {
         if (vehicleIndex == manager.truckSlotIndex)
         {
-            float parentScale = root.parent != null
-                ? Mathf.Abs(root.parent.lossyScale.x)
-                : 1f;
+            float parentScale = root.parent != null ? Mathf.Abs(root.parent.lossyScale.x) : 1f;
 
-            return Mathf.Max(0.1f, manager.truckVehicleWidth) *
-                parentScale * visualScale;
+            return Mathf.Max(0.1f, manager.truckVehicleWidth) * parentScale * visualScale;
         }
 
-        float commonBodyWidth = Mathf.Max(
-            0.1f,
-            manager.vehicleWidth
-        ) * Mathf.Abs(root.lossyScale.x) * visualScale;
+        float commonBodyWidth = Mathf.Max(0.1f, manager.vehicleWidth) * Mathf.Abs(root.lossyScale.x) * visualScale;
 
         return Mathf.Min(rendererWidth, commonBodyWidth);
     }
@@ -381,19 +321,10 @@ public class TrafficSimulationManagerEditor : Editor
         out Vector3 minimum,
         out Vector3 maximum)
     {
-        minimum = new Vector3(
-            float.PositiveInfinity,
-            float.PositiveInfinity,
-            float.PositiveInfinity
-        );
-        maximum = new Vector3(
-            float.NegativeInfinity,
-            float.NegativeInfinity,
-            float.NegativeInfinity
-        );
+        minimum = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+        maximum = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
 
-        Renderer[] renderers =
-            root.GetComponentsInChildren<Renderer>(true);
+        Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true);
         bool foundRenderer = false;
 
         for (int rendererIndex = 0;
@@ -402,9 +333,7 @@ public class TrafficSimulationManagerEditor : Editor
         {
             Renderer renderer = renderers[rendererIndex];
 
-            if (renderer == null ||
-                renderer is ParticleSystemRenderer ||
-                renderer is TrailRenderer ||
+            if (renderer == null || renderer is ParticleSystemRenderer || renderer is TrailRenderer ||
                 renderer is LineRenderer ||
                 IsExcludedVehicleBoundsRenderer(renderer, root) ||
                 IsEditorOnly(renderer.transform, root))
@@ -413,9 +342,7 @@ public class TrafficSimulationManagerEditor : Editor
             }
 
             Bounds localBounds = renderer.localBounds;
-            Matrix4x4 rendererToRoot =
-                root.worldToLocalMatrix *
-                renderer.transform.localToWorldMatrix;
+            Matrix4x4 rendererToRoot = root.worldToLocalMatrix * renderer.transform.localToWorldMatrix;
 
             for (int corner = 0; corner < 8; corner++)
             {
@@ -428,8 +355,7 @@ public class TrafficSimulationManagerEditor : Editor
                             (corner & 4) == 0 ? -1f : 1f
                         )
                     );
-                Vector3 rootCorner =
-                    rendererToRoot.MultiplyPoint3x4(localCorner);
+                Vector3 rootCorner = rendererToRoot.MultiplyPoint3x4(localCorner);
 
                 minimum = Vector3.Min(minimum, rootCorner);
                 maximum = Vector3.Max(maximum, rootCorner);
@@ -440,9 +366,7 @@ public class TrafficSimulationManagerEditor : Editor
         return foundRenderer;
     }
 
-    private static bool IsExcludedVehicleBoundsRenderer(
-        Renderer renderer,
-        Transform root)
+    private static bool IsExcludedVehicleBoundsRenderer(Renderer renderer, Transform root)
     {
         Transform current = renderer.transform;
 
@@ -466,8 +390,7 @@ public class TrafficSimulationManagerEditor : Editor
         }
 
         Mesh sharedMesh = null;
-        SkinnedMeshRenderer skinnedRenderer =
-            renderer as SkinnedMeshRenderer;
+        SkinnedMeshRenderer skinnedRenderer = renderer as SkinnedMeshRenderer;
 
         if (skinnedRenderer != null)
         {
@@ -475,8 +398,7 @@ public class TrafficSimulationManagerEditor : Editor
         }
         else
         {
-            MeshFilter meshFilter =
-                renderer.GetComponent<MeshFilter>();
+            MeshFilter meshFilter = renderer.GetComponent<MeshFilter>();
 
             if (meshFilter != null)
             {
@@ -499,9 +421,7 @@ public class TrafficSimulationManagerEditor : Editor
             );
     }
 
-    private static bool IsEditorOnly(
-        Transform current,
-        Transform root)
+    private static bool IsEditorOnly(Transform current, Transform root)
     {
         while (current != null)
         {
@@ -522,17 +442,13 @@ public class TrafficSimulationManagerEditor : Editor
     }
 
     [DrawGizmo(
-        GizmoType.Selected |
-        GizmoType.NonSelected |
-        GizmoType.Active
+        GizmoType.Selected | GizmoType.NonSelected | GizmoType.Active
     )]
     private static void DrawVehicleOccupancyVisualization(
         TrafficSimulationManager manager,
         GizmoType gizmoType)
     {
-        if (!Application.isPlaying ||
-            manager == null ||
-            manager.laneDatabase == null ||
+        if (!Application.isPlaying || manager == null || manager.laneDatabase == null ||
             !manager.laneDatabase.IsReady())
         {
             return;
@@ -800,11 +716,7 @@ public class TrafficSimulationManagerEditor : Editor
               )
             : null;
 
-        if (active == null ||
-            laneIds == null ||
-            laneS == null ||
-            speeds == null ||
-            changing == null ||
+        if (active == null || laneIds == null || laneS == null || speeds == null || changing == null ||
             reversing == null ||
             emergency == null ||
             targetLaneIds == null ||
@@ -830,13 +742,9 @@ public class TrafficSimulationManagerEditor : Editor
         {
             Matrix4x4 previousMatrix = Gizmos.matrix;
             Color previousGizmoColor = Gizmos.color;
-            Gizmos.matrix = manager.recoveryRoadArea.transform
-                .localToWorldMatrix;
+            Gizmos.matrix = manager.recoveryRoadArea.transform .localToWorldMatrix;
             Gizmos.color = new Color(0.3f, 1f, 0.45f, 0.5f);
-            Gizmos.DrawWireCube(
-                manager.recoveryRoadArea.center,
-                manager.recoveryRoadArea.size
-            );
+            Gizmos.DrawWireCube(manager.recoveryRoadArea.center, manager.recoveryRoadArea.size);
             Gizmos.matrix = previousMatrix;
             Gizmos.color = previousGizmoColor;
         }
@@ -857,8 +765,7 @@ public class TrafficSimulationManagerEditor : Editor
                 continue;
             }
 
-            bool truck =
-                vehicleIndex == manager.truckSlotIndex;
+            bool truck = vehicleIndex == manager.truckSlotIndex;
             float visualScale = Mathf.Clamp(
                 truck
                     ? manager.truckVisualScale
@@ -867,23 +774,15 @@ public class TrafficSimulationManagerEditor : Editor
                 1.25f
             );
             bool hasBakedBounds =
-                manager.bakedVehicleFrontExtents != null &&
-                manager.bakedVehicleRearExtents != null &&
+                manager.bakedVehicleFrontExtents != null && manager.bakedVehicleRearExtents != null &&
                 manager.bakedVehicleWidths != null &&
-                vehicleIndex <
-                    manager.bakedVehicleFrontExtents.Length &&
-                vehicleIndex <
-                    manager.bakedVehicleRearExtents.Length &&
+                vehicleIndex < manager.bakedVehicleFrontExtents.Length &&
+                vehicleIndex < manager.bakedVehicleRearExtents.Length &&
                 vehicleIndex < manager.bakedVehicleWidths.Length &&
                 manager.bakedVehicleFrontExtents[vehicleIndex] > 0.01f &&
                 manager.bakedVehicleRearExtents[vehicleIndex] > 0.01f &&
                 manager.bakedVehicleWidths[vehicleIndex] > 0.01f;
-            float fallbackLength = Mathf.Max(
-                0.1f,
-                truck
-                    ? manager.truckVehicleLength
-                    : manager.vehicleLength
-            ) * visualScale;
+            float fallbackLength = Mathf.Max(0.1f, truck ? manager.truckVehicleLength : manager.vehicleLength) * visualScale;
             float frontExtent = hasBakedBounds
                 ? manager.bakedVehicleFrontExtents[vehicleIndex]
                 : fallbackLength * 0.5f;
@@ -893,44 +792,27 @@ public class TrafficSimulationManagerEditor : Editor
             float length = frontExtent + rearExtent;
             float width = hasBakedBounds
                 ? manager.bakedVehicleWidths[vehicleIndex]
-                : Mathf.Max(
-                    0.1f,
-                    truck
-                        ? manager.truckVehicleWidth
-                        : manager.vehicleWidth
-                  ) * visualScale;
-            float centerOffset =
-                (frontExtent - rearExtent) * 0.5f;
-            float currentS = Mathf.Clamp(
-                laneS[vehicleIndex],
-                0f,
-                database.laneLengths[laneId]
-            );
+                : Mathf.Max(0.1f, truck ? manager.truckVehicleWidth : manager.vehicleWidth) * visualScale;
+            float centerOffset = (frontExtent - rearExtent) * 0.5f;
+            float currentS = Mathf.Clamp(laneS[vehicleIndex], 0f, database.laneLengths[laneId]);
 
-            Vector3 sourcePosition =
-                database.GetLanePosition(laneId, currentS, -1);
+            Vector3 sourcePosition = database.GetLanePosition(laneId, currentS, -1);
 
-            Quaternion sourceRotation =
-                database.GetLaneRotation(laneId, currentS, -1);
+            Quaternion sourceRotation = database.GetLaneRotation(laneId, currentS, -1);
 
             Vector3 currentVisualPosition = sourcePosition;
             Quaternion currentVisualRotation = sourceRotation;
 
-            if (manager.vehicleRoots != null &&
-                vehicleIndex < manager.vehicleRoots.Length &&
+            if (manager.vehicleRoots != null && vehicleIndex < manager.vehicleRoots.Length &&
                 manager.vehicleRoots[vehicleIndex] != null &&
                 manager.vehicleRoots[vehicleIndex].gameObject.activeInHierarchy)
             {
-                currentVisualPosition =
-                    manager.vehicleRoots[vehicleIndex].position;
-                currentVisualRotation =
-                    manager.vehicleRoots[vehicleIndex].rotation;
+                currentVisualPosition = manager.vehicleRoots[vehicleIndex].position;
+                currentVisualRotation = manager.vehicleRoots[vehicleIndex].rotation;
             }
 
             bool physicsPoseAvailable =
-                authority &&
-                physicsCastValid != null &&
-                physicsCastBlocked != null &&
+                authority && physicsCastValid != null && physicsCastBlocked != null &&
                 physicsCastLaneLimited != null &&
                 physicsCastCenters != null &&
                 physicsCastRotations != null &&
@@ -940,12 +822,9 @@ public class TrafficSimulationManagerEditor : Editor
                 vehicleIndex < physicsCastCenters.Length &&
                 vehicleIndex < physicsCastRotations.Length &&
                 physicsCastValid[vehicleIndex];
-            bool physicsBlockedNow = physicsPoseAvailable &&
-                physicsCastBlocked[vehicleIndex];
-            bool physicsLaneLimitedNow = physicsPoseAvailable &&
-                physicsCastLaneLimited[vehicleIndex];
-            bool signalStopNow = signalStops != null &&
-                vehicleIndex < signalStops.Length &&
+            bool physicsBlockedNow = physicsPoseAvailable && physicsCastBlocked[vehicleIndex];
+            bool physicsLaneLimitedNow = physicsPoseAvailable && physicsCastLaneLimited[vehicleIndex];
+            bool signalStopNow = signalStops != null && vehicleIndex < signalStops.Length &&
                 signalStops[vehicleIndex];
             Vector3 currentCollisionPosition = currentVisualPosition;
             Quaternion currentCollisionRotation = currentVisualRotation;
@@ -955,101 +834,57 @@ public class TrafficSimulationManagerEditor : Editor
             float targetCurrentS = currentS;
             float smoothProgress = 0f;
             float laneSeparation = 3.2f;
-            float recoveryDistance = Mathf.Max(
-                0.6f,
-                manager.laneChangeReverseDistance
-            );
+            float recoveryDistance = Mathf.Max(0.6f, manager.laneChangeReverseDistance);
             bool currentPathBlocked =
-                authority &&
-                playerSweepBlocked != null &&
-                vehicleSweepBlocked != null &&
+                authority && playerSweepBlocked != null && vehicleSweepBlocked != null &&
                 roadBoundaryBlocked != null &&
                 vehicleIndex < playerSweepBlocked.Length &&
                 vehicleIndex < vehicleSweepBlocked.Length &&
                 vehicleIndex < roadBoundaryBlocked.Length &&
-                (playerSweepBlocked[vehicleIndex] ||
-                 vehicleSweepBlocked[vehicleIndex] ||
+                (playerSweepBlocked[vehicleIndex] || vehicleSweepBlocked[vehicleIndex] ||
                  roadBoundaryBlocked[vehicleIndex]);
 
-            if (reversing[vehicleIndex] &&
-                recoveryDistances != null &&
+            if (reversing[vehicleIndex] && recoveryDistances != null &&
                 vehicleIndex < recoveryDistances.Length)
             {
-                recoveryDistance = Mathf.Max(
-                    0.6f,
-                    recoveryDistances[vehicleIndex]
-                );
+                recoveryDistance = Mathf.Max(0.6f, recoveryDistances[vehicleIndex]);
             }
 
             bool validLaneChange =
-                changing[vehicleIndex] &&
-                targetLaneId >= 0 &&
-                targetLaneId < database.laneCount;
-            int displayLaneId = validLaneChange
-                ? targetLaneId
-                : laneId;
+                changing[vehicleIndex] && targetLaneId >= 0 && targetLaneId < database.laneCount;
+            int displayLaneId = validLaneChange ? targetLaneId : laneId;
 
             if (validLaneChange)
             {
-                ruleIndex = FindLaneChangeRule(
-                    database,
-                    laneId,
-                    targetLaneId
-                );
+                ruleIndex = FindLaneChangeRule(database, laneId, targetLaneId);
 
                 validLaneChange = ruleIndex >= 0;
             }
 
             bool preparingLaneChange =
-                validLaneChange &&
-                preparing != null &&
-                vehicleIndex < preparing.Length &&
+                validLaneChange && preparing != null && vehicleIndex < preparing.Length &&
                 preparing[vehicleIndex];
-            int maneuverPathOffset =
-                vehicleIndex * ManeuverPathSampleCount;
+            int maneuverPathOffset = vehicleIndex * ManeuverPathSampleCount;
             bool cachedManeuverAvailable =
-                validLaneChange &&
-                maneuverPathValid != null &&
-                vehicleIndex < maneuverPathValid.Length &&
+                validLaneChange && maneuverPathValid != null && vehicleIndex < maneuverPathValid.Length &&
                 maneuverPathValid[vehicleIndex] &&
                 maneuverPathPositions != null &&
                 maneuverPathRotations != null &&
                 maneuverPathDistances != null &&
                 maneuverPathOffset >= 0 &&
-                maneuverPathOffset + ManeuverPathSampleCount <=
-                    maneuverPathPositions.Length &&
-                maneuverPathOffset + ManeuverPathSampleCount <=
-                    maneuverPathRotations.Length &&
-                maneuverPathOffset + ManeuverPathSampleCount <=
-                    maneuverPathDistances.Length;
+                maneuverPathOffset + ManeuverPathSampleCount <= maneuverPathPositions.Length &&
+                maneuverPathOffset + ManeuverPathSampleCount <= maneuverPathRotations.Length &&
+                maneuverPathOffset + ManeuverPathSampleCount <= maneuverPathDistances.Length;
 
             if (validLaneChange)
             {
-                targetCurrentS = MapSourceToTargetS(
-                    database,
-                    ruleIndex,
-                    targetLaneId,
-                    currentS
-                );
+                targetCurrentS = MapSourceToTargetS(database, ruleIndex, targetLaneId, currentS);
 
-                Vector3 targetPosition =
-                    database.GetLanePosition(
-                        targetLaneId,
-                        targetCurrentS,
-                        -1
-                    );
+                Vector3 targetPosition = database.GetLanePosition(targetLaneId, targetCurrentS, -1);
 
-                Quaternion targetRotation =
-                    database.GetLaneRotation(
-                        targetLaneId,
-                        targetCurrentS,
-                        -1
-                    );
+                Quaternion targetRotation = database.GetLaneRotation(targetLaneId, targetCurrentS, -1);
 
-                laneSeparation = Mathf.Max(
-                    0.5f,
-                    Vector3.Distance(sourcePosition, targetPosition)
-                );
+                laneSeparation = Mathf.Max(0.5f, Vector3.Distance(sourcePosition, targetPosition));
 
                 smoothProgress = GetVisualProgress(
                     manager,
@@ -1062,18 +897,13 @@ public class TrafficSimulationManagerEditor : Editor
 
                 bool targetIsOccupied =
                     reversing[vehicleIndex] ||
-                    smoothProgress >= Mathf.Clamp(
-                        manager.targetLaneOccupancyStart,
-                        0.02f,
-                        0.3f
-                    );
+                    smoothProgress >= Mathf.Clamp(manager.targetLaneOccupancyStart, 0.02f, 0.3f);
 
                 Vector3 targetFootprintPosition = targetPosition;
                 Quaternion targetFootprintRotation = targetRotation;
                 float targetFootprintLength = length;
 
-                if (reversing[vehicleIndex] &&
-                    !currentPathBlocked)
+                if (reversing[vehicleIndex] && !currentPathBlocked)
                 {
                     float recoveryStartSourceS = currentS -
                         GetRecoveryLongitudinalOffset(
@@ -1083,9 +913,7 @@ public class TrafficSimulationManagerEditor : Editor
                             laneSeparation,
                             length
                         );
-                    float reservationSourceS =
-                        recoveryStartSourceS -
-                        recoveryDistance * 0.5f;
+                    float reservationSourceS = recoveryStartSourceS - recoveryDistance * 0.5f;
                     float reservationTargetS = MapSourceToTargetS(
                         database,
                         ruleIndex,
@@ -1093,20 +921,9 @@ public class TrafficSimulationManagerEditor : Editor
                         reservationSourceS
                     );
 
-                    targetFootprintPosition =
-                        database.GetLanePosition(
-                            targetLaneId,
-                            reservationTargetS,
-                            -1
-                        );
-                    targetFootprintRotation =
-                        database.GetLaneRotation(
-                            targetLaneId,
-                            reservationTargetS,
-                            -1
-                        );
-                    targetFootprintLength =
-                        length + recoveryDistance;
+                    targetFootprintPosition = database.GetLanePosition(targetLaneId, reservationTargetS, -1);
+                    targetFootprintRotation = database.GetLaneRotation(targetLaneId, reservationTargetS, -1);
+                    targetFootprintLength = length + recoveryDistance;
                 }
 
                 DrawFootprint(
@@ -1124,12 +941,7 @@ public class TrafficSimulationManagerEditor : Editor
                     !targetIsOccupied
                 );
 
-                Handles.color = new Color(
-                    1f,
-                    0.25f,
-                    0.85f,
-                    0.85f
-                );
+                Handles.color = new Color(1f, 0.25f, 0.85f, 0.85f);
 
                 if (!cachedManeuverAvailable)
                 {
@@ -1143,31 +955,19 @@ public class TrafficSimulationManagerEditor : Editor
                 if (cachedManeuverAvailable)
                 {
                     int firstPathSample = Mathf.Clamp(
-                        Mathf.FloorToInt(
-                            progress[vehicleIndex] *
-                            (ManeuverPathSampleCount - 1)
-                        ),
+                        Mathf.FloorToInt(progress[vehicleIndex] * (ManeuverPathSampleCount - 1)),
                         0,
                         ManeuverPathSampleCount - 2
                     );
-                    Handles.color = new Color(
-                        0.15f,
-                        0.95f,
-                        1f,
-                        0.9f
-                    );
+                    Handles.color = new Color(0.15f, 0.95f, 1f, 0.9f);
 
                     for (int pathSample = firstPathSample;
                          pathSample < ManeuverPathSampleCount - 1;
                          pathSample++)
                     {
                         Handles.DrawLine(
-                            maneuverPathPositions[
-                                maneuverPathOffset + pathSample
-                            ] + Vector3.up * 0.08f,
-                            maneuverPathPositions[
-                                maneuverPathOffset + pathSample + 1
-                            ] + Vector3.up * 0.08f
+                            maneuverPathPositions[maneuverPathOffset + pathSample] + Vector3.up * 0.08f,
+                            maneuverPathPositions[maneuverPathOffset + pathSample + 1] + Vector3.up * 0.08f
                         );
                     }
                 }
@@ -1178,21 +978,14 @@ public class TrafficSimulationManagerEditor : Editor
                         targetFootprintPosition + Vector3.up * 0.82f,
                         "V" + vehicleIndex + "/" +
                         GetLaneName(displayLaneId) + " | " +
-                        GetRecoveryStateLabel(
-                            manager,
-                            progress[vehicleIndex]
-                        )
+                        GetRecoveryStateLabel(manager, progress[vehicleIndex])
                     );
                 }
             }
 
             bool sourceIsOccupied =
                 !validLaneChange ||
-                smoothProgress < Mathf.Clamp(
-                    manager.laneChangeSourceOccupancyEnd,
-                    0.7f,
-                    0.95f
-                );
+                smoothProgress < Mathf.Clamp(manager.laneChangeSourceOccupancyEnd, 0.7f, 0.95f);
 
             if (validLaneChange)
             {
@@ -1221,25 +1014,17 @@ public class TrafficSimulationManagerEditor : Editor
 
             float speed = Mathf.Max(0f, speeds[vehicleIndex]);
             bool reversePhase = validLaneChange &&
-                IsRecoveryReversePhase(
-                     manager,
-                     reversing[vehicleIndex],
-                     progress[vehicleIndex]
-                 );
+                IsRecoveryReversePhase(manager, reversing[vehicleIndex], progress[vehicleIndex]);
 
             float futureS = Mathf.Clamp(
-                currentS +
-                    (reversePhase ? -1f : 1f) *
-                    speed * PredictionTime,
+                currentS + (reversePhase ? -1f : 1f) * speed * PredictionTime,
                 0f,
                 database.laneLengths[laneId]
             );
 
-            Vector3 futurePosition =
-                database.GetLanePosition(laneId, futureS, -1);
+            Vector3 futurePosition = database.GetLanePosition(laneId, futureS, -1);
 
-            Quaternion futureRotation =
-                database.GetLaneRotation(laneId, futureS, -1);
+            Quaternion futureRotation = database.GetLaneRotation(laneId, futureS, -1);
 
             if (validLaneChange)
             {
@@ -1247,12 +1032,9 @@ public class TrafficSimulationManagerEditor : Editor
                 {
                     float maximumProgress = 1f;
 
-                    if (reversing[vehicleIndex] &&
-                        progress[vehicleIndex] <
-                            GetRecoveryPreparationEnd(manager))
+                    if (reversing[vehicleIndex] && progress[vehicleIndex] < GetRecoveryPreparationEnd(manager))
                     {
-                        maximumProgress =
-                            GetRecoveryPreparationEnd(manager);
+                        maximumProgress = GetRecoveryPreparationEnd(manager);
                     }
 
                     float futureProgress = AdvanceCachedManeuverProgress(
@@ -1262,24 +1044,20 @@ public class TrafficSimulationManagerEditor : Editor
                         speed * PredictionTime,
                         maximumProgress
                     );
-                    float futureCoordinate = Mathf.Clamp01(
-                        futureProgress
-                    ) * (ManeuverPathSampleCount - 1);
+                    float futureCoordinate = Mathf.Clamp01(futureProgress) * (ManeuverPathSampleCount - 1);
                     int futurePathSample = Mathf.Clamp(
                         Mathf.FloorToInt(futureCoordinate),
                         0,
                         ManeuverPathSampleCount - 2
                     );
-                    float futurePathInterpolation =
-                        futureCoordinate - futurePathSample;
+                    float futurePathInterpolation = futureCoordinate - futurePathSample;
 
                     futurePosition = Vector3.Lerp(
                         maneuverPathPositions[
                             maneuverPathOffset + futurePathSample
                         ],
                         maneuverPathPositions[
-                            maneuverPathOffset +
-                            futurePathSample + 1
+                            maneuverPathOffset + futurePathSample + 1
                         ],
                         futurePathInterpolation
                     );
@@ -1288,8 +1066,7 @@ public class TrafficSimulationManagerEditor : Editor
                             maneuverPathOffset + futurePathSample
                         ],
                         maneuverPathRotations[
-                            maneuverPathOffset +
-                            futurePathSample + 1
+                            maneuverPathOffset + futurePathSample + 1
                         ],
                         futurePathInterpolation
                     );
@@ -1304,14 +1081,8 @@ public class TrafficSimulationManagerEditor : Editor
             }
 
             bool drawFuturePrediction =
-                Vector3.Distance(
-                    currentVisualPosition,
-                    futurePosition
-                ) > 0.15f ||
-                Quaternion.Angle(
-                    currentVisualRotation,
-                    futureRotation
-                ) > 2f;
+                Vector3.Distance(currentVisualPosition, futurePosition) > 0.15f ||
+                Quaternion.Angle(currentVisualRotation, futureRotation) > 2f;
 
             if (drawFuturePrediction)
             {
@@ -1326,12 +1097,7 @@ public class TrafficSimulationManagerEditor : Editor
                     true
                 );
 
-                Handles.color = new Color(
-                    0.05f,
-                    0.9f,
-                    1f,
-                    0.9f
-                );
+                Handles.color = new Color(0.05f, 0.9f, 1f, 0.9f);
 
                 Handles.DrawDottedLine(
                     currentVisualPosition + Vector3.up * 0.28f,
@@ -1339,8 +1105,7 @@ public class TrafficSimulationManagerEditor : Editor
                     5f
                 );
 
-                float handleSize =
-                    HandleUtility.GetHandleSize(futurePosition);
+                float handleSize = HandleUtility.GetHandleSize(futurePosition);
 
                 Handles.SphereHandleCap(
                     0,
@@ -1361,12 +1126,9 @@ public class TrafficSimulationManagerEditor : Editor
                             ? "LIM"
                             : preparingLaneChange
                                 ? "PREP"
-                            : validLaneChange &&
-                              emergency[vehicleIndex]
+                            : validLaneChange && emergency[vehicleIndex]
                                 ? "EMG(" +
-                                  GetProgressQuarterLabel(
-                                      progress[vehicleIndex]
-                                  ) + ")"
+                                  GetProgressQuarterLabel(progress[vehicleIndex]) + ")"
                             : Mathf.RoundToInt(speed * 3.6f) + " km/h";
                 Vector3 statusPosition =
                     physicsBlockedNow || physicsLaneLimitedNow
@@ -1384,9 +1146,7 @@ public class TrafficSimulationManagerEditor : Editor
             }
 
             bool canDrawObstacleSweep =
-                authority &&
-                playerSweepBlocked != null &&
-                vehicleSweepBlocked != null &&
+                authority && playerSweepBlocked != null && vehicleSweepBlocked != null &&
                 roadBoundaryBlocked != null &&
                 obstacleSweepDebugValid != null &&
                 obstacleSweepStartPositions != null &&
@@ -1406,8 +1166,7 @@ public class TrafficSimulationManagerEditor : Editor
             if (canDrawObstacleSweep)
             {
                 bool blocked =
-                    playerSweepBlocked[vehicleIndex] ||
-                    vehicleSweepBlocked[vehicleIndex] ||
+                    playerSweepBlocked[vehicleIndex] || vehicleSweepBlocked[vehicleIndex] ||
                     roadBoundaryBlocked[vehicleIndex];
 
                 Color sweepColor = blocked
@@ -1415,26 +1174,13 @@ public class TrafficSimulationManagerEditor : Editor
                     : new Color(1f, 0.75f, 0.05f, 0.9f);
 
                 float playerSafetyExpansion = 2f * (
-                    Mathf.Max(
-                        0f,
-                        manager.authorityObstacleSafetyMargin
-                    ) +
-                    Mathf.Max(
-                        0f,
-                        manager.laneChangePlayerSafetyMargin
-                    )
+                    Mathf.Max(0f, manager.authorityObstacleSafetyMargin) +
+                    Mathf.Max(0f, manager.laneChangePlayerSafetyMargin)
                 );
 
-                float vehicleSafetyExpansion = 2f *
-                    Mathf.Max(
-                        0f,
-                        manager.laneChangeVehicleSafetyMargin
-                    );
+                float vehicleSafetyExpansion = 2f * Mathf.Max(0f, manager.laneChangeVehicleSafetyMargin);
 
-                float safetyExpansion = Mathf.Max(
-                    playerSafetyExpansion,
-                    vehicleSafetyExpansion
-                );
+                float safetyExpansion = Mathf.Max(playerSafetyExpansion, vehicleSafetyExpansion);
 
                 DrawFootprint(
                     obstacleSweepEndPositions[vehicleIndex],
@@ -1449,10 +1195,8 @@ public class TrafficSimulationManagerEditor : Editor
 
                 Handles.color = sweepColor;
                 Handles.DrawDottedLine(
-                    obstacleSweepStartPositions[vehicleIndex] +
-                        Vector3.up * 0.36f,
-                    obstacleSweepEndPositions[vehicleIndex] +
-                        Vector3.up * 0.36f,
+                    obstacleSweepStartPositions[vehicleIndex] + Vector3.up * 0.36f,
+                    obstacleSweepEndPositions[vehicleIndex] + Vector3.up * 0.36f,
                     3f
                 );
 
@@ -1461,19 +1205,13 @@ public class TrafficSimulationManagerEditor : Editor
                     string blockedStatus;
 
                     string blockedProgress = reversing[vehicleIndex]
-                        ? GetRecoveryPhaseLabel(
-                            manager,
-                            progress[vehicleIndex]
-                          )
-                        : GetProgressQuarterLabel(
-                            progress[vehicleIndex]
-                          );
+                        ? GetRecoveryPhaseLabel(manager, progress[vehicleIndex])
+                        : GetProgressQuarterLabel(progress[vehicleIndex]);
 
                     blockedStatus = "BLK(" + blockedProgress + ")";
 
                     Handles.Label(
-                        obstacleSweepEndPositions[vehicleIndex] +
-                            Vector3.up * 0.72f,
+                        obstacleSweepEndPositions[vehicleIndex] + Vector3.up * 0.72f,
                         "V" + vehicleIndex + "/" +
                         GetLaneName(displayLaneId) + " | " +
                         blockedStatus
@@ -1482,9 +1220,7 @@ public class TrafficSimulationManagerEditor : Editor
             }
 
             bool canDrawPhysicsCast =
-                authority &&
-                physicsCastValid != null &&
-                physicsCastBlocked != null &&
+                authority && physicsCastValid != null && physicsCastBlocked != null &&
                 physicsCastCenters != null &&
                 physicsCastHalfExtents != null &&
                 physicsCastDirections != null &&
@@ -1514,10 +1250,7 @@ public class TrafficSimulationManagerEditor : Editor
                     physicsCastHitDistances[vehicleIndex],
                     physicsCastBlocked[vehicleIndex],
                     physicsCastLaneLimited[vehicleIndex],
-                    Mathf.Max(
-                        0.1f,
-                        manager.authorityObstacleCastVerticalOffset
-                    )
+                    Mathf.Max(0.1f, manager.authorityObstacleCastVerticalOffset)
                 );
             }
         }
@@ -1547,8 +1280,7 @@ public class TrafficSimulationManagerEditor : Editor
         Vector3 normalizedDirection = direction.sqrMagnitude > 0.0001f
             ? direction.normalized
             : rotation * Vector3.forward;
-        Vector3 endCenter = center +
-            normalizedDirection * visibleDistance;
+        Vector3 endCenter = center + normalizedDirection * visibleDistance;
         Vector3 up = rotation * Vector3.up;
 
         if (up.sqrMagnitude <= 0.0001f)
@@ -1560,26 +1292,13 @@ public class TrafficSimulationManagerEditor : Editor
             up.Normalize();
         }
 
-        Vector3 roadEndCenter = endCenter -
-            up * Mathf.Max(0.1f, verticalOffset) +
-            up * 0.04f;
+        Vector3 roadEndCenter = endCenter - up * Mathf.Max(0.1f, verticalOffset) + up * 0.04f;
 
-        DrawPhysicsCastEndMarker(
-            roadEndCenter,
-            normalizedDirection,
-            up,
-            halfExtents.x,
-            color
-        );
+        DrawPhysicsCastEndMarker(roadEndCenter, normalizedDirection, up, halfExtents.x, color);
 
         if (blocked || laneLimited)
         {
-            DrawPhysicsBoxOutline(
-                roadEndCenter,
-                halfExtents,
-                rotation,
-                color
-            );
+            DrawPhysicsBoxOutline(roadEndCenter, halfExtents, rotation, color);
         }
     }
 
@@ -1590,10 +1309,7 @@ public class TrafficSimulationManagerEditor : Editor
         float halfWidth,
         Color color)
     {
-        Vector3 planarDirection = Vector3.ProjectOnPlane(
-            direction,
-            up
-        );
+        Vector3 planarDirection = Vector3.ProjectOnPlane(direction, up);
 
         if (planarDirection.sqrMagnitude <= 0.0001f)
         {
@@ -1616,11 +1332,7 @@ public class TrafficSimulationManagerEditor : Editor
         }
 
         float markerHalfWidth = Mathf.Max(0.25f, halfWidth);
-        float markerDepth = Mathf.Clamp(
-            markerHalfWidth * 0.32f,
-            0.18f,
-            0.45f
-        );
+        float markerDepth = Mathf.Clamp(markerHalfWidth * 0.32f, 0.18f, 0.45f);
         Vector3 left = center - right * markerHalfWidth;
         Vector3 rightPoint = center + right * markerHalfWidth;
         Vector3[] marker =
@@ -1641,10 +1353,8 @@ public class TrafficSimulationManagerEditor : Editor
         Quaternion rotation,
         Color color)
     {
-        Vector3 forwardOffset =
-            rotation * Vector3.forward * halfExtents.z;
-        Vector3 sideOffset =
-            rotation * Vector3.right * halfExtents.x;
+        Vector3 forwardOffset = rotation * Vector3.forward * halfExtents.z;
+        Vector3 sideOffset = rotation * Vector3.right * halfExtents.x;
         Vector3[] outline =
         {
             center + forwardOffset + sideOffset,
@@ -1672,9 +1382,7 @@ public class TrafficSimulationManagerEditor : Editor
         Vector3 forward = rotation * Vector3.forward;
         Vector3 right = rotation * Vector3.right;
 
-        Vector3 center = position +
-            forward * centerOffset +
-            up * 0.16f;
+        Vector3 center = position + forward * centerOffset + up * 0.16f;
         Vector3 forwardOffset = forward * length * 0.5f;
         Vector3 sideOffset = right * width * 0.5f;
 
@@ -1700,35 +1408,20 @@ public class TrafficSimulationManagerEditor : Editor
         {
             for (int i = 0; i < corners.Length; i++)
             {
-                Handles.DrawDottedLine(
-                    corners[i],
-                    corners[(i + 1) % corners.Length],
-                    4f
-                );
+                Handles.DrawDottedLine(corners[i], corners[(i + 1) % corners.Length], 4f);
             }
         }
         else
         {
-            Vector3[] outline =
-            {
-                corners[0],
-                corners[1],
-                corners[2],
-                corners[3],
-                corners[0]
-            };
+            Vector3[] outline = { corners[0], corners[1], corners[2], corners[3], corners[0] };
 
             Handles.DrawAAPolyLine(3f, outline);
         }
     }
 
-    private static int FindLaneChangeRule(
-        TrafficLaneDatabase database,
-        int sourceLaneId,
-        int targetLaneId)
+    private static int FindLaneChangeRule(TrafficLaneDatabase database, int sourceLaneId, int targetLaneId)
     {
-        if (sourceLaneId < 0 ||
-            sourceLaneId >= database.laneCount)
+        if (sourceLaneId < 0 || sourceLaneId >= database.laneCount)
         {
             return -1;
         }
@@ -1765,21 +1458,11 @@ public class TrafficSimulationManagerEditor : Editor
             -1
         );
 
-        float targetStart = ProjectPositionToLaneS(
-            database,
-            targetLaneId,
-            sourceStart
-        );
+        float targetStart = ProjectPositionToLaneS(database, targetLaneId, sourceStart);
 
-        float targetEnd = ProjectPositionToLaneS(
-            database,
-            targetLaneId,
-            sourceEnd
-        );
+        float targetEnd = ProjectPositionToLaneS(database, targetLaneId, sourceEnd);
 
-        float sourceLength =
-            database.changeEndS[ruleIndex] -
-            database.changeStartS[ruleIndex];
+        float sourceLength = database.changeEndS[ruleIndex] - database.changeStartS[ruleIndex];
 
         if (Mathf.Abs(sourceLength) < 0.001f)
         {
@@ -1788,16 +1471,13 @@ public class TrafficSimulationManagerEditor : Editor
 
         return Mathf.Clamp(
             targetStart +
-            (sourceS - database.changeStartS[ruleIndex]) *
-            (targetEnd - targetStart) / sourceLength,
+            (sourceS - database.changeStartS[ruleIndex]) * (targetEnd - targetStart) / sourceLength,
             0f,
             database.laneLengths[targetLaneId]
         );
     }
 
-    private static int FindSourceLaneId(
-        TrafficLaneDatabase database,
-        int ruleIndex)
+    private static int FindSourceLaneId(TrafficLaneDatabase database, int ruleIndex)
     {
         for (int laneId = 0;
              laneId < database.laneCount;
@@ -1806,8 +1486,7 @@ public class TrafficSimulationManagerEditor : Editor
             int first = database.laneRuleStarts[laneId];
             int count = database.laneRuleCounts[laneId];
 
-            if (ruleIndex >= first &&
-                ruleIndex < first + count)
+            if (ruleIndex >= first && ruleIndex < first + count)
             {
                 return laneId;
             }
@@ -1816,10 +1495,7 @@ public class TrafficSimulationManagerEditor : Editor
         return 0;
     }
 
-    private static float ProjectPositionToLaneS(
-        TrafficLaneDatabase database,
-        int laneId,
-        Vector3 position)
+    private static float ProjectPositionToLaneS(TrafficLaneDatabase database, int laneId, Vector3 position)
     {
         int first = database.laneSampleStarts[laneId];
         int count = database.laneSampleCounts[laneId];
@@ -1838,14 +1514,10 @@ public class TrafficSimulationManagerEditor : Editor
                 continue;
             }
 
-            float t = Mathf.Clamp01(
-                Vector3.Dot(position - start, segment) /
-                lengthSqr
-            );
+            float t = Mathf.Clamp01(Vector3.Dot(position - start, segment) / lengthSqr);
 
             Vector3 closest = Vector3.Lerp(start, end, t);
-            float distanceSqr =
-                (position - closest).sqrMagnitude;
+            float distanceSqr = (position - closest).sqrMagnitude;
 
             if (distanceSqr >= nearestDistanceSqr)
             {
@@ -1853,11 +1525,7 @@ public class TrafficSimulationManagerEditor : Editor
             }
 
             nearestDistanceSqr = distanceSqr;
-            nearestS = Mathf.Lerp(
-                database.sampleDistances[i],
-                database.sampleDistances[i + 1],
-                t
-            );
+            nearestS = Mathf.Lerp(database.sampleDistances[i], database.sampleDistances[i + 1], t);
         }
 
         return nearestS;
@@ -1887,56 +1555,33 @@ public class TrafficSimulationManagerEditor : Editor
 
         if (progress < preparationEnd)
         {
-            return preparationPose.y /
-                Mathf.Max(0.5f, laneSeparation);
+            return preparationPose.y / Mathf.Max(0.5f, laneSeparation);
         }
 
         float safeLaneSeparation = Mathf.Max(0.5f, laneSeparation);
-        float startLateral =
-            preparationPose.y / safeLaneSeparation;
+        float startLateral = preparationPose.y / safeLaneSeparation;
         float finalTravelDistance =
-            GetRecoveryFinalTravelDistance(
-                manager,
-                preparationPose,
-                safeLaneSeparation
-            );
-        float startTangent =
-            Mathf.Tan(preparationPose.z) *
-            finalTravelDistance / safeLaneSeparation;
-        float u = Mathf.InverseLerp(
-            preparationEnd,
-            1f,
-            progress
-        );
+            GetRecoveryFinalTravelDistance(manager, preparationPose, safeLaneSeparation);
+        float startTangent = Mathf.Tan(preparationPose.z) * finalTravelDistance / safeLaneSeparation;
+        float u = Mathf.InverseLerp(preparationEnd, 1f, progress);
         float u2 = u * u;
         float u3 = u2 * u;
 
         return Mathf.Clamp(
-            (2f * u3 - 3f * u2 + 1f) * startLateral +
-            (u3 - 2f * u2 + u) * startTangent +
-            (-2f * u3 + 3f * u2),
+            (2f * u3 - 3f * u2 + 1f) * startLateral + (u3 - 2f * u2 + u) * startTangent + (-2f * u3 + 3f * u2),
             -0.5f,
             1.1f
         );
     }
 
-    private static float GetRecoveryFirstReverseEnd(
-        TrafficSimulationManager manager)
+    private static float GetRecoveryFirstReverseEnd(TrafficSimulationManager manager)
     {
-        return Mathf.Clamp(
-            manager.reversePhaseFraction,
-            0.2f,
-            0.35f
-        );
+        return Mathf.Clamp(manager.reversePhaseFraction, 0.2f, 0.35f);
     }
 
-    private static float GetRecoveryPreparationEnd(
-        TrafficSimulationManager manager)
+    private static float GetRecoveryPreparationEnd(TrafficSimulationManager manager)
     {
-        return Mathf.Min(
-            0.7f,
-            GetRecoveryFirstReverseEnd(manager) + 0.25f
-        );
+        return Mathf.Min(0.7f, GetRecoveryFirstReverseEnd(manager) + 0.25f);
     }
 
     private static float GetRecoveryFinalTravelDistance(
@@ -1944,52 +1589,27 @@ public class TrafficSimulationManagerEditor : Editor
         Vector3 preparationPose,
         float laneSeparation)
     {
-        float configuredDistance = Mathf.Max(
-            8f,
-            manager.laneChangeMinimumTravelDistance
-        );
+        float configuredDistance = Mathf.Max(8f, manager.laneChangeMinimumTravelDistance);
         float safeLaneWidth = Mathf.Max(0.5f, laneSeparation);
-        float headingTangent = Mathf.Abs(
-            Mathf.Tan(preparationPose.z)
-        );
+        float headingTangent = Mathf.Abs(Mathf.Tan(preparationPose.z));
 
         if (headingTangent <= 0.001f)
         {
             return configuredDistance;
         }
 
-        float startLateral =
-            preparationPose.y / safeLaneWidth;
-        float remainingLateral = Mathf.Max(
-            0.25f,
-            1f - startLateral
-        );
-        float maximumNormalizedTangent = Mathf.Min(
-            2.5f,
-            2.4f * remainingLateral
-        );
+        float startLateral = preparationPose.y / safeLaneWidth;
+        float remainingLateral = Mathf.Max(0.25f, 1f - startLateral);
+        float maximumNormalizedTangent = Mathf.Min(2.5f, 2.4f * remainingLateral);
 
-        return Mathf.Clamp(
-            maximumNormalizedTangent *
-            safeLaneWidth /
-            headingTangent,
-            8f,
-            configuredDistance
-        );
+        return Mathf.Clamp(maximumNormalizedTangent * safeLaneWidth / headingTangent, 8f, configuredDistance);
     }
 
-    private static string GetRecoveryPhaseLabel(
-        TrafficSimulationManager manager,
-        float progress)
+    private static string GetRecoveryPhaseLabel(TrafficSimulationManager manager, float progress)
     {
-        float preparationEnd = Mathf.Max(
-            0.001f,
-            GetRecoveryPreparationEnd(manager)
-        );
+        float preparationEnd = Mathf.Max(0.001f, GetRecoveryPreparationEnd(manager));
         int percentage = Mathf.Clamp(
-            Mathf.CeilToInt(
-                Mathf.Clamp01(progress / preparationEnd) * 4f
-            ) * 25,
+            Mathf.CeilToInt(Mathf.Clamp01(progress / preparationEnd) * 4f) * 25,
             25,
             100
         );
@@ -1997,14 +1617,9 @@ public class TrafficSimulationManagerEditor : Editor
         return percentage + "%";
     }
 
-    private static string GetRecoveryStateLabel(
-        TrafficSimulationManager manager,
-        float progress)
+    private static string GetRecoveryStateLabel(TrafficSimulationManager manager, float progress)
     {
-        float preparationEnd = Mathf.Max(
-            0.001f,
-            GetRecoveryPreparationEnd(manager)
-        );
+        float preparationEnd = Mathf.Max(0.001f, GetRecoveryPreparationEnd(manager));
 
         if (progress <= preparationEnd + 0.0001f)
         {
@@ -2014,23 +1629,13 @@ public class TrafficSimulationManagerEditor : Editor
         }
 
         return "MRG(" +
-            GetProgressQuarterLabel(
-                Mathf.InverseLerp(
-                    preparationEnd,
-                    1f,
-                    progress
-                )
-            ) +
+            GetProgressQuarterLabel(Mathf.InverseLerp(preparationEnd, 1f, progress)) +
             ")";
     }
 
     private static string GetProgressQuarterLabel(float progress)
     {
-        int percentage = Mathf.Clamp(
-            Mathf.CeilToInt(Mathf.Clamp01(progress) * 4f) * 25,
-            25,
-            100
-        );
+        int percentage = Mathf.Clamp(Mathf.CeilToInt(Mathf.Clamp01(progress) * 4f) * 25, 25, 100);
 
         return percentage + "%";
     }
@@ -2040,8 +1645,7 @@ public class TrafficSimulationManagerEditor : Editor
         bool reverseManeuver,
         float progress)
     {
-        return reverseManeuver &&
-            progress < GetRecoveryFirstReverseEnd(manager) - 0.0001f;
+        return reverseManeuver && progress < GetRecoveryFirstReverseEnd(manager) - 0.0001f;
     }
 
     private static float AdvanceCachedManeuverProgress(
@@ -2051,44 +1655,26 @@ public class TrafficSimulationManagerEditor : Editor
         float travelDistance,
         float maximumProgress)
     {
-        float clampedProgress = Mathf.Clamp(
-            progress,
-            0f,
-            maximumProgress
-        );
-        float coordinate = clampedProgress *
-            (ManeuverPathSampleCount - 1);
-        int sample = Mathf.Clamp(
-            Mathf.FloorToInt(coordinate),
-            0,
-            ManeuverPathSampleCount - 2
-        );
+        float clampedProgress = Mathf.Clamp(progress, 0f, maximumProgress);
+        float coordinate = clampedProgress * (ManeuverPathSampleCount - 1);
+        int sample = Mathf.Clamp(Mathf.FloorToInt(coordinate), 0, ManeuverPathSampleCount - 2);
         float interpolation = coordinate - sample;
         float currentDistance = Mathf.Lerp(
             pathDistances[pathOffset + sample],
             pathDistances[pathOffset + sample + 1],
             interpolation
         );
-        float maximumCoordinate = Mathf.Clamp01(maximumProgress) *
-            (ManeuverPathSampleCount - 1);
-        int maximumSample = Mathf.Clamp(
-            Mathf.FloorToInt(maximumCoordinate),
-            0,
-            ManeuverPathSampleCount - 2
-        );
+        float maximumCoordinate = Mathf.Clamp01(maximumProgress) * (ManeuverPathSampleCount - 1);
+        int maximumSample = Mathf.Clamp(Mathf.FloorToInt(maximumCoordinate), 0, ManeuverPathSampleCount - 2);
         float maximumInterpolation = maximumCoordinate - maximumSample;
         float maximumDistance = Mathf.Lerp(
             pathDistances[pathOffset + maximumSample],
             pathDistances[pathOffset + maximumSample + 1],
             maximumInterpolation
         );
-        float targetDistance = Mathf.Min(
-            maximumDistance,
-            currentDistance + Mathf.Max(0f, travelDistance)
-        );
+        float targetDistance = Mathf.Min(maximumDistance, currentDistance + Mathf.Max(0f, travelDistance));
 
-        while (sample < ManeuverPathSampleCount - 2 &&
-               pathDistances[pathOffset + sample + 1] < targetDistance)
+        while (sample < ManeuverPathSampleCount - 2 && pathDistances[pathOffset + sample + 1] < targetDistance)
         {
             sample++;
         }
@@ -2096,18 +1682,10 @@ public class TrafficSimulationManagerEditor : Editor
         float segmentStart = pathDistances[pathOffset + sample];
         float segmentEnd = pathDistances[pathOffset + sample + 1];
         float segmentProgress = segmentEnd > segmentStart + 0.0001f
-            ? Mathf.InverseLerp(
-                segmentStart,
-                segmentEnd,
-                targetDistance
-              )
+            ? Mathf.InverseLerp(segmentStart, segmentEnd, targetDistance)
             : 0f;
 
-        return Mathf.Min(
-            maximumProgress,
-            (sample + segmentProgress) /
-                (ManeuverPathSampleCount - 1)
-        );
+        return Mathf.Min(maximumProgress, (sample + segmentProgress) / (ManeuverPathSampleCount - 1));
     }
 
     private static float GetRecoveryLongitudinalOffset(
@@ -2136,45 +1714,20 @@ public class TrafficSimulationManagerEditor : Editor
         float distance = Mathf.Max(0.6f, recoveryDistance);
         float reverseOneEnd = GetRecoveryFirstReverseEnd(manager);
         float preparationEnd = GetRecoveryPreparationEnd(manager);
-        float primaryCurvature = GetRecoveryPrimaryCurvature(
-            manager,
-            distance,
-            laneSeparation,
-            vehicleLength
-        );
+        float primaryCurvature = GetRecoveryPrimaryCurvature(manager, distance, laneSeparation, vehicleLength);
         Vector3 pose = Vector3.zero;
-        float phaseRatio = SmoothProgress01(
-            Mathf.InverseLerp(0f, reverseOneEnd, progress)
-        );
+        float phaseRatio = SmoothProgress01(Mathf.InverseLerp(0f, reverseOneEnd, progress));
 
         if (progress < reverseOneEnd)
         {
-            return AdvanceRecoveryKinematicPose(
-                pose,
-                -distance * phaseRatio,
-                -primaryCurvature
-            );
+            return AdvanceRecoveryKinematicPose(pose, -distance * phaseRatio, -primaryCurvature);
         }
 
-        pose = AdvanceRecoveryKinematicPose(
-            pose,
-            -distance,
-            -primaryCurvature
-        );
+        pose = AdvanceRecoveryKinematicPose(pose, -distance, -primaryCurvature);
 
-        phaseRatio = SmoothRecoveryForwardExit01(
-            Mathf.InverseLerp(
-                reverseOneEnd,
-                preparationEnd,
-                progress
-            )
-        );
+        phaseRatio = SmoothRecoveryForwardExit01(Mathf.InverseLerp(reverseOneEnd, preparationEnd, progress));
 
-        return AdvanceRecoveryKinematicPose(
-            pose,
-            distance * 0.65f * phaseRatio,
-            primaryCurvature
-        );
+        return AdvanceRecoveryKinematicPose(pose, distance * 0.65f * phaseRatio, primaryCurvature);
     }
 
     private static float SmoothRecoveryForwardExit01(float progress)
@@ -2184,10 +1737,7 @@ public class TrafficSimulationManagerEditor : Editor
         return t * t * (2f - t);
     }
 
-    private static Vector3 AdvanceRecoveryKinematicPose(
-        Vector3 pose,
-        float signedDistance,
-        float curvature)
+    private static Vector3 AdvanceRecoveryKinematicPose(Vector3 pose, float signedDistance, float curvature)
     {
         float heading = pose.z;
 
@@ -2199,12 +1749,8 @@ public class TrafficSimulationManagerEditor : Editor
         }
 
         float nextHeading = heading + curvature * signedDistance;
-        pose.x +=
-            (Mathf.Sin(nextHeading) - Mathf.Sin(heading)) /
-            curvature;
-        pose.y +=
-            (-Mathf.Cos(nextHeading) + Mathf.Cos(heading)) /
-            curvature;
+        pose.x += (Mathf.Sin(nextHeading) - Mathf.Sin(heading)) / curvature;
+        pose.y += (-Mathf.Cos(nextHeading) + Mathf.Cos(heading)) / curvature;
         pose.z = nextHeading;
         return pose;
     }
@@ -2216,48 +1762,27 @@ public class TrafficSimulationManagerEditor : Editor
         float vehicleLength)
     {
         float distance = Mathf.Max(0.6f, recoveryDistance);
-        float desiredLateralDistance = Mathf.Clamp(
-            manager.reverseLateralProgress,
-            0.05f,
-            0.25f
-        ) * Mathf.Max(0.5f, laneSeparation);
-        float desiredCurvature =
-            2f * desiredLateralDistance /
-            Mathf.Max(0.36f, distance * distance);
+        float desiredLateralDistance = Mathf.Clamp(manager.reverseLateralProgress, 0.05f, 0.25f) * Mathf.Max(0.5f, laneSeparation);
+        float desiredCurvature = 2f * desiredLateralDistance / Mathf.Max(0.36f, distance * distance);
         float wheelBase = Mathf.Max(2.2f, vehicleLength * 0.55f);
         float maximumCurvature = Mathf.Tan(
-            Mathf.Deg2Rad * Mathf.Clamp(
-                manager.blockedRecoveryMaximumSteeringAngle,
-                20f,
-                40f
-            )
+            Mathf.Deg2Rad * Mathf.Clamp(manager.blockedRecoveryMaximumSteeringAngle, 20f, 40f)
         ) / wheelBase;
         float maximumBodyCurvature =
-            Mathf.Deg2Rad * Mathf.Clamp(
-                manager.blockedRecoveryMaximumBodyAngle,
-                18f,
-                38f
-            ) /
+            Mathf.Deg2Rad * Mathf.Clamp(manager.blockedRecoveryMaximumBodyAngle, 18f, 38f) /
             Mathf.Max(0.1f, distance * 1.65f);
 
         return Mathf.Clamp(
             desiredCurvature,
             0.02f,
-            Mathf.Max(
-                0.02f,
-                Mathf.Min(
-                    maximumCurvature,
-                    maximumBodyCurvature
-                )
-            )
+            Mathf.Max(0.02f, Mathf.Min(maximumCurvature, maximumBodyCurvature))
         );
     }
 
     private static float SmoothProgress01(float progress)
     {
         float t = Mathf.Clamp01(progress);
-        return t * t * t *
-            (t * (t * 6f - 15f) + 10f);
+        return t * t * t * (t * (t * 6f - 15f) + 10f);
     }
 
     private static string GetLaneName(int laneId)
@@ -2280,30 +1805,21 @@ public class TrafficSimulationManagerEditor : Editor
         return Application.isPlaying;
     }
 
-    private static T GetRuntimeValue<T>(
-        TrafficSimulationManager manager,
-        string variableName,
-        T fallback)
+    private static T GetRuntimeValue<T>(TrafficSimulationManager manager, string variableName, T fallback)
     {
         if (!Application.isPlaying)
         {
             return fallback;
         }
 
-        UdonBehaviour backingBehaviour =
-            UdonSharpEditorUtility.GetBackingUdonBehaviour(
-                manager
-            );
+        UdonBehaviour backingBehaviour = UdonSharpEditorUtility.GetBackingUdonBehaviour(manager);
 
-        if (backingBehaviour == null ||
-            !backingBehaviour.IsInitialized)
+        if (backingBehaviour == null || !backingBehaviour.IsInitialized)
         {
             return fallback;
         }
 
-        object value = backingBehaviour.GetProgramVariable(
-            variableName
-        );
+        object value = backingBehaviour.GetProgramVariable(variableName);
 
         if (value is T typedValue)
         {

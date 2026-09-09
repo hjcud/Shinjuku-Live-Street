@@ -46,16 +46,7 @@ public class TrafficLaneBakerEditor : EditorWindow
         "Despawn_R4_Branch"
     };
 
-    private static readonly float[] DefaultSpawnWeights =
-    {
-        0.25f,
-        1f,
-        1f,
-        1f,
-        1f,
-        0.2f,
-        0f
-    };
+    private static readonly float[] DefaultSpawnWeights = { 0.25f, 1f, 1f, 1f, 1f, 0.2f, 0f };
     
     private static readonly Color[] LaneColors =
     {
@@ -118,8 +109,7 @@ public class TrafficLaneBakerEditor : EditorWindow
     [MenuItem("Tools/Traffic System V2/Lane Baker")]
     public static void OpenWindow()
     {
-        TrafficLaneBakerEditor window =
-            GetWindow<TrafficLaneBakerEditor>();
+        TrafficLaneBakerEditor window = GetWindow<TrafficLaneBakerEditor>();
 
         window.titleContent = new GUIContent("Traffic Lane Baker");
         window.minSize = new Vector2(430f, 420f);
@@ -142,9 +132,7 @@ public class TrafficLaneBakerEditor : EditorWindow
 
     private void OnGUI()
     {
-        scrollPosition = EditorGUILayout.BeginScrollView(
-            scrollPosition
-        );
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
         EditorGUILayout.LabelField(
             "Traffic System V2 Lane Baker",
@@ -188,9 +176,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             AutoFindObjects();
         }
 
-        EditorGUI.BeginDisabledGroup(
-            trafficRoot == null || database != null
-        );
+        EditorGUI.BeginDisabledGroup(trafficRoot == null || database != null);
 
         if (GUILayout.Button("Create Database"))
         {
@@ -253,11 +239,7 @@ public class TrafficLaneBakerEditor : EditorWindow
 
         EditorGUILayout.Space();
 
-        EditorGUI.BeginDisabledGroup(
-            EditorApplication.isPlaying ||
-            trafficRoot == null ||
-            database == null
-        );
+        EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying || trafficRoot == null || database == null);
 
         if (GUILayout.Button("Bake Lane Database", GUILayout.Height(36f)))
         {
@@ -303,8 +285,7 @@ public class TrafficLaneBakerEditor : EditorWindow
 
         if (trafficRoot != null)
         {
-            database = trafficRoot.GetComponentInChildren
-                <TrafficLaneDatabase>(true);
+            database = trafficRoot.GetComponentInChildren <TrafficLaneDatabase>(true);
         }
     }
 
@@ -327,15 +308,10 @@ public class TrafficLaneBakerEditor : EditorWindow
             return;
         }
 
-        database = UdonSharpUndo
-            .AddComponent<TrafficLaneDatabase>(
-                runtime.gameObject
-            );
+        database = UdonSharpUndo .AddComponent<TrafficLaneDatabase>(runtime.gameObject);
 
         Selection.activeObject = database;
-        EditorSceneManager.MarkSceneDirty(
-            runtime.gameObject.scene
-        );
+        EditorSceneManager.MarkSceneDirty(runtime.gameObject.scene);
 
         SetReport(
             "Runtime에 TrafficLaneDatabase를 생성했습니다.",
@@ -382,55 +358,26 @@ public class TrafficLaneBakerEditor : EditorWindow
             Physics.SyncTransforms();
 
             List<string> warnings = new List<string>();
-            LaneData[] lanes =
-                new LaneData[TrafficLaneDatabase.FixedLaneCount];
+            LaneData[] lanes = new LaneData[TrafficLaneDatabase.FixedLaneCount];
 
             for (int laneId = 0;
                  laneId < TrafficLaneDatabase.FixedLaneCount;
                  laneId++)
             {
-                Transform laneSource = RequirePath(
-                    laneSources,
-                    LaneNames[laneId]
-                );
+                Transform laneSource = RequirePath(laneSources, LaneNames[laneId]);
 
-                lanes[laneId] = BakeLane(
-                    laneSource,
-                    warnings
-                );
+                lanes[laneId] = BakeLane(laneSource, warnings);
             }
 
-            float[] spawnS = BakeSpawnPoints(
-                lanes,
-                spawnPoints,
-                warnings
-            );
+            float[] spawnS = BakeSpawnPoints(lanes, spawnPoints, warnings);
 
-            float[] despawnS = BakeDespawnPoints(
-                lanes,
-                despawnPoints,
-                warnings
-            );
+            float[] despawnS = BakeDespawnPoints(lanes, despawnPoints, warnings);
 
-            float[] stopLineS = BakeStopLines(
-                lanes,
-                stopLines,
-                warnings
-            );
+            float[] stopLineS = BakeStopLines(lanes, stopLines, warnings);
 
-            List<ChangeRule> rules = BakeChangeRules(
-                lanes,
-                laneChangeZones,
-                warnings
-            );
+            List<ChangeRule> rules = BakeChangeRules(lanes, laneChangeZones, warnings);
 
-            ApplyBake(
-                lanes,
-                spawnS,
-                despawnS,
-                stopLineS,
-                rules
-            );
+            ApplyBake(lanes, spawnS, despawnS, stopLineS, rules);
 
             SceneView.RepaintAll();
 
@@ -451,12 +398,7 @@ public class TrafficLaneBakerEditor : EditorWindow
                           );
             }
 
-            SetReport(
-                report,
-                warnings.Count > 0
-                    ? MessageType.Warning
-                    : MessageType.Info
-            );
+            SetReport(report, warnings.Count > 0 ? MessageType.Warning : MessageType.Info);
 
         }
         catch (Exception exception)
@@ -471,9 +413,7 @@ public class TrafficLaneBakerEditor : EditorWindow
     /// <summary>
     /// 자식 웨이포인트 순서로 곡선 생성 후 거리 기준 재샘플링 및 노면 위치와 회전 저장
     /// </summary>
-    private LaneData BakeLane(
-        Transform laneSource,
-        List<string> warnings)
+    private LaneData BakeLane(Transform laneSource, List<string> warnings)
     {
         if (laneSource.childCount < 2)
         {
@@ -487,14 +427,9 @@ public class TrafficLaneBakerEditor : EditorWindow
 
         for (int i = 0; i < laneSource.childCount; i++)
         {
-            Vector3 position =
-                laneSource.GetChild(i).position;
+            Vector3 position = laneSource.GetChild(i).position;
 
-            if (i > 0 &&
-                Vector3.Distance(
-                    controlPoints[i - 1],
-                    position
-                ) < 0.05f)
+            if (i > 0 && Vector3.Distance(controlPoints[i - 1], position) < 0.05f)
             {
                 throw new InvalidOperationException(
                     laneSource.name +
@@ -506,11 +441,9 @@ public class TrafficLaneBakerEditor : EditorWindow
             controlPoints.Add(position);
         }
 
-        List<Vector3> denseCurve =
-            BuildDenseCurve(controlPoints);
+        List<Vector3> denseCurve = BuildDenseCurve(controlPoints);
 
-        List<Vector3> resampledCurve =
-            ResampleCurve(denseCurve, sampleSpacing);
+        List<Vector3> resampledCurve = ResampleCurve(denseCurve, sampleSpacing);
 
         if (resampledCurve.Count < 2)
         {
@@ -520,19 +453,15 @@ public class TrafficLaneBakerEditor : EditorWindow
             );
         }
 
-        Vector3[] positions =
-            new Vector3[resampledCurve.Count];
+        Vector3[] positions = new Vector3[resampledCurve.Count];
 
-        Vector3[] normals =
-            new Vector3[resampledCurve.Count];
+        Vector3[] normals = new Vector3[resampledCurve.Count];
 
         int roadMask = 1 << RoadLayer;
 
         for (int i = 0; i < resampledCurve.Count; i++)
         {
-            Vector3 rayOrigin =
-                resampledCurve[i] +
-                Vector3.up * rayStartHeight;
+            Vector3 rayOrigin = resampledCurve[i] + Vector3.up * rayStartHeight;
 
             RaycastHit hit;
 
@@ -562,15 +491,9 @@ public class TrafficLaneBakerEditor : EditorWindow
         }
 
         // 노면 투영으로 달라진 샘플 간 거리를 반영하기 위해 최종 위치에서 누적 거리 재계산
-        float[] distances =
-            BuildCumulativeDistances(positions);
+        float[] distances = BuildCumulativeDistances(positions);
 
-        Quaternion[] rotations = BuildRotations(
-            laneSource.name,
-            positions,
-            normals,
-            warnings
-        );
+        Quaternion[] rotations = BuildRotations(laneSource.name, positions, normals, warnings);
 
         LaneData lane = new LaneData();
         lane.name = laneSource.name;
@@ -593,8 +516,7 @@ public class TrafficLaneBakerEditor : EditorWindow
     /// <summary>
     /// 거리 기준 재샘플링에 사용할 조밀한 Catmull-Rom 곡선 생성
     /// </summary>
-    private List<Vector3> BuildDenseCurve(
-        List<Vector3> controls)
+    private List<Vector3> BuildDenseCurve(List<Vector3> controls)
     {
         List<Vector3> result = new List<Vector3>();
         result.Add(controls[0]);
@@ -607,21 +529,13 @@ public class TrafficLaneBakerEditor : EditorWindow
             Vector3 p2 = controls[segmentIndex + 1];
 
             // 양 끝의 부족한 제어점을 인접 구간 연장으로 보완해 시작과 끝의 진행 방향 유지
-            Vector3 p0 = segmentIndex > 0
-                ? controls[segmentIndex - 1]
-                : p1 + (p1 - p2);
+            Vector3 p0 = segmentIndex > 0 ? controls[segmentIndex - 1] : p1 + (p1 - p2);
 
-            Vector3 p3 =
-                segmentIndex + 2 < controls.Count
-                    ? controls[segmentIndex + 2]
-                    : p2 + (p2 - p1);
+            Vector3 p3 = segmentIndex + 2 < controls.Count ? controls[segmentIndex + 2] : p2 + (p2 - p1);
 
             float chordLength = Vector3.Distance(p1, p2);
 
-            int subdivisions = Mathf.Max(
-                4,
-                Mathf.CeilToInt(chordLength / 0.25f)
-            );
+            int subdivisions = Mathf.Max(4, Mathf.CeilToInt(chordLength / 0.25f));
 
             for (int step = 1;
                  step <= subdivisions;
@@ -629,15 +543,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             {
                 float t = step / (float)subdivisions;
 
-                result.Add(
-                    EvaluateCentripetalCatmullRom(
-                        p0,
-                        p1,
-                        p2,
-                        p3,
-                        t
-                    )
-                );
+                result.Add(EvaluateCentripetalCatmullRom(p0, p1, p2, p3, t));
             }
         }
 
@@ -658,40 +564,23 @@ public class TrafficLaneBakerEditor : EditorWindow
 
         float t = Mathf.Lerp(t1, t2, normalizedT);
 
-        Vector3 a1 = InterpolateKnot(
-            p0, p1, t0, t1, t
-        );
+        Vector3 a1 = InterpolateKnot(p0, p1, t0, t1, t);
 
-        Vector3 a2 = InterpolateKnot(
-            p1, p2, t1, t2, t
-        );
+        Vector3 a2 = InterpolateKnot(p1, p2, t1, t2, t);
 
-        Vector3 a3 = InterpolateKnot(
-            p2, p3, t2, t3, t
-        );
+        Vector3 a3 = InterpolateKnot(p2, p3, t2, t3, t);
 
-        Vector3 b1 = InterpolateKnot(
-            a1, a2, t0, t2, t
-        );
+        Vector3 b1 = InterpolateKnot(a1, a2, t0, t2, t);
 
-        Vector3 b2 = InterpolateKnot(
-            a2, a3, t1, t3, t
-        );
+        Vector3 b2 = InterpolateKnot(a2, a3, t1, t3, t);
 
-        return InterpolateKnot(
-            b1, b2, t1, t2, t
-        );
+        return InterpolateKnot(b1, b2, t1, t2, t);
     }
 
-    private float GetKnotInterval(
-        Vector3 start,
-        Vector3 end)
+    private float GetKnotInterval(Vector3 start, Vector3 end)
     {
         // 제어점 간 거리의 제곱근으로 매개변수 간격 설정. 중복 위치의 간격 0 방지
-        return Mathf.Max(
-            0.0001f,
-            Mathf.Sqrt(Vector3.Distance(start, end))
-        );
+        return Mathf.Max(0.0001f, Mathf.Sqrt(Vector3.Distance(start, end)));
     }
 
     private Vector3 InterpolateKnot(
@@ -708,26 +597,18 @@ public class TrafficLaneBakerEditor : EditorWindow
             return startValue;
         }
 
-        float ratio =
-            (currentTime - startTime) / duration;
+        float ratio = (currentTime - startTime) / duration;
 
-        return Vector3.LerpUnclamped(
-            startValue,
-            endValue,
-            ratio
-        );
+        return Vector3.LerpUnclamped(startValue, endValue, ratio);
     }
 
     /// <summary>
     /// 곡선 매개변수 대신 누적 거리(m)를 기준으로 일정 간격의 샘플 위치 생성
     /// </summary>
     /// <remarks>끝점 누락 방지를 위해 마지막 구간은 설정 간격보다 짧게 허용</remarks>
-    private List<Vector3> ResampleCurve(
-        List<Vector3> denseCurve,
-        float spacing)
+    private List<Vector3> ResampleCurve(List<Vector3> denseCurve, float spacing)
     {
-        float[] distances =
-            BuildCumulativeDistances(denseCurve.ToArray());
+        float[] distances = BuildCumulativeDistances(denseCurve.ToArray());
 
         float totalLength = distances[distances.Length - 1];
 
@@ -745,8 +626,7 @@ public class TrafficLaneBakerEditor : EditorWindow
              targetS < totalLength;
              targetS += spacing)
         {
-            while (segmentIndex < distances.Length - 2 &&
-                   distances[segmentIndex + 1] < targetS)
+            while (segmentIndex < distances.Length - 2 && distances[segmentIndex + 1] < targetS)
             {
                 segmentIndex++;
             }
@@ -755,29 +635,14 @@ public class TrafficLaneBakerEditor : EditorWindow
             float endS = distances[segmentIndex + 1];
             float segmentLength = endS - startS;
 
-            float t = segmentLength > 0.0001f
-                ? Mathf.Clamp01(
-                    (targetS - startS) / segmentLength
-                )
-                : 0f;
+            float t = segmentLength > 0.0001f ? Mathf.Clamp01((targetS - startS) / segmentLength) : 0f;
 
-            result.Add(
-                Vector3.Lerp(
-                    denseCurve[segmentIndex],
-                    denseCurve[segmentIndex + 1],
-                    t
-                )
-            );
+            result.Add(Vector3.Lerp(denseCurve[segmentIndex], denseCurve[segmentIndex + 1], t));
         }
 
-        Vector3 finalPosition =
-            denseCurve[denseCurve.Count - 1];
+        Vector3 finalPosition = denseCurve[denseCurve.Count - 1];
 
-        if (result.Count == 0 ||
-            Vector3.Distance(
-                result[result.Count - 1],
-                finalPosition
-            ) > 0.01f)
+        if (result.Count == 0 || Vector3.Distance(result[result.Count - 1], finalPosition) > 0.01f)
         {
             result.Add(finalPosition);
         }
@@ -785,20 +650,14 @@ public class TrafficLaneBakerEditor : EditorWindow
         return result;
     }
 
-    private float[] BuildCumulativeDistances(
-        Vector3[] positions)
+    private float[] BuildCumulativeDistances(Vector3[] positions)
     {
         float[] distances = new float[positions.Length];
         distances[0] = 0f;
 
         for (int i = 1; i < positions.Length; i++)
         {
-            distances[i] =
-                distances[i - 1] +
-                Vector3.Distance(
-                    positions[i - 1],
-                    positions[i]
-                );
+            distances[i] = distances[i - 1] + Vector3.Distance(positions[i - 1], positions[i]);
         }
 
         return distances;
@@ -810,8 +669,7 @@ public class TrafficLaneBakerEditor : EditorWindow
         Vector3[] normals,
         List<string> warnings)
     {
-        Quaternion[] rotations =
-            new Quaternion[positions.Length];
+        Quaternion[] rotations = new Quaternion[positions.Length];
 
         Vector3 previousForward = Vector3.zero;
         bool directionWarningAdded = false;
@@ -820,14 +678,9 @@ public class TrafficLaneBakerEditor : EditorWindow
         for (int i = 0; i < positions.Length; i++)
         {
             int previousIndex = Mathf.Max(0, i - 1);
-            int nextIndex = Mathf.Min(
-                positions.Length - 1,
-                i + 1
-            );
+            int nextIndex = Mathf.Min(positions.Length - 1, i + 1);
 
-            Vector3 tangent =
-                positions[nextIndex] -
-                positions[previousIndex];
+            Vector3 tangent = positions[nextIndex] - positions[previousIndex];
 
             Vector3 normal = normals[i];
 
@@ -843,11 +696,7 @@ public class TrafficLaneBakerEditor : EditorWindow
 
             normal.Normalize();
 
-            Vector3 forward =
-                Vector3.ProjectOnPlane(
-                    tangent,
-                    normal
-                ).normalized;
+            Vector3 forward = Vector3.ProjectOnPlane(tangent, normal).normalized;
 
             if (forward.sqrMagnitude < 0.0001f)
             {
@@ -860,10 +709,7 @@ public class TrafficLaneBakerEditor : EditorWindow
 
             if (previousForward.sqrMagnitude > 0.1f)
             {
-                float dot = Vector3.Dot(
-                    previousForward,
-                    forward
-                );
+                float dot = Vector3.Dot(previousForward, forward);
 
                 if (dot < 0f)
                 {
@@ -874,11 +720,7 @@ public class TrafficLaneBakerEditor : EditorWindow
                     );
                 }
 
-                if (!directionWarningAdded &&
-                    Vector3.Angle(
-                        previousForward,
-                        forward
-                    ) > 25f)
+                if (!directionWarningAdded && Vector3.Angle(previousForward, forward) > 25f)
                 {
                     warnings.Add(
                         laneName +
@@ -889,11 +731,7 @@ public class TrafficLaneBakerEditor : EditorWindow
                 }
             }
 
-            if (!slopeWarningAdded &&
-                Vector3.Angle(
-                    normal,
-                    Vector3.up
-                ) > 20f)
+            if (!slopeWarningAdded && Vector3.Angle(normal, Vector3.up) > 20f)
             {
                 warnings.Add(
                     laneName +
@@ -903,10 +741,7 @@ public class TrafficLaneBakerEditor : EditorWindow
                 slopeWarningAdded = true;
             }
 
-            rotations[i] = Quaternion.LookRotation(
-                forward,
-                normal
-            );
+            rotations[i] = Quaternion.LookRotation(forward, normal);
 
             previousForward = forward;
         }
@@ -914,30 +749,17 @@ public class TrafficLaneBakerEditor : EditorWindow
         return rotations;
     }
 
-    private float[] BakeSpawnPoints(
-        LaneData[] lanes,
-        Transform container,
-        List<string> warnings)
+    private float[] BakeSpawnPoints(LaneData[] lanes, Transform container, List<string> warnings)
     {
-        float[] result =
-        {
-            -1f, -1f, -1f, -1f, -1f, -1f, -1f
-        };
+        float[] result = { -1f, -1f, -1f, -1f, -1f, -1f, -1f };
 
         for (int laneId = 0;
              laneId < SpawnMarkerNames.Length;
              laneId++)
         {
-            Transform marker = RequirePath(
-                container,
-                SpawnMarkerNames[laneId]
-            );
+            Transform marker = RequirePath(container, SpawnMarkerNames[laneId]);
 
-            result[laneId] = ProjectMarker(
-                marker,
-                lanes[laneId],
-                warnings
-            ).laneS;
+            result[laneId] = ProjectMarker(marker, lanes[laneId], warnings).laneS;
         }
 
         // 합류 전용 차선인 R4_BRANCH에서 차량 직접 생성 제외
@@ -946,42 +768,25 @@ public class TrafficLaneBakerEditor : EditorWindow
         return result;
     }
 
-    private float[] BakeDespawnPoints(
-        LaneData[] lanes,
-        Transform container,
-        List<string> warnings)
+    private float[] BakeDespawnPoints(LaneData[] lanes, Transform container, List<string> warnings)
     {
-        float[] result =
-            new float[TrafficLaneDatabase.FixedLaneCount];
+        float[] result = new float[TrafficLaneDatabase.FixedLaneCount];
 
         for (int laneId = 0;
              laneId < DespawnMarkerNames.Length;
              laneId++)
         {
-            Transform marker = RequirePath(
-                container,
-                DespawnMarkerNames[laneId]
-            );
+            Transform marker = RequirePath(container, DespawnMarkerNames[laneId]);
 
-            result[laneId] = ProjectMarker(
-                marker,
-                lanes[laneId],
-                warnings
-            ).laneS;
+            result[laneId] = ProjectMarker(marker, lanes[laneId], warnings).laneS;
         }
 
         return result;
     }
 
-    private float[] BakeStopLines(
-        LaneData[] lanes,
-        Transform container,
-        List<string> warnings)
+    private float[] BakeStopLines(LaneData[] lanes, Transform container, List<string> warnings)
     {
-        float[] result =
-        {
-            -1f, -1f, -1f, -1f, -1f, -1f, -1f
-        };
+        float[] result = { -1f, -1f, -1f, -1f, -1f, -1f, -1f };
 
         Transform stopLineL = RequirePath(
             container,
@@ -997,22 +802,14 @@ public class TrafficLaneBakerEditor : EditorWindow
              laneId <= TrafficLaneDatabase.LaneL3;
              laneId++)
         {
-            result[laneId] = ProjectMarker(
-                stopLineL,
-                lanes[laneId],
-                warnings
-            ).laneS;
+            result[laneId] = ProjectMarker(stopLineL, lanes[laneId], warnings).laneS;
         }
 
         for (int laneId = TrafficLaneDatabase.LaneR1;
              laneId <= TrafficLaneDatabase.LaneR3;
              laneId++)
         {
-            result[laneId] = ProjectMarker(
-                stopLineR,
-                lanes[laneId],
-                warnings
-            ).laneS;
+            result[laneId] = ProjectMarker(stopLineR, lanes[laneId], warnings).laneS;
         }
 
         result[TrafficLaneDatabase.LaneR4Branch] = -1f;
@@ -1020,13 +817,9 @@ public class TrafficLaneBakerEditor : EditorWindow
         return result;
     }
 
-    private List<ChangeRule> BakeChangeRules(
-        LaneData[] lanes,
-        Transform container,
-        List<string> warnings)
+    private List<ChangeRule> BakeChangeRules(LaneData[] lanes, Transform container, List<string> warnings)
     {
-        List<ChangeRule> rules =
-            new List<ChangeRule>();
+        List<ChangeRule> rules = new List<ChangeRule>();
 
         AddChangeRule(
             rules, lanes, container,
@@ -1122,27 +915,13 @@ public class TrafficLaneBakerEditor : EditorWindow
         string endMarkerName,
         List<string> warnings)
     {
-        Transform startMarker = RequirePath(
-            container,
-            startMarkerName
-        );
+        Transform startMarker = RequirePath(container, startMarkerName);
 
-        Transform endMarker = RequirePath(
-            container,
-            endMarkerName
-        );
+        Transform endMarker = RequirePath(container, endMarkerName);
 
-        float startS = ProjectMarker(
-            startMarker,
-            lanes[fromLaneId],
-            warnings
-        ).laneS;
+        float startS = ProjectMarker(startMarker, lanes[fromLaneId], warnings).laneS;
 
-        float endS = ProjectMarker(
-            endMarker,
-            lanes[fromLaneId],
-            warnings
-        ).laneS;
+        float endS = ProjectMarker(endMarker, lanes[fromLaneId], warnings).laneS;
 
         if (startS >= endS)
         {
@@ -1176,10 +955,7 @@ public class TrafficLaneBakerEditor : EditorWindow
         rules.Add(rule);
     }
 
-    private MarkerProjection ProjectMarker(
-        Transform marker,
-        LaneData lane,
-        List<string> warnings)
+    private MarkerProjection ProjectMarker(Transform marker, LaneData lane, List<string> warnings)
     {
         float bestDistanceSqr = float.MaxValue;
         float bestLaneS = -1f;
@@ -1192,35 +968,24 @@ public class TrafficLaneBakerEditor : EditorWindow
             Vector3 end = lane.positions[i + 1];
             Vector3 segment = end - start;
 
-            float segmentSqrMagnitude =
-                segment.sqrMagnitude;
+            float segmentSqrMagnitude = segment.sqrMagnitude;
 
             float t = 0f;
 
             if (segmentSqrMagnitude > 0.000001f)
             {
-                t = Mathf.Clamp01(
-                    Vector3.Dot(
-                        marker.position - start,
-                        segment
-                    ) / segmentSqrMagnitude
-                );
+                t = Mathf.Clamp01(Vector3.Dot(marker.position - start, segment) / segmentSqrMagnitude);
             }
 
             Vector3 closest = start + segment * t;
 
-            float distanceSqr =
-                (marker.position - closest).sqrMagnitude;
+            float distanceSqr = (marker.position - closest).sqrMagnitude;
 
             if (distanceSqr < bestDistanceSqr)
             {
                 bestDistanceSqr = distanceSqr;
 
-                bestLaneS = Mathf.Lerp(
-                    lane.distances[i],
-                    lane.distances[i + 1],
-                    t
-                );
+                bestLaneS = Mathf.Lerp(lane.distances[i], lane.distances[i + 1], t);
             }
         }
 
@@ -1248,8 +1013,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             );
         }
 
-        MarkerProjection result =
-            new MarkerProjection();
+        MarkerProjection result = new MarkerProjection();
 
         result.laneS = bestLaneS;
         result.distance = distance;
@@ -1273,17 +1037,13 @@ public class TrafficLaneBakerEditor : EditorWindow
     {
         List<float> allDistances = new List<float>();
         List<Vector3> allPositions = new List<Vector3>();
-        List<Quaternion> allRotations =
-            new List<Quaternion>();
+        List<Quaternion> allRotations = new List<Quaternion>();
 
-        int[] laneStarts =
-            new int[TrafficLaneDatabase.FixedLaneCount];
+        int[] laneStarts = new int[TrafficLaneDatabase.FixedLaneCount];
 
-        int[] laneCounts =
-            new int[TrafficLaneDatabase.FixedLaneCount];
+        int[] laneCounts = new int[TrafficLaneDatabase.FixedLaneCount];
 
-        float[] laneLengths =
-            new float[TrafficLaneDatabase.FixedLaneCount];
+        float[] laneLengths = new float[TrafficLaneDatabase.FixedLaneCount];
 
         for (int laneId = 0;
              laneId < lanes.Length;
@@ -1302,32 +1062,24 @@ public class TrafficLaneBakerEditor : EditorWindow
 
         int[] vehicleMasks =
         {
-            TrafficLaneDatabase.VehicleCar |
-            TrafficLaneDatabase.VehicleTruck,
+            TrafficLaneDatabase.VehicleCar | TrafficLaneDatabase.VehicleTruck,
 
-            TrafficLaneDatabase.VehicleCar |
-            TrafficLaneDatabase.VehicleTruck,
+            TrafficLaneDatabase.VehicleCar | TrafficLaneDatabase.VehicleTruck,
 
-            TrafficLaneDatabase.VehicleCar |
-            TrafficLaneDatabase.VehicleTruck,
+            TrafficLaneDatabase.VehicleCar | TrafficLaneDatabase.VehicleTruck,
 
-            TrafficLaneDatabase.VehicleCar |
-            TrafficLaneDatabase.VehicleTruck,
+            TrafficLaneDatabase.VehicleCar | TrafficLaneDatabase.VehicleTruck,
 
-            TrafficLaneDatabase.VehicleCar |
-            TrafficLaneDatabase.VehicleTruck,
+            TrafficLaneDatabase.VehicleCar | TrafficLaneDatabase.VehicleTruck,
 
-            TrafficLaneDatabase.VehicleCar |
-            TrafficLaneDatabase.VehicleTruck,
+            TrafficLaneDatabase.VehicleCar | TrafficLaneDatabase.VehicleTruck,
 
             TrafficLaneDatabase.VehicleCar
         };
 
-        float[] speedLimits =
-            new float[TrafficLaneDatabase.FixedLaneCount];
+        float[] speedLimits = new float[TrafficLaneDatabase.FixedLaneCount];
 
-        int[] signalGroupIds =
-            new int[TrafficLaneDatabase.FixedLaneCount];
+        int[] signalGroupIds = new int[TrafficLaneDatabase.FixedLaneCount];
 
         for (int laneId = 0;
              laneId < TrafficLaneDatabase.FixedLaneCount;
@@ -1335,17 +1087,12 @@ public class TrafficLaneBakerEditor : EditorWindow
         {
             speedLimits[laneId] = defaultSpeedLimit;
 
-            signalGroupIds[laneId] =
-                laneId == TrafficLaneDatabase.LaneR4Branch
-                    ? -1
-                    : SignalGroupMain;
+            signalGroupIds[laneId] = laneId == TrafficLaneDatabase.LaneR4Branch ? -1 : SignalGroupMain;
         }
 
-        int[] ruleStarts =
-            new int[TrafficLaneDatabase.FixedLaneCount];
+        int[] ruleStarts = new int[TrafficLaneDatabase.FixedLaneCount];
 
-        int[] ruleCounts =
-            new int[TrafficLaneDatabase.FixedLaneCount];
+        int[] ruleCounts = new int[TrafficLaneDatabase.FixedLaneCount];
 
         int ruleCursor = 0;
 
@@ -1355,14 +1102,12 @@ public class TrafficLaneBakerEditor : EditorWindow
         {
             ruleStarts[laneId] = ruleCursor;
 
-            while (ruleCursor < rules.Count &&
-                   rules[ruleCursor].fromLaneId == laneId)
+            while (ruleCursor < rules.Count && rules[ruleCursor].fromLaneId == laneId)
             {
                 ruleCursor++;
             }
 
-            ruleCounts[laneId] =
-                ruleCursor - ruleStarts[laneId];
+            ruleCounts[laneId] = ruleCursor - ruleStarts[laneId];
         }
 
         if (ruleCursor != rules.Count)
@@ -1391,9 +1136,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             "Bake Traffic Lane Database"
         );
 
-        var backingBehaviour =
-            UdonSharpEditorUtility
-                .GetBackingUdonBehaviour(database);
+        var backingBehaviour = UdonSharpEditorUtility .GetBackingUdonBehaviour(database);
 
         if (backingBehaviour != null)
         {
@@ -1403,8 +1146,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             );
         }
 
-        database.laneCount =
-            TrafficLaneDatabase.FixedLaneCount;
+        database.laneCount = TrafficLaneDatabase.FixedLaneCount;
 
         database.sampleSpacing = sampleSpacing;
         database.bakedRoadSurfaceClearance = TrafficLaneDatabase.RoadSurfaceClearance;
@@ -1412,14 +1154,11 @@ public class TrafficLaneBakerEditor : EditorWindow
         database.laneSampleStarts = laneStarts;
         database.laneSampleCounts = laneCounts;
 
-        database.sampleDistances =
-            allDistances.ToArray();
+        database.sampleDistances = allDistances.ToArray();
 
-        database.samplePositions =
-            allPositions.ToArray();
+        database.samplePositions = allPositions.ToArray();
 
-        database.sampleRotations =
-            allRotations.ToArray();
+        database.sampleRotations = allRotations.ToArray();
 
         database.laneLengths = laneLengths;
         database.laneVehicleMasks = vehicleMasks;
@@ -1427,8 +1166,7 @@ public class TrafficLaneBakerEditor : EditorWindow
         database.spawnS = spawnS;
         database.despawnS = despawnS;
 
-        database.spawnWeights =
-            (float[])DefaultSpawnWeights.Clone();
+        database.spawnWeights = (float[])DefaultSpawnWeights.Clone();
 
         database.speedLimits = speedLimits;
         database.stopLineS = stopLineS;
@@ -1440,13 +1178,9 @@ public class TrafficLaneBakerEditor : EditorWindow
         database.changeToLaneIds = changeToLaneIds;
         database.changeStartS = changeStartS;
         database.changeEndS = changeEndS;
-        database.changeVehicleMasks =
-            changeVehicleMasks;
+        database.changeVehicleMasks = changeVehicleMasks;
 
-        UdonSharpEditorUtility.CopyProxyToUdon(
-            database,
-            ProxySerializationPolicy.All
-        );
+        UdonSharpEditorUtility.CopyProxyToUdon(database, ProxySerializationPolicy.All);
 
         EditorUtility.SetDirty(database);
 
@@ -1455,14 +1189,10 @@ public class TrafficLaneBakerEditor : EditorWindow
             EditorUtility.SetDirty(backingBehaviour);
         }
 
-        EditorSceneManager.MarkSceneDirty(
-            database.gameObject.scene
-        );
+        EditorSceneManager.MarkSceneDirty(database.gameObject.scene);
     }
 
-    private Transform RequirePath(
-        Transform root,
-        string path)
+    private Transform RequirePath(Transform root, string path)
     {
         Transform result = root.Find(path);
 
@@ -1477,32 +1207,26 @@ public class TrafficLaneBakerEditor : EditorWindow
         return result;
     }
 
-    private Transform FindTransformInLoadedScenes(
-        string objectName)
+    private Transform FindTransformInLoadedScenes(string objectName)
     {
         for (int sceneIndex = 0;
              sceneIndex < SceneManager.sceneCount;
              sceneIndex++)
         {
-            Scene scene =
-                SceneManager.GetSceneAt(sceneIndex);
+            Scene scene = SceneManager.GetSceneAt(sceneIndex);
 
             if (!scene.isLoaded)
             {
                 continue;
             }
 
-            GameObject[] roots =
-                scene.GetRootGameObjects();
+            GameObject[] roots = scene.GetRootGameObjects();
 
             for (int rootIndex = 0;
                  rootIndex < roots.Length;
                  rootIndex++)
             {
-                Transform found = FindRecursive(
-                    roots[rootIndex].transform,
-                    objectName
-                );
+                Transform found = FindRecursive(roots[rootIndex].transform, objectName);
 
                 if (found != null)
                 {
@@ -1514,9 +1238,7 @@ public class TrafficLaneBakerEditor : EditorWindow
         return null;
     }
 
-    private Transform FindRecursive(
-        Transform current,
-        string objectName)
+    private Transform FindRecursive(Transform current, string objectName)
     {
         if (current.name == objectName)
         {
@@ -1525,10 +1247,7 @@ public class TrafficLaneBakerEditor : EditorWindow
 
         for (int i = 0; i < current.childCount; i++)
         {
-            Transform found = FindRecursive(
-                current.GetChild(i),
-                objectName
-            );
+            Transform found = FindRecursive(current.GetChild(i), objectName);
 
             if (found != null)
             {
@@ -1541,9 +1260,7 @@ public class TrafficLaneBakerEditor : EditorWindow
 
     private void DrawBakedPreview(SceneView sceneView)
     {
-        if (!showBakedPreview ||
-            database == null ||
-            !database.IsReady() ||
+        if (!showBakedPreview || database == null || !database.IsReady() ||
             Event.current.type != EventType.Repaint)
         {
             return;
@@ -1568,10 +1285,7 @@ public class TrafficLaneBakerEditor : EditorWindow
 
     private void DrawBakedLanes()
     {
-        int arrowStride = Mathf.Max(
-            1,
-            directionSampleStride
-        );
+        int arrowStride = Mathf.Max(1, directionSampleStride);
 
         for (int laneId = 0;
              laneId < database.laneCount;
@@ -1581,15 +1295,12 @@ public class TrafficLaneBakerEditor : EditorWindow
             int count = database.laneSampleCounts[laneId];
             int last = first + count - 1;
 
-            if (count < 2 ||
-                first < 0 ||
-                last >= database.samplePositions.Length)
+            if (count < 2 || first < 0 || last >= database.samplePositions.Length)
             {
                 continue;
             }
 
-            Handles.color =
-                LaneColors[laneId % LaneColors.Length];
+            Handles.color = LaneColors[laneId % LaneColors.Length];
 
             for (int sampleIndex = first;
                  sampleIndex < last;
@@ -1626,8 +1337,7 @@ public class TrafficLaneBakerEditor : EditorWindow
                 {
                     Handles.ArrowHandleCap(
                         0,
-                        database.samplePositions[sampleIndex] +
-                        Vector3.up * 0.08f,
+                        database.samplePositions[sampleIndex] + Vector3.up * 0.08f,
                         database.sampleRotations[sampleIndex],
                         previewArrowSize,
                         EventType.Repaint
@@ -1635,11 +1345,7 @@ public class TrafficLaneBakerEditor : EditorWindow
                 }
             }
 
-            Handles.Label(
-                database.samplePositions[first] +
-                Vector3.up * 0.5f,
-                LaneNames[laneId]
-            );
+            Handles.Label(database.samplePositions[first] + Vector3.up * 0.5f, LaneNames[laneId]);
         }
     }
 
@@ -1684,60 +1390,30 @@ public class TrafficLaneBakerEditor : EditorWindow
         }
     }
 
-    private void DrawMarker(
-        int laneId,
-        float laneS,
-        Color color,
-        string markerName,
-        bool drawCube)
+    private void DrawMarker(int laneId, float laneS, Color color, string markerName, bool drawCube)
     {
-        int sampleIndex = database.FindSampleIndex(
-            laneId,
-            laneS,
-            -1
-        );
+        int sampleIndex = database.FindSampleIndex(laneId, laneS, -1);
 
         if (sampleIndex < 0)
         {
             return;
         }
 
-        Vector3 position = database.GetLanePosition(
-            laneId,
-            laneS,
-            sampleIndex
-        );
+        Vector3 position = database.GetLanePosition(laneId, laneS, sampleIndex);
 
-        Quaternion rotation = database.GetLaneRotation(
-            laneId,
-            laneS,
-            sampleIndex
-        );
+        Quaternion rotation = database.GetLaneRotation(laneId, laneS, sampleIndex);
 
-        Vector3 markerPosition =
-            position + Vector3.up * 0.25f;
+        Vector3 markerPosition = position + Vector3.up * 0.25f;
 
         Handles.color = color;
 
         if (drawCube)
         {
-            Handles.CubeHandleCap(
-                0,
-                markerPosition,
-                rotation,
-                0.5f,
-                EventType.Repaint
-            );
+            Handles.CubeHandleCap(0, markerPosition, rotation, 0.5f, EventType.Repaint);
         }
         else
         {
-            Handles.SphereHandleCap(
-                0,
-                markerPosition,
-                Quaternion.identity,
-                0.45f,
-                EventType.Repaint
-            );
+            Handles.SphereHandleCap(0, markerPosition, Quaternion.identity, 0.45f, EventType.Repaint);
         }
 
         Handles.Label(
@@ -1749,60 +1425,39 @@ public class TrafficLaneBakerEditor : EditorWindow
 
     private void DrawChangeZones()
     {
-        Handles.color = new Color(
-            0.1f,
-            1f,
-            1f,
-            1f
-        );
+        Handles.color = new Color(0.1f, 1f, 1f, 1f);
 
         for (int laneId = 0;
              laneId < database.laneCount;
              laneId++)
         {
-            int firstRule =
-                database.laneRuleStarts[laneId];
+            int firstRule = database.laneRuleStarts[laneId];
 
-            int ruleCount =
-                database.laneRuleCounts[laneId];
+            int ruleCount = database.laneRuleCounts[laneId];
 
             for (int ruleOffset = 0;
                  ruleOffset < ruleCount;
                  ruleOffset++)
             {
-                int ruleIndex =
-                    firstRule + ruleOffset;
+                int ruleIndex = firstRule + ruleOffset;
 
-                if (ruleIndex < 0 ||
-                    ruleIndex >=
-                    database.changeToLaneIds.Length)
+                if (ruleIndex < 0 || ruleIndex >= database.changeToLaneIds.Length)
                 {
                     continue;
                 }
 
-                DrawChangeZone(
-                    laneId,
-                    ruleIndex
-                );
+                DrawChangeZone(laneId, ruleIndex);
             }
         }
     }
 
-    private void DrawChangeZone(
-        int fromLaneId,
-        int ruleIndex)
+    private void DrawChangeZone(int fromLaneId, int ruleIndex)
     {
-        float startS =
-            database.changeStartS[ruleIndex];
+        float startS = database.changeStartS[ruleIndex];
 
-        float endS =
-            database.changeEndS[ruleIndex];
+        float endS = database.changeEndS[ruleIndex];
 
-        int sampleIndex = database.FindSampleIndex(
-            fromLaneId,
-            startS,
-            -1
-        );
+        int sampleIndex = database.FindSampleIndex(fromLaneId, startS, -1);
 
         if (sampleIndex < 0)
         {
@@ -1811,31 +1466,17 @@ public class TrafficLaneBakerEditor : EditorWindow
 
         Vector3 offset = Vector3.up * 0.18f;
 
-        Vector3 previousPosition =
-            database.GetLanePosition(
-                fromLaneId,
-                startS,
-                sampleIndex
-            ) + offset;
+        Vector3 previousPosition = database.GetLanePosition(fromLaneId, startS, sampleIndex) + offset;
 
-        int laneLast =
-            database.laneSampleStarts[fromLaneId] +
-            database.laneSampleCounts[fromLaneId] - 1;
+        int laneLast = database.laneSampleStarts[fromLaneId] + database.laneSampleCounts[fromLaneId] - 1;
 
         int currentIndex = sampleIndex + 1;
 
-        while (currentIndex <= laneLast &&
-               database.sampleDistances[currentIndex] < endS)
+        while (currentIndex <= laneLast && database.sampleDistances[currentIndex] < endS)
         {
-            Vector3 currentPosition =
-                database.samplePositions[currentIndex] +
-                offset;
+            Vector3 currentPosition = database.samplePositions[currentIndex] + offset;
 
-            Handles.DrawLine(
-                previousPosition,
-                currentPosition,
-                6f
-            );
+            Handles.DrawLine(previousPosition, currentPosition, 6f);
 
             previousPosition = currentPosition;
             currentIndex++;
@@ -1844,10 +1485,7 @@ public class TrafficLaneBakerEditor : EditorWindow
         int endSampleIndex = database.FindSampleIndex(
             fromLaneId,
             endS,
-            Mathf.Max(
-                sampleIndex,
-                currentIndex - 1
-            )
+            Mathf.Max(sampleIndex, currentIndex - 1)
         );
 
         if (endSampleIndex < 0)
@@ -1855,37 +1493,21 @@ public class TrafficLaneBakerEditor : EditorWindow
             return;
         }
 
-        Vector3 endPosition =
-            database.GetLanePosition(
-                fromLaneId,
-                endS,
-                endSampleIndex
-            ) + offset;
+        Vector3 endPosition = database.GetLanePosition(fromLaneId, endS, endSampleIndex) + offset;
 
-        Handles.DrawLine(
-            previousPosition,
-            endPosition,
-            6f
-        );
+        Handles.DrawLine(previousPosition, endPosition, 6f);
 
-        int targetLaneId =
-            database.changeToLaneIds[ruleIndex];
+        int targetLaneId = database.changeToLaneIds[ruleIndex];
 
         Handles.Label(
-            database.GetLanePosition(
-                fromLaneId,
-                startS,
-                sampleIndex
-            ) + Vector3.up,
+            database.GetLanePosition(fromLaneId, startS, sampleIndex) + Vector3.up,
             LaneNames[fromLaneId] +
             " → " +
             LaneNames[targetLaneId]
         );
     }
 
-    private void SetReport(
-        string message,
-        MessageType type)
+    private void SetReport(string message, MessageType type)
     {
         lastReport = message;
         lastReportType = type;

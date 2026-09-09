@@ -40,10 +40,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private const int LaneChangeTargetShift = 20;
     private const int LaneChangeProgressShift = 23;
     private const int RecoveryDistanceShift = 29;
-    private const int VehicleSpawnGenerationBit =
-        unchecked((int)0x80000000);
-    private const int LaneChangeReverseManeuverBit =
-        unchecked((int)0x80000000);
+    private const int VehicleSpawnGenerationBit = unchecked((int)0x80000000);
+    private const int LaneChangeReverseManeuverBit = unchecked((int)0x80000000);
     private const int LaneChangePlayerBlock = 1;
     private const int LaneChangeVehicleBlock = 2;
     private const int LaneChangeRoadBoundaryBlock = 4;
@@ -60,12 +58,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     /// <returns>
     /// 일치하는 활성 차량의 월드 속도 반환. 차량을 찾지 못하면 <see cref="Vector3.zero"/> 반환
     /// </returns>
-    public Vector3 GetCollisionVehicleVelocity(
-        Transform collidedTransform)
+    public Vector3 GetCollisionVehicleVelocity(Transform collidedTransform)
     {
-        if (collidedTransform == null ||
-            vehicleRoots == null ||
-            visualActive == null ||
+        if (collidedTransform == null || vehicleRoots == null || visualActive == null ||
             vehicleCollisionVelocities == null)
         {
             return Vector3.zero;
@@ -73,10 +68,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         int count = Mathf.Min(
             vehicleRoots.Length,
-            Mathf.Min(
-                visualActive.Length,
-                vehicleCollisionVelocities.Length
-            )
+            Mathf.Min(visualActive.Length, vehicleCollisionVelocities.Length)
         );
 
         for (int i = 0; i < count; i++)
@@ -193,8 +185,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     public bool enableAuthorityPhysicsObstacles = true;
 
     [Tooltip("Player(9), PlayerLocal(10), 고정 장애물 ObstacleCollider(25) 포함. 신호 판정은 정지선 계산, 차량 간 판정은 차선 좌표 계산 사용")]
-    public int authorityObstacleLayerMask =
-        (1 << 9) | (1 << 10) | (1 << 25);
+    public int authorityObstacleLayerMask = (1 << 9) | (1 << 10) | (1 << 25);
 
     [Tooltip("한 렌더 프레임에 플레이어 감지를 갱신할 차량 수. 차량별 순환을 통한 분산 처리")]
     [Range(1, 4)]
@@ -486,12 +477,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private double syncedSimulationTime;
 
     [UdonSynced]
-    private int[] syncedVehicleStateA =
-        new int[NetworkSlotCapacity];
+    private int[] syncedVehicleStateA = new int[NetworkSlotCapacity];
 
     [UdonSynced]
-    private int[] syncedVehicleStateB =
-        new int[NetworkSlotCapacity];
+    private int[] syncedVehicleStateB = new int[NetworkSlotCapacity];
 
     [HideInInspector]
     public int activeVehicleCount;
@@ -555,13 +544,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private float[] physicalObstacleRestartHoldS = new float[0];
     private float[] physicalObstacleClearHoldRemaining = new float[0];
     private float[] physicalObstacleReactionHoldRemaining = new float[0];
-    private float[] laneChangeObstacleRestartHoldRemaining =
-        new float[0];
-    private float[] laneChangeObstacleClearHoldRemaining =
-        new float[0];
+    private float[] laneChangeObstacleRestartHoldRemaining = new float[0];
+    private float[] laneChangeObstacleClearHoldRemaining = new float[0];
     private float[] laneChangeRecoveryDistance = new float[0];
-    private float[] laneChangeRecoveryGearHoldRemaining =
-        new float[0];
+    private float[] laneChangeRecoveryGearHoldRemaining = new float[0];
     private bool[] laneChangeActive = new bool[0];
     private bool[] waitingForObstacleRelease = new bool[0];
     private bool[] physicalObstacleRestartPending = new bool[0];
@@ -572,38 +558,29 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private bool[] physicsObstacleCastDebugValid = new bool[0];
     private bool[] physicsObstacleCastDebugBlocked = new bool[0];
-    private bool[] physicsObstacleCastDebugLaneLimited =
-        new bool[0];
+    private bool[] physicsObstacleCastDebugLaneLimited = new bool[0];
     private bool[] signalStopDebugActive = new bool[0];
 
-    private Vector3[] physicsObstacleCastDebugCenters =
-        new Vector3[0];
+    private Vector3[] physicsObstacleCastDebugCenters = new Vector3[0];
 
-    private Vector3[] physicsObstacleCastDebugHalfExtents =
-        new Vector3[0];
+    private Vector3[] physicsObstacleCastDebugHalfExtents = new Vector3[0];
 
-    private Vector3[] physicsObstacleCastDebugDirections =
-        new Vector3[0];
+    private Vector3[] physicsObstacleCastDebugDirections = new Vector3[0];
 
-    private Quaternion[] physicsObstacleCastDebugRotations =
-        new Quaternion[0];
+    private Quaternion[] physicsObstacleCastDebugRotations = new Quaternion[0];
 
     private float[] physicsObstacleCastDebugDistances = new float[0];
     private float[] physicsObstacleCastDebugHitDistances = new float[0];
     private float[] physicsObstacleStopS = new float[0];
     private float[] physicsObstacleHitS = new float[0];
 
-    private Vector3[] laneChangeObstacleSweepStartPositions =
-        new Vector3[0];
+    private Vector3[] laneChangeObstacleSweepStartPositions = new Vector3[0];
 
-    private Vector3[] laneChangeObstacleSweepEndPositions =
-        new Vector3[0];
+    private Vector3[] laneChangeObstacleSweepEndPositions = new Vector3[0];
 
-    private Quaternion[] laneChangeObstacleSweepStartRotations =
-        new Quaternion[0];
+    private Quaternion[] laneChangeObstacleSweepStartRotations = new Quaternion[0];
 
-    private Quaternion[] laneChangeObstacleSweepEndRotations =
-        new Quaternion[0];
+    private Quaternion[] laneChangeObstacleSweepEndRotations = new Quaternion[0];
 
     private bool[] visualActive = new bool[0];
     private bool[] visualSpawnGeneration = new bool[0];
@@ -639,8 +616,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private bool[] snapshotNextReverseManeuver = new bool[0];
     private int[] snapshotBufferedStateA = new int[0];
     private int[] snapshotBufferedStateB = new int[0];
-    private double[] snapshotBufferedTimes =
-        new double[PendingRemoteSnapshotCapacity];
+    private double[] snapshotBufferedTimes = new double[PendingRemoteSnapshotCapacity];
     private bool[] laneChangeReverseManeuver = new bool[0];
     private bool[] laneChangeEmergencyManeuver = new bool[0];
     private bool[] laneChangePreparing = new bool[0];
@@ -663,36 +639,27 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private float[] maneuverPathSteeringAngles = new float[0];
     private int[] maneuverPhaseRangeScratch = new int[2];
 
-    private float[] ruleTargetStartS =
-        new float[MaximumLaneChangeRules];
+    private float[] ruleTargetStartS = new float[MaximumLaneChangeRules];
 
-    private float[] ruleTargetEndS =
-        new float[MaximumLaneChangeRules];
+    private float[] ruleTargetEndS = new float[MaximumLaneChangeRules];
 
-    private bool[] rulePhysicsCorridorValid =
-        new bool[MaximumLaneChangeRules];
+    private bool[] rulePhysicsCorridorValid = new bool[MaximumLaneChangeRules];
 
-    private Vector3[] rulePhysicsCorridorAxis =
-        new Vector3[MaximumLaneChangeRules];
+    private Vector3[] rulePhysicsCorridorAxis = new Vector3[MaximumLaneChangeRules];
 
-    private float[] rulePhysicsCorridorMinimum =
-        new float[MaximumLaneChangeRules];
+    private float[] rulePhysicsCorridorMinimum = new float[MaximumLaneChangeRules];
 
-    private float[] rulePhysicsCorridorMaximum =
-        new float[MaximumLaneChangeRules];
+    private float[] rulePhysicsCorridorMaximum = new float[MaximumLaneChangeRules];
 
     private Vector3[] baseLocalScales = new Vector3[0];
     private Vector3[] previousVisualPositions = new Vector3[0];
     private bool[] previousVisualPositionValid = new bool[0];
     private Vector3[] vehicleCollisionVelocities = new Vector3[0];
-    private AudioSource[] vehicleAudioSources =
-        new AudioSource[0];
+    private AudioSource[] vehicleAudioSources = new AudioSource[0];
 
-    private Transform[] vehicleWheelTransforms =
-        new Transform[0];
+    private Transform[] vehicleWheelTransforms = new Transform[0];
 
-    private Quaternion[] wheelBaseLocalRotations =
-        new Quaternion[0];
+    private Quaternion[] wheelBaseLocalRotations = new Quaternion[0];
 
     private int slotCount;
     private int randomState;
@@ -749,15 +716,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         timeSinceLastSnapshot = 0f;
         ownershipRecoveryTimer = 0f;
         networkSnapshotTimer = 0f;
-        localIsAuthority =
-            Networking.IsOwner(gameObject);
+        localIsAuthority = Networking.IsOwner(gameObject);
 
         if (localIsAuthority)
         {
-            SendCustomEventDelayedFrames(
-                nameof(_BeginAuthority),
-                1
-            );
+            SendCustomEventDelayedFrames(nameof(_BeginAuthority), 1);
         }
 
         ApplyNetworkVisuals();
@@ -770,9 +733,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
-        UpdateMotionVisualRefreshState(
-            Mathf.Min(Time.deltaTime, 0.1f)
-        );
+        UpdateMotionVisualRefreshState(Mathf.Min(Time.deltaTime, 0.1f));
 
         bool isOwner = Networking.IsOwner(gameObject);
 
@@ -802,26 +763,18 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void UpdateAuthoritySimulation()
     {
-        float stepDuration = Mathf.Clamp(
-            simulationInterval,
-            0.02f,
-            0.25f
-        );
+        float stepDuration = Mathf.Clamp(simulationInterval, 0.02f, 0.25f);
 
         float frameDuration = Mathf.Min(Time.deltaTime, 0.25f);
         simulationAccumulator += frameDuration;
 
         // 2026-09-08: 평상시에는 위치와 시각을 동일한 고정 단계로 진행
         // 긴 프레임에서 계산하지 않은 시간만 반영하여 서버 시각과의 누적 지연 방지
-        simulationStateTime += Mathf.Max(
-            0f,
-            Time.unscaledDeltaTime - frameDuration
-        );
+        simulationStateTime += Mathf.Max(0f, Time.unscaledDeltaTime - frameDuration);
 
         int completedSteps = 0;
 
-        while (simulationAccumulator >= stepDuration &&
-               completedSteps < maximumStepsPerFrame)
+        while (simulationAccumulator >= stepDuration && completedSteps < maximumStepsPerFrame)
         {
             SimulateStep(stepDuration);
             simulationStateTime += stepDuration;
@@ -846,18 +799,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     /// </remarks>
     public void _BeginAuthority()
     {
-        if (!initialized ||
-            !Networking.IsOwner(gameObject))
+        if (!initialized || !Networking.IsOwner(gameObject))
         {
             return;
         }
 
         if (!Networking.IsNetworkSettled)
         {
-            SendCustomEventDelayedSeconds(
-                nameof(_BeginAuthority),
-                0.5f
-            );
+            SendCustomEventDelayedSeconds(nameof(_BeginAuthority), 0.5f);
 
             return;
         }
@@ -894,10 +843,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
         }
 
-        syncedAuthorityEpoch = Mathf.Max(
-            1,
-            syncedAuthorityEpoch + 1
-        );
+        syncedAuthorityEpoch = Mathf.Max(1, syncedAuthorityEpoch + 1);
 
         simulationAccumulator = 0f;
         simulationStateTime = Networking.GetServerTimeInSeconds();
@@ -906,10 +852,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         authorityReady = true;
 
         networkStateDirty = true;
-        networkSnapshotTimer = Mathf.Max(
-            0.2f,
-            networkSnapshotInterval
-        );
+        networkSnapshotTimer = Mathf.Max(0.2f, networkSnapshotInterval);
         TryRequestNetworkSnapshot();
     }
 
@@ -923,10 +866,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (networkSnapshotTimer <= 0f)
         {
-            networkSnapshotTimer = Mathf.Max(
-                0.2f,
-                networkSnapshotInterval
-            );
+            networkSnapshotTimer = Mathf.Max(0.2f, networkSnapshotInterval);
 
             networkStateDirty = true;
         }
@@ -961,78 +901,45 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            int laneId = Mathf.Clamp(
-                vehicleLaneIds[i],
-                0,
-                7
-            );
+            int laneId = Mathf.Clamp(vehicleLaneIds[i], 0, 7);
 
-            int positionValue = Mathf.Clamp(
-                Mathf.RoundToInt(
-                    vehicleS[i] / PositionQuantum
-                ),
-                0,
-                131071
-            );
+            int positionValue = Mathf.Clamp(Mathf.RoundToInt(vehicleS[i] / PositionQuantum), 0, 131071);
 
-            int speedValue = Mathf.Clamp(
-                Mathf.RoundToInt(
-                    vehicleSpeeds[i] / SpeedQuantum
-                ),
-                0,
-                511
-            );
+            int speedValue = Mathf.Clamp(Mathf.RoundToInt(vehicleSpeeds[i] / SpeedQuantum), 0, 511);
 
             // A: 활성 0, 차선 1~3, 위치 4~20, 속도 21~29번 비트 사용
             // 30번은 신호 통과 또는 긴급 회피, 31번은 후진 회복 표시에 사용
-            int stateA = ActiveBit |
-                (laneId << LaneShift) |
-                (positionValue << PositionShift) |
+            int stateA = ActiveBit | (laneId << LaneShift) | (positionValue << PositionShift) |
                 (speedValue << SpeedShift);
 
-            if (laneChangeActive[i] &&
-                laneChangeReverseManeuver[i])
+            if (laneChangeActive[i] && laneChangeReverseManeuver[i])
             {
                 stateA |= LaneChangeReverseManeuverBit;
             }
-            else if (laneChangeActive[i] &&
-                     laneChangeEmergencyManeuver[i])
+            else if (laneChangeActive[i] && laneChangeEmergencyManeuver[i])
             {
                 stateA |= LaneChangeEmergencyManeuverBit;
             }
-            else if (!laneChangeActive[i] &&
-                     signalCommittedToCross[i])
+            else if (!laneChangeActive[i] && signalCommittedToCross[i])
             {
                 stateA |= SignalCommitBit;
             }
 
             int speedFactorValue = Mathf.Clamp(
-                Mathf.RoundToInt(
-                    Mathf.InverseLerp(
-                        0.5f,
-                        1.5f,
-                        speedFactors[i]
-                    ) * 255f
-                ),
+                Mathf.RoundToInt(Mathf.InverseLerp(0.5f, 1.5f, speedFactors[i]) * 255f),
                 0,
                 255
             );
 
             int accelerationValue = Mathf.Clamp(
-                Mathf.RoundToInt(
-                    vehicleAccelerations[i] /
-                    AccelerationQuantum
-                ),
+                Mathf.RoundToInt(vehicleAccelerations[i] / AccelerationQuantum),
                 -128,
                 127
             ) & 255;
 
             // B: 속도 배율 0~7, 부호 있는 가속도 8~15, 차선 16~18번 비트 사용
             // 차선 변경 활성 19, 목표 차선 20~22, 진행도 23~30, 재생성 구분 31번 비트 사용
-            int stateB =
-                speedFactorValue |
-                (accelerationValue << 8) |
-                (laneId << 16);
+            int stateB = speedFactorValue | (accelerationValue << 8) | (laneId << 16);
 
             if (vehicleSpawnGeneration[i])
             {
@@ -1041,39 +948,24 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (laneChangeActive[i])
             {
-                int targetLaneId = Mathf.Clamp(
-                    laneChangeTargetLaneIds[i],
-                    0,
-                    7
-                );
+                int targetLaneId = Mathf.Clamp(laneChangeTargetLaneIds[i], 0, 7);
 
                 // 후진 회복은 진행도를 23~28번으로 제한하고 29~30번에 회복 거리 4단계 저장
                 // 일반 차선 변경과 동일한 전송 크기를 유지하기 위한 비트 재사용
-                bool recoveryManeuver =
-                    laneChangeReverseManeuver[i];
-                int progressMaximum = recoveryManeuver
-                    ? 63
-                    : 255;
+                bool recoveryManeuver = laneChangeReverseManeuver[i];
+                int progressMaximum = recoveryManeuver ? 63 : 255;
                 int progressValue = Mathf.Clamp(
-                    Mathf.RoundToInt(
-                        laneChangeProgress[i] * progressMaximum
-                    ),
+                    Mathf.RoundToInt(laneChangeProgress[i] * progressMaximum),
                     0,
                     progressMaximum
                 );
 
-                stateB |= LaneChangeActiveBit |
-                    (targetLaneId <<
-                        LaneChangeTargetShift) |
-                    (progressValue <<
-                        LaneChangeProgressShift);
+                stateB |= LaneChangeActiveBit | (targetLaneId << LaneChangeTargetShift) |
+                    (progressValue << LaneChangeProgressShift);
 
                 if (recoveryManeuver)
                 {
-                    stateB |=
-                        EncodeRecoveryDistance(
-                            laneChangeRecoveryDistance[i]
-                        ) << RecoveryDistanceShift;
+                    stateB |= EncodeRecoveryDistance(laneChangeRecoveryDistance[i]) << RecoveryDistanceShift;
                 }
             }
 
@@ -1084,10 +976,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void TryRequestNetworkSnapshot()
     {
-        if (!localIsAuthority ||
-            !authorityReady ||
-            !networkStateDirty ||
-            serializationPending ||
+        if (!localIsAuthority || !authorityReady || !networkStateDirty || serializationPending ||
             Networking.IsClogged)
         {
             return;
@@ -1109,8 +998,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         networkStateDirty = false;
     }
 
-    public override void OnPostSerialization(
-        SerializationResult result)
+    public override void OnPostSerialization(SerializationResult result)
     {
         serializationPending = false;
         lastSerializationSucceeded = result.success;
@@ -1122,11 +1010,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
     }
 
-    public override void OnDeserialization(
-        DeserializationResult result)
+    public override void OnDeserialization(DeserializationResult result)
     {
-        if (!initialized ||
-            Networking.IsOwner(gameObject))
+        if (!initialized || Networking.IsOwner(gameObject))
         {
             return;
         }
@@ -1134,16 +1020,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         AcceptSyncedSnapshot();
     }
 
-    public override void OnOwnershipTransferred(
-        VRCPlayerApi newOwner)
+    public override void OnOwnershipTransferred(VRCPlayerApi newOwner)
     {
         if (!initialized)
         {
             return;
         }
 
-        bool becameOwner =
-            newOwner != null && newOwner.isLocal;
+        bool becameOwner = newOwner != null && newOwner.isLocal;
 
         localIsAuthority = becameOwner;
         authorityReady = false;
@@ -1151,10 +1035,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (becameOwner)
         {
-            SendCustomEventDelayedFrames(
-                nameof(_BeginAuthority),
-                2
-            );
+            SendCustomEventDelayedFrames(nameof(_BeginAuthority), 2);
         }
         else
         {
@@ -1165,37 +1046,25 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private void UpdateAuthorityRecovery()
     {
         timeSinceLastSnapshot += Time.deltaTime;
-        ownershipRecoveryTimer = Mathf.Max(
-            0f,
-            ownershipRecoveryTimer - Time.deltaTime
-        );
+        ownershipRecoveryTimer = Mathf.Max(0f, ownershipRecoveryTimer - Time.deltaTime);
 
-        if (!Networking.IsNetworkSettled ||
-            !Networking.IsMaster ||
-            timeSinceLastSnapshot <
-            Mathf.Max(3f, authorityTakeoverTimeout) ||
+        if (!Networking.IsNetworkSettled || !Networking.IsMaster ||
+            timeSinceLastSnapshot < Mathf.Max(3f, authorityTakeoverTimeout) ||
             ownershipRecoveryTimer > 0f)
         {
             return;
         }
 
-        VRCPlayerApi localPlayer =
-            Networking.LocalPlayer;
+        VRCPlayerApi localPlayer = Networking.LocalPlayer;
 
         if (localPlayer == null)
         {
             return;
         }
 
-        ownershipRecoveryTimer = Mathf.Max(
-            3f,
-            authorityTakeoverTimeout
-        );
+        ownershipRecoveryTimer = Mathf.Max(3f, authorityTakeoverTimeout);
 
-        Networking.SetOwner(
-            localPlayer,
-            gameObject
-        );
+        Networking.SetOwner(localPlayer, gameObject);
     }
 
     private void RestoreAuthorityFromSyncedState()
@@ -1220,12 +1089,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             int stateA = syncedVehicleStateA[i];
             int stateB = syncedVehicleStateB[i];
 
-            bool active =
-                (stateA & ActiveBit) != 0;
+            bool active = (stateA & ActiveBit) != 0;
 
             vehicleActive[i] = active;
-            vehicleSpawnGeneration[i] =
-                (stateB & VehicleSpawnGenerationBit) != 0;
+            vehicleSpawnGeneration[i] = (stateB & VehicleSpawnGenerationBit) != 0;
             processedSlots[i] = false;
             vehicleRenderMaximumS[i] = -1f;
             laneChangeRecoveryDistance[i] = 0f;
@@ -1265,60 +1132,37 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             vehicleS[i] = DecodePosition(stateA);
             previousVehicleS[i] = vehicleS[i];
             vehicleSpeeds[i] = DecodeSpeed(stateA);
-            vehicleAccelerations[i] =
-                DecodeAcceleration(stateB);
+            vehicleAccelerations[i] = DecodeAcceleration(stateB);
             speedFactors[i] = DecodeSpeedFactor(stateB);
-            laneChangeActive[i] =
-                DecodeLaneChangeActive(stateB);
+            laneChangeActive[i] = DecodeLaneChangeActive(stateB);
 
-            laneChangeReverseManeuver[i] =
-                laneChangeActive[i] &&
-                DecodeReverseManeuver(stateA);
+            laneChangeReverseManeuver[i] = laneChangeActive[i] && DecodeReverseManeuver(stateA);
 
             laneChangeEmergencyManeuver[i] =
-                laneChangeActive[i] &&
-                !laneChangeReverseManeuver[i] &&
-                DecodeEmergencyManeuver(stateA);
+                laneChangeActive[i] && !laneChangeReverseManeuver[i] && DecodeEmergencyManeuver(stateA);
 
 
-            signalCommittedToCross[i] =
-                !laneChangeActive[i] &&
-                (stateA & SignalCommitBit) != 0;
+            signalCommittedToCross[i] = !laneChangeActive[i] && (stateA & SignalCommitBit) != 0;
 
-            laneChangeTargetLaneIds[i] =
-                laneChangeActive[i]
-                    ? DecodeLaneChangeTarget(stateB)
-                    : -1;
+            laneChangeTargetLaneIds[i] = laneChangeActive[i] ? DecodeLaneChangeTarget(stateB) : -1;
 
             laneChangeProgress[i] =
                 laneChangeActive[i]
-                    ? DecodeLaneChangeProgress(
-                        stateB,
-                        laneChangeReverseManeuver[i]
-                      )
+                    ? DecodeLaneChangeProgress(stateB, laneChangeReverseManeuver[i])
                     : 0f;
 
             laneChangeRuleIndices[i] =
                 laneChangeActive[i]
-                    ? FindLaneChangeRule(
-                        vehicleLaneIds[i],
-                        laneChangeTargetLaneIds[i]
-                    )
+                    ? FindLaneChangeRule(vehicleLaneIds[i], laneChangeTargetLaneIds[i])
                     : -1;
 
-            if (laneChangeReverseManeuver[i] &&
-                laneChangeRuleIndices[i] >= 0)
+            if (laneChangeReverseManeuver[i] && laneChangeRuleIndices[i] >= 0)
             {
-                laneChangeRecoveryDistance[i] =
-                    DecodeRecoveryDistance(stateB);
+                laneChangeRecoveryDistance[i] = DecodeRecoveryDistance(stateB);
 
                 laneChangeReverseStartS[i] =
                     vehicleS[i] -
-                    GetRecoveryLongitudinalOffset(
-                        i,
-                        laneChangeProgress[i],
-                        laneChangeRecoveryDistance[i]
-                    );
+                    GetRecoveryLongitudinalOffset(i, laneChangeProgress[i], laneChangeRecoveryDistance[i]);
             }
             else
             {
@@ -1341,47 +1185,26 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 laneChangeCurveSpeedLimits[i] =
                     laneChangeReverseManeuver[i]
                         ? 0f
-                        : GetLaneChangeCurveSpeedLimit(
-                            i,
-                            laneChangeEmergencyManeuver[i],
-                            vehicleS[i]
-                          );
+                        : GetLaneChangeCurveSpeedLimit(i, laneChangeEmergencyManeuver[i], vehicleS[i]);
                 laneChangePreparing[i] =
-                    !laneChangeReverseManeuver[i] &&
-                    laneChangeProgress[i] <= 0.0001f &&
+                    !laneChangeReverseManeuver[i] && laneChangeProgress[i] <= 0.0001f &&
                     vehicleSpeeds[i] >
-                        laneChangeCurveSpeedLimits[i] +
-                        Mathf.Max(
-                            0.01f,
-                            laneChangePreparationSpeedTolerance
-                        );
+                        laneChangeCurveSpeedLimits[i] + Mathf.Max(0.01f, laneChangePreparationSpeedTolerance);
                 activeLaneChangeCount++;
             }
 
             laneChangeCooldownRemaining[i] = 0f;
-            laneChangeEvaluationRemaining[i] =
-                Mathf.Max(
-                    0.2f,
-                    laneChangeEvaluationInterval
-                );
+            laneChangeEvaluationRemaining[i] = Mathf.Max(0.2f, laneChangeEvaluationInterval);
 
             laneChangeBranchDecisions[i] =
-                laneChangeActive[i] &&
-                laneChangeTargetLaneIds[i] ==
-                    TrafficLaneDatabase.LaneR4Branch
+                laneChangeActive[i] && laneChangeTargetLaneIds[i] == TrafficLaneDatabase.LaneR4Branch
                     ? 2
                     : 0;
 
-            sampleHints[i] =
-                laneDatabase.FindSampleIndex(
-                    vehicleLaneIds[i],
-                    vehicleS[i],
-                    -1
-                );
+            sampleHints[i] = laneDatabase.FindSampleIndex(vehicleLaneIds[i], vehicleS[i], -1);
 
             previousVehicleSpeeds[i] = vehicleSpeeds[i];
-            previousLaneChangeProgress[i] =
-                laneChangeProgress[i];
+            previousLaneChangeProgress[i] = laneChangeProgress[i];
             previousVehicleLaneIds[i] = vehicleLaneIds[i];
             previousLaneChangeActive[i] = laneChangeActive[i];
 
@@ -1399,17 +1222,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         // 2026-09-08: 수신마다 지연을 바꾸면 재생 속도까지 변하므로 고정 지연 사용
         // 최소 1초 및 세 전송 간격의 여유를 확보하고 수신한 두 상태 사이에서만 선형 보간
-        remoteRenderDelay = Mathf.Max(
-            MinimumRemoteRenderDelay,
-            Mathf.Max(0.2f, networkSnapshotInterval) * 3f
-        );
+        remoteRenderDelay = Mathf.Max(MinimumRemoteRenderDelay, Mathf.Max(0.2f, networkSnapshotInterval) * 3f);
         hasReceivedSnapshot = false;
     }
 
     private void AcceptSyncedSnapshot()
     {
-        if (syncedVehicleStateA == null ||
-            syncedVehicleStateB == null ||
+        if (syncedVehicleStateA == null || syncedVehicleStateB == null ||
             syncedVehicleStateA.Length < slotCount ||
             syncedVehicleStateB.Length < slotCount ||
             syncedAuthorityEpoch < acceptedAuthorityEpoch)
@@ -1422,8 +1241,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             ResetRemoteSnapshotBuffer();
         }
 
-        if (hasReceivedSnapshot &&
-            syncedSnapshotSequence <= lastReceivedSequence)
+        if (hasReceivedSnapshot && syncedSnapshotSequence <= lastReceivedSequence)
         {
             return;
         }
@@ -1435,21 +1253,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         // 같은 계산 상태의 재전송을 가상의 1ms 이동 구간으로 만들지 않음
         // 저장된 초기 상태도 실제 계산 시각을 유지하며 새 상태와 구별
         if (hasReceivedSnapshot &&
-            Networking.CalculateServerDeltaTime(
-                syncedSimulationTime,
-                lastAcceptedSnapshotTime
-            ) <= 0d)
+            Networking.CalculateServerDeltaTime(syncedSimulationTime, lastAcceptedSnapshotTime) <= 0d)
         {
             return;
         }
 
         if (remoteSnapshotCount == 0)
         {
-            DecodeStateToNextSnapshot(
-                syncedVehicleStateA,
-                syncedVehicleStateB,
-                0
-            );
+            DecodeStateToNextSnapshot(syncedVehicleStateA, syncedVehicleStateB, 0);
             CopyNextSnapshotToPrevious();
             snapshotPreviousTime = syncedSimulationTime;
             snapshotNextTime = syncedSimulationTime;
@@ -1457,11 +1268,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
         else if (remoteSnapshotCount == 1)
         {
-            DecodeStateToNextSnapshot(
-                syncedVehicleStateA,
-                syncedVehicleStateB,
-                0
-            );
+            DecodeStateToNextSnapshot(syncedVehicleStateA, syncedVehicleStateB, 0);
             snapshotNextTime = syncedSimulationTime;
             remoteSnapshotCount = 2;
         }
@@ -1478,31 +1285,19 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         for (int i = 0; i < slotCount; i++)
         {
-            snapshotPreviousActive[i] =
-                snapshotNextActive[i];
-            snapshotPreviousSpawnGeneration[i] =
-                snapshotNextSpawnGeneration[i];
-            snapshotPreviousLaneIds[i] =
-                snapshotNextLaneIds[i];
-            snapshotPreviousTargetLaneIds[i] =
-                snapshotNextTargetLaneIds[i];
+            snapshotPreviousActive[i] = snapshotNextActive[i];
+            snapshotPreviousSpawnGeneration[i] = snapshotNextSpawnGeneration[i];
+            snapshotPreviousLaneIds[i] = snapshotNextLaneIds[i];
+            snapshotPreviousTargetLaneIds[i] = snapshotNextTargetLaneIds[i];
             snapshotPreviousS[i] = snapshotNextS[i];
-            snapshotPreviousSpeeds[i] =
-                snapshotNextSpeeds[i];
-            snapshotPreviousAccelerations[i] =
-                snapshotNextAccelerations[i];
-            snapshotPreviousSpeedFactors[i] =
-                snapshotNextSpeedFactors[i];
-            snapshotPreviousLaneChangeProgress[i] =
-                snapshotNextLaneChangeProgress[i];
-            snapshotPreviousLaneChangeActive[i] =
-                snapshotNextLaneChangeActive[i];
-            snapshotPreviousEmergencyManeuver[i] =
-                snapshotNextEmergencyManeuver[i];
-            snapshotPreviousReverseManeuver[i] =
-                snapshotNextReverseManeuver[i];
-            snapshotPreviousRecoveryDistance[i] =
-                snapshotNextRecoveryDistance[i];
+            snapshotPreviousSpeeds[i] = snapshotNextSpeeds[i];
+            snapshotPreviousAccelerations[i] = snapshotNextAccelerations[i];
+            snapshotPreviousSpeedFactors[i] = snapshotNextSpeedFactors[i];
+            snapshotPreviousLaneChangeProgress[i] = snapshotNextLaneChangeProgress[i];
+            snapshotPreviousLaneChangeActive[i] = snapshotNextLaneChangeActive[i];
+            snapshotPreviousEmergencyManeuver[i] = snapshotNextEmergencyManeuver[i];
+            snapshotPreviousReverseManeuver[i] = snapshotNextReverseManeuver[i];
+            snapshotPreviousRecoveryDistance[i] = snapshotNextRecoveryDistance[i];
         }
     }
 
@@ -1511,17 +1306,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         // 2026-09-08: 현재 재생 중인 두 상태는 수신 이벤트에서 교체하지 않음
         // 대기 큐가 가득 차도 가장 먼 미래 상태만 갱신하여 현재 보간 구간 보존
         int pendingCount = remoteSnapshotCount - 2;
-        int writeIndex = (snapshotBufferedHead +
-            Mathf.Min(pendingCount, PendingRemoteSnapshotCapacity - 1)) %
+        int writeIndex = (snapshotBufferedHead + Mathf.Min(pendingCount, PendingRemoteSnapshotCapacity - 1)) %
             PendingRemoteSnapshotCapacity;
         int offset = writeIndex * slotCount;
 
         for (int i = 0; i < slotCount; i++)
         {
-            snapshotBufferedStateA[offset + i] =
-                syncedVehicleStateA[i];
-            snapshotBufferedStateB[offset + i] =
-                syncedVehicleStateB[i];
+            snapshotBufferedStateA[offset + i] = syncedVehicleStateA[i];
+            snapshotBufferedStateB[offset + i] = syncedVehicleStateB[i];
         }
 
         snapshotBufferedTimes[writeIndex] = syncedSimulationTime;
@@ -1547,8 +1339,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             snapshotBufferedHead * slotCount
         );
         snapshotNextTime = snapshotBufferedTimes[snapshotBufferedHead];
-        snapshotBufferedHead = (snapshotBufferedHead + 1) %
-            PendingRemoteSnapshotCapacity;
+        snapshotBufferedHead = (snapshotBufferedHead + 1) % PendingRemoteSnapshotCapacity;
         remoteSnapshotCount--;
     }
 
@@ -1568,33 +1359,22 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return 1f;
         }
 
-        double duration = Networking.CalculateServerDeltaTime(
-            snapshotNextTime,
-            snapshotPreviousTime
-        );
-        double elapsed = Networking.CalculateServerDeltaTime(
-            renderTime,
-            snapshotPreviousTime
-        );
+        double duration = Networking.CalculateServerDeltaTime(snapshotNextTime, snapshotPreviousTime);
+        double elapsed = Networking.CalculateServerDeltaTime(renderTime, snapshotPreviousTime);
         return Mathf.Clamp01((float)(elapsed / duration));
     }
 
-    private void DecodeStateToNextSnapshot(
-        int[] stateAValues,
-        int[] stateBValues,
-        int offset)
+    private void DecodeStateToNextSnapshot(int[] stateAValues, int[] stateBValues, int offset)
     {
         for (int i = 0; i < slotCount; i++)
         {
             int stateA = stateAValues[offset + i];
             int stateB = stateBValues[offset + i];
 
-            bool active =
-                (stateA & ActiveBit) != 0;
+            bool active = (stateA & ActiveBit) != 0;
 
             snapshotNextActive[i] = active;
-            snapshotNextSpawnGeneration[i] =
-                (stateB & VehicleSpawnGenerationBit) != 0;
+            snapshotNextSpawnGeneration[i] = (stateB & VehicleSpawnGenerationBit) != 0;
 
             if (!active)
             {
@@ -1612,22 +1392,15 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            snapshotNextLaneIds[i] =
-                DecodeLaneId(stateA);
+            snapshotNextLaneIds[i] = DecodeLaneId(stateA);
             snapshotNextS[i] = DecodePosition(stateA);
             snapshotNextSpeeds[i] = DecodeSpeed(stateA);
-            snapshotNextAccelerations[i] =
-                DecodeAcceleration(stateB);
-            snapshotNextSpeedFactors[i] =
-                DecodeSpeedFactor(stateB);
-            snapshotNextLaneChangeActive[i] =
-                DecodeLaneChangeActive(stateB);
-            snapshotNextReverseManeuver[i] =
-                snapshotNextLaneChangeActive[i] &&
-                DecodeReverseManeuver(stateA);
+            snapshotNextAccelerations[i] = DecodeAcceleration(stateB);
+            snapshotNextSpeedFactors[i] = DecodeSpeedFactor(stateB);
+            snapshotNextLaneChangeActive[i] = DecodeLaneChangeActive(stateB);
+            snapshotNextReverseManeuver[i] = snapshotNextLaneChangeActive[i] && DecodeReverseManeuver(stateA);
             snapshotNextEmergencyManeuver[i] =
-                snapshotNextLaneChangeActive[i] &&
-                !snapshotNextReverseManeuver[i] &&
+                snapshotNextLaneChangeActive[i] && !snapshotNextReverseManeuver[i] &&
                 DecodeEmergencyManeuver(stateA);
             snapshotNextTargetLaneIds[i] =
                 snapshotNextLaneChangeActive[i]
@@ -1635,10 +1408,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     : -1;
             snapshotNextLaneChangeProgress[i] =
                 snapshotNextLaneChangeActive[i]
-                    ? DecodeLaneChangeProgress(
-                        stateB,
-                        snapshotNextReverseManeuver[i]
-                      )
+                    ? DecodeLaneChangeProgress(stateB, snapshotNextReverseManeuver[i])
                     : 0f;
             snapshotNextRecoveryDistance[i] =
                 snapshotNextReverseManeuver[i]
@@ -1654,14 +1424,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private float DecodePosition(int stateA)
     {
-        return ((stateA >> PositionShift) & 131071) *
-            PositionQuantum;
+        return ((stateA >> PositionShift) & 131071) * PositionQuantum;
     }
 
     private float DecodeSpeed(int stateA)
     {
-        return ((stateA >> SpeedShift) & 511) *
-            SpeedQuantum;
+        return ((stateA >> SpeedShift) & 511) * SpeedQuantum;
     }
 
     private float DecodeAcceleration(int stateB)
@@ -1681,11 +1449,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         int value = stateB & 255;
 
-        return Mathf.Lerp(
-            0.5f,
-            1.5f,
-            value / 255f
-        );
+        return Mathf.Lerp(0.5f, 1.5f, value / 255f);
     }
 
     private bool DecodeLaneChangeActive(int stateB)
@@ -1695,54 +1459,38 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private bool DecodeReverseManeuver(int stateA)
     {
-        return (stateA &
-                LaneChangeReverseManeuverBit) != 0;
+        return (stateA & LaneChangeReverseManeuverBit) != 0;
     }
 
     private bool DecodeEmergencyManeuver(int stateA)
     {
-        return (stateA &
-                LaneChangeEmergencyManeuverBit) != 0;
+        return (stateA & LaneChangeEmergencyManeuverBit) != 0;
     }
 
     private int DecodeLaneChangeTarget(int stateB)
     {
-        return (
-            stateB >> LaneChangeTargetShift
-        ) & 7;
+        return (stateB >> LaneChangeTargetShift) & 7;
     }
 
-    private float DecodeLaneChangeProgress(
-        int stateB,
-        bool recoveryManeuver)
+    private float DecodeLaneChangeProgress(int stateB, bool recoveryManeuver)
     {
-        int value = (
-            stateB >> LaneChangeProgressShift
-        ) & (recoveryManeuver ? 63 : 255);
+        int value = (stateB >> LaneChangeProgressShift) & (recoveryManeuver ? 63 : 255);
 
         return value / (recoveryManeuver ? 63f : 255f);
     }
 
     private int EncodeRecoveryDistance(float distance)
     {
-        float maximumDistance = Mathf.Max(
-            MinimumReverseRecoveryDistance,
-            laneChangeReverseDistance
-        );
+        float maximumDistance = Mathf.Max(MinimumReverseRecoveryDistance, laneChangeReverseDistance);
 
-        if (maximumDistance <=
-            MinimumReverseRecoveryDistance + 0.0001f)
+        if (maximumDistance <= MinimumReverseRecoveryDistance + 0.0001f)
         {
             return 0;
         }
 
         return Mathf.Clamp(
             Mathf.RoundToInt(
-                Mathf.InverseLerp(
-                    MinimumReverseRecoveryDistance,
-                    maximumDistance,
-                    distance
-                ) * 3f
+                Mathf.InverseLerp(MinimumReverseRecoveryDistance, maximumDistance, distance) * 3f
             ),
             0,
             3
@@ -1754,44 +1502,29 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int value = (stateB >> RecoveryDistanceShift) & 3;
         return Mathf.Lerp(
             MinimumReverseRecoveryDistance,
-            Mathf.Max(
-                MinimumReverseRecoveryDistance,
-                laneChangeReverseDistance
-            ),
+            Mathf.Max(MinimumReverseRecoveryDistance, laneChangeReverseDistance),
             value / 3f
         );
     }
 
     private float QuantizeRecoveryDistanceDown(float distance)
     {
-        float maximumDistance = Mathf.Max(
-            MinimumReverseRecoveryDistance,
-            laneChangeReverseDistance
-        );
+        float maximumDistance = Mathf.Max(MinimumReverseRecoveryDistance, laneChangeReverseDistance);
 
-        if (maximumDistance <=
-            MinimumReverseRecoveryDistance + 0.0001f)
+        if (maximumDistance <= MinimumReverseRecoveryDistance + 0.0001f)
         {
             return MinimumReverseRecoveryDistance;
         }
 
         int value = Mathf.Clamp(
             Mathf.FloorToInt(
-                Mathf.InverseLerp(
-                    MinimumReverseRecoveryDistance,
-                    maximumDistance,
-                    distance
-                ) * 3f + 0.0001f
+                Mathf.InverseLerp(MinimumReverseRecoveryDistance, maximumDistance, distance) * 3f + 0.0001f
             ),
             0,
             3
         );
 
-        return Mathf.Lerp(
-            MinimumReverseRecoveryDistance,
-            maximumDistance,
-            value / 3f
-        );
+        return Mathf.Lerp(MinimumReverseRecoveryDistance, maximumDistance, value / 3f);
     }
 
     // -------------------------------------------------------------------------
@@ -1800,20 +1533,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void EnsureNetworkBuffers()
     {
-        if (syncedVehicleStateA == null ||
-            syncedVehicleStateA.Length !=
-            NetworkSlotCapacity)
+        if (syncedVehicleStateA == null || syncedVehicleStateA.Length != NetworkSlotCapacity)
         {
-            syncedVehicleStateA =
-                new int[NetworkSlotCapacity];
+            syncedVehicleStateA = new int[NetworkSlotCapacity];
         }
 
-        if (syncedVehicleStateB == null ||
-            syncedVehicleStateB.Length !=
-            NetworkSlotCapacity)
+        if (syncedVehicleStateB == null || syncedVehicleStateB.Length != NetworkSlotCapacity)
         {
-            syncedVehicleStateB =
-                new int[NetworkSlotCapacity];
+            syncedVehicleStateB = new int[NetworkSlotCapacity];
         }
     }
 
@@ -1839,8 +1566,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return false;
         }
 
-        if (vehicleRoots == null ||
-            vehicleRoots.Length == 0)
+        if (vehicleRoots == null || vehicleRoots.Length == 0)
         {
             Debug.LogError(
                 "[TrafficSimulationManager] " +
@@ -1871,16 +1597,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         vehicleSpawnGeneration = new bool[slotCount];
         processedSlots = new bool[slotCount];
 
-        int laneCacheCapacity =
-            TrafficLaneDatabase.FixedLaneCount * slotCount;
-        sourceLaneVehicleOrder =
-            new int[laneCacheCapacity];
-        sourceLaneVehicleCounts =
-            new int[TrafficLaneDatabase.FixedLaneCount];
-        reservationLaneVehicleOrder =
-            new int[laneCacheCapacity];
-        reservationLaneVehicleCounts =
-            new int[TrafficLaneDatabase.FixedLaneCount];
+        int laneCacheCapacity = TrafficLaneDatabase.FixedLaneCount * slotCount;
+        sourceLaneVehicleOrder = new int[laneCacheCapacity];
+        sourceLaneVehicleCounts = new int[TrafficLaneDatabase.FixedLaneCount];
+        reservationLaneVehicleOrder = new int[laneCacheCapacity];
+        reservationLaneVehicleCounts = new int[TrafficLaneDatabase.FixedLaneCount];
 
         vehicleLaneIds = new int[slotCount];
         sampleHints = new int[slotCount];
@@ -1910,46 +1631,33 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         physicalObstacleRestartHoldS = new float[slotCount];
         physicalObstacleClearHoldRemaining = new float[slotCount];
         physicalObstacleReactionHoldRemaining = new float[slotCount];
-        laneChangeObstacleRestartHoldRemaining =
-            new float[slotCount];
-        laneChangeObstacleClearHoldRemaining =
-            new float[slotCount];
+        laneChangeObstacleRestartHoldRemaining = new float[slotCount];
+        laneChangeObstacleClearHoldRemaining = new float[slotCount];
         laneChangeRecoveryDistance = new float[slotCount];
-        laneChangeRecoveryGearHoldRemaining =
-            new float[slotCount];
+        laneChangeRecoveryGearHoldRemaining = new float[slotCount];
         laneChangeActive = new bool[slotCount];
         waitingForObstacleRelease = new bool[slotCount];
         physicalObstacleRestartPending = new bool[slotCount];
         laneChangePlayerBlocked = new bool[slotCount];
         laneChangeVehicleBlocked = new bool[slotCount];
         laneChangeRoadBoundaryBlocked = new bool[slotCount];
-        laneChangeObstacleSweepDebugValid =
-            new bool[slotCount];
+        laneChangeObstacleSweepDebugValid = new bool[slotCount];
         physicsObstacleCastDebugValid = new bool[slotCount];
         physicsObstacleCastDebugBlocked = new bool[slotCount];
-        physicsObstacleCastDebugLaneLimited =
-            new bool[slotCount];
+        physicsObstacleCastDebugLaneLimited = new bool[slotCount];
         signalStopDebugActive = new bool[slotCount];
         physicsObstacleCastDebugCenters = new Vector3[slotCount];
-        physicsObstacleCastDebugHalfExtents =
-            new Vector3[slotCount];
-        physicsObstacleCastDebugDirections =
-            new Vector3[slotCount];
-        physicsObstacleCastDebugRotations =
-            new Quaternion[slotCount];
+        physicsObstacleCastDebugHalfExtents = new Vector3[slotCount];
+        physicsObstacleCastDebugDirections = new Vector3[slotCount];
+        physicsObstacleCastDebugRotations = new Quaternion[slotCount];
         physicsObstacleCastDebugDistances = new float[slotCount];
-        physicsObstacleCastDebugHitDistances =
-            new float[slotCount];
+        physicsObstacleCastDebugHitDistances = new float[slotCount];
         physicsObstacleStopS = new float[slotCount];
         physicsObstacleHitS = new float[slotCount];
-        laneChangeObstacleSweepStartPositions =
-            new Vector3[slotCount];
-        laneChangeObstacleSweepEndPositions =
-            new Vector3[slotCount];
-        laneChangeObstacleSweepStartRotations =
-            new Quaternion[slotCount];
-        laneChangeObstacleSweepEndRotations =
-            new Quaternion[slotCount];
+        laneChangeObstacleSweepStartPositions = new Vector3[slotCount];
+        laneChangeObstacleSweepEndPositions = new Vector3[slotCount];
+        laneChangeObstacleSweepStartRotations = new Quaternion[slotCount];
+        laneChangeObstacleSweepEndRotations = new Quaternion[slotCount];
         laneChangeReverseManeuver = new bool[slotCount];
         laneChangeEmergencyManeuver = new bool[slotCount];
         laneChangePreparing = new bool[slotCount];
@@ -1962,16 +1670,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         maneuverPathReverse = new bool[slotCount];
         maneuverPathEmergency = new bool[slotCount];
         maneuverPathRecoveryDistances = new float[slotCount];
-        int maneuverSampleCapacity =
-            slotCount * ManeuverPathSampleCount;
-        maneuverPathPositions =
-            new Vector3[maneuverSampleCapacity];
-        maneuverPathRotations =
-            new Quaternion[maneuverSampleCapacity];
+        int maneuverSampleCapacity = slotCount * ManeuverPathSampleCount;
+        maneuverPathPositions = new Vector3[maneuverSampleCapacity];
+        maneuverPathRotations = new Quaternion[maneuverSampleCapacity];
         maneuverPathSourceS = new float[maneuverSampleCapacity];
         maneuverPathDistances = new float[maneuverSampleCapacity];
-        maneuverPathSteeringAngles =
-            new float[maneuverSampleCapacity];
+        maneuverPathSteeringAngles = new float[maneuverSampleCapacity];
         signalCommittedToCross = new bool[slotCount];
 
         visualActive = new bool[slotCount];
@@ -2008,21 +1712,17 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         snapshotNextEmergencyManeuver = new bool[slotCount];
         snapshotPreviousReverseManeuver = new bool[slotCount];
         snapshotNextReverseManeuver = new bool[slotCount];
-        snapshotBufferedStateA =
-            new int[slotCount * PendingRemoteSnapshotCapacity];
-        snapshotBufferedStateB =
-            new int[slotCount * PendingRemoteSnapshotCapacity];
+        snapshotBufferedStateA = new int[slotCount * PendingRemoteSnapshotCapacity];
+        snapshotBufferedStateB = new int[slotCount * PendingRemoteSnapshotCapacity];
 
         baseLocalScales = new Vector3[slotCount];
         previousVisualPositions = new Vector3[slotCount];
         previousVisualPositionValid = new bool[slotCount];
         vehicleCollisionVelocities = new Vector3[slotCount];
         vehicleAudioSources = new AudioSource[slotCount];
-        vehicleWheelTransforms =
-            new Transform[slotCount * 4];
+        vehicleWheelTransforms = new Transform[slotCount * 4];
 
-        wheelBaseLocalRotations =
-            new Quaternion[slotCount * 4];
+        wheelBaseLocalRotations = new Quaternion[slotCount * 4];
 
         randomState = randomSeed & 65535;
 
@@ -2043,9 +1743,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            baseLocalScales[i] =
-                vehicleRoot.localScale *
-                GetVehicleVisualScale(i);
+            baseLocalScales[i] = vehicleRoot.localScale * GetVehicleVisualScale(i);
             CacheVehicleMotionVisuals(i, vehicleRoot);
             vehicleRoot.gameObject.SetActive(false);
         }
@@ -2108,14 +1806,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             physicsObstacleCastDebugHitDistances[i] = 0f;
             physicsObstacleStopS[i] = -1f;
             physicsObstacleHitS[i] = -1f;
-            laneChangeObstacleSweepStartPositions[i] =
-                Vector3.zero;
-            laneChangeObstacleSweepEndPositions[i] =
-                Vector3.zero;
-            laneChangeObstacleSweepStartRotations[i] =
-                Quaternion.identity;
-            laneChangeObstacleSweepEndRotations[i] =
-                Quaternion.identity;
+            laneChangeObstacleSweepStartPositions[i] = Vector3.zero;
+            laneChangeObstacleSweepEndPositions[i] = Vector3.zero;
+            laneChangeObstacleSweepStartRotations[i] = Quaternion.identity;
+            laneChangeObstacleSweepEndRotations[i] = Quaternion.identity;
             laneChangeReverseManeuver[i] = false;
             laneChangeEmergencyManeuver[i] = false;
             laneChangePreparing[i] = false;
@@ -2172,8 +1866,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            vehicleRoot.localScale =
-                baseLocalScales[i];
+            vehicleRoot.localScale = baseLocalScales[i];
 
             vehicleRoot.gameObject.SetActive(false);
         }
@@ -2197,24 +1890,17 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         bool signalQueueReleased =
-            currentSignalState != ShinhoTime.SignalGreen &&
-            nextSignalState == ShinhoTime.SignalGreen;
+            currentSignalState != ShinhoTime.SignalGreen && nextSignalState == ShinhoTime.SignalGreen;
 
         currentSignalState = nextSignalState;
 
         if (signalQueueReleased)
         {
-            signalQueueReleaseHoldRemaining = Mathf.Max(
-                0.5f,
-                signalQueueReleaseGraceTime
-            );
+            signalQueueReleaseHoldRemaining = Mathf.Max(0.5f, signalQueueReleaseGraceTime);
         }
         else if (currentSignalState == ShinhoTime.SignalGreen)
         {
-            signalQueueReleaseHoldRemaining = Mathf.Max(
-                0f,
-                signalQueueReleaseHoldRemaining - deltaTime
-            );
+            signalQueueReleaseHoldRemaining = Mathf.Max(0f, signalQueueReleaseHoldRemaining - deltaTime);
         }
         else
         {
@@ -2231,25 +1917,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             {
                 previousVehicleS[i] = vehicleS[i];
                 previousVehicleSpeeds[i] = vehicleSpeeds[i];
-                previousLaneChangeProgress[i] =
-                    laneChangeProgress[i];
-                previousVehicleLaneIds[i] =
-                    vehicleLaneIds[i];
-                previousLaneChangeActive[i] =
-                    laneChangeActive[i];
-                laneChangeCooldownRemaining[i] =
-                    Mathf.Max(
-                        0f,
-                        laneChangeCooldownRemaining[i] -
-                        deltaTime
-                    );
+                previousLaneChangeProgress[i] = laneChangeProgress[i];
+                previousVehicleLaneIds[i] = vehicleLaneIds[i];
+                previousLaneChangeActive[i] = laneChangeActive[i];
+                laneChangeCooldownRemaining[i] = Mathf.Max(0f, laneChangeCooldownRemaining[i] - deltaTime);
 
                 laneChangeEvaluationRemaining[i] =
-                    Mathf.Max(
-                        0f,
-                        laneChangeEvaluationRemaining[i] -
-                        deltaTime
-                    );
+                    Mathf.Max(0f, laneChangeEvaluationRemaining[i] - deltaTime);
 
                 if (laneChangeActive[i])
                 {
@@ -2267,10 +1941,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             SimulateLane(laneId, deltaTime);
         }
 
-        respawnTimer = Mathf.Max(
-            0f,
-            respawnTimer - Mathf.Max(0f, deltaTime)
-        );
+        respawnTimer = Mathf.Max(0f, respawnTimer - Mathf.Max(0f, deltaTime));
         TryFillVehicleSlots();
     }
 
@@ -2293,10 +1964,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     }
     private void BuildLaneVehicleCaches()
     {
-        int laneCount = Mathf.Min(
-            laneDatabase.laneCount,
-            TrafficLaneDatabase.FixedLaneCount
-        );
+        int laneCount = Mathf.Min(laneDatabase.laneCount, TrafficLaneDatabase.FixedLaneCount);
 
         for (int laneId = 0;
              laneId < TrafficLaneDatabase.FixedLaneCount;
@@ -2330,9 +1998,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             int targetLaneId = laneChangeTargetLaneIds[i];
 
-            if (targetLaneId >= 0 &&
-                targetLaneId < laneCount &&
-                targetLaneId != sourceLaneId)
+            if (targetLaneId >= 0 && targetLaneId < laneCount && targetLaneId != sourceLaneId)
             {
                 AddReservationLaneVehicle(targetLaneId, i);
             }
@@ -2342,9 +2008,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         laneVehicleCacheDirty = false;
     }
 
-    private void AddSourceLaneVehicle(
-        int laneId,
-        int vehicleIndex)
+    private void AddSourceLaneVehicle(int laneId, int vehicleIndex)
     {
         int count = sourceLaneVehicleCounts[laneId];
 
@@ -2359,28 +2023,22 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         while (insertIndex > 0)
         {
-            int previousIndex = sourceLaneVehicleOrder[
-                offset + insertIndex - 1
-            ];
+            int previousIndex = sourceLaneVehicleOrder[offset + insertIndex - 1];
 
             if (previousVehicleS[previousIndex] <= sourceS)
             {
                 break;
             }
 
-            sourceLaneVehicleOrder[offset + insertIndex] =
-                previousIndex;
+            sourceLaneVehicleOrder[offset + insertIndex] = previousIndex;
             insertIndex--;
         }
 
-        sourceLaneVehicleOrder[offset + insertIndex] =
-            vehicleIndex;
+        sourceLaneVehicleOrder[offset + insertIndex] = vehicleIndex;
         sourceLaneVehicleCounts[laneId] = count + 1;
     }
 
-    private void AddReservationLaneVehicle(
-        int laneId,
-        int vehicleIndex)
+    private void AddReservationLaneVehicle(int laneId, int vehicleIndex)
     {
         int count = reservationLaneVehicleCounts[laneId];
 
@@ -2389,9 +2047,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
-        reservationLaneVehicleOrder[
-            laneId * slotCount + count
-        ] = vehicleIndex;
+        reservationLaneVehicleOrder[laneId * slotCount + count] = vehicleIndex;
         reservationLaneVehicleCounts[laneId] = count + 1;
     }
 
@@ -2400,35 +2056,23 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         laneVehicleCacheDirty = true;
     }
 
-    private void AdvanceVehicle(
-        int vehicleIndex,
-        float deltaTime)
+    private void AdvanceVehicle(int vehicleIndex, float deltaTime)
     {
         int laneId = vehicleLaneIds[vehicleIndex];
         vehicleRenderMaximumS[vehicleIndex] = -1f;
 
-        float oldS =
-            previousVehicleS[vehicleIndex];
+        float oldS = previousVehicleS[vehicleIndex];
 
-        float currentSpeed =
-            vehicleSpeeds[vehicleIndex];
+        float currentSpeed = vehicleSpeeds[vehicleIndex];
         signalStopDebugActive[vehicleIndex] = false;
 
-        if (laneChangeActive[vehicleIndex] &&
-            !laneChangePreparing[vehicleIndex])
+        if (laneChangeActive[vehicleIndex] && !laneChangePreparing[vehicleIndex])
         {
-            EnsureManeuverPath(
-                vehicleIndex,
-                oldS,
-                laneChangeProgress[vehicleIndex]
-            );
+            EnsureManeuverPath(vehicleIndex, oldS, laneChangeProgress[vehicleIndex]);
 
             if (!IsManeuverPathUsable(vehicleIndex))
             {
-                StopVehicleForLaneChangeObstacle(
-                    vehicleIndex,
-                    deltaTime
-                );
+                StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
                 return;
             }
         }
@@ -2438,123 +2082,68 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             laneChangePlayerBlocked[vehicleIndex] = false;
             laneChangeVehicleBlocked[vehicleIndex] = false;
             laneChangeRoadBoundaryBlocked[vehicleIndex] = false;
-            laneChangeObstacleRestartHoldRemaining[
-                vehicleIndex
-            ] = 0f;
-            laneChangeObstacleClearHoldRemaining[
-                vehicleIndex
-            ] = 0f;
-            laneChangeObstacleSweepDebugValid[
-                vehicleIndex
-            ] = false;
+            laneChangeObstacleRestartHoldRemaining[vehicleIndex] = 0f;
+            laneChangeObstacleClearHoldRemaining[vehicleIndex] = 0f;
+            laneChangeObstacleSweepDebugValid[vehicleIndex] = false;
         }
         else if (laneChangeReverseManeuver[vehicleIndex] &&
-                 laneChangeProgress[vehicleIndex] <
-                     GetRecoveryPreparationEndProgress())
+                 laneChangeProgress[vehicleIndex] < GetRecoveryPreparationEndProgress())
         {
-            UpdateBlockedLaneChangeRecoveryManeuver(
-                vehicleIndex,
-                deltaTime
-            );
+            UpdateBlockedLaneChangeRecoveryManeuver(vehicleIndex, deltaTime);
 
             return;
         }
-        else if (ShouldHoldLaneChangeForObstacle(
-                     vehicleIndex,
-                     deltaTime
-                 ))
+        else if (ShouldHoldLaneChangeForObstacle(vehicleIndex, deltaTime))
         {
             return;
         }
 
-        int leaderIndex = FindNearestLeaderOnLane(
-            vehicleIndex,
-            laneId,
-            oldS
-        );
+        int leaderIndex = FindNearestLeaderOnLane(vehicleIndex, laneId, oldS);
 
-        if (TryBeginBlockedLaneChangeRecovery(
-            vehicleIndex,
-            leaderIndex
-        ))
+        if (TryBeginBlockedLaneChangeRecovery(vehicleIndex, leaderIndex))
         {
             return;
         }
 
-        bool laneChangeWasActive =
-            laneChangeActive[vehicleIndex];
+        bool laneChangeWasActive = laneChangeActive[vehicleIndex];
 
-        TryBeginLaneChange(
-            vehicleIndex,
-            leaderIndex
-        );
+        TryBeginLaneChange(vehicleIndex, leaderIndex);
 
         // 새 후진 회복 경로는 후진으로 시작하므로 현재 전진 처리 단계를 여기서 종료
         // 남은 전진 계산에서 출발 차선 좌표 기준으로 비단조 경로를 다시 매핑하는 문제 방지
-        if (!laneChangeWasActive &&
-            laneChangeActive[vehicleIndex] &&
-            laneChangeReverseManeuver[vehicleIndex])
+        if (!laneChangeWasActive && laneChangeActive[vehicleIndex] && laneChangeReverseManeuver[vehicleIndex])
         {
             return;
         }
 
-        if (laneChangeActive[vehicleIndex] &&
-            !laneChangePreparing[vehicleIndex] &&
+        if (laneChangeActive[vehicleIndex] && !laneChangePreparing[vehicleIndex] &&
             !IsManeuverPathUsable(vehicleIndex))
         {
-            StopVehicleForLaneChangeObstacle(
-                vehicleIndex,
-                deltaTime
-            );
+            StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
             return;
         }
 
-        float sourceLeaderInfluence =
-            GetSourceLaneConstraintInfluence(vehicleIndex);
+        float sourceLeaderInfluence = GetSourceLaneConstraintInfluence(vehicleIndex);
 
-        float targetSpeed = GetCruiseSpeed(
-            vehicleIndex,
-            laneId
-        );
+        float targetSpeed = GetCruiseSpeed(vehicleIndex, laneId);
 
         float bumperGap = 1000000f;
-        float followingMinimumGap =
-            GetMinimumGap(vehicleIndex);
+        float followingMinimumGap = GetMinimumGap(vehicleIndex);
 
         if (leaderIndex >= 0)
         {
-            float leaderS = GetVehicleSOnLane(
-                leaderIndex,
-                laneId
-            );
+            float leaderS = GetVehicleSOnLane(leaderIndex, laneId);
 
-            bumperGap =
-                leaderS -
-                oldS -
-                GetCombinedHalfLength(
-                    vehicleIndex,
-                    leaderIndex
-                );
+            bumperGap = leaderS - oldS - GetCombinedHalfLength(vehicleIndex, leaderIndex);
 
             float followingSpeed =
-                (bumperGap - followingMinimumGap) /
-                Mathf.Max(
-                    0.1f,
-                    GetTimeHeadway(vehicleIndex)
-                );
+                (bumperGap - followingMinimumGap) / Mathf.Max(0.1f, GetTimeHeadway(vehicleIndex));
 
-            float restrictedSpeed = Mathf.Max(
-                0f,
-                followingSpeed
-            );
+            float restrictedSpeed = Mathf.Max(0f, followingSpeed);
 
             targetSpeed = Mathf.Min(
                 targetSpeed,
-                Mathf.Lerp(
-                    targetSpeed,
-                    restrictedSpeed,
-                    sourceLeaderInfluence
-                )
+                Mathf.Lerp(targetSpeed, restrictedSpeed, sourceLeaderInfluence)
             );
         }
 
@@ -2564,62 +2153,30 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (laneChangeActive[vehicleIndex])
         {
-            int targetLaneId =
-                laneChangeTargetLaneIds[vehicleIndex];
+            int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
 
-            int ruleIndex =
-                laneChangeRuleIndices[vehicleIndex];
+            int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-            float targetS = MapSourceToTargetS(
-                ruleIndex,
-                oldS
-            );
+            float targetS = MapSourceToTargetS(ruleIndex, oldS);
 
-            targetLeaderIndex =
-                FindNearestLeaderOnLane(
-                    vehicleIndex,
-                    targetLaneId,
-                    targetS
-                );
+            targetLeaderIndex = FindNearestLeaderOnLane(vehicleIndex, targetLaneId, targetS);
 
             if (targetLeaderIndex >= 0)
             {
-                targetLeaderS = GetVehicleSOnLane(
-                    targetLeaderIndex,
-                    targetLaneId
-                );
+                targetLeaderS = GetVehicleSOnLane(targetLeaderIndex, targetLaneId);
 
                 targetBumperGap =
-                    targetLeaderS -
-                    targetS -
-                    GetCombinedHalfLength(
-                        vehicleIndex,
-                        targetLeaderIndex
-                    );
+                    targetLeaderS - targetS - GetCombinedHalfLength(vehicleIndex, targetLeaderIndex);
 
                 float targetFollowingSpeed =
-                    (targetBumperGap -
-                     followingMinimumGap) /
-                    Mathf.Max(
-                        0.1f,
-                        GetTimeHeadway(vehicleIndex)
-                    );
+                    (targetBumperGap - followingMinimumGap) / Mathf.Max(0.1f, GetTimeHeadway(vehicleIndex));
 
-                targetSpeed = Mathf.Min(
-                    targetSpeed,
-                    Mathf.Max(
-                        0f,
-                        targetFollowingSpeed
-                    )
-                );
+                targetSpeed = Mathf.Min(targetSpeed, Mathf.Max(0f, targetFollowingSpeed));
             }
 
             if (laneChangeSpeedLimit > 0f)
             {
-                targetSpeed = Mathf.Min(
-                    targetSpeed,
-                    laneChangeSpeedLimit
-                );
+                targetSpeed = Mathf.Min(targetSpeed, laneChangeSpeedLimit);
             }
 
             if (!laneChangeReverseManeuver[vehicleIndex])
@@ -2633,26 +2190,15 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                             oldS
                           );
 
-                targetSpeed = Mathf.Min(
-                    targetSpeed,
-                    curveSpeedLimit
-                );
+                targetSpeed = Mathf.Min(targetSpeed, curveSpeedLimit);
 
                 if (laneChangePreparing[vehicleIndex] &&
-                    currentSpeed <=
-                        curveSpeedLimit +
-                        Mathf.Max(
-                            0.01f,
-                            laneChangePreparationSpeedTolerance
-                        ))
+                    currentSpeed <= curveSpeedLimit + Mathf.Max(0.01f, laneChangePreparationSpeedTolerance))
                 {
-                    float remainingRuleDistance =
-                        laneDatabase.changeEndS[ruleIndex] - oldS;
+                    float remainingRuleDistance = laneDatabase.changeEndS[ruleIndex] - oldS;
                     bool canEnterCurve =
                         remainingRuleDistance >=
-                            GetNormalLaneChangeTravelDistance(
-                                laneChangeEmergencyManeuver[vehicleIndex]
-                            ) &&
+                            GetNormalLaneChangeTravelDistance(laneChangeEmergencyManeuver[vehicleIndex]) &&
                         IsLaneChangeFullPathClear(
                             vehicleIndex,
                             ruleIndex,
@@ -2663,10 +2209,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     if (canEnterCurve)
                     {
                         laneChangePreparing[vehicleIndex] = false;
-                        BuildManeuverPath(
-                            vehicleIndex,
-                            oldS
-                        );
+                        BuildManeuverPath(vehicleIndex, oldS);
                     }
                     else
                     {
@@ -2678,20 +2221,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
         }
 
-        float signalStopS = GetSignalStopS(
-            vehicleIndex,
-            oldS,
-            currentSpeed
-        );
+        float signalStopS = GetSignalStopS(vehicleIndex, oldS, currentSpeed);
 
         float detectedPlayerStopS = GetPlayerStopS(vehicleIndex);
 
-        float playerStopS = ApplyPlayerObstacleReleaseHold(
-            vehicleIndex,
-            detectedPlayerStopS,
-            oldS,
-            deltaTime
-        );
+        float playerStopS = ApplyPlayerObstacleReleaseHold(vehicleIndex, detectedPlayerStopS, oldS, deltaTime);
 
         bool physicalObstacleRestartHold =
             UpdatePhysicalObstacleRestartGate(
@@ -2708,62 +2242,36 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         signalStopDebugActive[vehicleIndex] =
-            signalStopS >= 0f &&
-            (playerStopS < 0f || signalStopS <= playerStopS);
+            signalStopS >= 0f && (playerStopS < 0f || signalStopS <= playerStopS);
 
         float virtualStopS = -1f;
-        float virtualDeceleration =
-            signalComfortDeceleration;
+        float virtualDeceleration = signalComfortDeceleration;
 
         if (signalStopS >= 0f)
         {
             virtualStopS = signalStopS;
         }
 
-        if (playerStopS >= 0f &&
-            (virtualStopS < 0f ||
-             playerStopS < virtualStopS))
+        if (playerStopS >= 0f && (virtualStopS < 0f || playerStopS < virtualStopS))
         {
             virtualStopS = playerStopS;
-            virtualDeceleration =
-                playerComfortDeceleration;
+            virtualDeceleration = playerComfortDeceleration;
         }
 
         if (virtualStopS >= 0f)
         {
-            float distanceToStop =
-                Mathf.Max(
-                    0f,
-                    virtualStopS - oldS
-                );
+            float distanceToStop = Mathf.Max(0f, virtualStopS - oldS);
 
-            float virtualSpeedLimit = Mathf.Sqrt(
-                2f *
-                Mathf.Max(
-                    0.1f,
-                    virtualDeceleration
-                ) *
-                distanceToStop
-            );
+            float virtualSpeedLimit = Mathf.Sqrt(2f * Mathf.Max(0.1f, virtualDeceleration) * distanceToStop);
 
-            targetSpeed = Mathf.Min(
-                targetSpeed,
-                virtualSpeedLimit
-            );
+            targetSpeed = Mathf.Min(targetSpeed, virtualSpeedLimit);
         }
 
-        float stopThreshold = Mathf.Clamp(
-            stoppedSpeedThreshold,
-            0.05f,
-            0.5f
-        );
+        float stopThreshold = Mathf.Clamp(stoppedSpeedThreshold, 0.05f, 0.5f);
 
         bool naturallyStoppedByObstacle =
-            targetSpeed <= stopThreshold &&
-            currentSpeed <= stopThreshold + 0.1f &&
-            ((leaderIndex >= 0 &&
-              sourceLeaderInfluence > 0.001f) ||
-             targetLeaderIndex >= 0 ||
+            targetSpeed <= stopThreshold && currentSpeed <= stopThreshold + 0.1f &&
+            ((leaderIndex >= 0 && sourceLeaderInfluence > 0.001f) || targetLeaderIndex >= 0 ||
              virtualStopS >= 0f);
 
         if (physicalObstacleRestartHold)
@@ -2775,16 +2283,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         else if (naturallyStoppedByObstacle)
         {
             waitingForObstacleRelease[vehicleIndex] = true;
-            obstacleRestartDelayRemaining[vehicleIndex] =
-                GetObstacleRestartDelay(vehicleIndex);
+            obstacleRestartDelayRemaining[vehicleIndex] = GetObstacleRestartDelay(vehicleIndex);
         }
         else if (waitingForObstacleRelease[vehicleIndex])
         {
             obstacleRestartDelayRemaining[vehicleIndex] =
-                TickObstacleHoldTimer(
-                    obstacleRestartDelayRemaining[vehicleIndex],
-                    deltaTime
-                );
+                TickObstacleHoldTimer(obstacleRestartDelayRemaining[vehicleIndex], deltaTime);
 
             if (obstacleRestartDelayRemaining[vehicleIndex] > 0f)
             {
@@ -2798,92 +2302,51 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         float effectiveSourceBumperGap = 1000000f;
 
-        if (leaderIndex >= 0 &&
-            sourceLeaderInfluence > 0.001f)
+        if (leaderIndex >= 0 && sourceLeaderInfluence > 0.001f)
         {
             float sourcePassAllowance =
-                GetVehicleLength(vehicleIndex) +
-                GetVehicleLength(leaderIndex) +
-                followingMinimumGap;
+                GetVehicleLength(vehicleIndex) + GetVehicleLength(leaderIndex) + followingMinimumGap;
 
-            effectiveSourceBumperGap = bumperGap +
-                (1f - sourceLeaderInfluence) *
-                sourcePassAllowance;
+            effectiveSourceBumperGap = bumperGap + (1f - sourceLeaderInfluence) * sourcePassAllowance;
         }
 
         float speedChangeRate;
 
         if (targetSpeed >= currentSpeed)
         {
-            speedChangeRate =
-                GetAcceleration(vehicleIndex);
+            speedChangeRate = GetAcceleration(vehicleIndex);
         }
-        else if (Mathf.Min(
-                     effectiveSourceBumperGap,
-                     targetBumperGap
-                 ) <
-                 followingMinimumGap + 1f)
+        else if (Mathf.Min(effectiveSourceBumperGap, targetBumperGap) < followingMinimumGap + 1f)
         {
-            speedChangeRate =
-                GetEmergencyDeceleration(
-                    vehicleIndex
-                );
+            speedChangeRate = GetEmergencyDeceleration(vehicleIndex);
         }
         else
         {
-            speedChangeRate =
-                GetDeceleration(vehicleIndex);
+            speedChangeRate = GetDeceleration(vehicleIndex);
         }
 
-        float newSpeed = Mathf.MoveTowards(
-            currentSpeed,
-            targetSpeed,
-            speedChangeRate * deltaTime
-        );
+        float newSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, speedChangeRate * deltaTime);
 
         float longitudinalMotionFactor =
-            laneChangeActive[vehicleIndex] &&
-            !laneChangePreparing[vehicleIndex]
-                ? GetManeuverSourceAdvanceFactor(
-                    vehicleIndex,
-                    laneChangeProgress[vehicleIndex]
-                  )
+            laneChangeActive[vehicleIndex] && !laneChangePreparing[vehicleIndex]
+                ? GetManeuverSourceAdvanceFactor(vehicleIndex, laneChangeProgress[vehicleIndex])
                 : 1f;
-        float newS =
-            oldS +
-            (currentSpeed + newSpeed) *
-            0.5f *
-            longitudinalMotionFactor *
-            deltaTime;
+        float newS = oldS + (currentSpeed + newSpeed) * 0.5f * longitudinalMotionFactor * deltaTime;
 
         bool hasMaximumS = false;
         float maximumS = 1000000f;
 
-        if (leaderIndex >= 0 &&
-            sourceLeaderInfluence > 0.001f)
+        if (leaderIndex >= 0 && sourceLeaderInfluence > 0.001f)
         {
-            float leaderS = GetVehicleSOnLane(
-                leaderIndex,
-                laneId
-            );
+            float leaderS = GetVehicleSOnLane(leaderIndex, laneId);
 
             float baseMaximumS =
-                leaderS -
-                GetCombinedHalfLength(
-                    vehicleIndex,
-                    leaderIndex
-                ) -
-                followingMinimumGap;
+                leaderS - GetCombinedHalfLength(vehicleIndex, leaderIndex) - followingMinimumGap;
 
             float passAllowance =
-                GetVehicleLength(vehicleIndex) +
-                GetVehicleLength(leaderIndex) +
-                followingMinimumGap;
+                GetVehicleLength(vehicleIndex) + GetVehicleLength(leaderIndex) + followingMinimumGap;
 
-            maximumS =
-                baseMaximumS +
-                (1f - sourceLeaderInfluence) *
-                passAllowance;
+            maximumS = baseMaximumS + (1f - sourceLeaderInfluence) * passAllowance;
 
             hasMaximumS = true;
         }
@@ -2891,71 +2354,39 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (targetLeaderIndex >= 0)
         {
             float targetMaximumS =
-                targetLeaderS -
-                GetCombinedHalfLength(
-                    vehicleIndex,
-                    targetLeaderIndex
-                ) -
-                followingMinimumGap;
+                targetLeaderS - GetCombinedHalfLength(vehicleIndex, targetLeaderIndex) - followingMinimumGap;
 
-            float sourceMaximumS = MapTargetToSourceS(
-                laneChangeRuleIndices[vehicleIndex],
-                targetMaximumS
-            );
+            float sourceMaximumS = MapTargetToSourceS(laneChangeRuleIndices[vehicleIndex], targetMaximumS);
 
-            maximumS = hasMaximumS
-                ? Mathf.Min(maximumS, sourceMaximumS)
-                : sourceMaximumS;
+            maximumS = hasMaximumS ? Mathf.Min(maximumS, sourceMaximumS) : sourceMaximumS;
 
             hasMaximumS = true;
         }
 
         if (virtualStopS >= 0f)
         {
-            maximumS = hasMaximumS
-                ? Mathf.Min(maximumS, virtualStopS)
-                : virtualStopS;
+            maximumS = hasMaximumS ? Mathf.Min(maximumS, virtualStopS) : virtualStopS;
 
             hasMaximumS = true;
         }
 
-        vehicleRenderMaximumS[vehicleIndex] = hasMaximumS
-            ? maximumS
-            : -1f;
+        vehicleRenderMaximumS[vehicleIndex] = hasMaximumS ? maximumS : -1f;
 
         if (hasMaximumS && maximumS >= oldS)
         {
             float remainingDistance = maximumS - oldS;
-            float smoothingDistance = Mathf.Max(
-                0.1f,
-                stopSmoothingDistance
-            );
+            float smoothingDistance = Mathf.Max(0.1f, stopSmoothingDistance);
 
             if (remainingDistance <= smoothingDistance)
             {
-                float smoothSpeedLimit =
-                    remainingDistance /
-                    Mathf.Max(0.1f, stopSmoothingTime);
+                float smoothSpeedLimit = remainingDistance / Mathf.Max(0.1f, stopSmoothingTime);
 
-                newSpeed = Mathf.Min(
-                    newSpeed,
-                    smoothSpeedLimit
-                );
+                newSpeed = Mathf.Min(newSpeed, smoothSpeedLimit);
 
-                newS = oldS +
-                    (currentSpeed + newSpeed) *
-                    0.5f *
-                    longitudinalMotionFactor *
-                    deltaTime;
+                newS = oldS + (currentSpeed + newSpeed) * 0.5f * longitudinalMotionFactor * deltaTime;
 
-                if (remainingDistance <= Mathf.Max(
-                        0.001f,
-                        stopSnapDistance
-                    ) &&
-                    newSpeed <= Mathf.Max(
-                        0.005f,
-                        stopSnapSpeed
-                    ))
+                if (remainingDistance <= Mathf.Max(0.001f, stopSnapDistance) &&
+                    newSpeed <= Mathf.Max(0.005f, stopSnapSpeed))
                 {
                     newS = maximumS;
                     newSpeed = 0f;
@@ -2963,20 +2394,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
         }
 
-        if (hasMaximumS &&
-            newS > maximumS)
+        if (hasMaximumS && newS > maximumS)
         {
             if (maximumS >= oldS)
             {
                 newS = maximumS;
 
-                newSpeed = Mathf.Min(
-                    newSpeed,
-                    Mathf.Max(
-                        0f,
-                        (newS - oldS) / deltaTime
-                    )
-                );
+                newSpeed = Mathf.Min(newSpeed, Mathf.Max(0f, (newS - oldS) / deltaTime));
             }
             else
             {
@@ -2997,10 +2421,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
             else if (IsManeuverPathUsable(vehicleIndex))
             {
-                float pathTravelDistance =
-                    (currentSpeed + newSpeed) *
-                    0.5f *
-                    deltaTime;
+                float pathTravelDistance = (currentSpeed + newSpeed) * 0.5f * deltaTime;
                 candidateProgress =
                     AdvanceManeuverProgressByDistance(
                         vehicleIndex,
@@ -3009,17 +2430,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                         1f
                     );
 
-                newS = SampleManeuverPathSourceS(
-                    vehicleIndex,
-                    candidateProgress
-                );
+                newS = SampleManeuverPathSourceS(vehicleIndex, candidateProgress);
 
                 if (hasMaximumS)
                 {
                     if (maximumS < oldS)
                     {
-                        candidateProgress =
-                            laneChangeProgress[vehicleIndex];
+                        candidateProgress = laneChangeProgress[vehicleIndex];
                         newS = oldS;
                         newSpeed = 0f;
                     }
@@ -3031,32 +2448,18 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                                 laneChangeProgress[vehicleIndex],
                                 maximumS
                             );
-                        newS = SampleManeuverPathSourceS(
-                            vehicleIndex,
-                            candidateProgress
-                        );
+                        newS = SampleManeuverPathSourceS(vehicleIndex, candidateProgress);
 
                         float allowedPathDistance = Mathf.Max(
                             0f,
-                            SampleManeuverPathDistance(
-                                vehicleIndex,
-                                candidateProgress
-                            ) -
-                            SampleManeuverPathDistance(
-                                vehicleIndex,
-                                laneChangeProgress[vehicleIndex]
-                            )
+                            SampleManeuverPathDistance(vehicleIndex, candidateProgress) -
+                            SampleManeuverPathDistance(vehicleIndex, laneChangeProgress[vehicleIndex])
                         );
                         float allowedEndSpeed = Mathf.Max(
                             0f,
-                            2f * allowedPathDistance /
-                                Mathf.Max(0.0001f, deltaTime) -
-                            currentSpeed
+                            2f * allowedPathDistance / Mathf.Max(0.0001f, deltaTime) - currentSpeed
                         );
-                        newSpeed = Mathf.Min(
-                            newSpeed,
-                            allowedEndSpeed
-                        );
+                        newSpeed = Mathf.Min(newSpeed, allowedEndSpeed);
                     }
                 }
             }
@@ -3081,25 +2484,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             if (obstacleSweepBlocked)
             {
                 newS = laneChangeObstacleSweepSafeS;
-                laneChangeProgress[vehicleIndex] =
-                    laneChangeObstacleSweepSafeProgress;
+                laneChangeProgress[vehicleIndex] = laneChangeObstacleSweepSafeProgress;
                 newSpeed = 0f;
 
                 vehicleRenderMaximumS[vehicleIndex] = newS;
             }
             else
             {
-                laneChangeProgress[vehicleIndex] =
-                    candidateProgress;
+                laneChangeProgress[vehicleIndex] = candidateProgress;
             }
         }
 
         vehicleS[vehicleIndex] = newS;
         vehicleSpeeds[vehicleIndex] = newSpeed;
-        vehicleAccelerations[vehicleIndex] =
-            deltaTime > 0.0001f
-                ? (newSpeed - currentSpeed) / deltaTime
-                : 0f;
+        vehicleAccelerations[vehicleIndex] = deltaTime > 0.0001f ? (newSpeed - currentSpeed) / deltaTime : 0f;
 
         if (!obstacleSweepBlocked)
         {
@@ -3108,8 +2506,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         laneId = vehicleLaneIds[vehicleIndex];
 
-        if (vehicleS[vehicleIndex] >=
-            GetLaneEndS(laneId))
+        if (vehicleS[vehicleIndex] >= GetLaneEndS(laneId))
         {
             DeactivateVehicle(vehicleIndex);
         }
@@ -3121,8 +2518,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private float GetPlayerStopS(int vehicleIndex)
     {
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= physicsObstacleStopS.Length)
+        if (vehicleIndex < 0 || vehicleIndex >= physicsObstacleStopS.Length)
         {
             return -1f;
         }
@@ -3132,8 +2528,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private float GetPhysicsObstacleHitS(int vehicleIndex)
     {
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= physicsObstacleHitS.Length)
+        if (vehicleIndex < 0 || vehicleIndex >= physicsObstacleHitS.Length)
         {
             return -1f;
         }
@@ -3149,9 +2544,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         authorityPhysicsQueryCount = 0;
         authorityPhysicsHitCount = 0;
 
-        if (!enableAuthorityPhysicsObstacles ||
-            authorityObstacleLayerMask == 0 ||
-            !localIsAuthority ||
+        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0 || !localIsAuthority ||
             !authorityReady)
         {
             for (int i = 0; i < slotCount; i++)
@@ -3163,17 +2556,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         // 한 프레임에 갱신할 차량 수 제한. CheckBox와 BoxCast의 개별 호출 수와는 구분
-        int budget = Mathf.Clamp(
-            authorityObstacleVehiclesPerFrame,
-            1,
-            4
-        );
+        int budget = Mathf.Clamp(authorityObstacleVehiclesPerFrame, 1, 4);
         int checkedSlots = 0;
         int updatedVehicles = 0;
 
         // 이전 프레임의 다음 슬롯부터 재개하고 비활성 차량은 갱신 예산에서 제외
-        while (checkedSlots < slotCount &&
-               updatedVehicles < budget)
+        while (checkedSlots < slotCount && updatedVehicles < budget)
         {
             int vehicleIndex = authorityObstacleFrameCursor;
             authorityObstacleFrameCursor++;
@@ -3202,8 +2590,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void ClearAuthorityPhysicsObstacleState(int vehicleIndex)
     {
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= physicsObstacleStopS.Length)
+        if (vehicleIndex < 0 || vehicleIndex >= physicsObstacleStopS.Length)
         {
             return;
         }
@@ -3216,22 +2603,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         physicsObstacleCastDebugHitDistances[vehicleIndex] = 0f;
     }
 
-    private void UpdateAuthorityPhysicsObstacleSensor(
-        int vehicleIndex,
-        float currentS,
-        float currentSpeed)
+    private void UpdateAuthorityPhysicsObstacleSensor(int vehicleIndex, float currentS, float currentSpeed)
     {
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= physicsObstacleStopS.Length)
+        if (vehicleIndex < 0 || vehicleIndex >= physicsObstacleStopS.Length)
         {
             return;
         }
 
         ClearAuthorityPhysicsObstacleState(vehicleIndex);
 
-        if (!enableAuthorityPhysicsObstacles ||
-            authorityObstacleLayerMask == 0 ||
-            !localIsAuthority ||
+        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0 || !localIsAuthority ||
             !authorityReady)
         {
             return;
@@ -3245,19 +2626,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         Vector3 vehiclePosition = laneChangeActive[vehicleIndex]
-            ? GetLaneChangePathPosition(
-                vehicleIndex,
-                currentS,
-                laneChangeProgress[vehicleIndex]
-              )
-            : laneDatabase.GetLanePosition(
-                laneId,
-                currentS,
-                sampleHints[vehicleIndex]
-              );
+            ? GetLaneChangePathPosition(vehicleIndex, currentS, laneChangeProgress[vehicleIndex])
+            : laneDatabase.GetLanePosition(laneId, currentS, sampleHints[vehicleIndex]);
 
-        Quaternion vehicleRotation =
-            GetCurrentVehicleCollisionRotation(vehicleIndex);
+        Quaternion vehicleRotation = GetCurrentVehicleCollisionRotation(vehicleIndex);
 
         Vector3 boxCenter;
         Vector3 halfExtents;
@@ -3270,8 +2642,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             out halfExtents
         );
 
-        Vector3 castDirection =
-            vehicleRotation * Vector3.forward;
+        Vector3 castDirection = vehicleRotation * Vector3.forward;
 
         if (castDirection.sqrMagnitude <= 0.0001f)
         {
@@ -3284,35 +2655,23 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         // 현재 속도에서 일정한 감속도로 정지하는 데 필요한 거리: v² / (2a)
         float brakingDistance =
-            currentSpeed * currentSpeed /
-            (2f * Mathf.Max(0.1f, playerComfortDeceleration));
+            currentSpeed * currentSpeed / (2f * Mathf.Max(0.1f, playerComfortDeceleration));
 
         // 제동 거리에 전방 여유와 네트워크 지연 예상 시간 동안의 이동 거리를 추가
         // 저속에서도 최소 감지 거리는 유지
         float castDistance = Mathf.Max(
             Mathf.Max(0.5f, minimumObstacleLookAhead),
-            brakingDistance +
-            Mathf.Max(0f, playerFrontBuffer) +
-            currentSpeed * Mathf.Max(
-                0f,
-                obstacleNetworkLookAheadTime
-            )
+            brakingDistance + Mathf.Max(0f, playerFrontBuffer) +
+            currentSpeed * Mathf.Max(0f, obstacleNetworkLookAheadTime)
         );
 
-        if (!laneChangeActive[vehicleIndex] &&
-            !IsTruck(vehicleIndex) &&
-            HasAvailableLaneChangeRule(
-                vehicleIndex,
-                currentS
-            ))
+        if (!laneChangeActive[vehicleIndex] && !IsTruck(vehicleIndex) &&
+            HasAvailableLaneChangeRule(vehicleIndex, currentS))
         {
             castDistance = Mathf.Max(
                 castDistance,
                 Mathf.Max(
-                    Mathf.Max(
-                        normalLaneChangeTravelDistance,
-                        emergencyLaneChangeTravelDistance
-                    ),
+                    Mathf.Max(normalLaneChangeTravelDistance, emergencyLaneChangeTravelDistance),
                     laneChangePlanningLookAhead
                 )
             );
@@ -3330,32 +2689,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 castDistance,
                 out laneLimited
             );
-            physicsObstacleCastDebugLaneLimited[vehicleIndex] =
-                laneLimited;
+            physicsObstacleCastDebugLaneLimited[vehicleIndex] = laneLimited;
         }
 
         physicsObstacleCastDebugValid[vehicleIndex] = true;
         physicsObstacleCastDebugCenters[vehicleIndex] = boxCenter;
-        physicsObstacleCastDebugHalfExtents[vehicleIndex] =
-            halfExtents;
-        physicsObstacleCastDebugDirections[vehicleIndex] =
-            castDirection;
-        physicsObstacleCastDebugRotations[vehicleIndex] =
-            vehicleRotation;
-        physicsObstacleCastDebugDistances[vehicleIndex] =
-            castDistance;
-        physicsObstacleCastDebugHitDistances[vehicleIndex] =
-            castDistance;
+        physicsObstacleCastDebugHalfExtents[vehicleIndex] = halfExtents;
+        physicsObstacleCastDebugDirections[vehicleIndex] = castDirection;
+        physicsObstacleCastDebugRotations[vehicleIndex] = vehicleRotation;
+        physicsObstacleCastDebugDistances[vehicleIndex] = castDistance;
+        physicsObstacleCastDebugHitDistances[vehicleIndex] = castDistance;
 
         authorityPhysicsQueryCount++;
 
         // 검사 시작 영역에 이미 겹친 장애물을 먼저 확인
-        bool blocked = Physics.CheckBox(
-            boxCenter,
-            halfExtents,
-            vehicleRotation,
-            authorityObstacleLayerMask
-        );
+        bool blocked = Physics.CheckBox(boxCenter, halfExtents, vehicleRotation, authorityObstacleLayerMask);
 
         float hitDistance = 0f;
         // 시작 영역이 비어 있을 때만 전방을 검사해 추가 물리 쿼리 실행
@@ -3387,15 +2735,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         authorityPhysicsHitCount++;
-        physicsObstacleCastDebugHitDistances[vehicleIndex] =
-            hitDistance;
-        physicsObstacleHitS[vehicleIndex] =
-            currentS + Mathf.Max(0f, hitDistance);
+        physicsObstacleCastDebugHitDistances[vehicleIndex] = hitDistance;
+        physicsObstacleHitS[vehicleIndex] = currentS + Mathf.Max(0f, hitDistance);
         physicsObstacleStopS[vehicleIndex] = currentS +
-            Mathf.Max(
-                0f,
-                hitDistance - Mathf.Max(0f, playerFrontBuffer)
-            );
+            Mathf.Max(0f, hitDistance - Mathf.Max(0f, playerFrontBuffer));
     }
 
     private float LimitPhysicsCastToLaneChangeCorridor(
@@ -3411,42 +2754,30 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (ruleIndex < 0 ||
-            ruleIndex >= MaximumLaneChangeRules ||
-            !rulePhysicsCorridorValid[ruleIndex])
+        if (ruleIndex < 0 || ruleIndex >= MaximumLaneChangeRules || !rulePhysicsCorridorValid[ruleIndex])
         {
             return requestedDistance;
         }
 
         Vector3 targetSide = rulePhysicsCorridorAxis[ruleIndex];
-        float minimumCoordinate =
-            rulePhysicsCorridorMinimum[ruleIndex];
-        float maximumCoordinate =
-            rulePhysicsCorridorMaximum[ruleIndex];
+        float minimumCoordinate = rulePhysicsCorridorMinimum[ruleIndex];
+        float maximumCoordinate = rulePhysicsCorridorMaximum[ruleIndex];
         Vector3 boxRight = vehicleRotation * Vector3.right;
         Vector3 boxForward = vehicleRotation * Vector3.forward;
         float lateralRadius =
-            Mathf.Abs(Vector3.Dot(boxRight, targetSide)) *
-                halfExtents.x +
-            Mathf.Abs(Vector3.Dot(boxForward, targetSide)) *
-                halfExtents.z;
+            Mathf.Abs(Vector3.Dot(boxRight, targetSide)) * halfExtents.x +
+            Mathf.Abs(Vector3.Dot(boxForward, targetSide)) * halfExtents.z;
         float centerCoordinate = Vector3.Dot(boxCenter, targetSide);
         float lateralRate = Vector3.Dot(castDirection, targetSide);
         float corridorDistance = requestedDistance;
 
         if (lateralRate > 0.0001f)
         {
-            corridorDistance =
-                (maximumCoordinate -
-                 (centerCoordinate + lateralRadius)) /
-                lateralRate;
+            corridorDistance = (maximumCoordinate - (centerCoordinate + lateralRadius)) / lateralRate;
         }
         else if (lateralRate < -0.0001f)
         {
-            corridorDistance =
-                ((centerCoordinate - lateralRadius) -
-                 minimumCoordinate) /
-                -lateralRate;
+            corridorDistance = ((centerCoordinate - lateralRadius) - minimumCoordinate) / -lateralRate;
         }
 
         corridorDistance = Mathf.Max(0f, corridorDistance);
@@ -3460,21 +2791,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return corridorDistance;
     }
 
-    private bool HasAvailableLaneChangeRule(
-        int vehicleIndex,
-        float sourceS)
+    private bool HasAvailableLaneChangeRule(int vehicleIndex, float sourceS)
     {
-        if (!enableLaneChanges ||
-            laneDatabase == null ||
-            IsTruck(vehicleIndex))
+        if (!enableLaneChanges || laneDatabase == null || IsTruck(vehicleIndex))
         {
             return false;
         }
 
         int laneId = vehicleLaneIds[vehicleIndex];
 
-        if (laneId < 0 ||
-            laneId >= laneDatabase.laneCount)
+        if (laneId < 0 || laneId >= laneDatabase.laneCount)
         {
             return false;
         }
@@ -3486,11 +2812,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              ruleIndex < first + count;
              ruleIndex++)
         {
-            if (laneDatabase.IsChangeAllowed(
-                    ruleIndex,
-                    sourceS,
-                    TrafficLaneDatabase.VehicleCar
-                ))
+            if (laneDatabase.IsChangeAllowed(ruleIndex, sourceS, TrafficLaneDatabase.VehicleCar))
             {
                 return true;
             }
@@ -3518,14 +2840,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             up.Normalize();
         }
 
-        boxCenter = GetVehicleFootprintCenter(
-            vehicleIndex,
-            vehiclePosition,
-            vehicleRotation
-        ) + up * Mathf.Max(
-            0.1f,
-            authorityObstacleCastVerticalOffset
-        );
+        boxCenter = GetVehicleFootprintCenter(vehicleIndex, vehiclePosition, vehicleRotation) + up * Mathf.Max(0.1f, authorityObstacleCastVerticalOffset);
 
         float margin = Mathf.Max(0f, safetyMargin);
         halfExtents = new Vector3(
@@ -3541,8 +2856,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         Quaternion vehicleRotation,
         float safetyMargin)
     {
-        if (!enableAuthorityPhysicsObstacles ||
-            authorityObstacleLayerMask == 0)
+        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0)
         {
             return false;
         }
@@ -3559,12 +2873,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
 
         authorityPhysicsQueryCount++;
-        bool blocked = Physics.CheckBox(
-            boxCenter,
-            halfExtents,
-            vehicleRotation,
-            authorityObstacleLayerMask
-        );
+        bool blocked = Physics.CheckBox(boxCenter, halfExtents, vehicleRotation, authorityObstacleLayerMask);
 
         if (blocked)
         {
@@ -3580,8 +2889,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         Quaternion vehicleRotation,
         float safetyMargin)
     {
-        if (!enableAuthorityPhysicsObstacles ||
-            authorityObstacleLayerMask == 0)
+        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0)
         {
             return false;
         }
@@ -3598,12 +2906,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
 
         authorityPhysicsQueryCount++;
-        bool blocked = Physics.CheckBox(
-            center,
-            halfExtents,
-            vehicleRotation,
-            authorityObstacleLayerMask
-        );
+        bool blocked = Physics.CheckBox(center, halfExtents, vehicleRotation, authorityObstacleLayerMask);
 
         if (blocked)
         {
@@ -3622,32 +2925,18 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         out Vector3 halfExtents)
     {
         Vector3 up = vehicleRotation * Vector3.up;
-        up = up.sqrMagnitude > 0.0001f
-            ? up.normalized
-            : Vector3.up;
+        up = up.sqrMagnitude > 0.0001f ? up.normalized : Vector3.up;
 
         Vector3 forward = vehicleRotation * Vector3.forward;
-        forward = forward.sqrMagnitude > 0.0001f
-            ? forward.normalized
-            : Vector3.forward;
+        forward = forward.sqrMagnitude > 0.0001f ? forward.normalized : Vector3.forward;
 
         float margin = Mathf.Max(0f, safetyMargin);
-        float vehicleHalfLength =
-            GetVehicleLength(vehicleIndex) * 0.5f;
+        float vehicleHalfLength = GetVehicleLength(vehicleIndex) * 0.5f;
         float rearHalfDepth = vehicleHalfLength + margin;
 
-        center = GetVehicleFootprintCenter(
-            vehicleIndex,
-            vehiclePosition,
-            vehicleRotation
-        );
-        center -= forward * (
-            vehicleHalfLength * 0.5f + margin * 0.5f
-        );
-        center += up * Mathf.Max(
-            0.1f,
-            authorityObstacleCastVerticalOffset
-        );
+        center = GetVehicleFootprintCenter(vehicleIndex, vehiclePosition, vehicleRotation);
+        center -= forward * (vehicleHalfLength * 0.5f + margin * 0.5f);
+        center += up * Mathf.Max(0.1f, authorityObstacleCastVerticalOffset);
 
         halfExtents = new Vector3(
             GetVehicleWidth(vehicleIndex) * 0.5f + margin,
@@ -3664,14 +2953,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float safetyMargin)
     {
         Vector3 up = vehicleRotation * Vector3.up;
-        up = up.sqrMagnitude > 0.0001f
-            ? up.normalized
-            : Vector3.up;
+        up = up.sqrMagnitude > 0.0001f ? up.normalized : Vector3.up;
 
-        Vector3 forward = Vector3.ProjectOnPlane(
-            vehicleRotation * Vector3.forward,
-            up
-        );
+        Vector3 forward = Vector3.ProjectOnPlane(vehicleRotation * Vector3.forward, up);
 
         if (forward.sqrMagnitude <= 0.0001f)
         {
@@ -3680,10 +2964,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         forward.Normalize();
         Vector3 right = Vector3.Cross(up, forward).normalized;
-        float targetSideSign = Vector3.Dot(
-            targetLaneOffset,
-            right
-        ) >= 0f ? 1f : -1f;
+        float targetSideSign = Vector3.Dot(targetLaneOffset, right) >= 0f ? 1f : -1f;
 
         Vector3 fullCenter;
         Vector3 fullHalfExtents;
@@ -3697,21 +2978,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
 
         float sideHalfWidth = fullHalfExtents.x * 0.5f;
-        Vector3 center = fullCenter +
-            right * (targetSideSign * sideHalfWidth);
-        Vector3 halfExtents = new Vector3(
-            sideHalfWidth,
-            fullHalfExtents.y,
-            fullHalfExtents.z
-        );
+        Vector3 center = fullCenter + right * (targetSideSign * sideHalfWidth);
+        Vector3 halfExtents = new Vector3(sideHalfWidth, fullHalfExtents.y, fullHalfExtents.z);
 
         authorityPhysicsQueryCount++;
-        bool blocked = Physics.CheckBox(
-            center,
-            halfExtents,
-            vehicleRotation,
-            authorityObstacleLayerMask
-        );
+        bool blocked = Physics.CheckBox(center, halfExtents, vehicleRotation, authorityObstacleLayerMask);
 
         if (blocked)
         {
@@ -3721,16 +2992,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return blocked;
     }
 
-    private float ApplyPhysicsReverseLimit(
-        int vehicleIndex,
-        float currentS,
-        float minimumS)
+    private float ApplyPhysicsReverseLimit(int vehicleIndex, float currentS, float minimumS)
     {
         float castDistance = Mathf.Max(0f, currentS - minimumS);
 
-        if (!enableAuthorityPhysicsObstacles ||
-            authorityObstacleLayerMask == 0 ||
-            castDistance <= 0.001f)
+        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0 || castDistance <= 0.001f)
         {
             return minimumS;
         }
@@ -3740,8 +3006,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             currentS,
             laneChangeProgress[vehicleIndex]
         );
-        Quaternion vehicleRotation =
-            GetCurrentVehicleCollisionRotation(vehicleIndex);
+        Quaternion vehicleRotation = GetCurrentVehicleCollisionRotation(vehicleIndex);
         Vector3 center;
         Vector3 halfExtents;
         GetPhysicsRearHalfBox(
@@ -3754,12 +3019,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
 
         authorityPhysicsQueryCount++;
-        bool blocked = Physics.CheckBox(
-            center,
-            halfExtents,
-            vehicleRotation,
-            authorityObstacleLayerMask
-        );
+        bool blocked = Physics.CheckBox(center, halfExtents, vehicleRotation, authorityObstacleLayerMask);
 
         if (blocked)
         {
@@ -3767,8 +3027,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return currentS;
         }
 
-        Vector3 reverseDirection =
-            -(vehicleRotation * Vector3.forward);
+        Vector3 reverseDirection = -(vehicleRotation * Vector3.forward);
         reverseDirection = reverseDirection.sqrMagnitude > 0.0001f
             ? reverseDirection.normalized
             : Vector3.back;
@@ -3789,15 +3048,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         authorityPhysicsHitCount++;
-        float allowedReverseDistance = Mathf.Max(
-            0f,
-            hit.distance - Mathf.Max(0f, reverseRearClearance)
-        );
+        float allowedReverseDistance = Mathf.Max(0f, hit.distance - Mathf.Max(0f, reverseRearClearance));
 
-        return Mathf.Max(
-            minimumS,
-            currentS - allowedReverseDistance
-        );
+        return Mathf.Max(minimumS, currentS - allowedReverseDistance);
     }
 
     private float ApplyPlayerObstacleReleaseHold(
@@ -3809,30 +3062,22 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (detectedStopS >= 0f)
         {
             lastPlayerStopS[vehicleIndex] = detectedStopS;
-            playerObstacleHoldRemaining[vehicleIndex] =
-                Mathf.Max(0f, playerObstacleReleaseHold);
+            playerObstacleHoldRemaining[vehicleIndex] = Mathf.Max(0f, playerObstacleReleaseHold);
 
             return detectedStopS;
         }
 
-        float remaining = TickObstacleHoldTimer(
-            playerObstacleHoldRemaining[vehicleIndex],
-            deltaTime
-        );
+        float remaining = TickObstacleHoldTimer(playerObstacleHoldRemaining[vehicleIndex], deltaTime);
 
         playerObstacleHoldRemaining[vehicleIndex] = remaining;
 
-        if (remaining <= 0f ||
-            lastPlayerStopS[vehicleIndex] < 0f)
+        if (remaining <= 0f || lastPlayerStopS[vehicleIndex] < 0f)
         {
             lastPlayerStopS[vehicleIndex] = -1f;
             return -1f;
         }
 
-        return Mathf.Max(
-            currentS,
-            lastPlayerStopS[vehicleIndex]
-        );
+        return Mathf.Max(currentS, lastPlayerStopS[vehicleIndex]);
     }
 
     private bool UpdatePhysicalObstacleRestartGate(
@@ -3842,31 +3087,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float currentSpeed,
         float deltaTime)
     {
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= physicalObstacleRestartPending.Length ||
+        if (vehicleIndex < 0 || vehicleIndex >= physicalObstacleRestartPending.Length ||
             laneChangeActive[vehicleIndex])
         {
             return false;
         }
 
-        float stopThreshold = Mathf.Clamp(
-            stoppedSpeedThreshold,
-            0.05f,
-            0.5f
-        );
-        float detectedClearance = detectedStopS >= 0f
-            ? Mathf.Max(0f, detectedStopS - currentS)
-            : 1000000f;
-        float latchDistance = Mathf.Max(
-            0.25f,
-            Mathf.Max(0.001f, stopSnapDistance) * 4f
-        );
+        float stopThreshold = Mathf.Clamp(stoppedSpeedThreshold, 0.05f, 0.5f);
+        float detectedClearance = detectedStopS >= 0f ? Mathf.Max(0f, detectedStopS - currentS) : 1000000f;
+        float latchDistance = Mathf.Max(0.25f, Mathf.Max(0.001f, stopSnapDistance) * 4f);
 
         if (!physicalObstacleRestartPending[vehicleIndex])
         {
             bool stoppedAtPhysicalObstacle =
-                detectedStopS >= 0f &&
-                detectedClearance <= latchDistance &&
+                detectedStopS >= 0f && detectedClearance <= latchDistance &&
                 currentSpeed <= stopThreshold + 0.1f;
 
             if (!stoppedAtPhysicalObstacle)
@@ -3880,13 +3114,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return true;
         }
 
-        float requiredClearance = Mathf.Max(
-            0.5f,
-            physicalObstacleRestartClearance
-        );
+        float requiredClearance = Mathf.Max(0.5f, physicalObstacleRestartClearance);
 
-        if (detectedStopS >= 0f &&
-            detectedClearance < requiredClearance)
+        if (detectedStopS >= 0f && detectedClearance < requiredClearance)
         {
             // 장애물의 일시적인 움직임에 따른 즉시 출발 방지
             // 전방 공간의 안정적인 확보 후 전체 반응 절차 재시작
@@ -3894,10 +3124,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return true;
         }
 
-        float clearHold = TickObstacleHoldTimer(
-            physicalObstacleClearHoldRemaining[vehicleIndex],
-            deltaTime
-        );
+        float clearHold = TickObstacleHoldTimer(physicalObstacleClearHoldRemaining[vehicleIndex], deltaTime);
         physicalObstacleClearHoldRemaining[vehicleIndex] = clearHold;
 
         if (clearHold > 0f)
@@ -3926,32 +3153,22 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         physicalObstacleClearHoldRemaining[vehicleIndex] =
             Mathf.Max(0.1f, physicalObstacleClearConfirmationTime);
-        physicalObstacleReactionHoldRemaining[vehicleIndex] =
-            GetObstacleRestartDelay(vehicleIndex);
+        physicalObstacleReactionHoldRemaining[vehicleIndex] = GetObstacleRestartDelay(vehicleIndex);
     }
 
-    private float TickObstacleHoldTimer(
-        float remaining,
-        float deltaTime)
+    private float TickObstacleHoldTimer(float remaining, float deltaTime)
     {
-        return Mathf.Max(
-            0f,
-            remaining - Mathf.Max(0f, deltaTime)
-        );
+        return Mathf.Max(0f, remaining - Mathf.Max(0f, deltaTime));
     }
 
-    private float GetObstacleClearConfirmationTime(
-        bool playerBlocked)
+    private float GetObstacleClearConfirmationTime(bool playerBlocked)
     {
-        return playerBlocked
-            ? Mathf.Max(0.1f, playerObstacleReleaseHold)
-            : 0.25f;
+        return playerBlocked ? Mathf.Max(0.1f, playerObstacleReleaseHold) : 0.25f;
     }
 
     private void ClearPhysicalObstacleRestartState(int vehicleIndex)
     {
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= physicalObstacleRestartPending.Length)
+        if (vehicleIndex < 0 || vehicleIndex >= physicalObstacleRestartPending.Length)
         {
             return;
         }
@@ -3980,42 +3197,27 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         ClearAuthorityPhysicsObstacleState(vehicleIndex);
     }
 
-    private bool ShouldHoldLaneChangeForObstacle(
-        int vehicleIndex,
-        float deltaTime)
+    private bool ShouldHoldLaneChangeForObstacle(int vehicleIndex, float deltaTime)
     {
         if (!laneChangeActive[vehicleIndex] ||
-            (!enableLaneChangePlayerSweep &&
-             !enableLaneChangeVehicleSweep &&
-             recoveryRoadArea == null))
+            (!enableLaneChangePlayerSweep && !enableLaneChangeVehicleSweep && recoveryRoadArea == null))
         {
             laneChangePlayerBlocked[vehicleIndex] = false;
             laneChangeVehicleBlocked[vehicleIndex] = false;
             laneChangeRoadBoundaryBlocked[vehicleIndex] = false;
-            laneChangeObstacleRestartHoldRemaining[
-                vehicleIndex
-            ] = 0f;
-            laneChangeObstacleClearHoldRemaining[
-                vehicleIndex
-            ] = 0f;
+            laneChangeObstacleRestartHoldRemaining[vehicleIndex] = 0f;
+            laneChangeObstacleClearHoldRemaining[vehicleIndex] = 0f;
 
             return false;
         }
 
-        if (laneChangePlayerBlocked[vehicleIndex] ||
-            laneChangeVehicleBlocked[vehicleIndex] ||
+        if (laneChangePlayerBlocked[vehicleIndex] || laneChangeVehicleBlocked[vehicleIndex] ||
             laneChangeRoadBoundaryBlocked[vehicleIndex])
         {
             float currentS = vehicleS[vehicleIndex];
-            float currentProgress =
-                laneChangeProgress[vehicleIndex];
+            float currentProgress = laneChangeProgress[vehicleIndex];
 
-            Vector3 currentPosition =
-                GetLaneChangePathPosition(
-                    vehicleIndex,
-                    currentS,
-                    currentProgress
-                );
+            Vector3 currentPosition = GetLaneChangePathPosition(vehicleIndex, currentS, currentProgress);
 
             Quaternion currentRotation =
                 GetLaneChangeSweepRotation(
@@ -4030,11 +3232,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             int remainingBlockMask = 0;
 
             if (laneChangePlayerBlocked[vehicleIndex] &&
-                (IsLaneChangePoseBlockedByPlayer(
-                     vehicleIndex,
-                     currentPosition,
-                     currentRotation
-                 ) ||
+                (IsLaneChangePoseBlockedByPlayer(vehicleIndex, currentPosition, currentRotation) ||
                  IsLaneChangePoseBlockedByPlayer(
                      vehicleIndex,
                      laneChangeObstacleSweepEndPositions[
@@ -4049,11 +3247,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
 
             if (laneChangeVehicleBlocked[vehicleIndex] &&
-                (IsLaneChangePoseBlockedByVehicle(
-                     vehicleIndex,
-                     currentPosition,
-                     currentRotation
-                 ) ||
+                (IsLaneChangePoseBlockedByVehicle(vehicleIndex, currentPosition, currentRotation) ||
                  IsLaneChangePoseBlockedByVehicle(
                      vehicleIndex,
                      laneChangeObstacleSweepEndPositions[
@@ -4068,11 +3262,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
 
             if (laneChangeRoadBoundaryBlocked[vehicleIndex] &&
-                (!IsRecoveryRearInsideRoadArea(
-                     vehicleIndex,
-                     currentPosition,
-                     currentRotation
-                 ) ||
+                (!IsRecoveryRearInsideRoadArea(vehicleIndex, currentPosition, currentRotation) ||
                  !IsRecoveryRearInsideRoadArea(
                      vehicleIndex,
                      laneChangeObstacleSweepEndPositions[
@@ -4089,19 +3279,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             if (remainingBlockMask != 0)
             {
                 float clearHold =
-                    GetObstacleClearConfirmationTime(
-                        (remainingBlockMask &
-                         LaneChangePlayerBlock) != 0
-                    );
+                    GetObstacleClearConfirmationTime((remainingBlockMask & LaneChangePlayerBlock) != 0);
 
-                laneChangeObstacleClearHoldRemaining[
-                    vehicleIndex
-                ] = clearHold;
+                laneChangeObstacleClearHoldRemaining[vehicleIndex] = clearHold;
 
-                StopVehicleForLaneChangeObstacle(
-                    vehicleIndex,
-                    deltaTime
-                );
+                StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
 
                 return true;
             }
@@ -4113,16 +3295,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 deltaTime
             );
 
-            laneChangeObstacleClearHoldRemaining[
-                vehicleIndex
-            ] = clearRemaining;
+            laneChangeObstacleClearHoldRemaining[vehicleIndex] = clearRemaining;
 
             if (clearRemaining > 0f)
             {
-                StopVehicleForLaneChangeObstacle(
-                    vehicleIndex,
-                    deltaTime
-                );
+                StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
 
                 return true;
             }
@@ -4130,57 +3307,35 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             laneChangePlayerBlocked[vehicleIndex] = false;
             laneChangeVehicleBlocked[vehicleIndex] = false;
             laneChangeRoadBoundaryBlocked[vehicleIndex] = false;
-            laneChangeObstacleRestartHoldRemaining[
-                vehicleIndex
-            ] = GetObstacleRestartDelay(vehicleIndex);
+            laneChangeObstacleRestartHoldRemaining[vehicleIndex] = GetObstacleRestartDelay(vehicleIndex);
 
-            StopVehicleForLaneChangeObstacle(
-                vehicleIndex,
-                deltaTime
-            );
+            StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
 
             return true;
         }
 
-        float restartHold =
-            laneChangeObstacleRestartHoldRemaining[
-                vehicleIndex
-            ];
+        float restartHold = laneChangeObstacleRestartHoldRemaining[vehicleIndex];
 
         if (restartHold <= 0f)
         {
             return false;
         }
 
-        laneChangeObstacleRestartHoldRemaining[
-            vehicleIndex
-        ] = TickObstacleHoldTimer(
-            restartHold,
-            deltaTime
-        );
+        laneChangeObstacleRestartHoldRemaining[vehicleIndex] = TickObstacleHoldTimer(restartHold, deltaTime);
 
-        StopVehicleForLaneChangeObstacle(
-            vehicleIndex,
-            deltaTime
-        );
+        StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
 
         return true;
     }
 
-    private void StopVehicleForLaneChangeObstacle(
-        int vehicleIndex,
-        float deltaTime)
+    private void StopVehicleForLaneChangeObstacle(int vehicleIndex, float deltaTime)
     {
         float previousSpeed = vehicleSpeeds[vehicleIndex];
 
         vehicleSpeeds[vehicleIndex] = 0f;
-        vehicleAccelerations[vehicleIndex] =
-            deltaTime > 0.0001f
-                ? -previousSpeed / deltaTime
-                : 0f;
+        vehicleAccelerations[vehicleIndex] = deltaTime > 0.0001f ? -previousSpeed / deltaTime : 0f;
 
-        vehicleRenderMaximumS[vehicleIndex] =
-            vehicleS[vehicleIndex];
+        vehicleRenderMaximumS[vehicleIndex] = vehicleS[vehicleIndex];
     }
 
     private bool EvaluateLaneChangeObstacleSweep(
@@ -4193,61 +3348,27 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         laneChangeObstacleSweepSafeS = startS;
         laneChangeObstacleSweepSafeProgress = startProgress;
 
-        Vector3 startPosition = GetLaneChangePathPosition(
-            vehicleIndex,
-            startS,
-            startProgress
-        );
+        Vector3 startPosition = GetLaneChangePathPosition(vehicleIndex, startS, startProgress);
 
-        Vector3 endPosition = GetLaneChangePathPosition(
-            vehicleIndex,
-            endS,
-            endProgress
-        );
+        Vector3 endPosition = GetLaneChangePathPosition(vehicleIndex, endS, endProgress);
 
         Quaternion startRotation =
-            GetLaneChangeSweepRotation(
-                vehicleIndex,
-                startS,
-                startProgress,
-                endS,
-                endProgress,
-                0f
-            );
+            GetLaneChangeSweepRotation(vehicleIndex, startS, startProgress, endS, endProgress, 0f);
 
         Quaternion endRotation =
-            GetLaneChangeSweepRotation(
-                vehicleIndex,
-                startS,
-                startProgress,
-                endS,
-                endProgress,
-                1f
-            );
+            GetLaneChangeSweepRotation(vehicleIndex, startS, startProgress, endS, endProgress, 1f);
 
-        laneChangeObstacleSweepDebugValid[
-            vehicleIndex
-        ] = true;
+        laneChangeObstacleSweepDebugValid[vehicleIndex] = true;
 
-        laneChangeObstacleSweepStartPositions[
-            vehicleIndex
-        ] = startPosition;
+        laneChangeObstacleSweepStartPositions[vehicleIndex] = startPosition;
 
-        laneChangeObstacleSweepEndPositions[
-            vehicleIndex
-        ] = endPosition;
+        laneChangeObstacleSweepEndPositions[vehicleIndex] = endPosition;
 
-        laneChangeObstacleSweepStartRotations[
-            vehicleIndex
-        ] = startRotation;
+        laneChangeObstacleSweepStartRotations[vehicleIndex] = startRotation;
 
-        laneChangeObstacleSweepEndRotations[
-            vehicleIndex
-        ] = endRotation;
+        laneChangeObstacleSweepEndRotations[vehicleIndex] = endRotation;
 
-        if (!enableLaneChangePlayerSweep &&
-            !enableLaneChangeVehicleSweep &&
-            recoveryRoadArea == null)
+        if (!enableLaneChangePlayerSweep && !enableLaneChangeVehicleSweep && recoveryRoadArea == null)
         {
             laneChangePlayerBlocked[vehicleIndex] = false;
             laneChangeVehicleBlocked[vehicleIndex] = false;
@@ -4256,16 +3377,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         bool allowReverseEscape =
-            laneChangeReverseManeuver[vehicleIndex] &&
-            endS < startS - 0.0001f &&
+            laneChangeReverseManeuver[vehicleIndex] && endS < startS - 0.0001f &&
             IsReversePhase(true, startProgress);
 
         bool allowSourceLanePass =
             endProgress > startProgress + 0.0001f &&
-            !IsReversePhase(
-                laneChangeReverseManeuver[vehicleIndex],
-                startProgress
-            );
+            !IsReversePhase(laneChangeReverseManeuver[vehicleIndex], startProgress);
 
         int startBlockMask = GetLaneChangePoseUnsafeMask(
             vehicleIndex,
@@ -4277,18 +3394,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (startBlockMask != 0)
         {
-            MarkLaneChangeObstacleBlocked(
-                vehicleIndex,
-                startBlockMask
-            );
+            MarkLaneChangeObstacleBlocked(vehicleIndex, startBlockMask);
             return true;
         }
 
-        int sampleCount = Mathf.Clamp(
-            laneChangeObstacleSweepSamples,
-            2,
-            5
-        );
+        int sampleCount = Mathf.Clamp(laneChangeObstacleSweepSamples, 2, 5);
 
         float previousSafeFraction = 0f;
 
@@ -4296,8 +3406,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              sample <= sampleCount;
              sample++)
         {
-            float fraction =
-                (float)sample / sampleCount;
+            float fraction = (float)sample / sampleCount;
 
             int sampleBlockMask =
                 GetLaneChangeSweepFractionUnsafeMask(
@@ -4319,28 +3428,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             float safeFraction = previousSafeFraction;
 
-            laneChangeObstacleSweepSafeProgress = Mathf.Lerp(
-                startProgress,
-                endProgress,
-                safeFraction
-            );
+            laneChangeObstacleSweepSafeProgress = Mathf.Lerp(startProgress, endProgress, safeFraction);
 
             laneChangeObstacleSweepSafeS =
                 IsManeuverPathUsable(vehicleIndex)
-                    ? SampleManeuverPathSourceS(
-                        vehicleIndex,
-                        laneChangeObstacleSweepSafeProgress
-                      )
-                    : Mathf.Lerp(
-                        startS,
-                        endS,
-                        safeFraction
-                      );
+                    ? SampleManeuverPathSourceS(vehicleIndex, laneChangeObstacleSweepSafeProgress)
+                    : Mathf.Lerp(startS, endS, safeFraction);
 
-            MarkLaneChangeObstacleBlocked(
-                vehicleIndex,
-                sampleBlockMask
-            );
+            MarkLaneChangeObstacleBlocked(vehicleIndex, sampleBlockMask);
             return true;
         }
 
@@ -4353,28 +3448,19 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return false;
     }
 
-    private void MarkLaneChangeObstacleBlocked(
-        int vehicleIndex,
-        int blockMask)
+    private void MarkLaneChangeObstacleBlocked(int vehicleIndex, int blockMask)
     {
-        laneChangePlayerBlocked[vehicleIndex] =
-            (blockMask & LaneChangePlayerBlock) != 0;
+        laneChangePlayerBlocked[vehicleIndex] = (blockMask & LaneChangePlayerBlock) != 0;
 
-        laneChangeVehicleBlocked[vehicleIndex] =
-            (blockMask & LaneChangeVehicleBlock) != 0;
+        laneChangeVehicleBlocked[vehicleIndex] = (blockMask & LaneChangeVehicleBlock) != 0;
 
-        laneChangeRoadBoundaryBlocked[vehicleIndex] =
-            (blockMask & LaneChangeRoadBoundaryBlock) != 0;
+        laneChangeRoadBoundaryBlocked[vehicleIndex] = (blockMask & LaneChangeRoadBoundaryBlock) != 0;
 
         laneChangeObstacleClearHoldRemaining[
             vehicleIndex
-        ] = GetObstacleClearConfirmationTime(
-            laneChangePlayerBlocked[vehicleIndex]
-        );
+        ] = GetObstacleClearConfirmationTime(laneChangePlayerBlocked[vehicleIndex]);
 
-        laneChangeObstacleRestartHoldRemaining[
-            vehicleIndex
-        ] = 0f;
+        laneChangeObstacleRestartHoldRemaining[vehicleIndex] = 0f;
 
     }
 
@@ -4388,23 +3474,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         bool allowReverseEscape,
         bool allowSourceLanePass)
     {
-        float sampleS = Mathf.Lerp(
-            startS,
-            endS,
-            fraction
-        );
+        float sampleS = Mathf.Lerp(startS, endS, fraction);
 
-        float sampleProgress = Mathf.Lerp(
-            startProgress,
-            endProgress,
-            fraction
-        );
+        float sampleProgress = Mathf.Lerp(startProgress, endProgress, fraction);
 
-        Vector3 position = GetLaneChangePathPosition(
-            vehicleIndex,
-            sampleS,
-            sampleProgress
-        );
+        Vector3 position = GetLaneChangePathPosition(vehicleIndex, sampleS, sampleProgress);
 
         Quaternion rotation = GetLaneChangeSweepRotation(
             vehicleIndex,
@@ -4431,11 +3505,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         bool allowReverseEscape,
         bool allowSourceLanePass)
     {
-        int blockMask = GetLaneChangePoseBlockMask(
-            vehicleIndex,
-            vehiclePosition,
-            vehicleRotation
-        );
+        int blockMask = GetLaneChangePoseBlockMask(vehicleIndex, vehiclePosition, vehicleRotation);
 
         if (blockMask == 0)
         {
@@ -4443,12 +3513,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         if (allowReverseEscape &&
-            CanReverseEscapeLaneChangePose(
-                vehicleIndex,
-                vehiclePosition,
-                vehicleRotation,
-                blockMask
-            ))
+            CanReverseEscapeLaneChangePose(vehicleIndex, vehiclePosition, vehicleRotation, blockMask))
         {
             return 0;
         }
@@ -4461,21 +3526,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int remainingMask = blockMask;
 
         if ((remainingMask & LaneChangePlayerBlock) != 0 &&
-            CanAdvancePastSourceLanePlayerMargin(
-                vehicleIndex,
-                vehiclePosition,
-                vehicleRotation
-            ))
+            CanAdvancePastSourceLanePlayerMargin(vehicleIndex, vehiclePosition, vehicleRotation))
         {
             remainingMask &= ~LaneChangePlayerBlock;
         }
 
         if ((remainingMask & LaneChangeVehicleBlock) != 0 &&
-            CanAdvancePastSourceLaneSafetyMargin(
-                vehicleIndex,
-                vehiclePosition,
-                vehicleRotation
-            ))
+            CanAdvancePastSourceLaneSafetyMargin(vehicleIndex, vehiclePosition, vehicleRotation))
         {
             remainingMask &= ~LaneChangeVehicleBlock;
         }
@@ -4491,31 +3548,19 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int blockMask = 0;
 
         if (enableLaneChangePlayerSweep &&
-            IsLaneChangePoseBlockedByPlayer(
-                vehicleIndex,
-                vehiclePosition,
-                vehicleRotation
-            ))
+            IsLaneChangePoseBlockedByPlayer(vehicleIndex, vehiclePosition, vehicleRotation))
         {
             blockMask |= LaneChangePlayerBlock;
         }
 
         if (enableLaneChangeVehicleSweep &&
-            IsLaneChangePoseBlockedByVehicle(
-                vehicleIndex,
-                vehiclePosition,
-                vehicleRotation
-            ))
+            IsLaneChangePoseBlockedByVehicle(vehicleIndex, vehiclePosition, vehicleRotation))
         {
             blockMask |= LaneChangeVehicleBlock;
         }
 
         if (laneChangeReverseManeuver[vehicleIndex] &&
-            !IsRecoveryRearInsideRoadArea(
-                vehicleIndex,
-                vehiclePosition,
-                vehicleRotation
-            ))
+            !IsRecoveryRearInsideRoadArea(vehicleIndex, vehiclePosition, vehicleRotation))
         {
             blockMask |= LaneChangeRoadBoundaryBlock;
         }
@@ -4534,13 +3579,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         Vector3 up = vehicleRotation * Vector3.up;
-        up = up.sqrMagnitude > 0.0001f
-            ? up.normalized
-            : Vector3.up;
-        Vector3 forward = Vector3.ProjectOnPlane(
-            vehicleRotation * Vector3.forward,
-            up
-        );
+        up = up.sqrMagnitude > 0.0001f ? up.normalized : Vector3.up;
+        Vector3 forward = Vector3.ProjectOnPlane(vehicleRotation * Vector3.forward, up);
 
         if (forward.sqrMagnitude <= 0.0001f)
         {
@@ -4549,40 +3589,27 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         forward.Normalize();
         Vector3 right = Vector3.Cross(up, forward).normalized;
-        float halfWidth =
-            GetVehicleWidth(vehicleIndex) * 0.5f;
-        Vector3 rearCenter =
-            vehiclePosition -
-            forward * GetVehicleRearExtent(vehicleIndex);
+        float halfWidth = GetVehicleWidth(vehicleIndex) * 0.5f;
+        Vector3 rearCenter = vehiclePosition - forward * GetVehicleRearExtent(vehicleIndex);
 
-        return IsPointInsideRecoveryRoadArea(
-                   rearCenter - right * halfWidth
-               ) &&
-               IsPointInsideRecoveryRoadArea(
-                   rearCenter + right * halfWidth
-               );
+        return IsPointInsideRecoveryRoadArea(rearCenter - right * halfWidth) &&
+               IsPointInsideRecoveryRoadArea(rearCenter + right * halfWidth);
     }
 
-    private bool IsPointInsideRecoveryRoadArea(
-        Vector3 worldPosition)
+    private bool IsPointInsideRecoveryRoadArea(Vector3 worldPosition)
     {
         if (recoveryRoadArea == null)
         {
             return true;
         }
 
-        Vector3 localPosition =
-            recoveryRoadArea.transform.InverseTransformPoint(
-                worldPosition
-            );
+        Vector3 localPosition = recoveryRoadArea.transform.InverseTransformPoint(worldPosition);
         Vector3 center = recoveryRoadArea.center;
         Vector3 halfSize = recoveryRoadArea.size * 0.5f;
         float edgeMargin = 0.05f;
 
-        return Mathf.Abs(localPosition.x - center.x) <=
-                   Mathf.Max(0f, halfSize.x - edgeMargin) &&
-               Mathf.Abs(localPosition.z - center.z) <=
-                   Mathf.Max(0f, halfSize.z - edgeMargin);
+        return Mathf.Abs(localPosition.x - center.x) <= Mathf.Max(0f, halfSize.x - edgeMargin) &&
+               Mathf.Abs(localPosition.z - center.z) <= Mathf.Max(0f, halfSize.z - edgeMargin);
     }
 
     private bool CanReverseEscapeLaneChangePose(
@@ -4602,10 +3629,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             up.Normalize();
         }
 
-        Vector3 forward = Vector3.ProjectOnPlane(
-            vehicleRotation * Vector3.forward,
-            up
-        );
+        Vector3 forward = Vector3.ProjectOnPlane(vehicleRotation * Vector3.forward, up);
 
         if (forward.sqrMagnitude <= 0.0001f)
         {
@@ -4623,11 +3647,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         right.Normalize();
 
-        Vector3 footprintPosition = GetVehicleFootprintCenter(
-            vehicleIndex,
-            vehiclePosition,
-            vehicleRotation
-        );
+        Vector3 footprintPosition = GetVehicleFootprintCenter(vehicleIndex, vehiclePosition, vehicleRotation);
 
         float frontThreshold = 0.25f;
 
@@ -4637,10 +3657,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     vehicleIndex,
                     vehiclePosition,
                     vehicleRotation,
-                    Mathf.Max(
-                        authorityObstacleSafetyMargin,
-                        laneChangePlayerSafetyMargin
-                    )
+                    Mathf.Max(authorityObstacleSafetyMargin, laneChangePlayerSafetyMargin)
                 ))
             {
                 return false;
@@ -4649,11 +3666,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if ((blockMask & LaneChangeVehicleBlock) != 0)
         {
-            float subjectHalfLength =
-                GetVehicleLength(vehicleIndex) * 0.5f;
+            float subjectHalfLength = GetVehicleLength(vehicleIndex) * 0.5f;
 
-            float subjectHalfWidth =
-                GetVehicleWidth(vehicleIndex) * 0.5f;
+            float subjectHalfWidth = GetVehicleWidth(vehicleIndex) * 0.5f;
 
             bool foundVehicleBlocker = false;
 
@@ -4661,8 +3676,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                  otherIndex < slotCount;
                  otherIndex++)
             {
-                if (otherIndex == vehicleIndex ||
-                    !vehicleActive[otherIndex])
+                if (otherIndex == vehicleIndex || !vehicleActive[otherIndex])
                 {
                     continue;
                 }
@@ -4674,22 +3688,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                         laneChangeProgress[otherIndex]
                     );
 
-                Quaternion otherRotation =
-                    GetCurrentVehicleCollisionRotation(
-                        otherIndex
-                    );
+                Quaternion otherRotation = GetCurrentVehicleCollisionRotation(otherIndex);
                 Vector3 otherFootprintPosition =
-                    GetVehicleFootprintCenter(
-                        otherIndex,
-                        otherPosition,
-                        otherRotation
-                    );
+                    GetVehicleFootprintCenter(otherIndex, otherPosition, otherRotation);
 
-                float otherHalfLength =
-                    GetVehicleLength(otherIndex) * 0.5f;
+                float otherHalfLength = GetVehicleLength(otherIndex) * 0.5f;
 
-                float otherHalfWidth =
-                    GetVehicleWidth(otherIndex) * 0.5f;
+                float otherHalfWidth = GetVehicleWidth(otherIndex) * 0.5f;
 
                 if (!DoVehicleFootprintsOverlap(
                         footprintPosition,
@@ -4700,10 +3705,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                         otherRotation,
                         otherHalfLength,
                         otherHalfWidth,
-                        Mathf.Max(
-                            0f,
-                            laneChangeVehicleSafetyMargin
-                        )
+                        Mathf.Max(0f, laneChangeVehicleSafetyMargin)
                     ))
                 {
                     continue;
@@ -4711,10 +3713,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
                 foundVehicleBlocker = true;
 
-                if (Vector3.Dot(
-                        otherFootprintPosition - footprintPosition,
-                        forward
-                    ) <= frontThreshold)
+                if (Vector3.Dot(otherFootprintPosition - footprintPosition, forward) <= frontThreshold)
                 {
                     return false;
                 }
@@ -4734,8 +3733,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         Vector3 vehiclePosition,
         Quaternion vehicleRotation)
     {
-        if (!enableAuthorityPhysicsObstacles ||
-            authorityObstacleLayerMask == 0)
+        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0)
         {
             return false;
         }
@@ -4744,20 +3742,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
         int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (sourceLaneId < 0 ||
-            targetLaneId < 0 ||
-            targetLaneId >= laneDatabase.laneCount ||
-            ruleIndex < 0)
+        if (sourceLaneId < 0 || targetLaneId < 0 || targetLaneId >= laneDatabase.laneCount || ruleIndex < 0)
         {
             return false;
         }
 
         float sourceS = vehicleS[vehicleIndex];
-        Vector3 sourceCenter = laneDatabase.GetLanePosition(
-            sourceLaneId,
-            sourceS,
-            -1
-        );
+        Vector3 sourceCenter = laneDatabase.GetLanePosition(sourceLaneId, sourceS, -1);
         Vector3 targetCenter = laneDatabase.GetLanePosition(
             targetLaneId,
             MapSourceToTargetS(ruleIndex, sourceS),
@@ -4770,29 +3761,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return false;
         }
 
-        float coreMargin = Mathf.Max(
-            0f,
-            authorityObstacleSafetyMargin
-        );
-        float expandedMargin = coreMargin + Mathf.Max(
-            0f,
-            laneChangePlayerSafetyMargin
-        );
+        float coreMargin = Mathf.Max(0f, authorityObstacleSafetyMargin);
+        float expandedMargin = coreMargin + Mathf.Max(0f, laneChangePlayerSafetyMargin);
 
         // 출발 차선 쪽의 추가 안전 여유만 예외 처리
         // 실제 차체 범위에 닿은 Collider나 목표 차선을 점유한 물체가 있으면 기동 중지 유지
-        if (!IsPhysicsPoseBlockedByObstacle(
-                vehicleIndex,
-                vehiclePosition,
-                vehicleRotation,
-                expandedMargin
-            ) ||
-            IsPhysicsPoseBlockedByObstacle(
-                vehicleIndex,
-                vehiclePosition,
-                vehicleRotation,
-                coreMargin
-            ))
+        if (!IsPhysicsPoseBlockedByObstacle(vehicleIndex, vehiclePosition, vehicleRotation, expandedMargin) ||
+            IsPhysicsPoseBlockedByObstacle(vehicleIndex, vehiclePosition, vehicleRotation, coreMargin))
         {
             return false;
         }
@@ -4814,56 +3789,33 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int sourceLaneId = vehicleLaneIds[vehicleIndex];
         int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
 
-        if (sourceLaneId < 0 ||
-            targetLaneId < 0 ||
-            targetLaneId >= laneDatabase.laneCount)
+        if (sourceLaneId < 0 || targetLaneId < 0 || targetLaneId >= laneDatabase.laneCount)
         {
             return false;
         }
 
-        float subjectHalfLength =
-            GetVehicleLength(vehicleIndex) * 0.5f;
-        float subjectHalfWidth =
-            GetVehicleWidth(vehicleIndex) * 0.5f;
-        Vector3 footprintPosition = GetVehicleFootprintCenter(
-            vehicleIndex,
-            vehiclePosition,
-            vehicleRotation
-        );
+        float subjectHalfLength = GetVehicleLength(vehicleIndex) * 0.5f;
+        float subjectHalfWidth = GetVehicleWidth(vehicleIndex) * 0.5f;
+        Vector3 footprintPosition = GetVehicleFootprintCenter(vehicleIndex, vehiclePosition, vehicleRotation);
         bool foundSourceLeaderMargin = false;
 
         for (int otherIndex = 0;
              otherIndex < slotCount;
              otherIndex++)
         {
-            if (otherIndex == vehicleIndex ||
-                !vehicleActive[otherIndex] ||
-                !OtherVehicleHasLaneChangePriority(
-                    vehicleIndex,
-                    otherIndex
-                ))
+            if (otherIndex == vehicleIndex || !vehicleActive[otherIndex] ||
+                !OtherVehicleHasLaneChangePriority(vehicleIndex, otherIndex))
             {
                 continue;
             }
 
             Vector3 otherPosition =
-                GetLaneChangePathPosition(
-                    otherIndex,
-                    vehicleS[otherIndex],
-                    laneChangeProgress[otherIndex]
-                );
-            Quaternion otherRotation =
-                GetCurrentVehicleCollisionRotation(otherIndex);
+                GetLaneChangePathPosition(otherIndex, vehicleS[otherIndex], laneChangeProgress[otherIndex]);
+            Quaternion otherRotation = GetCurrentVehicleCollisionRotation(otherIndex);
             Vector3 otherFootprintPosition =
-                GetVehicleFootprintCenter(
-                    otherIndex,
-                    otherPosition,
-                    otherRotation
-                );
-            float otherHalfLength =
-                GetVehicleLength(otherIndex) * 0.5f;
-            float otherHalfWidth =
-                GetVehicleWidth(otherIndex) * 0.5f;
+                GetVehicleFootprintCenter(otherIndex, otherPosition, otherRotation);
+            float otherHalfLength = GetVehicleLength(otherIndex) * 0.5f;
+            float otherHalfWidth = GetVehicleWidth(otherIndex) * 0.5f;
 
             if (!DoVehicleFootprintsOverlap(
                     footprintPosition,
@@ -4874,10 +3826,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     otherRotation,
                     otherHalfLength,
                     otherHalfWidth,
-                    Mathf.Max(
-                        0f,
-                        laneChangeVehicleSafetyMargin
-                    )
+                    Mathf.Max(0f, laneChangeVehicleSafetyMargin)
                 ))
             {
                 continue;
@@ -4885,11 +3834,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             bool isSourceLeader =
                 VehicleOccupiesLane(otherIndex, sourceLaneId) &&
-                GetVehicleSOnLane(otherIndex, sourceLaneId) >
-                    vehicleS[vehicleIndex] + 0.01f;
+                GetVehicleSOnLane(otherIndex, sourceLaneId) > vehicleS[vehicleIndex] + 0.01f;
 
-            if (!isSourceLeader ||
-                VehicleOccupiesLane(otherIndex, targetLaneId) ||
+            if (!isSourceLeader || VehicleOccupiesLane(otherIndex, targetLaneId) ||
                 DoVehicleFootprintsOverlap(
                     footprintPosition,
                     vehicleRotation,
@@ -4920,8 +3867,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             vehicleIndex,
             vehiclePosition,
             vehicleRotation,
-            Mathf.Max(0f, authorityObstacleSafetyMargin) +
-            Mathf.Max(0f, laneChangePlayerSafetyMargin)
+            Mathf.Max(0f, authorityObstacleSafetyMargin) + Mathf.Max(0f, laneChangePlayerSafetyMargin)
         );
     }
 
@@ -4944,55 +3890,32 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         Quaternion vehicleRotation,
         float safetyMargin)
     {
-        float subjectHalfLength =
-            GetVehicleLength(vehicleIndex) * 0.5f;
+        float subjectHalfLength = GetVehicleLength(vehicleIndex) * 0.5f;
 
-        float subjectHalfWidth =
-            GetVehicleWidth(vehicleIndex) * 0.5f;
+        float subjectHalfWidth = GetVehicleWidth(vehicleIndex) * 0.5f;
 
-        Vector3 footprintPosition = GetVehicleFootprintCenter(
-            vehicleIndex,
-            vehiclePosition,
-            vehicleRotation
-        );
+        Vector3 footprintPosition = GetVehicleFootprintCenter(vehicleIndex, vehiclePosition, vehicleRotation);
 
         for (int otherIndex = 0;
              otherIndex < slotCount;
              otherIndex++)
         {
-            if (otherIndex == vehicleIndex ||
-                !vehicleActive[otherIndex] ||
-                !OtherVehicleHasLaneChangePriority(
-                    vehicleIndex,
-                    otherIndex
-                ))
+            if (otherIndex == vehicleIndex || !vehicleActive[otherIndex] ||
+                !OtherVehicleHasLaneChangePriority(vehicleIndex, otherIndex))
             {
                 continue;
             }
 
             Vector3 otherPosition =
-                GetLaneChangePathPosition(
-                    otherIndex,
-                    vehicleS[otherIndex],
-                    laneChangeProgress[otherIndex]
-                );
+                GetLaneChangePathPosition(otherIndex, vehicleS[otherIndex], laneChangeProgress[otherIndex]);
 
-            Quaternion otherRotation =
-                GetCurrentVehicleCollisionRotation(
-                    otherIndex
-                );
+            Quaternion otherRotation = GetCurrentVehicleCollisionRotation(otherIndex);
             Vector3 otherFootprintPosition =
-                GetVehicleFootprintCenter(
-                    otherIndex,
-                    otherPosition,
-                    otherRotation
-                );
+                GetVehicleFootprintCenter(otherIndex, otherPosition, otherRotation);
 
-            float otherHalfLength =
-                GetVehicleLength(otherIndex) * 0.5f;
+            float otherHalfLength = GetVehicleLength(otherIndex) * 0.5f;
 
-            float otherHalfWidth =
-                GetVehicleWidth(otherIndex) * 0.5f;
+            float otherHalfWidth = GetVehicleWidth(otherIndex) * 0.5f;
 
             if (DoVehicleFootprintsOverlap(
                     footprintPosition,
@@ -5013,14 +3936,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return false;
     }
 
-    private bool OtherVehicleHasLaneChangePriority(
-        int vehicleIndex,
-        int otherIndex)
+    private bool OtherVehicleHasLaneChangePriority(int vehicleIndex, int otherIndex)
     {
-        if (IsReversePhase(
-                laneChangeReverseManeuver[vehicleIndex],
-                laneChangeProgress[vehicleIndex]
-            ))
+        if (IsReversePhase(laneChangeReverseManeuver[vehicleIndex], laneChangeProgress[vehicleIndex]))
         {
             // 후진 차량은 점유된 모든 차체 범위에 양보
             // 후진 탈출 예외는 전방으로 확인된 장애물에만 적용하고 뒤쪽 및 옆 차량은 계속 검사
@@ -5031,32 +3949,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float sourceS = vehicleS[vehicleIndex];
 
         if (VehicleOccupiesLane(otherIndex, sourceLaneId) &&
-            GetVehicleSOnLane(otherIndex, sourceLaneId) <
-                sourceS - 0.01f)
+            GetVehicleSOnLane(otherIndex, sourceLaneId) < sourceS - 0.01f)
         {
             return false;
         }
 
-        int targetLaneId =
-            laneChangeTargetLaneIds[vehicleIndex];
+        int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
 
-        int ruleIndex =
-            laneChangeRuleIndices[vehicleIndex];
+        int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (targetLaneId >= 0 &&
-            targetLaneId < laneDatabase.laneCount &&
-            ruleIndex >= 0 &&
+        if (targetLaneId >= 0 && targetLaneId < laneDatabase.laneCount && ruleIndex >= 0 &&
             VehicleOccupiesLane(otherIndex, targetLaneId))
         {
-            float subjectTargetS = MapSourceToTargetS(
-                ruleIndex,
-                sourceS
-            );
+            float subjectTargetS = MapSourceToTargetS(ruleIndex, sourceS);
 
-            if (GetVehicleSOnLane(
-                    otherIndex,
-                    targetLaneId
-                ) < subjectTargetS - 0.01f)
+            if (GetVehicleSOnLane(otherIndex, targetLaneId) < subjectTargetS - 0.01f)
             {
                 return false;
             }
@@ -5096,30 +4003,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return otherIndex < vehicleIndex;
     }
 
-    private Quaternion GetCurrentVehicleCollisionRotation(
-        int vehicleIndex)
+    private Quaternion GetCurrentVehicleCollisionRotation(int vehicleIndex)
     {
         int laneId = vehicleLaneIds[vehicleIndex];
         float currentS = vehicleS[vehicleIndex];
 
         if (!laneChangeActive[vehicleIndex])
         {
-            return laneDatabase.GetLaneRotation(
-                laneId,
-                currentS,
-                -1
-            );
+            return laneDatabase.GetLaneRotation(laneId, currentS, -1);
         }
 
-        float currentProgress =
-            laneChangeProgress[vehicleIndex];
+        float currentProgress = laneChangeProgress[vehicleIndex];
 
         if (IsManeuverPathUsable(vehicleIndex))
         {
-            return SampleManeuverPathRotation(
-                vehicleIndex,
-                currentProgress
-            );
+            return SampleManeuverPathRotation(vehicleIndex, currentProgress);
         }
 
         return GetLaneChangeSweepRotation(
@@ -5154,10 +4052,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             upA.Normalize();
         }
 
-        Vector3 forwardA = Vector3.ProjectOnPlane(
-            rotationA * Vector3.forward,
-            upA
-        );
+        Vector3 forwardA = Vector3.ProjectOnPlane(rotationA * Vector3.forward, upA);
 
         if (forwardA.sqrMagnitude <= 0.0001f)
         {
@@ -5168,10 +4063,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             forwardA.Normalize();
         }
 
-        Vector3 rightA = Vector3.Cross(
-            upA,
-            forwardA
-        );
+        Vector3 rightA = Vector3.Cross(upA, forwardA);
 
         if (rightA.sqrMagnitude <= 0.0001f)
         {
@@ -5193,10 +4085,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             upB.Normalize();
         }
 
-        Vector3 forwardB = Vector3.ProjectOnPlane(
-            rotationB * Vector3.forward,
-            upB
-        );
+        Vector3 forwardB = Vector3.ProjectOnPlane(rotationB * Vector3.forward, upB);
 
         if (forwardB.sqrMagnitude <= 0.0001f)
         {
@@ -5207,10 +4096,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             forwardB.Normalize();
         }
 
-        Vector3 rightB = Vector3.Cross(
-            upB,
-            forwardB
-        );
+        Vector3 rightB = Vector3.Cross(upB, forwardB);
 
         if (rightB.sqrMagnitude <= 0.0001f)
         {
@@ -5297,25 +4183,15 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float halfLengthB,
         float halfWidthB)
     {
-        float centerDistance = Mathf.Abs(
-            Vector3.Dot(centerDifference, axis)
-        );
+        float centerDistance = Mathf.Abs(Vector3.Dot(centerDifference, axis));
 
         float radiusA =
-            halfLengthA * Mathf.Abs(
-                Vector3.Dot(forwardA, axis)
-            ) +
-            halfWidthA * Mathf.Abs(
-                Vector3.Dot(rightA, axis)
-            );
+            halfLengthA * Mathf.Abs(Vector3.Dot(forwardA, axis)) +
+            halfWidthA * Mathf.Abs(Vector3.Dot(rightA, axis));
 
         float radiusB =
-            halfLengthB * Mathf.Abs(
-                Vector3.Dot(forwardB, axis)
-            ) +
-            halfWidthB * Mathf.Abs(
-                Vector3.Dot(rightB, axis)
-            );
+            halfLengthB * Mathf.Abs(Vector3.Dot(forwardB, axis)) +
+            halfWidthB * Mathf.Abs(Vector3.Dot(rightB, axis));
 
         return centerDistance > radiusA + radiusB;
     }
@@ -5331,8 +4207,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void InvalidateManeuverPath(int vehicleIndex)
     {
-        if (vehicleIndex >= 0 &&
-            vehicleIndex < maneuverPathValid.Length)
+        if (vehicleIndex >= 0 && vehicleIndex < maneuverPathValid.Length)
         {
             maneuverPathValid[vehicleIndex] = false;
         }
@@ -5340,51 +4215,33 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private bool IsManeuverPathUsable(int vehicleIndex)
     {
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= maneuverPathValid.Length ||
-            !maneuverPathValid[vehicleIndex] ||
+        if (vehicleIndex < 0 || vehicleIndex >= maneuverPathValid.Length || !maneuverPathValid[vehicleIndex] ||
             !laneChangeActive[vehicleIndex])
         {
             return false;
         }
 
-        return maneuverPathSourceLaneIds[vehicleIndex] ==
-                   vehicleLaneIds[vehicleIndex] &&
-               maneuverPathTargetLaneIds[vehicleIndex] ==
-                   laneChangeTargetLaneIds[vehicleIndex] &&
-               maneuverPathRuleIndices[vehicleIndex] ==
-                   laneChangeRuleIndices[vehicleIndex] &&
-               maneuverPathReverse[vehicleIndex] ==
-                   laneChangeReverseManeuver[vehicleIndex] &&
-               maneuverPathEmergency[vehicleIndex] ==
-                   laneChangeEmergencyManeuver[vehicleIndex] &&
+        return maneuverPathSourceLaneIds[vehicleIndex] == vehicleLaneIds[vehicleIndex] &&
+               maneuverPathTargetLaneIds[vehicleIndex] == laneChangeTargetLaneIds[vehicleIndex] &&
+               maneuverPathRuleIndices[vehicleIndex] == laneChangeRuleIndices[vehicleIndex] &&
+               maneuverPathReverse[vehicleIndex] == laneChangeReverseManeuver[vehicleIndex] &&
+               maneuverPathEmergency[vehicleIndex] == laneChangeEmergencyManeuver[vehicleIndex] &&
                (!laneChangeReverseManeuver[vehicleIndex] ||
                 Mathf.Abs(
-                    maneuverPathRecoveryDistances[vehicleIndex] -
-                    laneChangeRecoveryDistance[vehicleIndex]
+                    maneuverPathRecoveryDistances[vehicleIndex] - laneChangeRecoveryDistance[vehicleIndex]
                 ) <= 0.051f);
     }
 
     private float GetManeuverPathSampleCoordinate(float progress)
     {
-        return Mathf.Clamp01(progress) *
-            (ManeuverPathSampleCount - 1);
+        return Mathf.Clamp01(progress) * (ManeuverPathSampleCount - 1);
     }
 
-    private Vector3 SampleManeuverPathPosition(
-        int vehicleIndex,
-        float progress)
+    private Vector3 SampleManeuverPathPosition(int vehicleIndex, float progress)
     {
         float coordinate = GetManeuverPathSampleCoordinate(progress);
-        int first = Mathf.Clamp(
-            Mathf.FloorToInt(coordinate),
-            0,
-            ManeuverPathSampleCount - 1
-        );
-        int second = Mathf.Min(
-            first + 1,
-            ManeuverPathSampleCount - 1
-        );
+        int first = Mathf.Clamp(Mathf.FloorToInt(coordinate), 0, ManeuverPathSampleCount - 1);
+        int second = Mathf.Min(first + 1, ManeuverPathSampleCount - 1);
         float interpolation = coordinate - first;
         int offset = GetManeuverPathOffset(vehicleIndex);
 
@@ -5395,20 +4252,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
-    private Quaternion SampleManeuverPathRotation(
-        int vehicleIndex,
-        float progress)
+    private Quaternion SampleManeuverPathRotation(int vehicleIndex, float progress)
     {
         float coordinate = GetManeuverPathSampleCoordinate(progress);
-        int first = Mathf.Clamp(
-            Mathf.FloorToInt(coordinate),
-            0,
-            ManeuverPathSampleCount - 1
-        );
-        int second = Mathf.Min(
-            first + 1,
-            ManeuverPathSampleCount - 1
-        );
+        int first = Mathf.Clamp(Mathf.FloorToInt(coordinate), 0, ManeuverPathSampleCount - 1);
+        int second = Mathf.Min(first + 1, ManeuverPathSampleCount - 1);
         float interpolation = coordinate - first;
         int offset = GetManeuverPathOffset(vehicleIndex);
 
@@ -5419,20 +4267,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
-    private float SampleManeuverPathSourceS(
-        int vehicleIndex,
-        float progress)
+    private float SampleManeuverPathSourceS(int vehicleIndex, float progress)
     {
         float coordinate = GetManeuverPathSampleCoordinate(progress);
-        int first = Mathf.Clamp(
-            Mathf.FloorToInt(coordinate),
-            0,
-            ManeuverPathSampleCount - 1
-        );
-        int second = Mathf.Min(
-            first + 1,
-            ManeuverPathSampleCount - 1
-        );
+        int first = Mathf.Clamp(Mathf.FloorToInt(coordinate), 0, ManeuverPathSampleCount - 1);
+        int second = Mathf.Min(first + 1, ManeuverPathSampleCount - 1);
         float interpolation = coordinate - first;
         int offset = GetManeuverPathOffset(vehicleIndex);
 
@@ -5443,20 +4282,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
-    private float SampleManeuverPathDistance(
-        int vehicleIndex,
-        float progress)
+    private float SampleManeuverPathDistance(int vehicleIndex, float progress)
     {
         float coordinate = GetManeuverPathSampleCoordinate(progress);
-        int first = Mathf.Clamp(
-            Mathf.FloorToInt(coordinate),
-            0,
-            ManeuverPathSampleCount - 1
-        );
-        int second = Mathf.Min(
-            first + 1,
-            ManeuverPathSampleCount - 1
-        );
+        int first = Mathf.Clamp(Mathf.FloorToInt(coordinate), 0, ManeuverPathSampleCount - 1);
+        int second = Mathf.Min(first + 1, ManeuverPathSampleCount - 1);
         float interpolation = coordinate - first;
         int offset = GetManeuverPathOffset(vehicleIndex);
 
@@ -5474,19 +4304,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float targetDistance)
     {
         float safeMinimum = Mathf.Clamp01(minimumProgress);
-        float safeMaximum = Mathf.Clamp(
-            maximumProgress,
-            safeMinimum,
-            1f
-        );
-        float minimumDistance = SampleManeuverPathDistance(
-            vehicleIndex,
-            safeMinimum
-        );
-        float maximumDistance = SampleManeuverPathDistance(
-            vehicleIndex,
-            safeMaximum
-        );
+        float safeMaximum = Mathf.Clamp(maximumProgress, safeMinimum, 1f);
+        float minimumDistance = SampleManeuverPathDistance(vehicleIndex, safeMinimum);
+        float maximumDistance = SampleManeuverPathDistance(vehicleIndex, safeMaximum);
 
         if (targetDistance <= minimumDistance + 0.0001f)
         {
@@ -5501,16 +4321,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int offset = GetManeuverPathOffset(vehicleIndex);
         int last = ManeuverPathSampleCount - 1;
         int firstSample = Mathf.Clamp(
-            Mathf.FloorToInt(
-                GetManeuverPathSampleCoordinate(safeMinimum)
-            ),
+            Mathf.FloorToInt(GetManeuverPathSampleCoordinate(safeMinimum)),
             0,
             last - 1
         );
         int finalSample = Mathf.Clamp(
-            Mathf.CeilToInt(
-                GetManeuverPathSampleCoordinate(safeMaximum)
-            ),
+            Mathf.CeilToInt(GetManeuverPathSampleCoordinate(safeMaximum)),
             firstSample + 1,
             last
         );
@@ -5519,25 +4335,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              sample < finalSample;
              sample++)
         {
-            float startDistance =
-                maneuverPathDistances[offset + sample];
-            float endDistance =
-                maneuverPathDistances[offset + sample + 1];
+            float startDistance = maneuverPathDistances[offset + sample];
+            float endDistance = maneuverPathDistances[offset + sample + 1];
 
-            if (targetDistance <= endDistance ||
-                sample == finalSample - 1)
+            if (targetDistance <= endDistance || sample == finalSample - 1)
             {
-                float segmentProgress = Mathf.InverseLerp(
-                    startDistance,
-                    endDistance,
-                    targetDistance
-                );
+                float segmentProgress = Mathf.InverseLerp(startDistance, endDistance, targetDistance);
 
-                return Mathf.Clamp(
-                    (sample + segmentProgress) / last,
-                    safeMinimum,
-                    safeMaximum
-                );
+                return Mathf.Clamp((sample + segmentProgress) / last, safeMinimum, safeMaximum);
             }
         }
 
@@ -5552,21 +4357,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         float safeProgress = Mathf.Clamp01(progress);
 
-        if (!IsManeuverPathUsable(vehicleIndex) ||
-            travelDistance <= 0.000001f)
+        if (!IsManeuverPathUsable(vehicleIndex) || travelDistance <= 0.000001f)
         {
             return safeProgress;
         }
 
-        float safeMaximum = Mathf.Clamp(
-            maximumProgress,
-            safeProgress,
-            1f
-        );
-        float currentDistance = SampleManeuverPathDistance(
-            vehicleIndex,
-            safeProgress
-        );
+        float safeMaximum = Mathf.Clamp(maximumProgress, safeProgress, 1f);
+        float currentDistance = SampleManeuverPathDistance(vehicleIndex, safeProgress);
 
         return FindManeuverProgressForDistance(
             vehicleIndex,
@@ -5576,17 +4373,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
-    private float FindManeuverProgressForSourceS(
-        int vehicleIndex,
-        float minimumProgress,
-        float sourceS)
+    private float FindManeuverProgressForSourceS(int vehicleIndex, float minimumProgress, float sourceS)
     {
         int offset = GetManeuverPathOffset(vehicleIndex);
         int last = ManeuverPathSampleCount - 1;
         int firstSample = Mathf.Clamp(
-            Mathf.FloorToInt(
-                GetManeuverPathSampleCoordinate(minimumProgress)
-            ),
+            Mathf.FloorToInt(GetManeuverPathSampleCoordinate(minimumProgress)),
             0,
             last - 1
         );
@@ -5605,35 +4397,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (sourceS <= endS || sample == last - 1)
             {
-                float segmentProgress = Mathf.InverseLerp(
-                    startS,
-                    endS,
-                    sourceS
-                );
+                float segmentProgress = Mathf.InverseLerp(startS, endS, sourceS);
 
-                return Mathf.Clamp01(
-                    (sample + segmentProgress) / last
-                );
+                return Mathf.Clamp01((sample + segmentProgress) / last);
             }
         }
 
         return 1f;
     }
 
-    private float SampleManeuverPathSteering(
-        int vehicleIndex,
-        float progress)
+    private float SampleManeuverPathSteering(int vehicleIndex, float progress)
     {
         float coordinate = GetManeuverPathSampleCoordinate(progress);
-        int first = Mathf.Clamp(
-            Mathf.FloorToInt(coordinate),
-            0,
-            ManeuverPathSampleCount - 1
-        );
-        int second = Mathf.Min(
-            first + 1,
-            ManeuverPathSampleCount - 1
-        );
+        int first = Mathf.Clamp(Mathf.FloorToInt(coordinate), 0, ManeuverPathSampleCount - 1);
+        int second = Mathf.Min(first + 1, ManeuverPathSampleCount - 1);
         float interpolation = coordinate - first;
         int offset = GetManeuverPathOffset(vehicleIndex);
 
@@ -5657,16 +4434,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (reverseManeuver)
         {
             int reverseEnd = Mathf.Clamp(
-                Mathf.RoundToInt(
-                    GetRecoveryFirstReverseEndProgress() * last
-                ),
+                Mathf.RoundToInt(GetRecoveryFirstReverseEndProgress() * last),
                 1,
                 last - 2
             );
             int preparationEnd = Mathf.Clamp(
-                Mathf.RoundToInt(
-                    GetRecoveryPreparationEndProgress() * last
-                ),
+                Mathf.RoundToInt(GetRecoveryPreparationEndProgress() * last),
                 reverseEnd + 1,
                 last - 1
             );
@@ -5675,8 +4448,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             {
                 phaseEnd = reverseEnd;
             }
-            else if (progress <
-                     GetRecoveryPreparationEndProgress() - 0.0001f)
+            else if (progress < GetRecoveryPreparationEndProgress() - 0.0001f)
             {
                 phaseStart = reverseEnd;
                 phaseEnd = preparationEnd;
@@ -5687,37 +4459,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
         }
 
-        phaseRange[0] = Mathf.Max(
-            phaseStart,
-            sampleIndex - 2
-        );
-        phaseRange[1] = Mathf.Min(
-            phaseEnd,
-            sampleIndex + 2
-        );
+        phaseRange[0] = Mathf.Max(phaseStart, sampleIndex - 2);
+        phaseRange[1] = Mathf.Min(phaseEnd, sampleIndex + 2);
 
         if (phaseRange[0] == phaseRange[1])
         {
-            phaseRange[0] = Mathf.Max(
-                phaseStart,
-                phaseRange[0] - 1
-            );
-            phaseRange[1] = Mathf.Min(
-                phaseEnd,
-                phaseRange[1] + 1
-            );
+            phaseRange[0] = Mathf.Max(phaseStart, phaseRange[0] - 1);
+            phaseRange[1] = Mathf.Min(phaseEnd, phaseRange[1] + 1);
         }
     }
 
-    private bool BuildManeuverPath(
-        int vehicleIndex,
-        float anchorS)
+    private bool BuildManeuverPath(int vehicleIndex, float anchorS)
     {
         InvalidateManeuverPath(vehicleIndex);
 
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= slotCount ||
-            !laneChangeActive[vehicleIndex] ||
+        if (vehicleIndex < 0 || vehicleIndex >= slotCount || !laneChangeActive[vehicleIndex] ||
             laneChangePreparing[vehicleIndex] ||
             laneChangeRuleIndices[vehicleIndex] < 0 ||
             laneChangeTargetLaneIds[vehicleIndex] < 0)
@@ -5725,21 +4481,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return false;
         }
 
-        bool reverseManeuver =
-            laneChangeReverseManeuver[vehicleIndex];
-        bool emergencyManeuver =
-            laneChangeEmergencyManeuver[vehicleIndex];
+        bool reverseManeuver = laneChangeReverseManeuver[vehicleIndex];
+        bool emergencyManeuver = laneChangeEmergencyManeuver[vehicleIndex];
         float recoveryDistance = reverseManeuver
-            ? Mathf.Max(
-                MinimumReverseRecoveryDistance,
-                laneChangeRecoveryDistance[vehicleIndex]
-              )
+            ? Mathf.Max(MinimumReverseRecoveryDistance, laneChangeRecoveryDistance[vehicleIndex])
             : 0f;
-        float travelDistance = reverseManeuver
-            ? 0f
-            : GetNormalLaneChangeTravelDistance(
-                emergencyManeuver
-              );
+        float travelDistance = reverseManeuver ? 0f : GetNormalLaneChangeTravelDistance(emergencyManeuver);
         int offset = GetManeuverPathOffset(vehicleIndex);
         float cumulativeDistance = 0f;
 
@@ -5747,22 +4494,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              sample < ManeuverPathSampleCount;
              sample++)
         {
-            float progress =
-                (float)sample /
-                (ManeuverPathSampleCount - 1);
+            float progress = (float)sample / (ManeuverPathSampleCount - 1);
             float sourceS = reverseManeuver
-                ? GetRecoveryPathSourceS(
-                    vehicleIndex,
-                    progress,
-                    recoveryDistance
-                  )
+                ? GetRecoveryPathSourceS(vehicleIndex, progress, recoveryDistance)
                 : anchorS + travelDistance * progress;
-            Vector3 position =
-                GetLaneChangePathPositionUncached(
-                    vehicleIndex,
-                    sourceS,
-                    progress
-                );
+            Vector3 position = GetLaneChangePathPositionUncached(vehicleIndex, sourceS, progress);
             int pathIndex = offset + sample;
 
             maneuverPathSourceS[pathIndex] = sourceS;
@@ -5770,10 +4506,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (sample > 0)
             {
-                cumulativeDistance += Vector3.Distance(
-                    maneuverPathPositions[pathIndex - 1],
-                    position
-                );
+                cumulativeDistance += Vector3.Distance(maneuverPathPositions[pathIndex - 1], position);
             }
 
             maneuverPathDistances[pathIndex] = cumulativeDistance;
@@ -5785,9 +4518,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              sample < ManeuverPathSampleCount;
              sample++)
         {
-            float progress =
-                (float)sample /
-                (ManeuverPathSampleCount - 1);
+            float progress = (float)sample / (ManeuverPathSampleCount - 1);
 
             if (reverseManeuver)
             {
@@ -5802,94 +4533,45 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            GetManeuverPathPhaseSampleRange(
-                reverseManeuver,
-                sample,
-                progress,
-                phaseRange
-            );
+            GetManeuverPathPhaseSampleRange(reverseManeuver, sample, progress, phaseRange);
             Vector3 pathForward =
-                maneuverPathPositions[offset + phaseRange[1]] -
-                maneuverPathPositions[offset + phaseRange[0]];
+                maneuverPathPositions[offset + phaseRange[1]] - maneuverPathPositions[offset + phaseRange[0]];
 
             Quaternion surfaceRotation =
-                GetLaneChangeSurfaceRotation(
-                    vehicleIndex,
-                    maneuverPathSourceS[offset + sample],
-                    progress
-                );
-            Vector3 surfaceUp =
-                surfaceRotation * Vector3.up;
-            pathForward = Vector3.ProjectOnPlane(
-                pathForward,
-                surfaceUp
-            );
+                GetLaneChangeSurfaceRotation(vehicleIndex, maneuverPathSourceS[offset + sample], progress);
+            Vector3 surfaceUp = surfaceRotation * Vector3.up;
+            pathForward = Vector3.ProjectOnPlane(pathForward, surfaceUp);
 
             maneuverPathRotations[offset + sample] =
                 pathForward.sqrMagnitude > 0.000001f
-                    ? Quaternion.LookRotation(
-                        pathForward.normalized,
-                        surfaceUp.normalized
-                      )
+                    ? Quaternion.LookRotation(pathForward.normalized, surfaceUp.normalized)
                     : surfaceRotation;
         }
 
-        float wheelBase = Mathf.Max(
-            2.2f,
-            GetVehicleLength(vehicleIndex) * 0.55f
-        );
+        float wheelBase = Mathf.Max(2.2f, GetVehicleLength(vehicleIndex) * 0.55f);
         float maximumSteering = Mathf.Min(
-            Mathf.Clamp(
-                maximumFrontWheelSteeringAngle,
-                20f,
-                40f
-            ),
+            Mathf.Clamp(maximumFrontWheelSteeringAngle, 20f, 40f),
             reverseManeuver
-                ? Mathf.Clamp(
-                    blockedRecoveryMaximumSteeringAngle,
-                    5f,
-                    40f
-                  )
+                ? Mathf.Clamp(blockedRecoveryMaximumSteeringAngle, 5f, 40f)
                 : (emergencyManeuver
-                    ? Mathf.Clamp(
-                        emergencyLaneChangeSteeringAngle,
-                        5f,
-                        40f
-                      )
-                    : Mathf.Clamp(
-                        maximumLaneChangeSteeringAngle,
-                        5f,
-                        40f
-                      ))
+                    ? Mathf.Clamp(emergencyLaneChangeSteeringAngle, 5f, 40f)
+                    : Mathf.Clamp(maximumLaneChangeSteeringAngle, 5f, 40f))
         );
 
         for (int sample = 0;
              sample < ManeuverPathSampleCount;
              sample++)
         {
-            float progress =
-                (float)sample /
-                (ManeuverPathSampleCount - 1);
-            GetManeuverPathPhaseSampleRange(
-                reverseManeuver,
-                sample,
-                progress,
-                phaseRange
-            );
+            float progress = (float)sample / (ManeuverPathSampleCount - 1);
+            GetManeuverPathPhaseSampleRange(reverseManeuver, sample, progress, phaseRange);
             int before = offset + phaseRange[0];
             int after = offset + phaseRange[1];
             float arcDistance = Mathf.Max(
                 0.001f,
-                maneuverPathDistances[after] -
-                maneuverPathDistances[before]
+                maneuverPathDistances[after] - maneuverPathDistances[before]
             );
-            float signedDistance =
-                IsReversePhase(reverseManeuver, progress)
-                    ? -arcDistance
-                    : arcDistance;
-            Vector3 up =
-                maneuverPathRotations[offset + sample] *
-                Vector3.up;
+            float signedDistance = IsReversePhase(reverseManeuver, progress) ? -arcDistance : arcDistance;
+            Vector3 up = maneuverPathRotations[offset + sample] * Vector3.up;
             float yawRadians = Mathf.Deg2Rad *
                 Vector3.SignedAngle(
                     maneuverPathRotations[before] * Vector3.forward,
@@ -5900,34 +4582,25 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             maneuverPathSteeringAngles[offset + sample] =
                 Mathf.Clamp(
-                    Mathf.Rad2Deg *
-                        Mathf.Atan(wheelBase * curvature),
+                    Mathf.Rad2Deg * Mathf.Atan(wheelBase * curvature),
                     -maximumSteering,
                     maximumSteering
                 );
         }
 
-        maneuverPathSourceLaneIds[vehicleIndex] =
-            vehicleLaneIds[vehicleIndex];
-        maneuverPathTargetLaneIds[vehicleIndex] =
-            laneChangeTargetLaneIds[vehicleIndex];
-        maneuverPathRuleIndices[vehicleIndex] =
-            laneChangeRuleIndices[vehicleIndex];
+        maneuverPathSourceLaneIds[vehicleIndex] = vehicleLaneIds[vehicleIndex];
+        maneuverPathTargetLaneIds[vehicleIndex] = laneChangeTargetLaneIds[vehicleIndex];
+        maneuverPathRuleIndices[vehicleIndex] = laneChangeRuleIndices[vehicleIndex];
         maneuverPathReverse[vehicleIndex] = reverseManeuver;
         maneuverPathEmergency[vehicleIndex] = emergencyManeuver;
-        maneuverPathRecoveryDistances[vehicleIndex] =
-            recoveryDistance;
+        maneuverPathRecoveryDistances[vehicleIndex] = recoveryDistance;
         maneuverPathValid[vehicleIndex] = true;
         return true;
     }
 
-    private void EnsureManeuverPath(
-        int vehicleIndex,
-        float sourceS,
-        float progress)
+    private void EnsureManeuverPath(int vehicleIndex, float sourceS, float progress)
     {
-        if (IsManeuverPathUsable(vehicleIndex) ||
-            !laneChangeActive[vehicleIndex] ||
+        if (IsManeuverPathUsable(vehicleIndex) || !laneChangeActive[vehicleIndex] ||
             laneChangePreparing[vehicleIndex])
         {
             return;
@@ -5936,223 +4609,110 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float anchorS = laneChangeReverseManeuver[vehicleIndex]
             ? laneChangeReverseStartS[vehicleIndex]
             : sourceS -
-              GetNormalLaneChangeTravelDistance(
-                  laneChangeEmergencyManeuver[vehicleIndex]
-              ) * Mathf.Clamp01(progress);
+              GetNormalLaneChangeTravelDistance(laneChangeEmergencyManeuver[vehicleIndex]) * Mathf.Clamp01(progress);
 
         BuildManeuverPath(vehicleIndex, anchorS);
     }
 
-    private Vector3 GetLaneChangePathPosition(
-        int vehicleIndex,
-        float sourceS,
-        float progress)
+    private Vector3 GetLaneChangePathPosition(int vehicleIndex, float sourceS, float progress)
     {
         if (IsManeuverPathUsable(vehicleIndex))
         {
-            return SampleManeuverPathPosition(
-                vehicleIndex,
-                progress
-            );
+            return SampleManeuverPathPosition(vehicleIndex, progress);
         }
 
-        return GetLaneChangePathPositionUncached(
-            vehicleIndex,
-            sourceS,
-            progress
-        );
+        return GetLaneChangePathPositionUncached(vehicleIndex, sourceS, progress);
     }
 
-    private Vector3 GetLaneChangePathPositionUncached(
-        int vehicleIndex,
-        float sourceS,
-        float progress)
+    private Vector3 GetLaneChangePathPositionUncached(int vehicleIndex, float sourceS, float progress)
     {
         int sourceLaneId = vehicleLaneIds[vehicleIndex];
 
-        Vector3 sourcePosition =
-            laneDatabase.GetLanePosition(
-                sourceLaneId,
-                sourceS,
-                -1
-            );
+        Vector3 sourcePosition = laneDatabase.GetLanePosition(sourceLaneId, sourceS, -1);
 
         if (!laneChangeActive[vehicleIndex])
         {
             return sourcePosition;
         }
 
-        int targetLaneId =
-            laneChangeTargetLaneIds[vehicleIndex];
+        int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
 
-        int ruleIndex =
-            laneChangeRuleIndices[vehicleIndex];
+        int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (targetLaneId < 0 ||
-            targetLaneId >= laneDatabase.laneCount ||
-            ruleIndex < 0)
+        if (targetLaneId < 0 || targetLaneId >= laneDatabase.laneCount || ruleIndex < 0)
         {
             return sourcePosition;
         }
 
-        float targetS = MapSourceToTargetSUnclamped(
-            ruleIndex,
-            sourceS
-        );
+        float targetS = MapSourceToTargetSUnclamped(ruleIndex, sourceS);
 
-        Vector3 targetPosition =
-            laneDatabase.GetLanePosition(
-                targetLaneId,
-                targetS,
-                -1
-            );
+        Vector3 targetPosition = laneDatabase.GetLanePosition(targetLaneId, targetS, -1);
 
         float lateralProgress =
-            GetLaneChangeVisualProgress(
-                vehicleIndex,
-                laneChangeReverseManeuver[vehicleIndex],
-                progress
-            );
+            GetLaneChangeVisualProgress(vehicleIndex, laneChangeReverseManeuver[vehicleIndex], progress);
 
-        return Vector3.LerpUnclamped(
-            sourcePosition,
-            targetPosition,
-            lateralProgress
-        );
+        return Vector3.LerpUnclamped(sourcePosition, targetPosition, lateralProgress);
     }
 
-    private Quaternion GetLaneChangeSurfaceRotation(
-        int vehicleIndex,
-        float sourceS,
-        float progress)
+    private Quaternion GetLaneChangeSurfaceRotation(int vehicleIndex, float sourceS, float progress)
     {
         int sourceLaneId = vehicleLaneIds[vehicleIndex];
 
-        Quaternion sourceRotation =
-            laneDatabase.GetLaneRotation(
-                sourceLaneId,
-                sourceS,
-                -1
-            );
+        Quaternion sourceRotation = laneDatabase.GetLaneRotation(sourceLaneId, sourceS, -1);
 
-        int targetLaneId =
-            laneChangeTargetLaneIds[vehicleIndex];
+        int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
 
-        int ruleIndex =
-            laneChangeRuleIndices[vehicleIndex];
+        int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (!laneChangeActive[vehicleIndex] ||
-            targetLaneId < 0 ||
-            targetLaneId >= laneDatabase.laneCount ||
+        if (!laneChangeActive[vehicleIndex] || targetLaneId < 0 || targetLaneId >= laneDatabase.laneCount ||
             ruleIndex < 0)
         {
             return sourceRotation;
         }
 
-        float targetS = MapSourceToTargetSUnclamped(
-            ruleIndex,
-            sourceS
-        );
+        float targetS = MapSourceToTargetSUnclamped(ruleIndex, sourceS);
 
-        Quaternion targetRotation =
-            laneDatabase.GetLaneRotation(
-                targetLaneId,
-                targetS,
-                -1
-            );
+        Quaternion targetRotation = laneDatabase.GetLaneRotation(targetLaneId, targetS, -1);
 
         float lateralProgress = Mathf.Clamp01(
-            GetLaneChangeVisualProgress(
-                vehicleIndex,
-                laneChangeReverseManeuver[vehicleIndex],
-                progress
-            )
+            GetLaneChangeVisualProgress(vehicleIndex, laneChangeReverseManeuver[vehicleIndex], progress)
         );
 
-        return Quaternion.Slerp(
-            sourceRotation,
-            targetRotation,
-            lateralProgress
-        );
+        return Quaternion.Slerp(sourceRotation, targetRotation, lateralProgress);
     }
 
-    private Quaternion GetNormalLaneChangePathRotation(
-        int vehicleIndex,
-        float sourceS,
-        float progress)
+    private Quaternion GetNormalLaneChangePathRotation(int vehicleIndex, float sourceS, float progress)
     {
         if (IsManeuverPathUsable(vehicleIndex))
         {
-            return SampleManeuverPathRotation(
-                vehicleIndex,
-                progress
-            );
+            return SampleManeuverPathRotation(vehicleIndex, progress);
         }
 
-        Quaternion surfaceRotation =
-            GetLaneChangeSurfaceRotation(
-                vehicleIndex,
-                sourceS,
-                progress
-            );
+        Quaternion surfaceRotation = GetLaneChangeSurfaceRotation(vehicleIndex, sourceS, progress);
         int sourceLaneId = vehicleLaneIds[vehicleIndex];
         int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
         int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (sourceLaneId < 0 ||
-            sourceLaneId >= laneDatabase.laneCount ||
-            targetLaneId < 0 ||
+        if (sourceLaneId < 0 || sourceLaneId >= laneDatabase.laneCount || targetLaneId < 0 ||
             targetLaneId >= laneDatabase.laneCount ||
             ruleIndex < 0)
         {
             return surfaceRotation;
         }
 
-        float targetS = MapSourceToTargetSUnclamped(
-            ruleIndex,
-            sourceS
-        );
-        Vector3 sourcePosition = laneDatabase.GetLanePosition(
-            sourceLaneId,
-            sourceS,
-            -1
-        );
-        Vector3 targetPosition = laneDatabase.GetLanePosition(
-            targetLaneId,
-            targetS,
-            -1
-        );
-        Quaternion sourceRotation = laneDatabase.GetLaneRotation(
-            sourceLaneId,
-            sourceS,
-            -1
-        );
-        Quaternion targetRotation = laneDatabase.GetLaneRotation(
-            targetLaneId,
-            targetS,
-            -1
-        );
+        float targetS = MapSourceToTargetSUnclamped(ruleIndex, sourceS);
+        Vector3 sourcePosition = laneDatabase.GetLanePosition(sourceLaneId, sourceS, -1);
+        Vector3 targetPosition = laneDatabase.GetLanePosition(targetLaneId, targetS, -1);
+        Quaternion sourceRotation = laneDatabase.GetLaneRotation(sourceLaneId, sourceS, -1);
+        Quaternion targetRotation = laneDatabase.GetLaneRotation(targetLaneId, targetS, -1);
         Vector3 surfaceUp = surfaceRotation * Vector3.up;
-        Vector3 sourceForward = Vector3.ProjectOnPlane(
-            sourceRotation * Vector3.forward,
-            surfaceUp
-        ).normalized;
-        Vector3 targetForward = Vector3.ProjectOnPlane(
-            targetRotation * Vector3.forward,
-            surfaceUp
-        ).normalized;
+        Vector3 sourceForward = Vector3.ProjectOnPlane(sourceRotation * Vector3.forward, surfaceUp).normalized;
+        Vector3 targetForward = Vector3.ProjectOnPlane(targetRotation * Vector3.forward, surfaceUp).normalized;
         float lateralProgress = SmoothLaneChange01(progress);
-        float travelDistance = GetNormalLaneChangeTravelDistance(
-            laneChangeEmergencyManeuver[vehicleIndex]
-        );
+        float travelDistance = GetNormalLaneChangeTravelDistance(laneChangeEmergencyManeuver[vehicleIndex]);
         Vector3 tangent =
-            Vector3.Lerp(
-                sourceForward,
-                targetForward,
-                lateralProgress
-            ) * travelDistance +
-            (targetPosition - sourcePosition) *
-            GetSmoothLaneChangeFirstDerivative(progress);
+            Vector3.Lerp(sourceForward, targetForward, lateralProgress) * travelDistance +
+            (targetPosition - sourcePosition) * GetSmoothLaneChangeFirstDerivative(progress);
 
         tangent = Vector3.ProjectOnPlane(tangent, surfaceUp);
 
@@ -6161,10 +4721,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return surfaceRotation;
         }
 
-        return Quaternion.LookRotation(
-            tangent.normalized,
-            surfaceUp
-        );
+        return Quaternion.LookRotation(tangent.normalized, surfaceUp);
     }
 
     private Quaternion GetLaneChangeSweepRotation(
@@ -6175,45 +4732,23 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float endProgress,
         float fraction)
     {
-        float sampleS = Mathf.Lerp(
-            startS,
-            endS,
-            fraction
-        );
+        float sampleS = Mathf.Lerp(startS, endS, fraction);
 
-        float sampleProgress = Mathf.Lerp(
-            startProgress,
-            endProgress,
-            fraction
-        );
+        float sampleProgress = Mathf.Lerp(startProgress, endProgress, fraction);
 
         if (laneChangeReverseManeuver[vehicleIndex])
         {
-            return GetRecoveryKinematicWorldRotation(
-                vehicleIndex,
-                sampleS,
-                sampleProgress
-            );
+            return GetRecoveryKinematicWorldRotation(vehicleIndex, sampleS, sampleProgress);
         }
 
-        return GetNormalLaneChangePathRotation(
-            vehicleIndex,
-            sampleS,
-            sampleProgress
-        );
+        return GetNormalLaneChangePathRotation(vehicleIndex, sampleS, sampleProgress);
     }
 
-    private Quaternion GetRecoveryKinematicWorldRotation(
-        int vehicleIndex,
-        float sourceS,
-        float progress)
+    private Quaternion GetRecoveryKinematicWorldRotation(int vehicleIndex, float sourceS, float progress)
     {
         if (IsManeuverPathUsable(vehicleIndex))
         {
-            return SampleManeuverPathRotation(
-                vehicleIndex,
-                progress
-            );
+            return SampleManeuverPathRotation(vehicleIndex, progress);
         }
 
         float clampedProgress = Mathf.Clamp01(progress);
@@ -6228,70 +4763,29 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (clampedProgress <= preparationEnd + 0.0001f)
         {
             Vector3 kinematicPose =
-                GetRecoveryKinematicLocalPose(
-                    vehicleIndex,
-                    clampedProgress,
-                    recoveryDistance
-                );
+                GetRecoveryKinematicLocalPose(vehicleIndex, clampedProgress, recoveryDistance);
 
-            return GetRecoveryKinematicHeadingRotation(
-                vehicleIndex,
-                sourceS,
-                progress,
-                kinematicPose.z
-            );
+            return GetRecoveryKinematicHeadingRotation(vehicleIndex, sourceS, progress, kinematicPose.z);
         }
 
         float phaseStart = preparationEnd;
         float phaseEnd = 1f;
-        float tangentWindow =
-            2f / (ManeuverPathSampleCount - 1);
-        float beforeProgress = Mathf.Max(
-            phaseStart,
-            clampedProgress - tangentWindow
-        );
-        float afterProgress = Mathf.Min(
-            phaseEnd,
-            clampedProgress + tangentWindow
-        );
+        float tangentWindow = 2f / (ManeuverPathSampleCount - 1);
+        float beforeProgress = Mathf.Max(phaseStart, clampedProgress - tangentWindow);
+        float afterProgress = Mathf.Min(phaseEnd, clampedProgress + tangentWindow);
 
         if (afterProgress - beforeProgress < 0.0001f)
         {
-            return GetLaneChangeSurfaceRotation(
-                vehicleIndex,
-                sourceS,
-                progress
-            );
+            return GetLaneChangeSurfaceRotation(vehicleIndex, sourceS, progress);
         }
 
-        float beforeS = GetRecoveryPathSourceS(
-            vehicleIndex,
-            beforeProgress,
-            recoveryDistance
-        );
-        float afterS = GetRecoveryPathSourceS(
-            vehicleIndex,
-            afterProgress,
-            recoveryDistance
-        );
+        float beforeS = GetRecoveryPathSourceS(vehicleIndex, beforeProgress, recoveryDistance);
+        float afterS = GetRecoveryPathSourceS(vehicleIndex, afterProgress, recoveryDistance);
         Vector3 pathForward =
-            GetLaneChangePathPositionUncached(
-                vehicleIndex,
-                afterS,
-                afterProgress
-            ) -
-            GetLaneChangePathPositionUncached(
-                vehicleIndex,
-                beforeS,
-                beforeProgress
-            );
+            GetLaneChangePathPositionUncached(vehicleIndex, afterS, afterProgress) -
+            GetLaneChangePathPositionUncached(vehicleIndex, beforeS, beforeProgress);
 
-        return GetRecoveryPathTangentRotation(
-            vehicleIndex,
-            sourceS,
-            progress,
-            pathForward
-        );
+        return GetRecoveryPathTangentRotation(vehicleIndex, sourceS, progress, pathForward);
     }
 
     private Quaternion GetRecoveryKinematicHeadingRotation(
@@ -6300,17 +4794,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float progress,
         float localHeadingRadians)
     {
-        Quaternion surfaceRotation =
-            GetLaneChangeSurfaceRotation(
-                vehicleIndex,
-                sourceS,
-                progress
-            );
+        Quaternion surfaceRotation = GetLaneChangeSurfaceRotation(vehicleIndex, sourceS, progress);
         Vector3 surfaceUp = surfaceRotation * Vector3.up;
-        Vector3 surfaceForward = Vector3.ProjectOnPlane(
-            surfaceRotation * Vector3.forward,
-            surfaceUp
-        );
+        Vector3 surfaceForward = Vector3.ProjectOnPlane(surfaceRotation * Vector3.forward, surfaceUp);
 
         if (surfaceForward.sqrMagnitude <= 0.0001f)
         {
@@ -6323,31 +4809,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
         int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (sourceLaneId < 0 ||
-            sourceLaneId >= laneDatabase.laneCount ||
-            targetLaneId < 0 ||
+        if (sourceLaneId < 0 || sourceLaneId >= laneDatabase.laneCount || targetLaneId < 0 ||
             targetLaneId >= laneDatabase.laneCount ||
             ruleIndex < 0)
         {
             return surfaceRotation;
         }
 
-        Vector3 sourcePosition = laneDatabase.GetLanePosition(
-            sourceLaneId,
-            sourceS,
-            -1
-        );
+        Vector3 sourcePosition = laneDatabase.GetLanePosition(sourceLaneId, sourceS, -1);
         Vector3 targetPosition = laneDatabase.GetLanePosition(
             targetLaneId,
             MapSourceToTargetSUnclamped(ruleIndex, sourceS),
             -1
         );
-        Vector3 targetSide = Vector3.ProjectOnPlane(
-            targetPosition - sourcePosition,
-            surfaceUp
-        );
-        targetSide -= surfaceForward *
-            Vector3.Dot(targetSide, surfaceForward);
+        Vector3 targetSide = Vector3.ProjectOnPlane(targetPosition - sourcePosition, surfaceUp);
+        targetSide -= surfaceForward * Vector3.Dot(targetSide, surfaceForward);
 
         if (targetSide.sqrMagnitude <= 0.0001f)
         {
@@ -6355,27 +4831,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         targetSide.Normalize();
-        float targetSign = Mathf.Sign(
-            Vector3.SignedAngle(
-                surfaceForward,
-                targetSide,
-                surfaceUp
-            )
-        );
+        float targetSign = Mathf.Sign(Vector3.SignedAngle(surfaceForward, targetSide, surfaceUp));
         float headingAngle = Mathf.Clamp(
             Mathf.Abs(localHeadingRadians) * Mathf.Rad2Deg,
             0f,
-            Mathf.Clamp(
-                blockedRecoveryMaximumBodyAngle,
-                18f,
-                38f
-            )
+            Mathf.Clamp(blockedRecoveryMaximumBodyAngle, 18f, 38f)
         );
 
-        return Quaternion.AngleAxis(
-            targetSign * headingAngle,
-            surfaceUp
-        ) * surfaceRotation;
+        return Quaternion.AngleAxis(targetSign * headingAngle, surfaceUp) * surfaceRotation;
     }
 
     private Quaternion GetRecoveryPathTangentRotation(
@@ -6384,24 +4847,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float progress,
         Vector3 pathForward)
     {
-        Quaternion surfaceRotation =
-            GetLaneChangeSurfaceRotation(
-                vehicleIndex,
-                sourceS,
-                progress
-            );
+        Quaternion surfaceRotation = GetLaneChangeSurfaceRotation(vehicleIndex, sourceS, progress);
         Vector3 surfaceUp = surfaceRotation * Vector3.up;
-        Vector3 surfaceForward = Vector3.ProjectOnPlane(
-            surfaceRotation * Vector3.forward,
-            surfaceUp
-        );
-        pathForward = Vector3.ProjectOnPlane(
-            pathForward,
-            surfaceUp
-        );
+        Vector3 surfaceForward = Vector3.ProjectOnPlane(surfaceRotation * Vector3.forward, surfaceUp);
+        pathForward = Vector3.ProjectOnPlane(pathForward, surfaceUp);
 
-        if (surfaceForward.sqrMagnitude <= 0.0001f ||
-            pathForward.sqrMagnitude <= 0.000001f)
+        if (surfaceForward.sqrMagnitude <= 0.0001f || pathForward.sqrMagnitude <= 0.000001f)
         {
             return surfaceRotation;
         }
@@ -6411,30 +4862,19 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
         int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (sourceLaneId < 0 ||
-            targetLaneId < 0 ||
-            targetLaneId >= laneDatabase.laneCount ||
-            ruleIndex < 0)
+        if (sourceLaneId < 0 || targetLaneId < 0 || targetLaneId >= laneDatabase.laneCount || ruleIndex < 0)
         {
             return surfaceRotation;
         }
 
-        Vector3 sourcePosition = laneDatabase.GetLanePosition(
-            sourceLaneId,
-            sourceS,
-            -1
-        );
+        Vector3 sourcePosition = laneDatabase.GetLanePosition(sourceLaneId, sourceS, -1);
         Vector3 targetPosition = laneDatabase.GetLanePosition(
             targetLaneId,
             MapSourceToTargetSUnclamped(ruleIndex, sourceS),
             -1
         );
-        Vector3 targetSide = Vector3.ProjectOnPlane(
-            targetPosition - sourcePosition,
-            surfaceUp
-        );
-        targetSide -= surfaceForward *
-            Vector3.Dot(targetSide, surfaceForward);
+        Vector3 targetSide = Vector3.ProjectOnPlane(targetPosition - sourcePosition, surfaceUp);
+        targetSide -= surfaceForward * Vector3.Dot(targetSide, surfaceForward);
 
         if (targetSide.sqrMagnitude <= 0.0001f)
         {
@@ -6442,46 +4882,18 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         targetSide.Normalize();
-        float maximumBodyAngle = Mathf.Clamp(
-            blockedRecoveryMaximumBodyAngle,
-            18f,
-            38f
-        );
-        float targetSign = Mathf.Sign(
-            Vector3.SignedAngle(
-                surfaceForward,
-                targetSide,
-                surfaceUp
-            )
-        );
-        float pathAngle = Vector3.SignedAngle(
-            surfaceForward,
-            pathForward.normalized,
-            surfaceUp
-        );
-        float angleTowardTarget = Mathf.Max(
-            0f,
-            pathAngle * targetSign
-        );
-        float constrainedAngle = targetSign * Mathf.Clamp(
-            angleTowardTarget,
-            0f,
-            maximumBodyAngle
-        );
+        float maximumBodyAngle = Mathf.Clamp(blockedRecoveryMaximumBodyAngle, 18f, 38f);
+        float targetSign = Mathf.Sign(Vector3.SignedAngle(surfaceForward, targetSide, surfaceUp));
+        float pathAngle = Vector3.SignedAngle(surfaceForward, pathForward.normalized, surfaceUp);
+        float angleTowardTarget = Mathf.Max(0f, pathAngle * targetSign);
+        float constrainedAngle = targetSign * Mathf.Clamp(angleTowardTarget, 0f, maximumBodyAngle);
 
-        return Quaternion.AngleAxis(
-            constrainedAngle,
-            surfaceUp
-        ) * surfaceRotation;
+        return Quaternion.AngleAxis(constrainedAngle, surfaceUp) * surfaceRotation;
     }
 
-    private float GetRecoveryPathSourceS(
-        int vehicleIndex,
-        float progress,
-        float recoveryDistance)
+    private float GetRecoveryPathSourceS(int vehicleIndex, float progress, float recoveryDistance)
     {
-        float preparationEnd =
-            GetRecoveryPreparationEndProgress();
+        float preparationEnd = GetRecoveryPreparationEndProgress();
         float clampedProgress = Mathf.Clamp01(progress);
         Vector3 preparationPose =
             GetRecoveryKinematicLocalPose(
@@ -6492,66 +4904,40 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (clampedProgress <= preparationEnd)
         {
-            return laneChangeReverseStartS[vehicleIndex] +
-                preparationPose.x;
+            return laneChangeReverseStartS[vehicleIndex] + preparationPose.x;
         }
 
         float finalTravelDistance =
             GetRecoveryFinalTravelDistance(
                 preparationPose,
-                GetLaneChangeSeparation(
-                    vehicleIndex,
-                    laneChangeReverseStartS[vehicleIndex]
-                )
+                GetLaneChangeSeparation(vehicleIndex, laneChangeReverseStartS[vehicleIndex])
             );
-        float finalProgress = Mathf.InverseLerp(
-            preparationEnd,
-            1f,
-            clampedProgress
-        );
+        float finalProgress = Mathf.InverseLerp(preparationEnd, 1f, clampedProgress);
 
-        return laneChangeReverseStartS[vehicleIndex] +
-            preparationPose.x +
-            finalTravelDistance * finalProgress;
+        return laneChangeReverseStartS[vehicleIndex] + preparationPose.x + finalTravelDistance * finalProgress;
     }
 
     private float GetObstacleRestartDelay(int vehicleIndex)
     {
-        float minimum = Mathf.Max(
-            0.2f,
-            obstacleRestartDelayMinimum
-        );
+        float minimum = Mathf.Max(0.2f, obstacleRestartDelayMinimum);
 
-        float maximum = Mathf.Max(
-            minimum,
-            obstacleRestartDelayMaximum
-        );
+        float maximum = Mathf.Max(minimum, obstacleRestartDelayMaximum);
 
-        int pattern =
-            (vehicleIndex * 37 + 17) % 100;
+        int pattern = (vehicleIndex * 37 + 17) % 100;
 
-        return Mathf.Lerp(
-            minimum,
-            maximum,
-            pattern / 99f
-        );
+        return Mathf.Lerp(minimum, maximum, pattern / 99f);
     }
 
-    private float GetSignalStopS(
-        int vehicleIndex,
-        float currentS,
-        float currentSpeed)
+    private float GetSignalStopS(int vehicleIndex, float currentS, float currentSpeed)
     {
         if (mainSignal == null)
         {
             return -1f;
         }
 
-        int laneId =
-            vehicleLaneIds[vehicleIndex];
+        int laneId = vehicleLaneIds[vehicleIndex];
 
-        if (laneId < 0 ||
-            laneId >= laneDatabase.laneCount)
+        if (laneId < 0 || laneId >= laneDatabase.laneCount)
         {
             return -1f;
         }
@@ -6561,30 +4947,23 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return -1f;
         }
 
-        float lineS =
-            laneDatabase.stopLineS[laneId];
+        float lineS = laneDatabase.stopLineS[laneId];
 
         if (lineS < 0f)
         {
             return -1f;
         }
 
-        if (currentSignalState ==
-            ShinhoTime.SignalGreen)
+        if (currentSignalState == ShinhoTime.SignalGreen)
         {
-            signalCommittedToCross[vehicleIndex] =
-                false;
+            signalCommittedToCross[vehicleIndex] = false;
 
             return -1f;
         }
 
-        float stopS =
-            lineS -
-            GetVehicleFrontExtent(vehicleIndex) -
-            stopLineFrontBuffer;
+        float stopS = lineS - GetVehicleFrontExtent(vehicleIndex) - stopLineFrontBuffer;
 
-        float distanceToStop =
-            stopS - currentS;
+        float distanceToStop = stopS - currentS;
 
         // 정지선을 실제로 통과한 차량만 계속 진행
         // 정확히 정지선에 도착한 차량은 신호 변경까지 현재 위치 유지
@@ -6598,26 +4977,17 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return -1f;
         }
 
-        if (currentSignalState ==
-            ShinhoTime.SignalYellow)
+        if (currentSignalState == ShinhoTime.SignalYellow)
         {
-            float brakingRate = Mathf.Max(
-                0.1f,
-                signalComfortDeceleration
-            );
+            float brakingRate = Mathf.Max(0.1f, signalComfortDeceleration);
 
             float requiredBrakingDistance =
-                currentSpeed *
-                currentSpeed /
-                (2f * brakingRate) +
-                yellowDecisionMargin;
+                currentSpeed * currentSpeed / (2f * brakingRate) + yellowDecisionMargin;
 
             // 황색 전환 시 정지선과 너무 가까우면 급정지 없이 통과
-            if (distanceToStop <=
-                requiredBrakingDistance)
+            if (distanceToStop <= requiredBrakingDistance)
             {
-                signalCommittedToCross[vehicleIndex] =
-                    true;
+                signalCommittedToCross[vehicleIndex] = true;
 
                 return -1f;
             }
@@ -6626,23 +4996,15 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return stopS;
     }
 
-    private float GetCruiseSpeed(
-        int vehicleIndex,
-        int laneId)
+    private float GetCruiseSpeed(int vehicleIndex, int laneId)
     {
-        float targetSpeed =
-            GetBaseCruiseSpeed(vehicleIndex) *
-            speedFactors[vehicleIndex];
+        float targetSpeed = GetBaseCruiseSpeed(vehicleIndex) * speedFactors[vehicleIndex];
 
-        float speedLimit =
-            laneDatabase.speedLimits[laneId];
+        float speedLimit = laneDatabase.speedLimits[laneId];
 
         if (speedLimit > 0f)
         {
-            targetSpeed = Mathf.Min(
-                targetSpeed,
-                speedLimit
-            );
+            targetSpeed = Mathf.Min(targetSpeed, speedLimit);
         }
 
         return Mathf.Max(0f, targetSpeed);
@@ -6655,33 +5017,24 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private float GetVehicleLength(int vehicleIndex)
     {
-        return GetVehicleFrontExtent(vehicleIndex) +
-            GetVehicleRearExtent(vehicleIndex);
+        return GetVehicleFrontExtent(vehicleIndex) + GetVehicleRearExtent(vehicleIndex);
     }
 
     private float GetVehicleWidth(int vehicleIndex)
     {
         if (HasBakedVehicleBounds(vehicleIndex))
         {
-            return Mathf.Max(
-                0.1f,
-                bakedVehicleWidths[vehicleIndex]
-            );
+            return Mathf.Max(0.1f, bakedVehicleWidths[vehicleIndex]);
         }
 
-        float fallbackWidth = IsTruck(vehicleIndex)
-            ? truckVehicleWidth
-            : vehicleWidth;
+        float fallbackWidth = IsTruck(vehicleIndex) ? truckVehicleWidth : vehicleWidth;
 
-        return Mathf.Max(0.1f, fallbackWidth) *
-            GetVehicleVisualScale(vehicleIndex);
+        return Mathf.Max(0.1f, fallbackWidth) * GetVehicleVisualScale(vehicleIndex);
     }
 
     private bool HasBakedVehicleBounds(int vehicleIndex)
     {
-        return vehicleIndex >= 0 &&
-            bakedVehicleFrontExtents != null &&
-            bakedVehicleRearExtents != null &&
+        return vehicleIndex >= 0 && bakedVehicleFrontExtents != null && bakedVehicleRearExtents != null &&
             bakedVehicleWidths != null &&
             vehicleIndex < bakedVehicleFrontExtents.Length &&
             vehicleIndex < bakedVehicleRearExtents.Length &&
@@ -6695,176 +5048,116 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         if (HasBakedVehicleBounds(vehicleIndex))
         {
-            return Mathf.Max(
-                0.05f,
-                bakedVehicleFrontExtents[vehicleIndex]
-            );
+            return Mathf.Max(0.05f, bakedVehicleFrontExtents[vehicleIndex]);
         }
 
-        float fallbackLength = IsTruck(vehicleIndex)
-            ? truckVehicleLength
-            : vehicleLength;
+        float fallbackLength = IsTruck(vehicleIndex) ? truckVehicleLength : vehicleLength;
 
-        return Mathf.Max(0.1f, fallbackLength) *
-            GetVehicleVisualScale(vehicleIndex) * 0.5f;
+        return Mathf.Max(0.1f, fallbackLength) * GetVehicleVisualScale(vehicleIndex) * 0.5f;
     }
 
     private float GetVehicleRearExtent(int vehicleIndex)
     {
         if (HasBakedVehicleBounds(vehicleIndex))
         {
-            return Mathf.Max(
-                0.05f,
-                bakedVehicleRearExtents[vehicleIndex]
-            );
+            return Mathf.Max(0.05f, bakedVehicleRearExtents[vehicleIndex]);
         }
 
-        float fallbackLength = IsTruck(vehicleIndex)
-            ? truckVehicleLength
-            : vehicleLength;
+        float fallbackLength = IsTruck(vehicleIndex) ? truckVehicleLength : vehicleLength;
 
-        return Mathf.Max(0.1f, fallbackLength) *
-            GetVehicleVisualScale(vehicleIndex) * 0.5f;
+        return Mathf.Max(0.1f, fallbackLength) * GetVehicleVisualScale(vehicleIndex) * 0.5f;
     }
 
     private float GetVehicleCenterOffset(int vehicleIndex)
     {
-        return (
-            GetVehicleFrontExtent(vehicleIndex) -
-            GetVehicleRearExtent(vehicleIndex)
-        ) * 0.5f;
+        return (GetVehicleFrontExtent(vehicleIndex) - GetVehicleRearExtent(vehicleIndex)) * 0.5f;
     }
 
-    private Vector3 GetVehicleFootprintCenter(
-        int vehicleIndex,
-        Vector3 rootPosition,
-        Quaternion rootRotation)
+    private Vector3 GetVehicleFootprintCenter(int vehicleIndex, Vector3 rootPosition, Quaternion rootRotation)
     {
         Vector3 up = rootRotation * Vector3.up;
-        Vector3 forward = Vector3.ProjectOnPlane(
-            rootRotation * Vector3.forward,
-            up
-        );
+        Vector3 forward = Vector3.ProjectOnPlane(rootRotation * Vector3.forward, up);
 
         if (forward.sqrMagnitude <= 0.0001f)
         {
             return rootPosition;
         }
 
-        return rootPosition +
-            forward.normalized * GetVehicleCenterOffset(vehicleIndex);
+        return rootPosition + forward.normalized * GetVehicleCenterOffset(vehicleIndex);
     }
 
-    private float GetCombinedHalfLength(
-        int followerIndex,
-        int leaderIndex)
+    private float GetCombinedHalfLength(int followerIndex, int leaderIndex)
     {
-        return GetVehicleFrontExtent(followerIndex) +
-            GetVehicleRearExtent(leaderIndex);
+        return GetVehicleFrontExtent(followerIndex) + GetVehicleRearExtent(leaderIndex);
     }
 
     private float GetBaseCruiseSpeed(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckCruiseSpeed
-            : cruiseSpeed;
+        return IsTruck(vehicleIndex) ? truckCruiseSpeed : cruiseSpeed;
     }
 
     private float GetAcceleration(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckAcceleration
-            : acceleration;
+        return IsTruck(vehicleIndex) ? truckAcceleration : acceleration;
     }
 
     private float GetDeceleration(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckDeceleration
-            : deceleration;
+        return IsTruck(vehicleIndex) ? truckDeceleration : deceleration;
     }
 
-    private float GetEmergencyDeceleration(
-        int vehicleIndex)
+    private float GetEmergencyDeceleration(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckEmergencyDeceleration
-            : emergencyDeceleration;
+        return IsTruck(vehicleIndex) ? truckEmergencyDeceleration : emergencyDeceleration;
     }
 
     private float GetMinimumGap(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckMinimumGap
-            : minimumGap;
+        return IsTruck(vehicleIndex) ? truckMinimumGap : minimumGap;
     }
 
     private float GetTimeHeadway(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckTimeHeadway
-            : timeHeadway;
+        return IsTruck(vehicleIndex) ? truckTimeHeadway : timeHeadway;
     }
 
     private float GetSpawnClearance(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckSpawnClearance
-            : spawnClearance;
+        return IsTruck(vehicleIndex) ? truckSpawnClearance : spawnClearance;
     }
 
     private int GetVehicleMask(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? TrafficLaneDatabase.VehicleTruck
-            : TrafficLaneDatabase.VehicleCar;
+        return IsTruck(vehicleIndex) ? TrafficLaneDatabase.VehicleTruck : TrafficLaneDatabase.VehicleCar;
     }
 
-    private float GetMaximumEngineVolume(
-        int vehicleIndex)
+    private float GetMaximumEngineVolume(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckMaximumEngineVolume
-            : maximumEngineVolume;
+        return IsTruck(vehicleIndex) ? truckMaximumEngineVolume : maximumEngineVolume;
     }
 
     private float GetIdleEnginePitch(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckIdleEnginePitch
-            : idleEnginePitch;
+        return IsTruck(vehicleIndex) ? truckIdleEnginePitch : idleEnginePitch;
     }
 
-    private float GetMaximumEnginePitch(
-        int vehicleIndex)
+    private float GetMaximumEnginePitch(int vehicleIndex)
     {
-        return IsTruck(vehicleIndex)
-            ? truckMaximumEnginePitch
-            : maximumEnginePitch;
+        return IsTruck(vehicleIndex) ? truckMaximumEnginePitch : maximumEnginePitch;
     }
 
     private float GetWheelRadius(int vehicleIndex)
     {
-        float baseRadius = IsTruck(vehicleIndex)
-            ? truckWheelRadius
-            : wheelRadius;
+        float baseRadius = IsTruck(vehicleIndex) ? truckWheelRadius : wheelRadius;
 
-        return baseRadius *
-               GetVehicleVisualScale(vehicleIndex);
+        return baseRadius * GetVehicleVisualScale(vehicleIndex);
     }
 
-    private float GetVehicleVisualScale(
-        int vehicleIndex)
+    private float GetVehicleVisualScale(int vehicleIndex)
     {
-        float visualScale = IsTruck(vehicleIndex)
-            ? truckVisualScale
-            : normalCarVisualScale;
+        float visualScale = IsTruck(vehicleIndex) ? truckVisualScale : normalCarVisualScale;
 
-        return Mathf.Clamp(
-            visualScale,
-            0.8f,
-            1.25f
-        );
+        return Mathf.Clamp(visualScale, 0.8f, 1.25f);
     }
 
     // -------------------------------------------------------------------------
@@ -6885,76 +5178,42 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             rulePhysicsCorridorMaximum[i] = 0f;
         }
 
-        int ruleCount = Mathf.Min(
-            laneDatabase.changeToLaneIds.Length,
-            MaximumLaneChangeRules
-        );
+        int ruleCount = Mathf.Min(laneDatabase.changeToLaneIds.Length, MaximumLaneChangeRules);
 
         for (int sourceLaneId = 0;
              sourceLaneId < laneDatabase.laneCount;
              sourceLaneId++)
         {
-            int first =
-                laneDatabase.laneRuleStarts[sourceLaneId];
+            int first = laneDatabase.laneRuleStarts[sourceLaneId];
 
-            int count =
-                laneDatabase.laneRuleCounts[sourceLaneId];
+            int count = laneDatabase.laneRuleCounts[sourceLaneId];
 
-            int last = Mathf.Min(
-                first + count,
-                ruleCount
-            );
+            int last = Mathf.Min(first + count, ruleCount);
 
             for (int ruleIndex = first;
                  ruleIndex < last;
                  ruleIndex++)
             {
-                int targetLaneId =
-                    laneDatabase.changeToLaneIds[ruleIndex];
+                int targetLaneId = laneDatabase.changeToLaneIds[ruleIndex];
 
                 Vector3 sourceStartPosition =
-                    laneDatabase.GetLanePosition(
-                        sourceLaneId,
-                        laneDatabase.changeStartS[ruleIndex],
-                        -1
-                    );
+                    laneDatabase.GetLanePosition(sourceLaneId, laneDatabase.changeStartS[ruleIndex], -1);
 
                 Vector3 sourceEndPosition =
-                    laneDatabase.GetLanePosition(
-                        sourceLaneId,
-                        laneDatabase.changeEndS[ruleIndex],
-                        -1
-                    );
+                    laneDatabase.GetLanePosition(sourceLaneId, laneDatabase.changeEndS[ruleIndex], -1);
 
-                ruleTargetStartS[ruleIndex] =
-                    ProjectPositionToLaneS(
-                        targetLaneId,
-                        sourceStartPosition
-                    );
+                ruleTargetStartS[ruleIndex] = ProjectPositionToLaneS(targetLaneId, sourceStartPosition);
 
-                ruleTargetEndS[ruleIndex] =
-                    ProjectPositionToLaneS(
-                        targetLaneId,
-                        sourceEndPosition
-                    );
+                ruleTargetEndS[ruleIndex] = ProjectPositionToLaneS(targetLaneId, sourceEndPosition);
 
-                BuildPhysicsCorridorRuleCache(
-                    ruleIndex,
-                    sourceLaneId,
-                    targetLaneId
-                );
+                BuildPhysicsCorridorRuleCache(ruleIndex, sourceLaneId, targetLaneId);
             }
         }
     }
 
-    private void BuildPhysicsCorridorRuleCache(
-        int ruleIndex,
-        int sourceLaneId,
-        int targetLaneId)
+    private void BuildPhysicsCorridorRuleCache(int ruleIndex, int sourceLaneId, int targetLaneId)
     {
-        if (ruleIndex < 0 ||
-            ruleIndex >= MaximumLaneChangeRules ||
-            sourceLaneId < 0 ||
+        if (ruleIndex < 0 || ruleIndex >= MaximumLaneChangeRules || sourceLaneId < 0 ||
             sourceLaneId >= laneDatabase.laneCount ||
             targetLaneId < 0 ||
             targetLaneId >= laneDatabase.laneCount)
@@ -6967,40 +5226,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             laneDatabase.changeEndS[ruleIndex],
             0.5f
         );
-        float targetS = Mathf.Lerp(
-            ruleTargetStartS[ruleIndex],
-            ruleTargetEndS[ruleIndex],
-            0.5f
-        );
-        Vector3 sourcePosition = laneDatabase.GetLanePosition(
-            sourceLaneId,
-            sourceS,
-            -1
-        );
-        Vector3 targetPosition = laneDatabase.GetLanePosition(
-            targetLaneId,
-            targetS,
-            -1
-        );
-        Quaternion surfaceRotation = laneDatabase.GetLaneRotation(
-            sourceLaneId,
-            sourceS,
-            -1
-        );
+        float targetS = Mathf.Lerp(ruleTargetStartS[ruleIndex], ruleTargetEndS[ruleIndex], 0.5f);
+        Vector3 sourcePosition = laneDatabase.GetLanePosition(sourceLaneId, sourceS, -1);
+        Vector3 targetPosition = laneDatabase.GetLanePosition(targetLaneId, targetS, -1);
+        Quaternion surfaceRotation = laneDatabase.GetLaneRotation(sourceLaneId, sourceS, -1);
         Vector3 surfaceUp = surfaceRotation * Vector3.up;
         Vector3 surfaceForward = surfaceRotation * Vector3.forward;
 
-        if (surfaceUp.sqrMagnitude <= 0.0001f ||
-            surfaceForward.sqrMagnitude <= 0.0001f)
+        if (surfaceUp.sqrMagnitude <= 0.0001f || surfaceForward.sqrMagnitude <= 0.0001f)
         {
             return;
         }
 
         surfaceUp.Normalize();
-        surfaceForward = Vector3.ProjectOnPlane(
-            surfaceForward,
-            surfaceUp
-        );
+        surfaceForward = Vector3.ProjectOnPlane(surfaceForward, surfaceUp);
 
         if (surfaceForward.sqrMagnitude <= 0.0001f)
         {
@@ -7008,12 +5247,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         surfaceForward.Normalize();
-        Vector3 targetSide = Vector3.ProjectOnPlane(
-            targetPosition - sourcePosition,
-            surfaceUp
-        );
-        targetSide -= surfaceForward *
-            Vector3.Dot(targetSide, surfaceForward);
+        Vector3 targetSide = Vector3.ProjectOnPlane(targetPosition - sourcePosition, surfaceUp);
+        targetSide -= surfaceForward * Vector3.Dot(targetSide, surfaceForward);
 
         if (targetSide.sqrMagnitude <= 0.0001f)
         {
@@ -7021,14 +5256,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         targetSide.Normalize();
-        float sourceCoordinate = Vector3.Dot(
-            sourcePosition,
-            targetSide
-        );
-        float targetCoordinate = Vector3.Dot(
-            targetPosition,
-            targetSide
-        );
+        float sourceCoordinate = Vector3.Dot(sourcePosition, targetSide);
+        float targetCoordinate = Vector3.Dot(targetPosition, targetSide);
         float laneSeparation = targetCoordinate - sourceCoordinate;
 
         if (laneSeparation <= 0.5f)
@@ -7039,15 +5268,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float halfLaneWidth = laneSeparation * 0.5f;
         rulePhysicsCorridorValid[ruleIndex] = true;
         rulePhysicsCorridorAxis[ruleIndex] = targetSide;
-        rulePhysicsCorridorMinimum[ruleIndex] =
-            sourceCoordinate - halfLaneWidth;
-        rulePhysicsCorridorMaximum[ruleIndex] =
-            targetCoordinate + halfLaneWidth;
+        rulePhysicsCorridorMinimum[ruleIndex] = sourceCoordinate - halfLaneWidth;
+        rulePhysicsCorridorMaximum[ruleIndex] = targetCoordinate + halfLaneWidth;
     }
 
-    private float ProjectPositionToLaneS(
-        int laneId,
-        Vector3 position)
+    private float ProjectPositionToLaneS(int laneId, Vector3 position)
     {
         int first = laneDatabase.laneSampleStarts[laneId];
         int count = laneDatabase.laneSampleCounts[laneId];
@@ -7058,11 +5283,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         for (int i = first; i < last; i++)
         {
-            Vector3 start =
-                laneDatabase.samplePositions[i];
+            Vector3 start = laneDatabase.samplePositions[i];
 
-            Vector3 end =
-                laneDatabase.samplePositions[i + 1];
+            Vector3 end = laneDatabase.samplePositions[i + 1];
 
             Vector3 segment = end - start;
             float lengthSqr = segment.sqrMagnitude;
@@ -7072,16 +5295,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            float t = Mathf.Clamp01(
-                Vector3.Dot(position - start, segment) /
-                lengthSqr
-            );
+            float t = Mathf.Clamp01(Vector3.Dot(position - start, segment) / lengthSqr);
 
-            Vector3 closest =
-                Vector3.Lerp(start, end, t);
+            Vector3 closest = Vector3.Lerp(start, end, t);
 
-            float distanceSqr =
-                (position - closest).sqrMagnitude;
+            float distanceSqr = (position - closest).sqrMagnitude;
 
             if (distanceSqr >= nearestSqr)
             {
@@ -7089,38 +5307,28 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
 
             nearestSqr = distanceSqr;
-            nearestS = Mathf.Lerp(
-                laneDatabase.sampleDistances[i],
-                laneDatabase.sampleDistances[i + 1],
-                t
-            );
+            nearestS = Mathf.Lerp(laneDatabase.sampleDistances[i], laneDatabase.sampleDistances[i + 1], t);
         }
 
         return nearestS;
     }
 
-    private int FindLaneChangeRule(
-        int sourceLaneId,
-        int targetLaneId)
+    private int FindLaneChangeRule(int sourceLaneId, int targetLaneId)
     {
-        if (sourceLaneId < 0 ||
-            sourceLaneId >= laneDatabase.laneCount)
+        if (sourceLaneId < 0 || sourceLaneId >= laneDatabase.laneCount)
         {
             return -1;
         }
 
-        int first =
-            laneDatabase.laneRuleStarts[sourceLaneId];
+        int first = laneDatabase.laneRuleStarts[sourceLaneId];
 
-        int count =
-            laneDatabase.laneRuleCounts[sourceLaneId];
+        int count = laneDatabase.laneRuleCounts[sourceLaneId];
 
         for (int i = first;
              i < first + count;
              i++)
         {
-            if (laneDatabase.changeToLaneIds[i] ==
-                targetLaneId)
+            if (laneDatabase.changeToLaneIds[i] == targetLaneId)
             {
                 return i;
             }
@@ -7129,12 +5337,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return -1;
     }
 
-    private float MapSourceToTargetS(
-        int ruleIndex,
-        float sourceS)
+    private float MapSourceToTargetS(int ruleIndex, float sourceS)
     {
-        if (ruleIndex < 0 ||
-            ruleIndex >= MaximumLaneChangeRules ||
+        if (ruleIndex < 0 || ruleIndex >= MaximumLaneChangeRules ||
             ruleIndex >= laneDatabase.changeStartS.Length)
         {
             return sourceS;
@@ -7146,104 +5351,67 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             sourceS
         );
 
-        return Mathf.Lerp(
-            ruleTargetStartS[ruleIndex],
-            ruleTargetEndS[ruleIndex],
-            t
-        );
+        return Mathf.Lerp(ruleTargetStartS[ruleIndex], ruleTargetEndS[ruleIndex], t);
     }
 
-    private float MapTargetToSourceS(
-        int ruleIndex,
-        float targetS)
+    private float MapTargetToSourceS(int ruleIndex, float targetS)
     {
-        if (ruleIndex < 0 ||
-            ruleIndex >= MaximumLaneChangeRules ||
+        if (ruleIndex < 0 || ruleIndex >= MaximumLaneChangeRules ||
             ruleIndex >= laneDatabase.changeStartS.Length)
         {
             return targetS;
         }
 
-        float t = Mathf.InverseLerp(
-            ruleTargetStartS[ruleIndex],
-            ruleTargetEndS[ruleIndex],
-            targetS
-        );
+        float t = Mathf.InverseLerp(ruleTargetStartS[ruleIndex], ruleTargetEndS[ruleIndex], targetS);
 
-        return Mathf.Lerp(
-            laneDatabase.changeStartS[ruleIndex],
-            laneDatabase.changeEndS[ruleIndex],
-            t
-        );
+        return Mathf.Lerp(laneDatabase.changeStartS[ruleIndex], laneDatabase.changeEndS[ruleIndex], t);
     }
 
-    private float MapSourceToTargetSUnclamped(
-        int ruleIndex,
-        float sourceS)
+    private float MapSourceToTargetSUnclamped(int ruleIndex, float sourceS)
     {
-        if (ruleIndex < 0 ||
-            ruleIndex >= MaximumLaneChangeRules ||
+        if (ruleIndex < 0 || ruleIndex >= MaximumLaneChangeRules ||
             ruleIndex >= laneDatabase.changeStartS.Length)
         {
             return sourceS;
         }
 
-        float sourceStart =
-            laneDatabase.changeStartS[ruleIndex];
+        float sourceStart = laneDatabase.changeStartS[ruleIndex];
 
-        float sourceLength =
-            laneDatabase.changeEndS[ruleIndex] -
-            sourceStart;
+        float sourceLength = laneDatabase.changeEndS[ruleIndex] - sourceStart;
 
         if (Mathf.Abs(sourceLength) < 0.001f)
         {
             return ruleTargetStartS[ruleIndex];
         }
 
-        float targetLength =
-            ruleTargetEndS[ruleIndex] -
-            ruleTargetStartS[ruleIndex];
+        float targetLength = ruleTargetEndS[ruleIndex] - ruleTargetStartS[ruleIndex];
 
-        return ruleTargetStartS[ruleIndex] +
-               (sourceS - sourceStart) *
-               targetLength / sourceLength;
+        return ruleTargetStartS[ruleIndex] + (sourceS - sourceStart) * targetLength / sourceLength;
     }
 
-    private float MapTargetToSourceSUnclamped(
-        int ruleIndex,
-        float targetS)
+    private float MapTargetToSourceSUnclamped(int ruleIndex, float targetS)
     {
-        if (ruleIndex < 0 ||
-            ruleIndex >= MaximumLaneChangeRules ||
+        if (ruleIndex < 0 || ruleIndex >= MaximumLaneChangeRules ||
             ruleIndex >= laneDatabase.changeStartS.Length)
         {
             return targetS;
         }
 
-        float targetStart =
-            ruleTargetStartS[ruleIndex];
+        float targetStart = ruleTargetStartS[ruleIndex];
 
-        float targetLength =
-            ruleTargetEndS[ruleIndex] -
-            targetStart;
+        float targetLength = ruleTargetEndS[ruleIndex] - targetStart;
 
         if (Mathf.Abs(targetLength) < 0.001f)
         {
             return laneDatabase.changeStartS[ruleIndex];
         }
 
-        float sourceLength =
-            laneDatabase.changeEndS[ruleIndex] -
-            laneDatabase.changeStartS[ruleIndex];
+        float sourceLength = laneDatabase.changeEndS[ruleIndex] - laneDatabase.changeStartS[ruleIndex];
 
-        return laneDatabase.changeStartS[ruleIndex] +
-               (targetS - targetStart) *
-               sourceLength / targetLength;
+        return laneDatabase.changeStartS[ruleIndex] + (targetS - targetStart) * sourceLength / targetLength;
     }
 
-    private bool VehicleOccupiesLane(
-        int vehicleIndex,
-        int laneId)
+    private bool VehicleOccupiesLane(int vehicleIndex, int laneId)
     {
         if (!vehicleActive[vehicleIndex])
         {
@@ -7261,19 +5429,13 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                         laneChangeProgress[vehicleIndex]
                     );
 
-                return sourceLateralSeparation < Mathf.Clamp(
-                    laneChangeSourceOccupancyEnd,
-                    0.7f,
-                    0.95f
-                );
+                return sourceLateralSeparation < Mathf.Clamp(laneChangeSourceOccupancyEnd, 0.7f, 0.95f);
             }
 
             return true;
         }
 
-        if (!laneChangeActive[vehicleIndex] ||
-            laneChangeTargetLaneIds[vehicleIndex] !=
-                laneId)
+        if (!laneChangeActive[vehicleIndex] || laneChangeTargetLaneIds[vehicleIndex] != laneId)
         {
             return false;
         }
@@ -7293,28 +5455,19 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         float lateralSeparation = visualProgress;
 
-        return lateralSeparation >= Mathf.Clamp(
-            targetLaneOccupancyStart,
-            0.02f,
-            0.3f
-        );
+        return lateralSeparation >= Mathf.Clamp(targetLaneOccupancyStart, 0.02f, 0.3f);
     }
 
-    private float GetSourceLaneConstraintInfluence(
-        int vehicleIndex)
+    private float GetSourceLaneConstraintInfluence(int vehicleIndex)
     {
         if (!laneChangeActive[vehicleIndex] ||
-            IsReversePhase(
-                laneChangeReverseManeuver[vehicleIndex],
-                laneChangeProgress[vehicleIndex]
-            ))
+            IsReversePhase(laneChangeReverseManeuver[vehicleIndex], laneChangeProgress[vehicleIndex]))
         {
             return 1f;
         }
 
         if (laneChangeReverseManeuver[vehicleIndex] &&
-            laneChangeProgress[vehicleIndex] >=
-                GetRecoveryPreparationEndProgress() - 0.0001f)
+            laneChangeProgress[vehicleIndex] >= GetRecoveryPreparationEndProgress() - 0.0001f)
         {
             return 0f;
         }
@@ -7328,109 +5481,73 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         return 1f - Mathf.InverseLerp(
             0f,
-            Mathf.Clamp(
-                laneChangeSourceConstraintEnd,
-                0.45f,
-                0.7f
-            ),
+            Mathf.Clamp(laneChangeSourceConstraintEnd, 0.45f, 0.7f),
             lateralSeparation
         );
     }
 
-    private bool VehicleReservesLane(
-        int vehicleIndex,
-        int laneId)
+    private bool VehicleReservesLane(int vehicleIndex, int laneId)
     {
         if (VehicleOccupiesLane(vehicleIndex, laneId))
         {
             return true;
         }
 
-        return vehicleActive[vehicleIndex] &&
-               laneChangeActive[vehicleIndex] &&
+        return vehicleActive[vehicleIndex] && laneChangeActive[vehicleIndex] &&
                laneChangeTargetLaneIds[vehicleIndex] == laneId;
     }
 
-    private float GetVehicleSOnLane(
-        int vehicleIndex,
-        int laneId)
+    private float GetVehicleSOnLane(int vehicleIndex, int laneId)
     {
         float sourceS = vehicleS[vehicleIndex];
 
-        if (laneChangeActive[vehicleIndex] &&
-            laneChangeReverseManeuver[vehicleIndex])
+        if (laneChangeActive[vehicleIndex] && laneChangeReverseManeuver[vehicleIndex])
         {
             // 기동 점유 영역의 뒤쪽 끝을 예정된 최대 후진 자세에 고정
             // 대상 차량의 재전진 중 뒤 차량의 확보 공간 진입 방지
             sourceS = laneChangeReverseStartS[vehicleIndex] -
-                Mathf.Max(
-                    MinimumReverseRecoveryDistance,
-                    laneChangeRecoveryDistance[vehicleIndex]
-                );
+                Mathf.Max(MinimumReverseRecoveryDistance, laneChangeRecoveryDistance[vehicleIndex]);
         }
         if (vehicleLaneIds[vehicleIndex] == laneId)
         {
             return sourceS;
         }
 
-        if (laneChangeActive[vehicleIndex] &&
-            laneChangeTargetLaneIds[vehicleIndex] ==
-            laneId)
+        if (laneChangeActive[vehicleIndex] && laneChangeTargetLaneIds[vehicleIndex] == laneId)
         {
-            return MapSourceToTargetS(
-                laneChangeRuleIndices[vehicleIndex],
-                sourceS
-            );
+            return MapSourceToTargetS(laneChangeRuleIndices[vehicleIndex], sourceS);
         }
 
         return -1f;
     }
 
-    private int FindNearestLeaderOnLane(
-        int vehicleIndex,
-        int laneId,
-        float referenceS)
+    private int FindNearestLeaderOnLane(int vehicleIndex, int laneId, float referenceS)
     {
         int nearestIndex = -1;
         float nearestS = 1000000f;
 
         bool useLaneCache =
-            laneVehicleCacheReady &&
-            !laneVehicleCacheDirty &&
-            laneId >= 0 &&
+            laneVehicleCacheReady && !laneVehicleCacheDirty && laneId >= 0 &&
             laneId < reservationLaneVehicleCounts.Length;
 
-        int candidateCount = useLaneCache
-            ? reservationLaneVehicleCounts[laneId]
-            : slotCount;
+        int candidateCount = useLaneCache ? reservationLaneVehicleCounts[laneId] : slotCount;
 
-        int cacheOffset = laneId >= 0
-            ? laneId * slotCount
-            : 0;
+        int cacheOffset = laneId >= 0 ? laneId * slotCount : 0;
 
         for (int candidate = 0;
              candidate < candidateCount;
              candidate++)
         {
-            int i = useLaneCache
-                ? reservationLaneVehicleOrder[
-                    cacheOffset + candidate
-                  ]
-                : candidate;
+            int i = useLaneCache ? reservationLaneVehicleOrder[cacheOffset + candidate] : candidate;
 
-            if (i == vehicleIndex ||
-                !VehicleOccupiesLane(i, laneId))
+            if (i == vehicleIndex || !VehicleOccupiesLane(i, laneId))
             {
                 continue;
             }
 
-            float candidateS = GetVehicleSOnLane(
-                i,
-                laneId
-            );
+            float candidateS = GetVehicleSOnLane(i, laneId);
 
-            if (candidateS <= referenceS + 0.01f ||
-                candidateS >= nearestS)
+            if (candidateS <= referenceS + 0.01f || candidateS >= nearestS)
             {
                 continue;
             }
@@ -7446,82 +5563,52 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     // 차선 변경 및 제한 공간 회복 판단
     // -------------------------------------------------------------------------
 
-    private float GetLaneChangeSafetyScore(
-        int vehicleIndex,
-        int ruleIndex)
+    private float GetLaneChangeSafetyScore(int vehicleIndex, int ruleIndex)
     {
-        return GetLaneChangeSafetyScoreAtS(
-            vehicleIndex,
-            ruleIndex,
-            vehicleS[vehicleIndex]
-        );
+        return GetLaneChangeSafetyScoreAtS(vehicleIndex, ruleIndex, vehicleS[vehicleIndex]);
     }
 
-    private float GetLaneChangeSafetyScoreAtS(
-        int vehicleIndex,
-        int ruleIndex,
-        float sourceS)
+    private float GetLaneChangeSafetyScoreAtS(int vehicleIndex, int ruleIndex, float sourceS)
     {
-        int targetLaneId =
-            laneDatabase.changeToLaneIds[ruleIndex];
+        int targetLaneId = laneDatabase.changeToLaneIds[ruleIndex];
 
-        float targetS = MapSourceToTargetS(
-            ruleIndex,
-            sourceS
-        );
+        float targetS = MapSourceToTargetS(ruleIndex, sourceS);
 
         float nearestFrontGap = 1000000f;
         float nearestRearGap = 1000000f;
         int nearestRearIndex = -1;
 
         bool useLaneCache =
-            laneVehicleCacheReady &&
-            !laneVehicleCacheDirty &&
-            targetLaneId >= 0 &&
+            laneVehicleCacheReady && !laneVehicleCacheDirty && targetLaneId >= 0 &&
             targetLaneId < reservationLaneVehicleCounts.Length;
 
-        int candidateCount = useLaneCache
-            ? reservationLaneVehicleCounts[targetLaneId]
-            : slotCount;
+        int candidateCount = useLaneCache ? reservationLaneVehicleCounts[targetLaneId] : slotCount;
 
-        int cacheOffset = targetLaneId >= 0
-            ? targetLaneId * slotCount
-            : 0;
+        int cacheOffset = targetLaneId >= 0 ? targetLaneId * slotCount : 0;
 
         for (int candidate = 0;
              candidate < candidateCount;
              candidate++)
         {
-            int i = useLaneCache
-                ? reservationLaneVehicleOrder[
-                    cacheOffset + candidate
-                  ]
-                : candidate;
+            int i = useLaneCache ? reservationLaneVehicleOrder[cacheOffset + candidate] : candidate;
 
-            if (i == vehicleIndex ||
-                !VehicleReservesLane(i, targetLaneId))
+            if (i == vehicleIndex || !VehicleReservesLane(i, targetLaneId))
             {
                 continue;
             }
 
-            float otherS = GetVehicleSOnLane(
-                i,
-                targetLaneId
-            );
+            float otherS = GetVehicleSOnLane(i, targetLaneId);
 
             if (otherS >= targetS)
             {
                 nearestFrontGap = Mathf.Min(
                     nearestFrontGap,
-                    otherS - targetS -
-                    GetCombinedHalfLength(vehicleIndex, i)
+                    otherS - targetS - GetCombinedHalfLength(vehicleIndex, i)
                 );
             }
             else
             {
-                float rearGap =
-                    targetS - otherS -
-                    GetCombinedHalfLength(i, vehicleIndex);
+                float rearGap = targetS - otherS - GetCombinedHalfLength(i, vehicleIndex);
 
                 if (rearGap < nearestRearGap)
                 {
@@ -7531,23 +5618,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
         }
 
-        if (enableAuthorityPhysicsObstacles &&
-            targetLaneId >= 0 &&
-            targetLaneId < laneDatabase.laneCount)
+        if (enableAuthorityPhysicsObstacles && targetLaneId >= 0 && targetLaneId < laneDatabase.laneCount)
         {
-            Vector3 targetPosition = laneDatabase.GetLanePosition(
-                targetLaneId,
-                targetS,
-                -1
-            );
-            Quaternion targetRotation = laneDatabase.GetLaneRotation(
-                targetLaneId,
-                targetS,
-                -1
-            );
+            Vector3 targetPosition = laneDatabase.GetLanePosition(targetLaneId, targetS, -1);
+            Quaternion targetRotation = laneDatabase.GetLaneRotation(targetLaneId, targetS, -1);
             float targetSafetyMargin = Mathf.Max(
-                Mathf.Max(0f, authorityObstacleSafetyMargin) +
-                Mathf.Max(0f, laneChangePlayerSafetyMargin),
+                Mathf.Max(0f, authorityObstacleSafetyMargin) + Mathf.Max(0f, laneChangePlayerSafetyMargin),
                 Mathf.Max(0f, playerFrontBuffer)
             );
 
@@ -7564,24 +5640,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         float requiredFrontGap = Mathf.Max(
             GetMinimumGap(vehicleIndex) + 1f,
-            vehicleSpeeds[vehicleIndex] *
-            GetTimeHeadway(vehicleIndex)
+            vehicleSpeeds[vehicleIndex] * GetTimeHeadway(vehicleIndex)
         );
 
-        float requiredRearGap =
-            GetMinimumGap(vehicleIndex) + 1f;
+        float requiredRearGap = GetMinimumGap(vehicleIndex) + 1f;
 
         if (nearestRearIndex >= 0)
         {
             requiredRearGap = Mathf.Max(
                 GetMinimumGap(nearestRearIndex) + 1f,
-                vehicleSpeeds[nearestRearIndex] *
-                GetTimeHeadway(nearestRearIndex)
+                vehicleSpeeds[nearestRearIndex] * GetTimeHeadway(nearestRearIndex)
             );
         }
 
-        if (nearestFrontGap < requiredFrontGap ||
-            nearestRearGap < requiredRearGap)
+        if (nearestFrontGap < requiredFrontGap || nearestRearGap < requiredRearGap)
         {
             return -1f;
         }
@@ -7589,8 +5661,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return Mathf.Min(nearestFrontGap, 1000f);
     }
 
-    private float GetNormalLaneChangeTravelDistance(
-        bool emergencyManeuver)
+    private float GetNormalLaneChangeTravelDistance(bool emergencyManeuver)
     {
         return Mathf.Max(
             2f,
@@ -7600,19 +5671,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
-    private float GetLaneChangeCurveSpeedLimit(
-        int vehicleIndex,
-        bool emergencyManeuver,
-        float sourceS)
+    private float GetLaneChangeCurveSpeedLimit(int vehicleIndex, bool emergencyManeuver, float sourceS)
     {
-        float travelDistance =
-            GetNormalLaneChangeTravelDistance(
-                emergencyManeuver
-            );
-        float laneSeparation = GetLaneChangeSeparation(
-            vehicleIndex,
-            sourceS
-        );
+        float travelDistance = GetNormalLaneChangeTravelDistance(emergencyManeuver);
+        float laneSeparation = GetLaneChangeSeparation(vehicleIndex, sourceS);
         float maximumCurvature = 0f;
 
         // 일반 차선 변경 경로: x = Lp, y = D(6p^5 - 15p^4 + 10p^3)
@@ -7621,44 +5683,24 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         for (int sample = 1; sample < 16; sample++)
         {
             float progress = sample / 16f;
-            float firstDerivative =
-                GetSmoothLaneChangeFirstDerivative(progress);
-            float secondDerivative =
-                GetSmoothLaneChangeSecondDerivative(progress);
+            float firstDerivative = GetSmoothLaneChangeFirstDerivative(progress);
+            float secondDerivative = GetSmoothLaneChangeSecondDerivative(progress);
             float denominatorBase =
                 travelDistance * travelDistance +
-                laneSeparation * laneSeparation *
-                firstDerivative * firstDerivative;
-            float denominator = Mathf.Pow(
-                Mathf.Max(0.0001f, denominatorBase),
-                1.5f
-            );
-            float curvature = Mathf.Abs(
-                travelDistance * laneSeparation *
-                secondDerivative / denominator
-            );
+                laneSeparation * laneSeparation * firstDerivative * firstDerivative;
+            float denominator = Mathf.Pow(Mathf.Max(0.0001f, denominatorBase), 1.5f);
+            float curvature = Mathf.Abs(travelDistance * laneSeparation * secondDerivative / denominator);
 
-            maximumCurvature = Mathf.Max(
-                maximumCurvature,
-                curvature
-            );
+            maximumCurvature = Mathf.Max(maximumCurvature, curvature);
         }
 
         float curveSpeed = maximumCurvature > 0.0001f
-            ? Mathf.Sqrt(
-                Mathf.Max(
-                    0.5f,
-                    laneChangeMaximumLateralAcceleration
-                ) / maximumCurvature
-              )
+            ? Mathf.Sqrt(Mathf.Max(0.5f, laneChangeMaximumLateralAcceleration) / maximumCurvature)
             : laneChangeSpeedLimit;
 
         if (laneChangeSpeedLimit > 0f)
         {
-            curveSpeed = Mathf.Min(
-                curveSpeed,
-                laneChangeSpeedLimit
-            );
+            curveSpeed = Mathf.Min(curveSpeed, laneChangeSpeedLimit);
         }
 
         return Mathf.Max(0.5f, curveSpeed);
@@ -7669,17 +5711,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float currentSpeed,
         float curveSpeedLimit)
     {
-        float speedSquaredDifference =
-            currentSpeed * currentSpeed -
-            curveSpeedLimit * curveSpeedLimit;
+        float speedSquaredDifference = currentSpeed * currentSpeed - curveSpeedLimit * curveSpeedLimit;
 
         if (speedSquaredDifference <= 0f)
         {
             return 0f;
         }
 
-        return speedSquaredDifference /
-            (2f * Mathf.Max(0.1f, GetDeceleration(vehicleIndex)));
+        return speedSquaredDifference / (2f * Mathf.Max(0.1f, GetDeceleration(vehicleIndex)));
     }
 
     private float GetSmoothLaneChangeFirstDerivative(float progress)
@@ -7694,8 +5733,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         float p = Mathf.Clamp01(progress);
 
-        return 60f * p *
-            (2f * p * p - 3f * p + 1f);
+        return 60f * p * (2f * p * p - 3f * p + 1f);
     }
 
     private bool IsLaneChangeFullPathClear(
@@ -7704,89 +5742,52 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         bool emergencyManeuver,
         float pathStartS)
     {
-        if (ruleIndex < 0 ||
-            ruleIndex >= MaximumLaneChangeRules)
+        if (ruleIndex < 0 || ruleIndex >= MaximumLaneChangeRules)
         {
             return false;
         }
 
-        int targetLaneId =
-            laneDatabase.changeToLaneIds[ruleIndex];
+        int targetLaneId = laneDatabase.changeToLaneIds[ruleIndex];
 
-        if (targetLaneId < 0 ||
-            targetLaneId >= laneDatabase.laneCount)
+        if (targetLaneId < 0 || targetLaneId >= laneDatabase.laneCount)
         {
             return false;
         }
 
         bool savedActive = laneChangeActive[vehicleIndex];
         bool savedReverse = laneChangeReverseManeuver[vehicleIndex];
-        bool savedEmergency =
-            laneChangeEmergencyManeuver[vehicleIndex];
-        int savedTargetLaneId =
-            laneChangeTargetLaneIds[vehicleIndex];
-        int savedRuleIndex =
-            laneChangeRuleIndices[vehicleIndex];
-        float savedProgress =
-            laneChangeProgress[vehicleIndex];
+        bool savedEmergency = laneChangeEmergencyManeuver[vehicleIndex];
+        int savedTargetLaneId = laneChangeTargetLaneIds[vehicleIndex];
+        int savedRuleIndex = laneChangeRuleIndices[vehicleIndex];
+        float savedProgress = laneChangeProgress[vehicleIndex];
         float savedS = vehicleS[vehicleIndex];
 
         laneChangeActive[vehicleIndex] = true;
         laneChangeReverseManeuver[vehicleIndex] = false;
-        laneChangeEmergencyManeuver[vehicleIndex] =
-            emergencyManeuver;
+        laneChangeEmergencyManeuver[vehicleIndex] = emergencyManeuver;
         laneChangeTargetLaneIds[vehicleIndex] = targetLaneId;
         laneChangeRuleIndices[vehicleIndex] = ruleIndex;
         laneChangeProgress[vehicleIndex] = 0f;
 
-        float travelDistance =
-            GetNormalLaneChangeTravelDistance(
-                emergencyManeuver
-            );
+        float travelDistance = GetNormalLaneChangeTravelDistance(emergencyManeuver);
         float endS = pathStartS + travelDistance;
-        int sampleCount = Mathf.Clamp(
-            laneChangePreflightSamples,
-            6,
-            12
-        );
+        int sampleCount = Mathf.Clamp(laneChangePreflightSamples, 6, 12);
         bool pathClear = true;
 
         for (int sample = 0;
              sample <= sampleCount;
              sample++)
         {
-            float fraction =
-                (float)sample / sampleCount;
-            float sampleS = Mathf.Lerp(
-                pathStartS,
-                endS,
-                fraction
-            );
+            float fraction = (float)sample / sampleCount;
+            float sampleS = Mathf.Lerp(pathStartS, endS, fraction);
 
             vehicleS[vehicleIndex] = sampleS;
             laneChangeProgress[vehicleIndex] = fraction;
 
-            Vector3 position = GetLaneChangePathPosition(
-                vehicleIndex,
-                sampleS,
-                fraction
-            );
-            Quaternion rotation = GetLaneChangeSweepRotation(
-                vehicleIndex,
-                pathStartS,
-                0f,
-                endS,
-                1f,
-                fraction
-            );
+            Vector3 position = GetLaneChangePathPosition(vehicleIndex, sampleS, fraction);
+            Quaternion rotation = GetLaneChangeSweepRotation(vehicleIndex, pathStartS, 0f, endS, 1f, fraction);
 
-            if (GetLaneChangePoseUnsafeMask(
-                    vehicleIndex,
-                    position,
-                    rotation,
-                    false,
-                    sample > 0
-                ) != 0)
+            if (GetLaneChangePoseUnsafeMask(vehicleIndex, position, rotation, false, sample > 0) != 0)
             {
                 pathClear = false;
                 break;
@@ -7796,46 +5797,33 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         vehicleS[vehicleIndex] = savedS;
         laneChangeActive[vehicleIndex] = savedActive;
         laneChangeReverseManeuver[vehicleIndex] = savedReverse;
-        laneChangeEmergencyManeuver[vehicleIndex] =
-            savedEmergency;
-        laneChangeTargetLaneIds[vehicleIndex] =
-            savedTargetLaneId;
+        laneChangeEmergencyManeuver[vehicleIndex] = savedEmergency;
+        laneChangeTargetLaneIds[vehicleIndex] = savedTargetLaneId;
         laneChangeRuleIndices[vehicleIndex] = savedRuleIndex;
         laneChangeProgress[vehicleIndex] = savedProgress;
 
         return pathClear;
     }
 
-    private void TryBeginLaneChange(
-        int vehicleIndex,
-        int sourceLeaderIndex)
+    private void TryBeginLaneChange(int vehicleIndex, int sourceLeaderIndex)
     {
-        if (!enableLaneChanges ||
-            IsTruck(vehicleIndex) ||
-            laneChangeActive[vehicleIndex] ||
+        if (!enableLaneChanges || IsTruck(vehicleIndex) || laneChangeActive[vehicleIndex] ||
             laneChangeCooldownRemaining[vehicleIndex] > 0f ||
             laneChangeEvaluationRemaining[vehicleIndex] > 0f)
         {
             return;
         }
 
-        laneChangeEvaluationRemaining[vehicleIndex] =
-            Mathf.Max(
-                0.2f,
-                laneChangeEvaluationInterval
-            );
+        laneChangeEvaluationRemaining[vehicleIndex] = Mathf.Max(0.2f, laneChangeEvaluationInterval);
 
-        int sourceLaneId =
-            vehicleLaneIds[vehicleIndex];
+        int sourceLaneId = vehicleLaneIds[vehicleIndex];
 
         float currentS = vehicleS[vehicleIndex];
         float currentSpeed = vehicleSpeeds[vehicleIndex];
 
-        int first =
-            laneDatabase.laneRuleStarts[sourceLaneId];
+        int first = laneDatabase.laneRuleStarts[sourceLaneId];
 
-        int count =
-            laneDatabase.laneRuleCounts[sourceLaneId];
+        int count = laneDatabase.laneRuleCounts[sourceLaneId];
 
         int bestRuleIndex = -1;
         float bestScore = -1f;
@@ -7846,55 +5834,32 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (sourceLeaderIndex >= 0)
         {
-            float sourceLeaderS = GetVehicleSOnLane(
-                sourceLeaderIndex,
-                sourceLaneId
-            );
+            float sourceLeaderS = GetVehicleSOnLane(sourceLeaderIndex, sourceLaneId);
 
             sourceBumperGap =
-                sourceLeaderS - currentS -
-                GetCombinedHalfLength(
-                    vehicleIndex,
-                    sourceLeaderIndex
-                );
+                sourceLeaderS - currentS - GetCombinedHalfLength(vehicleIndex, sourceLeaderIndex);
 
             shouldOvertake =
-                sourceBumperGap <=
-                    overtakeTriggerDistance &&
-                vehicleSpeeds[sourceLeaderIndex] +
-                    overtakeSpeedAdvantage <
-                    GetCruiseSpeed(
-                        vehicleIndex,
-                        sourceLaneId
-                    );
+                sourceBumperGap <= overtakeTriggerDistance &&
+                vehicleSpeeds[sourceLeaderIndex] + overtakeSpeedAdvantage <
+                    GetCruiseSpeed(vehicleIndex, sourceLaneId);
 
             if (shouldOvertake &&
-                IsSignalQueueLaneChangeBlocked(
-                    vehicleIndex,
-                    sourceLeaderIndex,
-                    sourceLaneId,
-                    currentS
-                ))
+                IsSignalQueueLaneChangeBlocked(vehicleIndex, sourceLeaderIndex, sourceLaneId, currentS))
             {
                 shouldOvertake = false;
             }
         }
 
-        float obstacleHitS =
-            GetPhysicsObstacleHitS(vehicleIndex);
+        float obstacleHitS = GetPhysicsObstacleHitS(vehicleIndex);
         float physicsObstacleGap = 1000000f;
-        bool physicsObstacleAhead =
-            obstacleHitS >= currentS;
+        bool physicsObstacleAhead = obstacleHitS >= currentS;
 
         if (physicsObstacleAhead)
         {
-            physicsObstacleGap =
-                obstacleHitS - currentS;
+            physicsObstacleGap = obstacleHitS - currentS;
 
-            sourceBumperGap = Mathf.Min(
-                sourceBumperGap,
-                physicsObstacleGap
-            );
+            sourceBumperGap = Mathf.Min(sourceBumperGap, physicsObstacleGap);
 
             if (physicsObstacleGap <= overtakeTriggerDistance)
             {
@@ -7905,17 +5870,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         bool preferEmergencyManeuver =
             physicsObstacleAhead &&
             physicsObstacleGap <=
-                Mathf.Max(
-                    emergencyLaneChangeTravelDistance,
-                    emergencyLaneChangeTriggerDistance
-                );
+                Mathf.Max(emergencyLaneChangeTravelDistance, emergencyLaneChangeTriggerDistance);
 
-        if (shouldOvertake &&
-            IsSignalAreaLaneChangeBlocked(
-                vehicleIndex,
-                sourceLaneId,
-                currentS
-            ))
+        if (shouldOvertake && IsSignalAreaLaneChangeBlocked(vehicleIndex, sourceLaneId, currentS))
         {
             shouldOvertake = false;
         }
@@ -7924,30 +5881,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              ruleIndex < first + count;
              ruleIndex++)
         {
-            if (!laneDatabase.IsChangeAllowed(
-                ruleIndex,
-                currentS,
-                TrafficLaneDatabase.VehicleCar
-            ))
+            if (!laneDatabase.IsChangeAllowed(ruleIndex, currentS, TrafficLaneDatabase.VehicleCar))
             {
                 continue;
             }
 
-            int targetLaneId =
-                laneDatabase.changeToLaneIds[ruleIndex];
+            int targetLaneId = laneDatabase.changeToLaneIds[ruleIndex];
 
-            bool isR4Branch =
-                targetLaneId ==
-                TrafficLaneDatabase.LaneR4Branch;
+            bool isR4Branch = targetLaneId == TrafficLaneDatabase.LaneR4Branch;
 
             if (isR4Branch)
             {
                 if (laneChangeBranchDecisions[vehicleIndex] == 0)
                 {
-                    laneChangeBranchDecisions[vehicleIndex] =
-                        NextRandom01() < r4BranchProbability
-                            ? 1
-                            : 2;
+                    laneChangeBranchDecisions[vehicleIndex] = NextRandom01() < r4BranchProbability ? 1 : 2;
                 }
 
                 if (laneChangeBranchDecisions[vehicleIndex] != 1)
@@ -7961,93 +5908,56 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
 
             bool candidateBlockedRecovery =
-                !isR4Branch &&
-                enableBlockedLaneChangeReverse &&
-                currentSpeed <= reverseMaximumStartSpeed &&
+                !isR4Branch && enableBlockedLaneChangeReverse && currentSpeed <= reverseMaximumStartSpeed &&
                 sourceBumperGap <= reverseFrontGapThreshold;
 
             bool candidateEmergencyManeuver =
-                !isR4Branch &&
-                !candidateBlockedRecovery &&
-                preferEmergencyManeuver;
+                !isR4Branch && !candidateBlockedRecovery && preferEmergencyManeuver;
 
-            float availableTravelDistance =
-                laneDatabase.changeEndS[ruleIndex] -
-                currentS;
+            float availableTravelDistance = laneDatabase.changeEndS[ruleIndex] - currentS;
 
             float candidateCurveSpeedLimit =
                 candidateBlockedRecovery
                     ? currentSpeed
-                    : GetLaneChangeCurveSpeedLimit(
-                        vehicleIndex,
-                        candidateEmergencyManeuver,
-                        currentS
-                      );
+                    : GetLaneChangeCurveSpeedLimit(vehicleIndex, candidateEmergencyManeuver, currentS);
             float candidatePreparationDistance =
                 candidateBlockedRecovery
                     ? 0f
-                    : GetLaneChangePreparationDistance(
-                        vehicleIndex,
-                        currentSpeed,
-                        candidateCurveSpeedLimit
-                      );
+                    : GetLaneChangePreparationDistance(vehicleIndex, currentSpeed, candidateCurveSpeedLimit);
             float requiredTravelDistance =
                 candidateBlockedRecovery
-                    ? Mathf.Max(
-                        8f,
-                        laneChangeMinimumTravelDistance
-                      )
+                    ? Mathf.Max(8f, laneChangeMinimumTravelDistance)
                     : candidatePreparationDistance +
-                      GetNormalLaneChangeTravelDistance(
-                          candidateEmergencyManeuver
-                      );
+                      GetNormalLaneChangeTravelDistance(candidateEmergencyManeuver);
 
             if (availableTravelDistance < requiredTravelDistance)
             {
-                if (isR4Branch ||
-                    candidateBlockedRecovery ||
-                    candidateEmergencyManeuver)
+                if (isR4Branch || candidateBlockedRecovery || candidateEmergencyManeuver)
                 {
                     continue;
                 }
 
                 candidateEmergencyManeuver = true;
-                candidateCurveSpeedLimit =
-                    GetLaneChangeCurveSpeedLimit(
-                        vehicleIndex,
-                        true,
-                        currentS
-                    );
+                candidateCurveSpeedLimit = GetLaneChangeCurveSpeedLimit(vehicleIndex, true, currentS);
                 candidatePreparationDistance =
-                    GetLaneChangePreparationDistance(
-                        vehicleIndex,
-                        currentSpeed,
-                        candidateCurveSpeedLimit
-                    );
+                    GetLaneChangePreparationDistance(vehicleIndex, currentSpeed, candidateCurveSpeedLimit);
                 requiredTravelDistance =
-                    candidatePreparationDistance +
-                    GetNormalLaneChangeTravelDistance(true);
+                    candidatePreparationDistance + GetNormalLaneChangeTravelDistance(true);
 
-                if (availableTravelDistance <
-                    requiredTravelDistance)
+                if (availableTravelDistance < requiredTravelDistance)
                 {
                     continue;
                 }
             }
 
-            float score = GetLaneChangeSafetyScore(
-                vehicleIndex,
-                ruleIndex
-            );
+            float score = GetLaneChangeSafetyScore(vehicleIndex, ruleIndex);
 
             if (score < 0f)
             {
                 continue;
             }
 
-            if (!isR4Branch &&
-                score < sourceBumperGap +
-                    laneChangeBenefitDistance)
+            if (!isR4Branch && score < sourceBumperGap + laneChangeBenefitDistance)
             {
                 continue;
             }
@@ -8061,29 +5971,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     currentS + candidatePreparationDistance
                 );
 
-                if (!pathClear &&
-                    !isR4Branch &&
-                    !candidateEmergencyManeuver &&
-                    availableTravelDistance >=
-                        GetNormalLaneChangeTravelDistance(true))
+                if (!pathClear && !isR4Branch && !candidateEmergencyManeuver &&
+                    availableTravelDistance >= GetNormalLaneChangeTravelDistance(true))
                 {
                     candidateEmergencyManeuver = true;
-                    candidateCurveSpeedLimit =
-                        GetLaneChangeCurveSpeedLimit(
-                            vehicleIndex,
-                            true,
-                            currentS
-                        );
+                    candidateCurveSpeedLimit = GetLaneChangeCurveSpeedLimit(vehicleIndex, true, currentS);
                     candidatePreparationDistance =
-                        GetLaneChangePreparationDistance(
-                            vehicleIndex,
-                            currentSpeed,
-                            candidateCurveSpeedLimit
-                        );
+                        GetLaneChangePreparationDistance(vehicleIndex, currentSpeed, candidateCurveSpeedLimit);
 
                     if (availableTravelDistance <
-                        candidatePreparationDistance +
-                        GetNormalLaneChangeTravelDistance(true))
+                        candidatePreparationDistance + GetNormalLaneChangeTravelDistance(true))
                     {
                         continue;
                     }
@@ -8113,8 +6010,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             {
                 bestScore = score;
                 bestRuleIndex = ruleIndex;
-                bestEmergencyManeuver =
-                    candidateEmergencyManeuver;
+                bestEmergencyManeuver = candidateEmergencyManeuver;
             }
         }
 
@@ -8123,21 +6019,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
-        int bestTargetLaneId =
-            laneDatabase.changeToLaneIds[bestRuleIndex];
+        int bestTargetLaneId = laneDatabase.changeToLaneIds[bestRuleIndex];
 
         bool isBlockedOvertake =
-            bestTargetLaneId !=
-                TrafficLaneDatabase.LaneR4Branch &&
-            enableBlockedLaneChangeReverse &&
+            bestTargetLaneId != TrafficLaneDatabase.LaneR4Branch && enableBlockedLaneChangeReverse &&
             currentSpeed <= reverseMaximumStartSpeed &&
             sourceBumperGap <= reverseFrontGapThreshold;
 
-        if (isBlockedOvertake &&
-            !CanBeginLaneChangeReverse(
-                vehicleIndex,
-                bestRuleIndex
-            ))
+        if (isBlockedOvertake && !CanBeginLaneChangeReverse(vehicleIndex, bestRuleIndex))
         {
             return;
         }
@@ -8145,34 +6034,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         laneChangeActive[vehicleIndex] = true;
         InvalidateManeuverPath(vehicleIndex);
         InvalidateLaneVehicleCaches();
-        laneChangeRuleIndices[vehicleIndex] =
-            bestRuleIndex;
-        laneChangeTargetLaneIds[vehicleIndex] =
-            bestTargetLaneId;
+        laneChangeRuleIndices[vehicleIndex] = bestRuleIndex;
+        laneChangeTargetLaneIds[vehicleIndex] = bestTargetLaneId;
         laneChangeProgress[vehicleIndex] = 0f;
-        laneChangeReverseManeuver[vehicleIndex] =
-            isBlockedOvertake;
-        laneChangeEmergencyManeuver[vehicleIndex] =
-            !isBlockedOvertake &&
-            bestEmergencyManeuver;
+        laneChangeReverseManeuver[vehicleIndex] = isBlockedOvertake;
+        laneChangeEmergencyManeuver[vehicleIndex] = !isBlockedOvertake && bestEmergencyManeuver;
         laneChangeCurveSpeedLimits[vehicleIndex] =
             isBlockedOvertake
                 ? 0f
-                : GetLaneChangeCurveSpeedLimit(
-                    vehicleIndex,
-                    bestEmergencyManeuver,
-                    currentS
-                  );
+                : GetLaneChangeCurveSpeedLimit(vehicleIndex, bestEmergencyManeuver, currentS);
         laneChangePreparing[vehicleIndex] =
             !isBlockedOvertake &&
             currentSpeed >
                 laneChangeCurveSpeedLimits[vehicleIndex] +
-                Mathf.Max(
-                    0.01f,
-                    laneChangePreparationSpeedTolerance
-                );
-        laneChangeReverseStartS[vehicleIndex] =
-            vehicleS[vehicleIndex];
+                Mathf.Max(0.01f, laneChangePreparationSpeedTolerance);
+        laneChangeReverseStartS[vehicleIndex] = vehicleS[vehicleIndex];
         laneChangeRecoveryDistance[vehicleIndex] = 0f;
         laneChangeRecoveryGearHoldRemaining[vehicleIndex] = 0f;
 
@@ -8195,26 +6071,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (!laneChangePreparing[vehicleIndex])
         {
-            BuildManeuverPath(
-                vehicleIndex,
-                vehicleS[vehicleIndex]
-            );
+            BuildManeuverPath(vehicleIndex, vehicleS[vehicleIndex]);
         }
 
         laneChangePlayerBlocked[vehicleIndex] = false;
         laneChangeVehicleBlocked[vehicleIndex] = false;
         laneChangeRoadBoundaryBlocked[vehicleIndex] = false;
-        laneChangeObstacleRestartHoldRemaining[
-            vehicleIndex
-        ] = 0f;
+        laneChangeObstacleRestartHoldRemaining[vehicleIndex] = 0f;
         laneChangeObstacleClearHoldRemaining[vehicleIndex] = 0f;
         laneChangeObstacleSweepDebugValid[vehicleIndex] = false;
         signalStopDebugActive[vehicleIndex] = false;
         ClearAuthorityPhysicsObstacleState(vehicleIndex);
         ClearPhysicalObstacleRestartState(vehicleIndex);
 
-        if (laneChangeTargetLaneIds[vehicleIndex] ==
-            TrafficLaneDatabase.LaneR4Branch)
+        if (laneChangeTargetLaneIds[vehicleIndex] == TrafficLaneDatabase.LaneR4Branch)
         {
             laneChangeBranchDecisions[vehicleIndex] = 2;
         }
@@ -8222,26 +6092,18 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         activeLaneChangeCount++;
     }
 
-    private bool TryBeginBlockedLaneChangeRecovery(
-        int vehicleIndex,
-        int sourceLeaderIndex)
+    private bool TryBeginBlockedLaneChangeRecovery(int vehicleIndex, int sourceLeaderIndex)
     {
-        if (!enableBlockedLaneChangeReverse ||
-            !laneChangeActive[vehicleIndex] ||
+        if (!enableBlockedLaneChangeReverse || !laneChangeActive[vehicleIndex] ||
             laneChangePreparing[vehicleIndex] ||
             laneChangeReverseManeuver[vehicleIndex] ||
-            vehicleSpeeds[vehicleIndex] >
-                reverseMaximumStartSpeed)
+            vehicleSpeeds[vehicleIndex] > reverseMaximumStartSpeed)
         {
             return false;
         }
 
         float visualProgress =
-            GetLaneChangeVisualProgress(
-                vehicleIndex,
-                false,
-                laneChangeProgress[vehicleIndex]
-            );
+            GetLaneChangeVisualProgress(vehicleIndex, false, laneChangeProgress[vehicleIndex]);
 
         if (visualProgress > 0.03f)
         {
@@ -8255,52 +6117,31 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (sourceLeaderIndex >= 0)
         {
             frontGap =
-                GetVehicleSOnLane(
-                    sourceLeaderIndex,
-                    laneId
-                ) -
-                currentS -
-                GetCombinedHalfLength(
-                    vehicleIndex,
-                    sourceLeaderIndex
-                );
+                GetVehicleSOnLane(sourceLeaderIndex, laneId) - currentS -
+                GetCombinedHalfLength(vehicleIndex, sourceLeaderIndex);
         }
 
-        float playerStopS =
-            GetPhysicsObstacleHitS(vehicleIndex);
+        float playerStopS = GetPhysicsObstacleHitS(vehicleIndex);
 
         if (playerStopS >= currentS)
         {
-            frontGap = Mathf.Min(
-                frontGap,
-                playerStopS - currentS
-            );
+            frontGap = Mathf.Min(frontGap, playerStopS - currentS);
         }
 
         if (frontGap > reverseFrontGapThreshold ||
-            IsSignalAreaLaneChangeBlocked(
-                vehicleIndex,
-                laneId,
-                currentS
-            ))
+            IsSignalAreaLaneChangeBlocked(vehicleIndex, laneId, currentS))
         {
             return false;
         }
 
-        int ruleIndex =
-            laneChangeRuleIndices[vehicleIndex];
+        int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (ruleIndex < 0 ||
-            !CanBeginLaneChangeReverse(
-                vehicleIndex,
-                ruleIndex
-            ))
+        if (ruleIndex < 0 || !CanBeginLaneChangeReverse(vehicleIndex, ruleIndex))
         {
             return false;
         }
 
-        bool previousEmergencyManeuver =
-            laneChangeEmergencyManeuver[vehicleIndex];
+        bool previousEmergencyManeuver = laneChangeEmergencyManeuver[vehicleIndex];
         laneChangeReverseManeuver[vehicleIndex] = true;
         laneChangeEmergencyManeuver[vehicleIndex] = false;
         laneChangePreparing[vehicleIndex] = false;
@@ -8311,8 +6152,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (!InitializeBlockedRecoveryManeuver(vehicleIndex))
         {
             laneChangeReverseManeuver[vehicleIndex] = false;
-            laneChangeEmergencyManeuver[vehicleIndex] =
-                previousEmergencyManeuver;
+            laneChangeEmergencyManeuver[vehicleIndex] = previousEmergencyManeuver;
             laneChangeRecoveryDistance[vehicleIndex] = 0f;
             return false;
         }
@@ -8324,15 +6164,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return true;
     }
 
-    private bool IsSignalQueueLaneChangeBlocked(
-        int vehicleIndex,
-        int leaderIndex,
-        int laneId,
-        float currentS)
+    private bool IsSignalQueueLaneChangeBlocked(int vehicleIndex, int leaderIndex, int laneId, float currentS)
     {
-        if (leaderIndex < 0 ||
-            laneId < 0 ||
-            laneId >= laneDatabase.laneCount ||
+        if (leaderIndex < 0 || laneId < 0 || laneId >= laneDatabase.laneCount ||
             laneDatabase.signalGroupIds[laneId] < 0)
         {
             return false;
@@ -8345,17 +6179,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return false;
         }
 
-        float stopS =
-            lineS -
-            GetVehicleFrontExtent(vehicleIndex) -
-            stopLineFrontBuffer;
+        float stopS = lineS - GetVehicleFrontExtent(vehicleIndex) - stopLineFrontBuffer;
 
-        if (currentS >= stopS ||
-            stopS - currentS >
-                Mathf.Max(
-                    10f,
-                    signalQueueLaneChangeBlockDistance
-                ))
+        if (currentS >= stopS || stopS - currentS > Mathf.Max(10f, signalQueueLaneChangeBlockDistance))
         {
             return false;
         }
@@ -8365,16 +6191,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return true;
         }
 
-        float leaderS = GetVehicleSOnLane(
-            leaderIndex,
-            laneId
-        );
+        float leaderS = GetVehicleSOnLane(leaderIndex, laneId);
 
-        bool leaderIsInSignalQueue =
-            leaderS <=
-            lineS +
-            GetVehicleRearExtent(leaderIndex) +
-            2f;
+        bool leaderIsInSignalQueue = leaderS <= lineS + GetVehicleRearExtent(leaderIndex) + 2f;
 
         if (!leaderIsInSignalQueue)
         {
@@ -8386,23 +6205,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return true;
         }
 
-        float releaseSpeed = Mathf.Max(
-            1f,
-            signalQueueReleaseSpeed
-        );
+        float releaseSpeed = Mathf.Max(1f, signalQueueReleaseSpeed);
 
-        return vehicleSpeeds[vehicleIndex] < releaseSpeed ||
-               vehicleSpeeds[leaderIndex] < releaseSpeed;
+        return vehicleSpeeds[vehicleIndex] < releaseSpeed || vehicleSpeeds[leaderIndex] < releaseSpeed;
     }
 
-    private bool IsSignalAreaLaneChangeBlocked(
-        int vehicleIndex,
-        int laneId,
-        float currentS)
+    private bool IsSignalAreaLaneChangeBlocked(int vehicleIndex, int laneId, float currentS)
     {
-        if (laneId < 0 ||
-            laneId >= laneDatabase.laneCount ||
-            laneDatabase.signalGroupIds[laneId] < 0)
+        if (laneId < 0 || laneId >= laneDatabase.laneCount || laneDatabase.signalGroupIds[laneId] < 0)
         {
             return false;
         }
@@ -8417,86 +6227,50 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float distanceToLine = lineS - currentS;
 
         bool insideSignalQueueArea =
-            distanceToLine >=
-                -GetVehicleRearExtent(vehicleIndex) &&
-            distanceToLine <= Mathf.Max(
-                10f,
-                signalQueueLaneChangeBlockDistance
-            );
+            distanceToLine >= -GetVehicleRearExtent(vehicleIndex) &&
+            distanceToLine <= Mathf.Max(10f, signalQueueLaneChangeBlockDistance);
 
         return insideSignalQueueArea &&
-            (currentSignalState != ShinhoTime.SignalGreen ||
-             signalQueueReleaseHoldRemaining > 0f);
+            (currentSignalState != ShinhoTime.SignalGreen || signalQueueReleaseHoldRemaining > 0f);
     }
 
-    private bool CanBeginLaneChangeReverse(
-        int vehicleIndex,
-        int ruleIndex)
+    private bool CanBeginLaneChangeReverse(int vehicleIndex, int ruleIndex)
     {
-        float reverseDistance = Mathf.Max(
-            0.5f,
-            laneChangeReverseDistance
-        );
+        float reverseDistance = Mathf.Max(0.5f, laneChangeReverseDistance);
 
         float currentS = vehicleS[vehicleIndex];
         float targetSourceS = currentS - reverseDistance;
 
-        int sourceLaneId =
-            vehicleLaneIds[vehicleIndex];
+        int sourceLaneId = vehicleLaneIds[vehicleIndex];
 
-        float minimumS = GetReverseMinimumS(
-            vehicleIndex,
-            sourceLaneId
-        );
+        float minimumS = GetReverseMinimumS(vehicleIndex, sourceLaneId);
 
-        targetSourceS = Mathf.Max(
-            targetSourceS,
-            minimumS
-        );
+        targetSourceS = Mathf.Max(targetSourceS, minimumS);
 
-        if (currentS - targetSourceS <
-                MinimumReverseRecoveryDistance ||
-            targetSourceS <=
-                laneDatabase.spawnS[sourceLaneId] ||
-            !laneDatabase.IsChangeAllowed(
-                ruleIndex,
-                targetSourceS,
-                TrafficLaneDatabase.VehicleCar
-            ))
+        if (currentS - targetSourceS < MinimumReverseRecoveryDistance ||
+            targetSourceS <= laneDatabase.spawnS[sourceLaneId] ||
+            !laneDatabase.IsChangeAllowed(ruleIndex, targetSourceS, TrafficLaneDatabase.VehicleCar))
         {
             return false;
         }
 
-        return GetLaneChangeSafetyScoreAtS(
-            vehicleIndex,
-            ruleIndex,
-            targetSourceS
-        ) >= 0f;
+        return GetLaneChangeSafetyScoreAtS(vehicleIndex, ruleIndex, targetSourceS) >= 0f;
     }
 
-    private float GetReverseMinimumS(
-        int vehicleIndex,
-        int laneId)
+    private float GetReverseMinimumS(int vehicleIndex, int laneId)
     {
-        float minimumS = Mathf.Max(
-            0f,
-            laneDatabase.spawnS[laneId]
-        );
+        float minimumS = Mathf.Max(0f, laneDatabase.spawnS[laneId]);
 
         float currentS = vehicleS[vehicleIndex];
 
         for (int i = 0; i < slotCount; i++)
         {
-            if (i == vehicleIndex ||
-                !VehicleOccupiesLane(i, laneId))
+            if (i == vehicleIndex || !VehicleOccupiesLane(i, laneId))
             {
                 continue;
             }
 
-            float otherS = GetVehicleSOnLane(
-                i,
-                laneId
-            );
+            float otherS = GetVehicleSOnLane(i, laneId);
 
             if (otherS >= currentS)
             {
@@ -8505,41 +6279,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             // 짧은 저속 회복 기동에서는 일반 추종 간격 요구 완화
             // 밀집된 대기열에서 필요한 후진이 모두 막혀 발생하는 영구 정체 방지
-            float rearGap = Mathf.Max(
-                0.25f,
-                reverseRearClearance
-            );
+            float rearGap = Mathf.Max(0.25f, reverseRearClearance);
 
-            minimumS = Mathf.Max(
-                minimumS,
-                otherS +
-                GetCombinedHalfLength(
-                    i,
-                    vehicleIndex
-                ) +
-                rearGap
-            );
+            minimumS = Mathf.Max(minimumS, otherS + GetCombinedHalfLength(i, vehicleIndex) + rearGap);
         }
 
-        return ApplyPhysicsReverseLimit(
-            vehicleIndex,
-            currentS,
-            minimumS
-        );
+        return ApplyPhysicsReverseLimit(vehicleIndex, currentS, minimumS);
     }
 
-    private bool InitializeBlockedRecoveryManeuver(
-        int vehicleIndex)
+    private bool InitializeBlockedRecoveryManeuver(int vehicleIndex)
     {
         float availableRearDistance =
             laneChangeReverseStartS[vehicleIndex] -
-            GetReverseMinimumS(
-                vehicleIndex,
-                vehicleLaneIds[vehicleIndex]
-            );
+            GetReverseMinimumS(vehicleIndex, vehicleLaneIds[vehicleIndex]);
 
-        if (availableRearDistance <
-            MinimumReverseRecoveryDistance)
+        if (availableRearDistance < MinimumReverseRecoveryDistance)
         {
             laneChangeRecoveryDistance[vehicleIndex] = 0f;
             return false;
@@ -8550,10 +6304,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 Mathf.Clamp(
                     availableRearDistance,
                     MinimumReverseRecoveryDistance,
-                    Mathf.Max(
-                        MinimumReverseRecoveryDistance,
-                        laneChangeReverseDistance
-                    )
+                    Mathf.Max(MinimumReverseRecoveryDistance, laneChangeReverseDistance)
                 )
             );
 
@@ -8567,22 +6318,15 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float minimumDistance = MinimumReverseRecoveryDistance;
         float maximumDistance = laneChangeRecoveryDistance[vehicleIndex];
 
-        if (!IsRecoveryRoadPathValid(
-                vehicleIndex,
-                minimumDistance
-            ))
+        if (!IsRecoveryRoadPathValid(vehicleIndex, minimumDistance))
         {
             laneChangeRecoveryDistance[vehicleIndex] = 0f;
             return false;
         }
 
-        if (IsRecoveryRoadPathValid(
-                vehicleIndex,
-                maximumDistance
-            ))
+        if (IsRecoveryRoadPathValid(vehicleIndex, maximumDistance))
         {
-            laneChangeRecoveryDistance[vehicleIndex] =
-                QuantizeRecoveryDistanceDown(maximumDistance);
+            laneChangeRecoveryDistance[vehicleIndex] = QuantizeRecoveryDistanceDown(maximumDistance);
             return true;
         }
 
@@ -8591,13 +6335,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         for (int iteration = 0; iteration < 6; iteration++)
         {
-            float middleDistance =
-                (safeDistance + unsafeDistance) * 0.5f;
+            float middleDistance = (safeDistance + unsafeDistance) * 0.5f;
 
-            if (IsRecoveryRoadPathValid(
-                    vehicleIndex,
-                    middleDistance
-                ))
+            if (IsRecoveryRoadPathValid(vehicleIndex, middleDistance))
             {
                 safeDistance = middleDistance;
             }
@@ -8607,168 +6347,91 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
         }
 
-        laneChangeRecoveryDistance[vehicleIndex] =
-            QuantizeRecoveryDistanceDown(safeDistance);
+        laneChangeRecoveryDistance[vehicleIndex] = QuantizeRecoveryDistanceDown(safeDistance);
         return true;
     }
 
-    private bool IsRecoveryRoadPathValid(
-        int vehicleIndex,
-        float recoveryDistance)
+    private bool IsRecoveryRoadPathValid(int vehicleIndex, float recoveryDistance)
     {
         if (recoveryRoadArea == null)
         {
             return true;
         }
 
-        float originalDistance =
-            laneChangeRecoveryDistance[vehicleIndex];
+        float originalDistance = laneChangeRecoveryDistance[vehicleIndex];
         laneChangeRecoveryDistance[vehicleIndex] = recoveryDistance;
-        float preparationEnd =
-            GetRecoveryPreparationEndProgress();
+        float preparationEnd = GetRecoveryPreparationEndProgress();
 
         for (int sample = 0; sample <= 12; sample++)
         {
             float progress = preparationEnd * sample / 12f;
             float sourceS = laneChangeReverseStartS[vehicleIndex] +
-                GetRecoveryLongitudinalOffset(
-                    vehicleIndex,
-                    progress,
-                    recoveryDistance
-                );
-            Vector3 position = GetLaneChangePathPosition(
-                vehicleIndex,
-                sourceS,
-                progress
-            );
-            Quaternion rotation =
-                GetRecoveryKinematicWorldRotation(
-                    vehicleIndex,
-                    sourceS,
-                    progress
-                );
+                GetRecoveryLongitudinalOffset(vehicleIndex, progress, recoveryDistance);
+            Vector3 position = GetLaneChangePathPosition(vehicleIndex, sourceS, progress);
+            Quaternion rotation = GetRecoveryKinematicWorldRotation(vehicleIndex, sourceS, progress);
 
-            if (!IsRecoveryRearInsideRoadArea(
-                    vehicleIndex,
-                    position,
-                    rotation
-                ))
+            if (!IsRecoveryRearInsideRoadArea(vehicleIndex, position, rotation))
             {
-                laneChangeRecoveryDistance[vehicleIndex] =
-                    originalDistance;
+                laneChangeRecoveryDistance[vehicleIndex] = originalDistance;
                 return false;
             }
         }
 
-        laneChangeRecoveryDistance[vehicleIndex] =
-            originalDistance;
+        laneChangeRecoveryDistance[vehicleIndex] = originalDistance;
         return true;
     }
 
     private float GetRecoveryFirstReverseEndProgress()
     {
-        return Mathf.Clamp(
-            reversePhaseFraction,
-            0.2f,
-            0.35f
-        );
+        return Mathf.Clamp(reversePhaseFraction, 0.2f, 0.35f);
     }
 
     private float GetRecoveryPreparationEndProgress()
     {
-        return Mathf.Min(
-            0.7f,
-            GetRecoveryFirstReverseEndProgress() + 0.25f
-        );
+        return Mathf.Min(0.7f, GetRecoveryFirstReverseEndProgress() + 0.25f);
     }
 
-    private float GetRecoveryFinalTravelDistance(
-        Vector3 preparationPose,
-        float laneWidth)
+    private float GetRecoveryFinalTravelDistance(Vector3 preparationPose, float laneWidth)
     {
-        float configuredDistance = Mathf.Max(
-            8f,
-            laneChangeMinimumTravelDistance
-        );
+        float configuredDistance = Mathf.Max(8f, laneChangeMinimumTravelDistance);
         float safeLaneWidth = Mathf.Max(0.5f, laneWidth);
-        float headingTangent = Mathf.Abs(
-            Mathf.Tan(preparationPose.z)
-        );
+        float headingTangent = Mathf.Abs(Mathf.Tan(preparationPose.z));
 
         if (headingTangent <= 0.001f)
         {
             return configuredDistance;
         }
 
-        float startLateral =
-            preparationPose.y / safeLaneWidth;
-        float remainingLateral = Mathf.Max(
-            0.25f,
-            1f - startLateral
-        );
+        float startLateral = preparationPose.y / safeLaneWidth;
+        float remainingLateral = Mathf.Max(0.25f, 1f - startLateral);
 
         // 3차 합류 곡선의 단조성 유지 및 정확한 탈출 방향 보존
         // 기존 고정 22m 합류 경로의 시작 접선 제한으로 인해 단계 경계에서 발생하던
         // 차체 각도 급변(30~35도에서 약 20도) 방지
-        float maximumNormalizedTangent = Mathf.Min(
-            2.5f,
-            2.4f * remainingLateral
-        );
-        float continuityDistance =
-            maximumNormalizedTangent *
-            safeLaneWidth /
-            headingTangent;
+        float maximumNormalizedTangent = Mathf.Min(2.5f, 2.4f * remainingLateral);
+        float continuityDistance = maximumNormalizedTangent * safeLaneWidth / headingTangent;
 
-        return Mathf.Clamp(
-            continuityDistance,
-            8f,
-            configuredDistance
-        );
+        return Mathf.Clamp(continuityDistance, 8f, configuredDistance);
     }
 
-    private Vector3 GetRecoveryKinematicLocalPose(
-        int vehicleIndex,
-        float progress,
-        float recoveryDistance)
+    private Vector3 GetRecoveryKinematicLocalPose(int vehicleIndex, float progress, float recoveryDistance)
     {
-        float distance = Mathf.Max(
-            MinimumReverseRecoveryDistance,
-            recoveryDistance
-        );
-        float reverseOneEnd =
-            GetRecoveryFirstReverseEndProgress();
-        float preparationEnd =
-            GetRecoveryPreparationEndProgress();
-        float primaryCurvature =
-            GetRecoveryPrimaryCurvature(vehicleIndex, distance);
+        float distance = Mathf.Max(MinimumReverseRecoveryDistance, recoveryDistance);
+        float reverseOneEnd = GetRecoveryFirstReverseEndProgress();
+        float preparationEnd = GetRecoveryPreparationEndProgress();
+        float primaryCurvature = GetRecoveryPrimaryCurvature(vehicleIndex, distance);
         Vector3 pose = Vector3.zero;
 
-        float phaseRatio = SmoothLaneChange01(
-            Mathf.InverseLerp(0f, reverseOneEnd, progress)
-        );
+        float phaseRatio = SmoothLaneChange01(Mathf.InverseLerp(0f, reverseOneEnd, progress));
 
         if (progress < reverseOneEnd)
         {
-            return AdvanceRecoveryKinematicPose(
-                pose,
-                -distance * phaseRatio,
-                -primaryCurvature
-            );
+            return AdvanceRecoveryKinematicPose(pose, -distance * phaseRatio, -primaryCurvature);
         }
 
-        pose = AdvanceRecoveryKinematicPose(
-            pose,
-            -distance,
-            -primaryCurvature
-        );
+        pose = AdvanceRecoveryKinematicPose(pose, -distance, -primaryCurvature);
 
-        phaseRatio = SmoothRecoveryForwardExit01(
-            Mathf.InverseLerp(
-                reverseOneEnd,
-                preparationEnd,
-                progress
-            )
-        );
+        phaseRatio = SmoothRecoveryForwardExit01(Mathf.InverseLerp(reverseOneEnd, preparationEnd, progress));
 
         return AdvanceRecoveryKinematicPose(
             pose,
@@ -8786,10 +6449,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return t * t * (2f - t);
     }
 
-    private Vector3 AdvanceRecoveryKinematicPose(
-        Vector3 pose,
-        float signedDistance,
-        float curvature)
+    private Vector3 AdvanceRecoveryKinematicPose(Vector3 pose, float signedDistance, float curvature)
     {
         float heading = pose.z;
 
@@ -8801,122 +6461,64 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         float nextHeading = heading + curvature * signedDistance;
-        pose.x +=
-            (Mathf.Sin(nextHeading) - Mathf.Sin(heading)) /
-            curvature;
-        pose.y +=
-            (-Mathf.Cos(nextHeading) + Mathf.Cos(heading)) /
-            curvature;
+        pose.x += (Mathf.Sin(nextHeading) - Mathf.Sin(heading)) / curvature;
+        pose.y += (-Mathf.Cos(nextHeading) + Mathf.Cos(heading)) / curvature;
         pose.z = nextHeading;
         return pose;
     }
 
-    private float GetRecoveryPrimaryCurvature(
-        int vehicleIndex,
-        float recoveryDistance)
+    private float GetRecoveryPrimaryCurvature(int vehicleIndex, float recoveryDistance)
     {
-        float distance = Mathf.Max(
-            MinimumReverseRecoveryDistance,
-            recoveryDistance
-        );
-        float laneWidth = GetLaneChangeSeparation(
-            vehicleIndex,
-            vehicleS[vehicleIndex]
-        );
-        float desiredLateralDistance = Mathf.Clamp(
-            reverseLateralProgress,
-            0.05f,
-            0.25f
-        ) * laneWidth;
-        float desiredCurvature =
-            2f * desiredLateralDistance /
-            Mathf.Max(0.36f, distance * distance);
-        float wheelBase = Mathf.Max(
-            2.2f,
-            GetVehicleLength(vehicleIndex) * 0.55f
-        );
+        float distance = Mathf.Max(MinimumReverseRecoveryDistance, recoveryDistance);
+        float laneWidth = GetLaneChangeSeparation(vehicleIndex, vehicleS[vehicleIndex]);
+        float desiredLateralDistance = Mathf.Clamp(reverseLateralProgress, 0.05f, 0.25f) * laneWidth;
+        float desiredCurvature = 2f * desiredLateralDistance / Mathf.Max(0.36f, distance * distance);
+        float wheelBase = Mathf.Max(2.2f, GetVehicleLength(vehicleIndex) * 0.55f);
         float maximumCurvature = Mathf.Tan(
-            Mathf.Deg2Rad * Mathf.Clamp(
-                blockedRecoveryMaximumSteeringAngle,
-                20f,
-                40f
-            )
+            Mathf.Deg2Rad * Mathf.Clamp(blockedRecoveryMaximumSteeringAngle, 20f, 40f)
         ) / wheelBase;
         float maximumBodyCurvature =
-            Mathf.Deg2Rad * Mathf.Clamp(
-                blockedRecoveryMaximumBodyAngle,
-                18f,
-                38f
-            ) /
+            Mathf.Deg2Rad * Mathf.Clamp(blockedRecoveryMaximumBodyAngle, 18f, 38f) /
             // 통합 회복 경로를 하나의 전체 후진 곡선과 더 짧은 전진 곡선으로 구성
             // 두 곡선의 방향 변화 합계를 설정된 차체 각도로 제한
-            Mathf.Max(
-                0.1f,
-                distance *
-                    (1f + RecoveryForwardPreparationFactor)
-            );
+            Mathf.Max(0.1f, distance * (1f + RecoveryForwardPreparationFactor));
 
         return Mathf.Clamp(
             desiredCurvature,
             0.02f,
-            Mathf.Max(
-                0.02f,
-                Mathf.Min(
-                    maximumCurvature,
-                    maximumBodyCurvature
-                )
-            )
+            Mathf.Max(0.02f, Mathf.Min(maximumCurvature, maximumBodyCurvature))
         );
     }
 
-    private float GetLaneChangeSeparation(
-        int vehicleIndex,
-        float sourceS)
+    private float GetLaneChangeSeparation(int vehicleIndex, float sourceS)
     {
         int sourceLaneId = vehicleLaneIds[vehicleIndex];
         int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
         int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        if (sourceLaneId < 0 ||
-            sourceLaneId >= laneDatabase.laneCount ||
-            targetLaneId < 0 ||
+        if (sourceLaneId < 0 || sourceLaneId >= laneDatabase.laneCount || targetLaneId < 0 ||
             targetLaneId >= laneDatabase.laneCount ||
             ruleIndex < 0)
         {
             return 3.2f;
         }
 
-        Vector3 sourcePosition = laneDatabase.GetLanePosition(
-            sourceLaneId,
-            sourceS,
-            -1
-        );
+        Vector3 sourcePosition = laneDatabase.GetLanePosition(sourceLaneId, sourceS, -1);
         Vector3 targetPosition = laneDatabase.GetLanePosition(
             targetLaneId,
             MapSourceToTargetSUnclamped(ruleIndex, sourceS),
             -1
         );
 
-        return Mathf.Max(
-            0.5f,
-            Vector3.Distance(sourcePosition, targetPosition)
-        );
+        return Mathf.Max(0.5f, Vector3.Distance(sourcePosition, targetPosition));
     }
 
-    private float GetRecoveryLongitudinalOffset(
-        int vehicleIndex,
-        float progress,
-        float recoveryDistance)
+    private float GetRecoveryLongitudinalOffset(int vehicleIndex, float progress, float recoveryDistance)
     {
-        return GetRecoveryKinematicLocalPose(
-            vehicleIndex,
-            progress,
-            recoveryDistance
-        ).x;
+        return GetRecoveryKinematicLocalPose(vehicleIndex, progress, recoveryDistance).x;
     }
 
-    private float GetRecoveryCurrentPhaseEndProgress(
-        float progress)
+    private float GetRecoveryCurrentPhaseEndProgress(float progress)
     {
         if (progress < GetRecoveryFirstReverseEndProgress() - 0.0001f)
         {
@@ -8933,51 +6535,27 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float phaseEnd,
         float recoveryDistance)
     {
-        if (!laneChangeVehicleBlocked[vehicleIndex] ||
-            laneChangePlayerBlocked[vehicleIndex] ||
+        if (!laneChangeVehicleBlocked[vehicleIndex] || laneChangePlayerBlocked[vehicleIndex] ||
             laneChangeRoadBoundaryBlocked[vehicleIndex])
         {
             return false;
         }
 
         float phaseEndS = laneChangeReverseStartS[vehicleIndex] +
-            GetRecoveryLongitudinalOffset(
-                vehicleIndex,
-                phaseEnd,
-                recoveryDistance
-            );
+            GetRecoveryLongitudinalOffset(vehicleIndex, phaseEnd, recoveryDistance);
 
-        Vector3 safePosition = GetLaneChangePathPosition(
-            vehicleIndex,
-            safeS,
-            safeProgress
-        );
-        Vector3 phaseEndPosition = GetLaneChangePathPosition(
-            vehicleIndex,
-            phaseEndS,
-            phaseEnd
-        );
+        Vector3 safePosition = GetLaneChangePathPosition(vehicleIndex, safeS, safeProgress);
+        Vector3 phaseEndPosition = GetLaneChangePathPosition(vehicleIndex, phaseEndS, phaseEnd);
 
-        if (Vector3.Distance(safePosition, phaseEndPosition) >
-            RecoveryPhaseCompletionPositionTolerance)
+        if (Vector3.Distance(safePosition, phaseEndPosition) > RecoveryPhaseCompletionPositionTolerance)
         {
             return false;
         }
 
-        Quaternion safeRotation = GetRecoveryKinematicWorldRotation(
-            vehicleIndex,
-            safeS,
-            safeProgress
-        );
-        Quaternion phaseEndRotation =
-            GetRecoveryKinematicWorldRotation(
-                vehicleIndex,
-                phaseEndS,
-                phaseEnd
-            );
+        Quaternion safeRotation = GetRecoveryKinematicWorldRotation(vehicleIndex, safeS, safeProgress);
+        Quaternion phaseEndRotation = GetRecoveryKinematicWorldRotation(vehicleIndex, phaseEndS, phaseEnd);
 
-        if (Quaternion.Angle(safeRotation, phaseEndRotation) >
-            RecoveryPhaseCompletionRotationTolerance)
+        if (Quaternion.Angle(safeRotation, phaseEndRotation) > RecoveryPhaseCompletionRotationTolerance)
         {
             return false;
         }
@@ -8992,21 +6570,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
-    private void UpdateBlockedLaneChangeRecoveryManeuver(
-        int vehicleIndex,
-        float deltaTime)
+    private void UpdateBlockedLaneChangeRecoveryManeuver(int vehicleIndex, float deltaTime)
     {
-        float gearHold =
-            laneChangeRecoveryGearHoldRemaining[vehicleIndex];
+        float gearHold = laneChangeRecoveryGearHoldRemaining[vehicleIndex];
 
         if (gearHold > 0f)
         {
-            laneChangeRecoveryGearHoldRemaining[vehicleIndex] =
-                Mathf.Max(0f, gearHold - deltaTime);
-            StopVehicleForLaneChangeObstacle(
-                vehicleIndex,
-                deltaTime
-            );
+            laneChangeRecoveryGearHoldRemaining[vehicleIndex] = Mathf.Max(0f, gearHold - deltaTime);
+            StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
             return;
         }
 
@@ -9016,90 +6587,48 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             MinimumReverseRecoveryDistance,
             laneChangeRecoveryDistance[vehicleIndex]
         );
-        float phaseEnd =
-            GetRecoveryCurrentPhaseEndProgress(oldProgress);
-        bool movingInReverse = IsReversePhase(
-            true,
-            oldProgress
-        );
+        float phaseEnd = GetRecoveryCurrentPhaseEndProgress(oldProgress);
+        bool movingInReverse = IsReversePhase(true, oldProgress);
         float previousSpeed = vehicleSpeeds[vehicleIndex];
         float targetPathSpeed = movingInReverse
             ? Mathf.Max(0.1f, laneChangeReverseSpeed)
             : Mathf.Max(0.1f, blockedRecoveryForwardSpeed);
         float remainingPhaseDistance = Mathf.Max(
             0f,
-            SampleManeuverPathDistance(
-                vehicleIndex,
-                phaseEnd
-            ) -
-            SampleManeuverPathDistance(
-                vehicleIndex,
-                oldProgress
-            )
+            SampleManeuverPathDistance(vehicleIndex, phaseEnd) -
+            SampleManeuverPathDistance(vehicleIndex, oldProgress)
         );
 
         if (movingInReverse)
         {
-            float stoppingDeceleration = Mathf.Max(
-                0.1f,
-                GetDeceleration(vehicleIndex)
-            );
+            float stoppingDeceleration = Mathf.Max(0.1f, GetDeceleration(vehicleIndex));
             float stoppingSpeed = Mathf.Max(
                 0f,
-                Mathf.Sqrt(
-                    2f *
-                    stoppingDeceleration *
-                    remainingPhaseDistance
-                ) - stoppingDeceleration * deltaTime
+                Mathf.Sqrt(2f * stoppingDeceleration * remainingPhaseDistance) - stoppingDeceleration * deltaTime
             );
-            targetPathSpeed = Mathf.Min(
-                targetPathSpeed,
-                stoppingSpeed
-            );
+            targetPathSpeed = Mathf.Min(targetPathSpeed, stoppingSpeed);
         }
 
         float speedChangeRate =
             targetPathSpeed >= previousSpeed
                 ? GetAcceleration(vehicleIndex)
                 : GetDeceleration(vehicleIndex);
-        float movementSpeed = Mathf.MoveTowards(
-            previousSpeed,
-            targetPathSpeed,
-            speedChangeRate * deltaTime
-        );
-        float pathTravelDistance =
-            (previousSpeed + movementSpeed) *
-            0.5f *
-            deltaTime;
+        float movementSpeed = Mathf.MoveTowards(previousSpeed, targetPathSpeed, speedChangeRate * deltaTime);
+        float pathTravelDistance = (previousSpeed + movementSpeed) * 0.5f * deltaTime;
         float candidateProgress =
             remainingPhaseDistance <= 0.01f
                 ? phaseEnd
-                : AdvanceManeuverProgressByDistance(
-                    vehicleIndex,
-                    oldProgress,
-                    pathTravelDistance,
-                    phaseEnd
-                  );
+                : AdvanceManeuverProgressByDistance(vehicleIndex, oldProgress, pathTravelDistance, phaseEnd);
 
-        float newS = SampleManeuverPathSourceS(
-            vehicleIndex,
-            candidateProgress
-        );
+        float newS = SampleManeuverPathSourceS(vehicleIndex, candidateProgress);
 
         bool obstacleSweepBlocked =
-            EvaluateLaneChangeObstacleSweep(
-                vehicleIndex,
-                oldS,
-                oldProgress,
-                newS,
-                candidateProgress
-            );
+            EvaluateLaneChangeObstacleSweep(vehicleIndex, oldS, oldProgress, newS, candidateProgress);
 
         if (obstacleSweepBlocked)
         {
             newS = laneChangeObstacleSweepSafeS;
-            candidateProgress =
-                laneChangeObstacleSweepSafeProgress;
+            candidateProgress = laneChangeObstacleSweepSafeProgress;
 
             if (CanCompleteRecoveryPhaseAtVehicleMargin(
                     vehicleIndex,
@@ -9112,11 +6641,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 // 여유 간격의 겹침 해제를 기다리지 않고 단계 끝점에서 기어 전환
                 // 플레이어 및 도로 경계 장애에는 예외 적용 제외
                 newS = laneChangeReverseStartS[vehicleIndex] +
-                    GetRecoveryLongitudinalOffset(
-                        vehicleIndex,
-                        phaseEnd,
-                        recoveryDistance
-                    );
+                    GetRecoveryLongitudinalOffset(vehicleIndex, phaseEnd, recoveryDistance);
                 candidateProgress = phaseEnd;
                 obstacleSweepBlocked = false;
                 laneChangePlayerBlocked[vehicleIndex] = false;
@@ -9140,28 +6665,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 : 0f;
         vehicleRenderMaximumS[vehicleIndex] = newS;
 
-        if (obstacleSweepBlocked ||
-            candidateProgress < phaseEnd - 0.0001f)
+        if (obstacleSweepBlocked || candidateProgress < phaseEnd - 0.0001f)
         {
             return;
         }
 
-        bool completedReverse =
-            phaseEnd == GetRecoveryFirstReverseEndProgress();
+        bool completedReverse = phaseEnd == GetRecoveryFirstReverseEndProgress();
 
         if (!completedReverse)
         {
-            laneChangeProgress[vehicleIndex] =
-                GetRecoveryPreparationEndProgress();
-            vehicleS[vehicleIndex] = SampleManeuverPathSourceS(
-                vehicleIndex,
-                laneChangeProgress[vehicleIndex]
-            );
+            laneChangeProgress[vehicleIndex] = GetRecoveryPreparationEndProgress();
+            vehicleS[vehicleIndex] = SampleManeuverPathSourceS(vehicleIndex, laneChangeProgress[vehicleIndex]);
             vehicleSpeeds[vehicleIndex] = movementSpeed;
             vehicleAccelerations[vehicleIndex] =
                 deltaTime > 0.0001f
-                    ? (vehicleSpeeds[vehicleIndex] -
-                       previousSpeed) / deltaTime
+                    ? (vehicleSpeeds[vehicleIndex] - previousSpeed) / deltaTime
                     : 0f;
             laneChangeRecoveryGearHoldRemaining[vehicleIndex] = 0f;
             laneChangeObstacleRestartHoldRemaining[vehicleIndex] = 0f;
@@ -9173,8 +6691,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         // 통합 회복의 기어 전환은 한 번으로 제한
         // 장애물에서 후진한 다음 일반 합류 곡선을 따라 전진
-        laneChangeRecoveryGearHoldRemaining[vehicleIndex] =
-            Mathf.Max(0.15f, blockedRecoveryGearShiftPause);
+        laneChangeRecoveryGearHoldRemaining[vehicleIndex] = Mathf.Max(0.15f, blockedRecoveryGearShiftPause);
         vehicleSpeeds[vehicleIndex] = 0f;
         vehicleAccelerations[vehicleIndex] = 0f;
     }
@@ -9202,27 +6719,17 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return;
         }
 
-        int ruleIndex =
-            laneChangeRuleIndices[vehicleIndex];
+        int ruleIndex = laneChangeRuleIndices[vehicleIndex];
 
-        int targetLaneId =
-            laneChangeTargetLaneIds[vehicleIndex];
+        int targetLaneId = laneChangeTargetLaneIds[vehicleIndex];
 
-        float targetS = MapSourceToTargetSUnclamped(
-            ruleIndex,
-            vehicleS[vehicleIndex]
-        );
+        float targetS = MapSourceToTargetSUnclamped(ruleIndex, vehicleS[vehicleIndex]);
 
         vehicleLaneIds[vehicleIndex] = targetLaneId;
         vehicleS[vehicleIndex] = targetS;
         previousVehicleS[vehicleIndex] = targetS;
         vehicleRenderMaximumS[vehicleIndex] = -1f;
-        sampleHints[vehicleIndex] =
-            laneDatabase.FindSampleIndex(
-                targetLaneId,
-                targetS,
-                -1
-            );
+        sampleHints[vehicleIndex] = laneDatabase.FindSampleIndex(targetLaneId, targetS, -1);
 
         laneChangeActive[vehicleIndex] = false;
         InvalidateManeuverPath(vehicleIndex);
@@ -9234,58 +6741,36 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         laneChangeReverseStartS[vehicleIndex] = 0f;
         laneChangeRecoveryDistance[vehicleIndex] = 0f;
         laneChangeRecoveryGearHoldRemaining[vehicleIndex] = 0f;
-        activeLaneChangeCount = Mathf.Max(
-            0,
-            activeLaneChangeCount - 1
-        );
+        activeLaneChangeCount = Mathf.Max(0, activeLaneChangeCount - 1);
         laneChangeTargetLaneIds[vehicleIndex] = -1;
         laneChangeRuleIndices[vehicleIndex] = -1;
         laneChangeProgress[vehicleIndex] = 0f;
         laneChangePlayerBlocked[vehicleIndex] = false;
         laneChangeVehicleBlocked[vehicleIndex] = false;
         laneChangeRoadBoundaryBlocked[vehicleIndex] = false;
-        laneChangeObstacleRestartHoldRemaining[
-            vehicleIndex
-        ] = 0f;
+        laneChangeObstacleRestartHoldRemaining[vehicleIndex] = 0f;
         laneChangeObstacleClearHoldRemaining[vehicleIndex] = 0f;
         laneChangeObstacleSweepDebugValid[vehicleIndex] = false;
-        laneChangeCooldownRemaining[vehicleIndex] =
-            Mathf.Max(0f, laneChangeCooldown);
-        laneChangeEvaluationRemaining[vehicleIndex] =
-            Mathf.Max(
-                0.2f,
-                laneChangeEvaluationInterval
-            );
+        laneChangeCooldownRemaining[vehicleIndex] = Mathf.Max(0f, laneChangeCooldown);
+        laneChangeEvaluationRemaining[vehicleIndex] = Mathf.Max(0.2f, laneChangeEvaluationInterval);
     }
 
-    private float GetManeuverSourceAdvanceFactor(
-        int vehicleIndex,
-        float progress)
+    private float GetManeuverSourceAdvanceFactor(int vehicleIndex, float progress)
     {
         if (!IsManeuverPathUsable(vehicleIndex))
         {
             return 1f;
         }
 
-        float coordinate =
-            GetManeuverPathSampleCoordinate(progress);
-        int segment = Mathf.Clamp(
-            Mathf.FloorToInt(coordinate),
-            0,
-            ManeuverPathSampleCount - 2
-        );
+        float coordinate = GetManeuverPathSampleCoordinate(progress);
+        int segment = Mathf.Clamp(Mathf.FloorToInt(coordinate), 0, ManeuverPathSampleCount - 2);
         int offset = GetManeuverPathOffset(vehicleIndex);
         float sourceAdvance =
-            maneuverPathSourceS[offset + segment + 1] -
-            maneuverPathSourceS[offset + segment];
+            maneuverPathSourceS[offset + segment + 1] - maneuverPathSourceS[offset + segment];
         float pathAdvance =
-            maneuverPathDistances[offset + segment + 1] -
-            maneuverPathDistances[offset + segment];
+            maneuverPathDistances[offset + segment + 1] - maneuverPathDistances[offset + segment];
 
-        return Mathf.Clamp01(
-            sourceAdvance /
-            Mathf.Max(0.0001f, pathAdvance)
-        );
+        return Mathf.Clamp01(sourceAdvance / Mathf.Max(0.0001f, pathAdvance));
     }
 
     // -------------------------------------------------------------------------
@@ -9294,45 +6779,30 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void TryFillVehicleSlots()
     {
-        int targetCount = Mathf.Clamp(
-            targetActiveVehicles,
-            0,
-            slotCount
-        );
+        int targetCount = Mathf.Clamp(targetActiveVehicles, 0, slotCount);
 
-        if (activeVehicleCount >= targetCount ||
-            respawnTimer > 0f)
+        if (activeVehicleCount >= targetCount || respawnTimer > 0f)
         {
             return;
         }
 
         bool spawned = TrySpawnOneVehicle();
-        respawnTimer = spawned
-            ? Mathf.Max(0.15f, respawnInterval)
-            : Mathf.Max(0.1f, respawnInterval * 0.5f);
+        respawnTimer = spawned ? Mathf.Max(0.15f, respawnInterval) : Mathf.Max(0.1f, respawnInterval * 0.5f);
     }
 
     private void DistributeStartupVehicles()
     {
-        int targetCount = Mathf.Clamp(
-            targetActiveVehicles,
-            0,
-            slotCount
-        );
+        int targetCount = Mathf.Clamp(targetActiveVehicles, 0, slotCount);
 
         int laneCount = laneDatabase.laneCount;
-        int[] startupLaneCounts =
-            new int[laneCount];
+        int[] startupLaneCounts = new int[laneCount];
 
-        int startupLaneCursor =
-            Mathf.Abs(randomState) %
-            Mathf.Max(1, laneCount);
+        int startupLaneCursor = Mathf.Abs(randomState) % Mathf.Max(1, laneCount);
 
         int assignedCount = 0;
 
         for (int i = 0;
-             i < slotCount &&
-             assignedCount < targetCount;
+             i < slotCount && assignedCount < targetCount;
              i++)
         {
             if (vehicleRoots[i] == null)
@@ -9340,11 +6810,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 continue;
             }
 
-            int laneId = ChooseStartupLane(
-                i,
-                startupLaneCounts,
-                startupLaneCursor
-            );
+            int laneId = ChooseStartupLane(i, startupLaneCounts, startupLaneCursor);
 
             if (laneId < 0)
             {
@@ -9354,34 +6820,28 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             vehicleLaneIds[i] = laneId;
             startupLaneCounts[laneId]++;
             assignedCount++;
-            startupLaneCursor =
-                (laneId + 1) % laneCount;
+            startupLaneCursor = (laneId + 1) % laneCount;
         }
 
         for (int laneId = 0;
              laneId < laneCount;
              laneId++)
         {
-            int vehiclesOnLane =
-                startupLaneCounts[laneId];
+            int vehiclesOnLane = startupLaneCounts[laneId];
 
             if (vehiclesOnLane <= 0)
             {
                 continue;
             }
 
-            float laneStart =
-                laneDatabase.spawnS[laneId];
+            float laneStart = laneDatabase.spawnS[laneId];
 
             float laneEnd = GetLaneEndS(laneId);
 
             float padding = Mathf.Clamp(
                 startupDistributionEdgePadding,
                 0f,
-                Mathf.Max(
-                    0f,
-                    (laneEnd - laneStart) * 0.2f
-                )
+                Mathf.Max(0f, (laneEnd - laneStart) * 0.2f)
             );
 
             float usableStart = laneStart + padding;
@@ -9393,9 +6853,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 usableEnd = laneEnd;
             }
 
-            float cellLength =
-                (usableEnd - usableStart) /
-                vehiclesOnLane;
+            float cellLength = (usableEnd - usableStart) / vehiclesOnLane;
 
             int ordinal = 0;
 
@@ -9403,52 +6861,27 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                  i < slotCount;
                  i++)
             {
-                if (vehicleRoots[i] == null ||
-                    vehicleLaneIds[i] != laneId ||
-                    vehicleActive[i])
+                if (vehicleRoots[i] == null || vehicleLaneIds[i] != laneId || vehicleActive[i])
                 {
                     continue;
                 }
 
-                float cellOffset = Mathf.Lerp(
-                    0.3f,
-                    0.7f,
-                    NextRandom01()
-                );
+                float cellOffset = Mathf.Lerp(0.3f, 0.7f, NextRandom01());
 
-                float laneS =
-                    usableStart +
-                    (ordinal + cellOffset) *
-                    cellLength;
+                float laneS = usableStart + (ordinal + cellOffset) * cellLength;
 
-                laneS = MoveStartupPositionAwayFromStopLine(
-                    i,
-                    laneId,
-                    laneS,
-                    usableStart,
-                    usableEnd
-                );
+                laneS = MoveStartupPositionAwayFromStopLine(i, laneId, laneS, usableStart, usableEnd);
 
                 speedFactors[i] = 1f;
 
-                ActivateVehicleAt(
-                    i,
-                    laneId,
-                    laneS,
-                    1f,
-                    GetCruiseSpeed(i, laneId),
-                    4f + NextRandom01() * 3f
-                );
+                ActivateVehicleAt(i, laneId, laneS, 1f, GetCruiseSpeed(i, laneId), 4f + NextRandom01() * 3f);
 
                 ordinal++;
             }
         }
     }
 
-    private int ChooseStartupLane(
-        int vehicleIndex,
-        int[] startupLaneCounts,
-        int laneCursor)
+    private int ChooseStartupLane(int vehicleIndex, int[] startupLaneCounts, int laneCursor)
     {
         int bestLaneId = -1;
         float bestScore = 1000000f;
@@ -9459,38 +6892,23 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              offset < laneCount;
              offset++)
         {
-            int laneId =
-                (laneCursor + offset) % laneCount;
+            int laneId = (laneCursor + offset) % laneCount;
 
-            if (!CanUseStartupLane(
-                laneId,
-                vehicleIndex
-            ) ||
-                startupLaneCounts[laneId] >= Mathf.Max(
-                    1,
-                    maximumVehiclesPerSpawnLane
-                ))
+            if (!CanUseStartupLane(laneId, vehicleIndex) ||
+                startupLaneCounts[laneId] >= Mathf.Max(1, maximumVehiclesPerSpawnLane))
             {
                 continue;
             }
 
-            float weight = Mathf.Max(
-                0.01f,
-                laneDatabase.spawnWeights[laneId]
-            );
+            float weight = Mathf.Max(0.01f, laneDatabase.spawnWeights[laneId]);
 
-            float score =
-                (startupLaneCounts[laneId] + 0.5f) /
-                weight;
+            float score = (startupLaneCounts[laneId] + 0.5f) / weight;
 
-            bool lowerScore =
-                score < bestScore - 0.0001f;
+            bool lowerScore = score < bestScore - 0.0001f;
 
             bool betterTie =
                 Mathf.Abs(score - bestScore) <= 0.0001f &&
-                (bestLaneId < 0 ||
-                 startupLaneCounts[laneId] <
-                 startupLaneCounts[bestLaneId]);
+                (bestLaneId < 0 || startupLaneCounts[laneId] < startupLaneCounts[bestLaneId]);
 
             if (!lowerScore && !betterTie)
             {
@@ -9504,26 +6922,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return bestLaneId;
     }
 
-    private bool CanUseStartupLane(
-        int laneId,
-        int vehicleIndex)
+    private bool CanUseStartupLane(int laneId, int vehicleIndex)
     {
-        if (laneId < 0 ||
-            laneId >= laneDatabase.laneCount ||
-            laneDatabase.spawnS[laneId] < 0f ||
+        if (laneId < 0 || laneId >= laneDatabase.laneCount || laneDatabase.spawnS[laneId] < 0f ||
             laneDatabase.spawnWeights[laneId] <= 0f)
         {
             return false;
         }
 
-        if ((laneDatabase.laneVehicleMasks[laneId] &
-             GetVehicleMask(vehicleIndex)) == 0)
+        if ((laneDatabase.laneVehicleMasks[laneId] & GetVehicleMask(vehicleIndex)) == 0)
         {
             return false;
         }
 
-        return GetLaneEndS(laneId) >
-               laneDatabase.spawnS[laneId];
+        return GetLaneEndS(laneId) > laneDatabase.spawnS[laneId];
     }
 
     private float MoveStartupPositionAwayFromStopLine(
@@ -9533,46 +6945,33 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float usableStart,
         float usableEnd)
     {
-        float stopLineS =
-            laneDatabase.stopLineS[laneId];
+        float stopLineS = laneDatabase.stopLineS[laneId];
 
         if (stopLineS < 0f)
         {
             return laneS;
         }
 
-        float clearance = Mathf.Max(
-            0f,
-            startupStopLineClearance
-        ) + Mathf.Max(
-            GetVehicleFrontExtent(vehicleIndex),
-            GetVehicleRearExtent(vehicleIndex)
-        );
+        float clearance = Mathf.Max(0f, startupStopLineClearance) + Mathf.Max(GetVehicleFrontExtent(vehicleIndex), GetVehicleRearExtent(vehicleIndex));
 
-        float distanceToStopLine =
-            laneS - stopLineS;
+        float distanceToStopLine = laneS - stopLineS;
 
         if (Mathf.Abs(distanceToStopLine) >= clearance)
         {
             return laneS;
         }
 
-        float beforeStopLine =
-            stopLineS - clearance;
+        float beforeStopLine = stopLineS - clearance;
 
-        float afterStopLine =
-            stopLineS + clearance;
+        float afterStopLine = stopLineS + clearance;
 
-        bool canMoveBefore =
-            beforeStopLine >= usableStart;
+        bool canMoveBefore = beforeStopLine >= usableStart;
 
-        bool canMoveAfter =
-            afterStopLine <= usableEnd;
+        bool canMoveAfter = afterStopLine <= usableEnd;
 
         if (canMoveBefore && canMoveAfter)
         {
-            return Mathf.Abs(laneS - beforeStopLine) <=
-                   Mathf.Abs(laneS - afterStopLine)
+            return Mathf.Abs(laneS - beforeStopLine) <= Mathf.Abs(laneS - afterStopLine)
                 ? beforeStopLine
                 : afterStopLine;
         }
@@ -9597,8 +6996,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         for (int i = 0; i < slotCount; i++)
         {
-            if (vehicleActive[i] ||
-                vehicleRoots[i] == null)
+            if (vehicleActive[i] || vehicleRoots[i] == null)
             {
                 continue;
             }
@@ -9622,20 +7020,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         float startS = laneDatabase.spawnS[laneId];
 
-        float speedFactor = Mathf.Lerp(
-            minimumSpeedFactor,
-            maximumSpeedFactor,
-            NextRandom01()
-        );
+        float speedFactor = Mathf.Lerp(minimumSpeedFactor, maximumSpeedFactor, NextRandom01());
 
-        ActivateVehicleAt(
-            freeSlot,
-            laneId,
-            startS,
-            speedFactor,
-            spawnInitialSpeed,
-            2f + NextRandom01() * 3f
-        );
+        ActivateVehicleAt(freeSlot, laneId, startS, speedFactor, spawnInitialSpeed, 2f + NextRandom01() * 3f);
 
         return true;
     }
@@ -9648,14 +7035,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float initialSpeed,
         float initialLaneChangeCooldown)
     {
-        speedFactors[vehicleIndex] = Mathf.Clamp(
-            speedFactor,
-            0.5f,
-            1.5f
-        );
+        speedFactors[vehicleIndex] = Mathf.Clamp(speedFactor, 0.5f, 1.5f);
 
-        vehicleSpawnGeneration[vehicleIndex] =
-            !vehicleSpawnGeneration[vehicleIndex];
+        vehicleSpawnGeneration[vehicleIndex] = !vehicleSpawnGeneration[vehicleIndex];
         vehicleActive[vehicleIndex] = true;
         InvalidateLaneVehicleCaches();
         vehicleLaneIds[vehicleIndex] = laneId;
@@ -9673,20 +7055,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         laneChangeRuleIndices[vehicleIndex] = -1;
         laneChangeBranchDecisions[vehicleIndex] = 0;
         laneChangeProgress[vehicleIndex] = 0f;
-        laneChangeCooldownRemaining[vehicleIndex] =
-            Mathf.Max(0f, initialLaneChangeCooldown);
-        laneChangeEvaluationRemaining[vehicleIndex] =
-            Mathf.Max(
-                0.2f,
-                laneChangeEvaluationInterval
-            );
+        laneChangeCooldownRemaining[vehicleIndex] = Mathf.Max(0f, initialLaneChangeCooldown);
+        laneChangeEvaluationRemaining[vehicleIndex] = Mathf.Max(0.2f, laneChangeEvaluationInterval);
         ResetVehicleObstacleState(vehicleIndex);
 
-        float clampedS = Mathf.Clamp(
-            laneS,
-            laneDatabase.spawnS[laneId],
-            GetLaneEndS(laneId)
-        );
+        float clampedS = Mathf.Clamp(laneS, laneDatabase.spawnS[laneId], GetLaneEndS(laneId));
 
         vehicleS[vehicleIndex] = clampedS;
         previousVehicleS[vehicleIndex] = clampedS;
@@ -9696,8 +7069,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             GetCruiseSpeed(vehicleIndex, laneId)
         );
 
-        previousVehicleSpeeds[vehicleIndex] =
-            vehicleSpeeds[vehicleIndex];
+        previousVehicleSpeeds[vehicleIndex] = vehicleSpeeds[vehicleIndex];
         previousLaneChangeProgress[vehicleIndex] = 0f;
         previousVehicleLaneIds[vehicleIndex] = laneId;
         previousLaneChangeActive[vehicleIndex] = false;
@@ -9705,12 +7077,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         vehicleAccelerations[vehicleIndex] = 0f;
         vehicleRenderMaximumS[vehicleIndex] = -1f;
 
-        sampleHints[vehicleIndex] =
-            laneDatabase.FindSampleIndex(
-                laneId,
-                clampedS,
-                -1
-            );
+        sampleHints[vehicleIndex] = laneDatabase.FindSampleIndex(laneId, clampedS, -1);
 
         activeVehicleCount++;
     }
@@ -9723,10 +7090,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              laneId < laneDatabase.laneCount;
              laneId++)
         {
-            if (!CanSpawnOnLane(
-                laneId,
-                vehicleIndex
-            ))
+            if (!CanSpawnOnLane(laneId, vehicleIndex))
             {
                 continue;
             }
@@ -9739,8 +7103,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return -1;
         }
 
-        float selection =
-            NextRandom01() * totalWeight;
+        float selection = NextRandom01() * totalWeight;
 
         int fallbackLane = -1;
 
@@ -9748,10 +7111,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
              laneId < laneDatabase.laneCount;
              laneId++)
         {
-            if (!CanSpawnOnLane(
-                laneId,
-                vehicleIndex
-            ))
+            if (!CanSpawnOnLane(laneId, vehicleIndex))
             {
                 continue;
             }
@@ -9778,18 +7138,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private float GetAvailableSpawnLaneWeight(int laneId)
     {
         int population = GetSpawnLanePopulation(laneId);
-        int capacity = Mathf.Max(
-            1,
-            maximumVehiclesPerSpawnLane
-        );
-        float remainingRatio = Mathf.Clamp01(
-            (capacity - population) / (float)capacity
-        );
+        int capacity = Mathf.Max(1, maximumVehiclesPerSpawnLane);
+        float remainingRatio = Mathf.Clamp01((capacity - population) / (float)capacity);
 
-        return Mathf.Max(
-            0f,
-            laneDatabase.spawnWeights[laneId]
-        ) * remainingRatio * remainingRatio;
+        return Mathf.Max(0f, laneDatabase.spawnWeights[laneId]) * remainingRatio * remainingRatio;
     }
 
     private int GetSpawnLanePopulation(int laneId)
@@ -9807,34 +7159,26 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         return population;
     }
 
-    private bool CanSpawnOnLane(
-        int laneId,
-        int vehicleIndex)
+    private bool CanSpawnOnLane(int laneId, int vehicleIndex)
     {
-        if (laneId < 0 ||
-            laneId >= laneDatabase.laneCount)
+        if (laneId < 0 || laneId >= laneDatabase.laneCount)
         {
             return false;
         }
 
-        if ((laneDatabase.laneVehicleMasks[laneId] &
-             GetVehicleMask(vehicleIndex)) == 0)
+        if ((laneDatabase.laneVehicleMasks[laneId] & GetVehicleMask(vehicleIndex)) == 0)
         {
             return false;
         }
 
-        if (GetSpawnLanePopulation(laneId) >= Mathf.Max(
-                1,
-                maximumVehiclesPerSpawnLane
-            ))
+        if (GetSpawnLanePopulation(laneId) >= Mathf.Max(1, maximumVehiclesPerSpawnLane))
         {
             return false;
         }
 
         float startS = laneDatabase.spawnS[laneId];
 
-        if (startS < 0f ||
-            laneDatabase.spawnWeights[laneId] <= 0f)
+        if (startS < 0f || laneDatabase.spawnWeights[laneId] <= 0f)
         {
             return false;
         }
@@ -9848,37 +7192,25 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         for (int i = 0; i < slotCount; i++)
         {
-            if (!vehicleActive[i] ||
-                vehicleLaneIds[i] != laneId)
+            if (!vehicleActive[i] || vehicleLaneIds[i] != laneId)
             {
                 continue;
             }
 
             float occupiedS = vehicleS[i];
 
-            if (laneChangeReverseManeuver[i] &&
-                vehicleLaneIds[i] == laneId)
+            if (laneChangeReverseManeuver[i] && vehicleLaneIds[i] == laneId)
             {
                 occupiedS = Mathf.Min(
                     occupiedS,
                     laneChangeReverseStartS[i] -
-                        Mathf.Max(
-                            MinimumReverseRecoveryDistance,
-                            laneChangeRecoveryDistance[i]
-                        )
+                        Mathf.Max(MinimumReverseRecoveryDistance, laneChangeRecoveryDistance[i])
                 );
             }
 
-            float bumperGap =
-                occupiedS -
-                startS -
-                GetCombinedHalfLength(
-                    vehicleIndex,
-                    i
-                );
+            float bumperGap = occupiedS - startS - GetCombinedHalfLength(vehicleIndex, i);
 
-            if (bumperGap <
-                GetSpawnClearance(vehicleIndex))
+            if (bumperGap < GetSpawnClearance(vehicleIndex))
             {
                 return false;
             }
@@ -9889,20 +7221,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private float GetLaneEndS(int laneId)
     {
-        float endS =
-            laneDatabase.despawnS[laneId];
+        float endS = laneDatabase.despawnS[laneId];
 
         if (endS < 0f)
         {
-            endS =
-                laneDatabase.laneLengths[laneId];
+            endS = laneDatabase.laneLengths[laneId];
         }
 
-        return Mathf.Clamp(
-            endS,
-            0f,
-            laneDatabase.laneLengths[laneId]
-        );
+        return Mathf.Clamp(endS, 0f, laneDatabase.laneLengths[laneId]);
     }
 
     private void DeactivateVehicle(int vehicleIndex)
@@ -9914,10 +7240,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         if (laneChangeActive[vehicleIndex])
         {
-            activeLaneChangeCount = Mathf.Max(
-                0,
-                activeLaneChangeCount - 1
-            );
+            activeLaneChangeCount = Mathf.Max(0, activeLaneChangeCount - 1);
         }
 
         vehicleActive[vehicleIndex] = false;
@@ -9946,10 +7269,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         vehicleRenderMaximumS[vehicleIndex] = -1f;
         signalCommittedToCross[vehicleIndex] = false;
 
-        activeVehicleCount = Mathf.Max(
-            0,
-            activeVehicleCount - 1
-        );
+        activeVehicleCount = Mathf.Max(0, activeVehicleCount - 1);
     }
 
     // -------------------------------------------------------------------------
@@ -9980,24 +7300,17 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         {
             bool useNextIdentity = interpolation >= 1f;
 
-            bool shouldBeActive = useNextIdentity
-                ? snapshotNextActive[i]
-                : snapshotPreviousActive[i];
+            bool shouldBeActive = useNextIdentity ? snapshotNextActive[i] : snapshotPreviousActive[i];
 
             bool spawnGenerationChanged =
-                snapshotPreviousActive[i] &&
-                snapshotNextActive[i] &&
-                snapshotPreviousSpawnGeneration[i] !=
-                    snapshotNextSpawnGeneration[i];
+                snapshotPreviousActive[i] && snapshotNextActive[i] &&
+                snapshotPreviousSpawnGeneration[i] != snapshotNextSpawnGeneration[i];
 
             bool renderSpawnGeneration = useNextIdentity
                 ? snapshotNextSpawnGeneration[i]
                 : snapshotPreviousSpawnGeneration[i];
 
-            if (shouldBeActive &&
-                visualActive[i] &&
-                visualSpawnGeneration[i] !=
-                    renderSpawnGeneration)
+            if (shouldBeActive && visualActive[i] && visualSpawnGeneration[i] != renderSpawnGeneration)
             {
                 SetVehicleVisualActive(i, false);
             }
@@ -10006,12 +7319,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (shouldBeActive)
             {
-                visualSpawnGeneration[i] =
-                    renderSpawnGeneration;
+                visualSpawnGeneration[i] = renderSpawnGeneration;
             }
 
-            if (!shouldBeActive ||
-                vehicleRoots[i] == null)
+            if (!shouldBeActive || vehicleRoots[i] == null)
             {
                 continue;
             }
@@ -10033,30 +7344,19 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             int completionRuleIndex = -1;
 
             bool completesLaneChange =
-                snapshotPreviousActive[i] &&
-                snapshotNextActive[i] &&
-                snapshotPreviousLaneChangeActive[i] &&
+                snapshotPreviousActive[i] && snapshotNextActive[i] && snapshotPreviousLaneChangeActive[i] &&
                 !snapshotNextLaneChangeActive[i] &&
-                snapshotPreviousTargetLaneIds[i] ==
-                    snapshotNextLaneIds[i] &&
-                snapshotPreviousLaneIds[i] !=
-                    snapshotNextLaneIds[i];
+                snapshotPreviousTargetLaneIds[i] == snapshotNextLaneIds[i] &&
+                snapshotPreviousLaneIds[i] != snapshotNextLaneIds[i];
 
             if (completesLaneChange)
             {
-                completionRuleIndex = FindLaneChangeRule(
-                    snapshotPreviousLaneIds[i],
-                    snapshotNextLaneIds[i]
-                );
+                completionRuleIndex = FindLaneChangeRule(snapshotPreviousLaneIds[i], snapshotNextLaneIds[i]);
             }
 
             bool canInterpolate =
-                snapshotPreviousActive[i] &&
-                snapshotNextActive[i] &&
-                !spawnGenerationChanged &&
-                (snapshotPreviousLaneIds[i] ==
-                    snapshotNextLaneIds[i] ||
-                 completionRuleIndex >= 0);
+                snapshotPreviousActive[i] && snapshotNextActive[i] && !spawnGenerationChanged &&
+                (snapshotPreviousLaneIds[i] == snapshotNextLaneIds[i] || completionRuleIndex >= 0);
 
             if (canInterpolate)
             {
@@ -10065,33 +7365,18 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     laneId = snapshotPreviousLaneIds[i];
 
                     float completedSourceS =
-                        MapTargetToSourceSUnclamped(
-                            completionRuleIndex,
-                            snapshotNextS[i]
-                        );
+                        MapTargetToSourceSUnclamped(completionRuleIndex, snapshotNextS[i]);
 
-                    renderS = Mathf.Lerp(
-                        snapshotPreviousS[i],
-                        completedSourceS,
-                        interpolation
-                    );
+                    renderS = Mathf.Lerp(snapshotPreviousS[i], completedSourceS, interpolation);
                 }
                 else
                 {
                     laneId = snapshotNextLaneIds[i];
 
-                    renderS = Mathf.Lerp(
-                        snapshotPreviousS[i],
-                        snapshotNextS[i],
-                        interpolation
-                    );
+                    renderS = Mathf.Lerp(snapshotPreviousS[i], snapshotNextS[i], interpolation);
                 }
 
-                renderSpeed = Mathf.Lerp(
-                    snapshotPreviousSpeeds[i],
-                    snapshotNextSpeeds[i],
-                    interpolation
-                );
+                renderSpeed = Mathf.Lerp(snapshotPreviousSpeeds[i], snapshotNextSpeeds[i], interpolation);
 
                 renderSpeedFactor = Mathf.Lerp(
                     snapshotPreviousSpeedFactors[i],
@@ -10102,14 +7387,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 if (completionRuleIndex >= 0)
                 {
                     renderLaneChangeActive = true;
-                    renderReverseManeuver =
-                        snapshotPreviousReverseManeuver[i];
-                    renderEmergencyManeuver =
-                        snapshotPreviousEmergencyManeuver[i];
-                    renderRecoveryDistance =
-                        snapshotPreviousRecoveryDistance[i];
-                    renderTargetLaneId =
-                        snapshotNextLaneIds[i];
+                    renderReverseManeuver = snapshotPreviousReverseManeuver[i];
+                    renderEmergencyManeuver = snapshotPreviousEmergencyManeuver[i];
+                    renderRecoveryDistance = snapshotPreviousRecoveryDistance[i];
+                    renderTargetLaneId = snapshotNextLaneIds[i];
                     renderLaneChangeProgress = Mathf.Lerp(
                         snapshotPreviousLaneChangeProgress[i],
                         1f,
@@ -10119,22 +7400,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 else
                 {
                     bool sameLaneChange =
-                        snapshotPreviousLaneChangeActive[i] &&
-                        snapshotNextLaneChangeActive[i] &&
-                        snapshotPreviousTargetLaneIds[i] ==
-                        snapshotNextTargetLaneIds[i];
+                        snapshotPreviousLaneChangeActive[i] && snapshotNextLaneChangeActive[i] &&
+                        snapshotPreviousTargetLaneIds[i] == snapshotNextTargetLaneIds[i];
 
                     if (sameLaneChange)
                     {
                         renderLaneChangeActive = true;
-                        renderReverseManeuver =
-                            snapshotNextReverseManeuver[i];
-                        renderEmergencyManeuver =
-                            snapshotNextEmergencyManeuver[i];
-                        renderRecoveryDistance =
-                            snapshotNextRecoveryDistance[i];
-                        renderTargetLaneId =
-                            snapshotNextTargetLaneIds[i];
+                        renderReverseManeuver = snapshotNextReverseManeuver[i];
+                        renderEmergencyManeuver = snapshotNextEmergencyManeuver[i];
+                        renderRecoveryDistance = snapshotNextRecoveryDistance[i];
+                        renderTargetLaneId = snapshotNextTargetLaneIds[i];
                         renderLaneChangeProgress = Mathf.Lerp(
                             snapshotPreviousLaneChangeProgress[i],
                             snapshotNextLaneChangeProgress[i],
@@ -10144,14 +7419,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     else if (snapshotNextLaneChangeActive[i])
                     {
                         renderLaneChangeActive = true;
-                        renderReverseManeuver =
-                            snapshotNextReverseManeuver[i];
-                        renderEmergencyManeuver =
-                            snapshotNextEmergencyManeuver[i];
-                        renderRecoveryDistance =
-                            snapshotNextRecoveryDistance[i];
-                        renderTargetLaneId =
-                            snapshotNextTargetLaneIds[i];
+                        renderReverseManeuver = snapshotNextReverseManeuver[i];
+                        renderEmergencyManeuver = snapshotNextEmergencyManeuver[i];
+                        renderRecoveryDistance = snapshotNextRecoveryDistance[i];
+                        renderTargetLaneId = snapshotNextTargetLaneIds[i];
                         renderLaneChangeProgress = Mathf.Lerp(
                             0f,
                             snapshotNextLaneChangeProgress[i],
@@ -10163,51 +7434,33 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             else
             {
                 bool usePrevious =
-                    shouldBeActive &&
-                    (!snapshotNextActive[i] ||
-                     (spawnGenerationChanged &&
-                      !useNextIdentity));
+                    shouldBeActive && (!snapshotNextActive[i] || (spawnGenerationChanged && !useNextIdentity));
 
                 if (usePrevious)
                 {
                     laneId = snapshotPreviousLaneIds[i];
                     renderS = snapshotPreviousS[i];
-                    renderSpeed =
-                        snapshotPreviousSpeeds[i];
-                    renderSpeedFactor =
-                        snapshotPreviousSpeedFactors[i];
-                    renderLaneChangeActive =
-                        snapshotPreviousLaneChangeActive[i];
-                    renderReverseManeuver =
-                        snapshotPreviousReverseManeuver[i];
-                    renderEmergencyManeuver =
-                        snapshotPreviousEmergencyManeuver[i];
-                    renderRecoveryDistance =
-                        snapshotPreviousRecoveryDistance[i];
-                    renderTargetLaneId =
-                        snapshotPreviousTargetLaneIds[i];
-                    renderLaneChangeProgress =
-                        snapshotPreviousLaneChangeProgress[i];
+                    renderSpeed = snapshotPreviousSpeeds[i];
+                    renderSpeedFactor = snapshotPreviousSpeedFactors[i];
+                    renderLaneChangeActive = snapshotPreviousLaneChangeActive[i];
+                    renderReverseManeuver = snapshotPreviousReverseManeuver[i];
+                    renderEmergencyManeuver = snapshotPreviousEmergencyManeuver[i];
+                    renderRecoveryDistance = snapshotPreviousRecoveryDistance[i];
+                    renderTargetLaneId = snapshotPreviousTargetLaneIds[i];
+                    renderLaneChangeProgress = snapshotPreviousLaneChangeProgress[i];
                 }
                 else
                 {
                     laneId = snapshotNextLaneIds[i];
                     renderS = snapshotNextS[i];
                     renderSpeed = snapshotNextSpeeds[i];
-                    renderSpeedFactor =
-                        snapshotNextSpeedFactors[i];
-                    renderLaneChangeActive =
-                        snapshotNextLaneChangeActive[i];
-                    renderReverseManeuver =
-                        snapshotNextReverseManeuver[i];
-                    renderEmergencyManeuver =
-                        snapshotNextEmergencyManeuver[i];
-                    renderRecoveryDistance =
-                        snapshotNextRecoveryDistance[i];
-                    renderTargetLaneId =
-                        snapshotNextTargetLaneIds[i];
-                    renderLaneChangeProgress =
-                        snapshotNextLaneChangeProgress[i];
+                    renderSpeedFactor = snapshotNextSpeedFactors[i];
+                    renderLaneChangeActive = snapshotNextLaneChangeActive[i];
+                    renderReverseManeuver = snapshotNextReverseManeuver[i];
+                    renderEmergencyManeuver = snapshotNextEmergencyManeuver[i];
+                    renderRecoveryDistance = snapshotNextRecoveryDistance[i];
+                    renderTargetLaneId = snapshotNextTargetLaneIds[i];
+                    renderLaneChangeProgress = snapshotNextLaneChangeProgress[i];
                 }
             }
 
@@ -10216,24 +7469,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             int previousRenderedLaneId = vehicleLaneIds[i];
             float previousRenderedS = vehicleS[i];
-            bool previousRenderValid =
-                previousVisualPositionValid[i];
+            bool previousRenderValid = previousVisualPositionValid[i];
             bool previousLaneChangeActive = laneChangeActive[i];
-            bool previousReverseManeuver =
-                laneChangeReverseManeuver[i];
-            bool previousEmergencyManeuver =
-                laneChangeEmergencyManeuver[i];
-            int previousTargetLaneId =
-                laneChangeTargetLaneIds[i];
-            float previousRenderedProgress =
-                laneChangeProgress[i];
-            float previousReverseStartS =
-                laneChangeReverseStartS[i];
+            bool previousReverseManeuver = laneChangeReverseManeuver[i];
+            bool previousEmergencyManeuver = laneChangeEmergencyManeuver[i];
+            int previousTargetLaneId = laneChangeTargetLaneIds[i];
+            float previousRenderedProgress = laneChangeProgress[i];
+            float previousReverseStartS = laneChangeReverseStartS[i];
 
             bool sameRenderedLaneChange =
-                previousRenderValid &&
-                previousLaneChangeActive &&
-                renderLaneChangeActive &&
+                previousRenderValid && previousLaneChangeActive && renderLaneChangeActive &&
                 previousRenderedLaneId == laneId &&
                 previousTargetLaneId == renderTargetLaneId &&
                 previousReverseManeuver == renderReverseManeuver &&
@@ -10242,12 +7487,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             bool renderedManeuverContextChanged =
                 previousLaneChangeActive != renderLaneChangeActive ||
                 (renderLaneChangeActive &&
-                 (!previousRenderValid ||
-                  previousRenderedLaneId != laneId ||
+                 (!previousRenderValid || previousRenderedLaneId != laneId ||
                   previousTargetLaneId != renderTargetLaneId ||
                   previousReverseManeuver != renderReverseManeuver ||
-                  previousEmergencyManeuver !=
-                      renderEmergencyManeuver));
+                  previousEmergencyManeuver != renderEmergencyManeuver));
 
             if (renderedManeuverContextChanged)
             {
@@ -10258,14 +7501,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (sameRenderedLaneChange)
             {
-                float signedProgressAdvance =
-                    (renderLaneChangeProgress -
-                     previousRenderedProgress);
+                float signedProgressAdvance = (renderLaneChangeProgress - previousRenderedProgress);
 
                 if (signedProgressAdvance < 0f)
                 {
-                    renderLaneChangeProgress =
-                        previousRenderedProgress;
+                    renderLaneChangeProgress = previousRenderedProgress;
                 }
             }
 
@@ -10276,12 +7516,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             vehicleS[i] = renderS;
             laneChangeActive[i] = renderLaneChangeActive;
             laneChangeReverseManeuver[i] = renderReverseManeuver;
-            laneChangeEmergencyManeuver[i] =
-                renderEmergencyManeuver;
+            laneChangeEmergencyManeuver[i] = renderEmergencyManeuver;
             laneChangePreparing[i] =
-                renderLaneChangeActive &&
-                !renderReverseManeuver &&
-                renderLaneChangeProgress <= 0.0001f &&
+                renderLaneChangeActive && !renderReverseManeuver && renderLaneChangeProgress <= 0.0001f &&
                 snapshotNextAccelerations[i] < -0.05f;
             laneChangeTargetLaneIds[i] = renderTargetLaneId;
             laneChangeProgress[i] = renderLaneChangeProgress;
@@ -10297,10 +7534,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                   )
                 : 0f;
 
-            if (renderLaneChangeActive &&
-                renderReverseManeuver &&
-                renderLaneChangeProgress <=
-                    GetRecoveryPreparationEndProgress() + 0.0001f)
+            if (renderLaneChangeActive && renderReverseManeuver &&
+                renderLaneChangeProgress <= GetRecoveryPreparationEndProgress() + 0.0001f)
             {
                 float recoveryDistance = Mathf.Max(
                     MinimumReverseRecoveryDistance,
@@ -10310,22 +7545,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 );
                 float nextRecoveryStartS =
                     snapshotNextS[i] -
-                    GetRecoveryLongitudinalOffset(
-                        i,
-                        snapshotNextLaneChangeProgress[i],
-                        recoveryDistance
-                    );
+                    GetRecoveryLongitudinalOffset(i, snapshotNextLaneChangeProgress[i], recoveryDistance);
                 float recoveryStartS = nextRecoveryStartS;
                 bool sameRecoveryInBothSnapshots =
-                    canInterpolate &&
-                    snapshotPreviousLaneChangeActive[i] &&
-                    snapshotNextLaneChangeActive[i] &&
+                    canInterpolate && snapshotPreviousLaneChangeActive[i] && snapshotNextLaneChangeActive[i] &&
                     snapshotPreviousReverseManeuver[i] &&
                     snapshotNextReverseManeuver[i] &&
-                    snapshotPreviousLaneIds[i] ==
-                        snapshotNextLaneIds[i] &&
-                    snapshotPreviousTargetLaneIds[i] ==
-                        snapshotNextTargetLaneIds[i];
+                    snapshotPreviousLaneIds[i] == snapshotNextLaneIds[i] &&
+                    snapshotPreviousTargetLaneIds[i] == snapshotNextTargetLaneIds[i];
 
                 if (sameRecoveryInBothSnapshots)
                 {
@@ -10337,14 +7564,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                             recoveryDistance
                         );
 
-                    recoveryStartS = Mathf.Lerp(
-                        previousRecoveryStartS,
-                        nextRecoveryStartS,
-                        interpolation
-                    );
+                    recoveryStartS = Mathf.Lerp(previousRecoveryStartS, nextRecoveryStartS, interpolation);
                 }
-                else if (!snapshotNextReverseManeuver[i] &&
-                         snapshotPreviousReverseManeuver[i])
+                else if (!snapshotNextReverseManeuver[i] && snapshotPreviousReverseManeuver[i])
                 {
                     recoveryStartS =
                         snapshotPreviousS[i] -
@@ -10356,11 +7578,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 }
 
                 renderS = recoveryStartS +
-                    GetRecoveryLongitudinalOffset(
-                        i,
-                        renderLaneChangeProgress,
-                        recoveryDistance
-                    );
+                    GetRecoveryLongitudinalOffset(i, renderLaneChangeProgress, recoveryDistance);
 
                 laneChangeReverseStartS[i] = recoveryStartS;
                 vehicleS[i] = renderS;
@@ -10370,18 +7588,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 laneChangeReverseStartS[i] = renderS;
             }
 
-            bool renderingInReverse =
-                IsReversePhase(
-                    renderReverseManeuver,
-                    renderLaneChangeProgress
-                );
+            bool renderingInReverse = IsReversePhase(renderReverseManeuver, renderLaneChangeProgress);
 
-            if (previousRenderValid &&
-                previousRenderedLaneId == laneId)
+            if (previousRenderValid && previousRenderedLaneId == laneId)
             {
-                float signedRenderedAdvance =
-                    (renderS - previousRenderedS) *
-                    (renderingInReverse ? -1f : 1f);
+                float signedRenderedAdvance = (renderS - previousRenderedS) * (renderingInReverse ? -1f : 1f);
 
                 if (signedRenderedAdvance < 0f)
                 {
@@ -10392,17 +7603,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
                     if (sameRenderedLaneChange)
                     {
-                        renderLaneChangeProgress =
-                            previousRenderedProgress;
+                        renderLaneChangeProgress = previousRenderedProgress;
 
                         if (renderReverseManeuver)
                         {
-                            laneChangeReverseStartS[i] =
-                                previousReverseStartS;
+                            laneChangeReverseStartS[i] = previousReverseStartS;
                         }
                     }
-                    else if (renderLaneChangeActive &&
-                             !previousLaneChangeActive)
+                    else if (renderLaneChangeActive && !previousLaneChangeActive)
                     {
                         // 새로 수신한 기동이 횡방향 보정만으로 시작되는 문제 방지
                         renderLaneChangeProgress = 0f;
@@ -10420,9 +7628,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             speedFactors[i] = renderSpeedFactor;
             laneChangeProgress[i] = renderLaneChangeProgress;
             laneChangePreparing[i] =
-                renderLaneChangeActive &&
-                !renderReverseManeuver &&
-                renderLaneChangeProgress <= 0.0001f &&
+                renderLaneChangeActive && !renderReverseManeuver && renderLaneChangeProgress <= 0.0001f &&
                 snapshotNextAccelerations[i] < -0.05f;
 
             ApplyVehiclePose(
@@ -10441,119 +7647,72 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 renderedLaneChangeCount++;
             }
 
-            ApplyVehicleMotionVisuals(
-                i,
-                laneId,
-                renderSpeed,
-                renderSpeedFactor
-            );
+            ApplyVehicleMotionVisuals(i, laneId, renderSpeed, renderSpeedFactor);
         }
 
         if (!localIsAuthority)
         {
             activeVehicleCount = renderedActiveCount;
-            activeLaneChangeCount =
-                renderedLaneChangeCount;
+            activeLaneChangeCount = renderedLaneChangeCount;
         }
     }
 
     private void ApplyAuthorityVisuals()
     {
-        float stepDuration = Mathf.Clamp(
-            simulationInterval,
-            0.02f,
-            0.25f
-        );
-        float stateInterpolation = Mathf.Clamp01(
-            simulationAccumulator / stepDuration
-        );
+        float stepDuration = Mathf.Clamp(simulationInterval, 0.02f, 0.25f);
+        float stateInterpolation = Mathf.Clamp01(simulationAccumulator / stepDuration);
 
         for (int i = 0; i < slotCount; i++)
         {
             bool shouldBeActive = vehicleActive[i];
 
-            if (shouldBeActive &&
-                visualActive[i] &&
-                visualSpawnGeneration[i] !=
-                    vehicleSpawnGeneration[i])
+            if (shouldBeActive && visualActive[i] && visualSpawnGeneration[i] != vehicleSpawnGeneration[i])
             {
                 SetVehicleVisualActive(i, false);
             }
 
             SetVehicleVisualActive(i, shouldBeActive);
 
-            if (!shouldBeActive ||
-                vehicleRoots[i] == null)
+            if (!shouldBeActive || vehicleRoots[i] == null)
             {
                 continue;
             }
 
-            visualSpawnGeneration[i] =
-                vehicleSpawnGeneration[i];
+            visualSpawnGeneration[i] = vehicleSpawnGeneration[i];
 
             int laneId = vehicleLaneIds[i];
 
-            if (laneId < 0 ||
-                laneId >= laneDatabase.laneCount)
+            if (laneId < 0 || laneId >= laneDatabase.laneCount)
             {
                 continue;
             }
 
-            bool sameLaneState =
-                previousVehicleLaneIds[i] == laneId;
-            bool continuousManeuverState =
-                !previousLaneChangeActive[i] ||
-                laneChangeActive[i];
-            bool interpolateState =
-                sameLaneState && continuousManeuverState;
+            bool sameLaneState = previousVehicleLaneIds[i] == laneId;
+            bool continuousManeuverState = !previousLaneChangeActive[i] || laneChangeActive[i];
+            bool interpolateState = sameLaneState && continuousManeuverState;
             float renderSpeed = Mathf.Max(
                 0f,
                 interpolateState
-                    ? Mathf.Lerp(
-                        previousVehicleSpeeds[i],
-                        vehicleSpeeds[i],
-                        stateInterpolation
-                      )
+                    ? Mathf.Lerp(previousVehicleSpeeds[i], vehicleSpeeds[i], stateInterpolation)
                     : vehicleSpeeds[i]
             );
-            float renderProgress =
-                laneChangeProgress[i];
+            float renderProgress = laneChangeProgress[i];
             bool renderCachedManeuver =
-                laneChangeActive[i] &&
-                !laneChangePreparing[i] &&
-                IsManeuverPathUsable(i);
+                laneChangeActive[i] && !laneChangePreparing[i] && IsManeuverPathUsable(i);
             float renderS = vehicleS[i];
 
             if (interpolateState && renderCachedManeuver)
             {
-                float previousProgress =
-                    previousLaneChangeActive[i]
-                        ? previousLaneChangeProgress[i]
-                        : 0f;
-                renderProgress = Mathf.Lerp(
-                    previousProgress,
-                    laneChangeProgress[i],
-                    stateInterpolation
-                );
-                renderS = SampleManeuverPathSourceS(
-                    i,
-                    renderProgress
-                );
+                float previousProgress = previousLaneChangeActive[i] ? previousLaneChangeProgress[i] : 0f;
+                renderProgress = Mathf.Lerp(previousProgress, laneChangeProgress[i], stateInterpolation);
+                renderS = SampleManeuverPathSourceS(i, renderProgress);
             }
             else if (interpolateState)
             {
-                renderS = Mathf.Lerp(
-                    previousVehicleS[i],
-                    vehicleS[i],
-                    stateInterpolation
-                );
+                renderS = Mathf.Lerp(previousVehicleS[i], vehicleS[i], stateInterpolation);
             }
 
-            renderS = Mathf.Clamp(
-                renderS,
-                0f,
-                laneDatabase.laneLengths[laneId]
-            );
+            renderS = Mathf.Clamp(renderS, 0f, laneDatabase.laneLengths[laneId]);
 
             ApplyVehiclePose(
                 i,
@@ -10566,18 +7725,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 renderSpeed
             );
 
-            ApplyVehicleMotionVisuals(
-                i,
-                laneId,
-                renderSpeed,
-                speedFactors[i]
-            );
+            ApplyVehicleMotionVisuals(i, laneId, renderSpeed, speedFactors[i]);
         }
     }
 
-    private void SetVehicleVisualActive(
-        int vehicleIndex,
-        bool active)
+    private void SetVehicleVisualActive(int vehicleIndex, bool active)
     {
         if (visualActive[vehicleIndex] == active)
         {
@@ -10593,8 +7745,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             InvalidateManeuverPath(vehicleIndex);
         }
 
-        Transform vehicleRoot =
-            vehicleRoots[vehicleIndex];
+        Transform vehicleRoot = vehicleRoots[vehicleIndex];
 
         if (vehicleRoot == null)
         {
@@ -10606,11 +7757,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             ResetVehicleMotionVisuals(vehicleIndex);
             vehicleRoot.gameObject.SetActive(true);
 
-            AudioSource audioSource =
-                vehicleAudioSources[vehicleIndex];
+            AudioSource audioSource = vehicleAudioSources[vehicleIndex];
 
-            if (audioSource != null &&
-                !audioSource.isPlaying)
+            if (audioSource != null && !audioSource.isPlaying)
             {
                 audioSource.Play();
             }
@@ -10618,33 +7767,26 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         else
         {
             ResetVehicleMotionVisuals(vehicleIndex);
-            vehicleRoot.localScale =
-                baseLocalScales[vehicleIndex];
+            vehicleRoot.localScale = baseLocalScales[vehicleIndex];
             vehicleRoot.gameObject.SetActive(false);
         }
     }
 
-    private void CacheVehicleMotionVisuals(
-        int vehicleIndex,
-        Transform vehicleRoot)
+    private void CacheVehicleMotionVisuals(int vehicleIndex, Transform vehicleRoot)
     {
-        AudioSource audioSource =
-            vehicleRoot.GetComponentInChildren<AudioSource>(true);
+        AudioSource audioSource = vehicleRoot.GetComponentInChildren<AudioSource>(true);
 
-        vehicleAudioSources[vehicleIndex] =
-            audioSource;
+        vehicleAudioSources[vehicleIndex] = audioSource;
 
         if (audioSource != null)
         {
             audioSource.playOnAwake = false;
             audioSource.volume = 0f;
-            audioSource.pitch =
-                GetIdleEnginePitch(vehicleIndex);
+            audioSource.pitch = GetIdleEnginePitch(vehicleIndex);
             audioSource.Stop();
         }
 
-        Transform[] childTransforms =
-            vehicleRoot.GetComponentsInChildren<Transform>(true);
+        Transform[] childTransforms = vehicleRoot.GetComponentsInChildren<Transform>(true);
 
         int wheelOffset = vehicleIndex * 4;
 
@@ -10689,26 +7831,22 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             int flatIndex = wheelOffset + wheelIndex;
 
             vehicleWheelTransforms[flatIndex] = child;
-            wheelBaseLocalRotations[flatIndex] =
-                child.localRotation;
+            wheelBaseLocalRotations[flatIndex] = child.localRotation;
         }
     }
 
-    private void ResetVehicleMotionVisuals(
-        int vehicleIndex)
+    private void ResetVehicleMotionVisuals(int vehicleIndex)
     {
         wheelAngles[vehicleIndex] = 0f;
         wheelTravelDistanceDeltas[vehicleIndex] = 0f;
         frontWheelSteeringAngles[vehicleIndex] = 0f;
 
-        AudioSource audioSource =
-            vehicleAudioSources[vehicleIndex];
+        AudioSource audioSource = vehicleAudioSources[vehicleIndex];
 
         if (audioSource != null)
         {
             audioSource.volume = 0f;
-            audioSource.pitch =
-                GetIdleEnginePitch(vehicleIndex);
+            audioSource.pitch = GetIdleEnginePitch(vehicleIndex);
             audioSource.Stop();
         }
 
@@ -10717,13 +7855,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         for (int i = 0; i < 4; i++)
         {
             int flatIndex = wheelOffset + i;
-            Transform wheel =
-                vehicleWheelTransforms[flatIndex];
+            Transform wheel = vehicleWheelTransforms[flatIndex];
 
             if (wheel != null)
             {
-                wheel.localRotation =
-                    wheelBaseLocalRotations[flatIndex];
+                wheel.localRotation = wheelBaseLocalRotations[flatIndex];
             }
         }
     }
@@ -10731,15 +7867,11 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private void UpdateMotionVisualRefreshState(float deltaTime)
     {
         audioVisualUpdateTimer -= Mathf.Max(0f, deltaTime);
-        refreshAudioVisualsThisFrame =
-            audioVisualUpdateTimer <= 0f;
+        refreshAudioVisualsThisFrame = audioVisualUpdateTimer <= 0f;
 
         if (refreshAudioVisualsThisFrame)
         {
-            audioVisualUpdateTimer = Mathf.Max(
-                0.05f,
-                audioVisualUpdateInterval
-            );
+            audioVisualUpdateTimer = Mathf.Max(0.05f, audioVisualUpdateInterval);
         }
     }
 
@@ -10751,36 +7883,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         if (refreshAudioVisualsThisFrame)
         {
-            float referenceSpeed = Mathf.Max(
-                0.1f,
-                GetBaseCruiseSpeed(vehicleIndex) *
-                renderSpeedFactor
-            );
+            float referenceSpeed = Mathf.Max(0.1f, GetBaseCruiseSpeed(vehicleIndex) * renderSpeedFactor);
 
-            if (laneId >= 0 &&
-                laneId < laneDatabase.laneCount &&
-                laneDatabase.speedLimits[laneId] > 0f)
+            if (laneId >= 0 && laneId < laneDatabase.laneCount && laneDatabase.speedLimits[laneId] > 0f)
             {
-                referenceSpeed = Mathf.Min(
-                    referenceSpeed,
-                    laneDatabase.speedLimits[laneId]
-                );
+                referenceSpeed = Mathf.Min(referenceSpeed, laneDatabase.speedLimits[laneId]);
             }
 
-            float speedRatio = Mathf.Clamp01(
-                renderSpeed / referenceSpeed
-            );
+            float speedRatio = Mathf.Clamp01(renderSpeed / referenceSpeed);
 
-            AudioSource audioSource =
-                vehicleAudioSources[vehicleIndex];
+            AudioSource audioSource = vehicleAudioSources[vehicleIndex];
 
             if (audioSource != null)
             {
-                audioSource.volume =
-                    Mathf.Clamp01(
-                        GetMaximumEngineVolume(vehicleIndex)
-                    ) *
-                    speedRatio;
+                audioSource.volume = Mathf.Clamp01(GetMaximumEngineVolume(vehicleIndex)) * speedRatio;
 
                 audioSource.pitch = Mathf.Lerp(
                     GetIdleEnginePitch(vehicleIndex),
@@ -10795,62 +7911,28 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
         }
 
-        float safeWheelRadius = Mathf.Max(
-            0.05f,
-            GetWheelRadius(vehicleIndex)
-        );
+        float safeWheelRadius = Mathf.Max(0.05f, GetWheelRadius(vehicleIndex));
 
-        float angleDelta =
-            wheelTravelDistanceDeltas[vehicleIndex] /
-            safeWheelRadius *
-            Mathf.Rad2Deg;
+        float angleDelta = wheelTravelDistanceDeltas[vehicleIndex] / safeWheelRadius * Mathf.Rad2Deg;
 
-        wheelAngles[vehicleIndex] = Mathf.Repeat(
-            wheelAngles[vehicleIndex] + angleDelta,
-            360f
-        );
+        wheelAngles[vehicleIndex] = Mathf.Repeat(wheelAngles[vehicleIndex] + angleDelta, 360f);
 
-        Quaternion wheelRotation =
-            Quaternion.AngleAxis(
-                wheelAngles[vehicleIndex],
-                Vector3.right
-            );
-        float centerSteering =
-            frontWheelSteeringAngles[vehicleIndex];
+        Quaternion wheelRotation = Quaternion.AngleAxis(wheelAngles[vehicleIndex], Vector3.right);
+        float centerSteering = frontWheelSteeringAngles[vehicleIndex];
         float leftSteering = centerSteering;
         float rightSteering = centerSteering;
 
         if (Mathf.Abs(centerSteering) > 0.01f)
         {
-            float wheelBase = Mathf.Max(
-                2.2f,
-                GetVehicleLength(vehicleIndex) * 0.55f
-            );
-            float trackWidth = Mathf.Max(
-                1f,
-                GetVehicleWidth(vehicleIndex) * 0.78f
-            );
+            float wheelBase = Mathf.Max(2.2f, GetVehicleLength(vehicleIndex) * 0.55f);
+            float trackWidth = Mathf.Max(1f, GetVehicleWidth(vehicleIndex) * 0.78f);
             float turnRadius = wheelBase /
-                Mathf.Max(
-                    0.001f,
-                    Mathf.Tan(
-                        Mathf.Abs(centerSteering) *
-                        Mathf.Deg2Rad
-                    )
-                );
+                Mathf.Max(0.001f, Mathf.Tan(Mathf.Abs(centerSteering) * Mathf.Deg2Rad));
             float innerAngle = Mathf.Rad2Deg * Mathf.Atan(
-                wheelBase /
-                Mathf.Max(0.1f, turnRadius - trackWidth * 0.5f)
+                wheelBase / Mathf.Max(0.1f, turnRadius - trackWidth * 0.5f)
             );
-            float outerAngle = Mathf.Rad2Deg * Mathf.Atan(
-                wheelBase /
-                (turnRadius + trackWidth * 0.5f)
-            );
-            float maximum = Mathf.Clamp(
-                maximumFrontWheelSteeringAngle + 6f,
-                20f,
-                45f
-            );
+            float outerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBase / (turnRadius + trackWidth * 0.5f));
+            float maximum = Mathf.Clamp(maximumFrontWheelSteeringAngle + 6f, 20f, 45f);
             innerAngle = Mathf.Min(innerAngle, maximum);
             outerAngle = Mathf.Min(outerAngle, maximum);
 
@@ -10866,31 +7948,23 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             }
         }
 
-        Quaternion leftSteeringRotation =
-            Quaternion.AngleAxis(leftSteering, Vector3.up);
-        Quaternion rightSteeringRotation =
-            Quaternion.AngleAxis(rightSteering, Vector3.up);
+        Quaternion leftSteeringRotation = Quaternion.AngleAxis(leftSteering, Vector3.up);
+        Quaternion rightSteeringRotation = Quaternion.AngleAxis(rightSteering, Vector3.up);
 
         int wheelOffset = vehicleIndex * 4;
 
         for (int i = 0; i < 4; i++)
         {
             int flatIndex = wheelOffset + i;
-            Transform wheel =
-                vehicleWheelTransforms[flatIndex];
+            Transform wheel = vehicleWheelTransforms[flatIndex];
 
             if (wheel != null)
             {
-                Quaternion steeringRotation = i == 0
-                    ? leftSteeringRotation
-                    : rightSteeringRotation;
+                Quaternion steeringRotation = i == 0 ? leftSteeringRotation : rightSteeringRotation;
 
                 wheel.localRotation = i < 2
-                    ? steeringRotation *
-                        wheelBaseLocalRotations[flatIndex] *
-                        wheelRotation
-                    : wheelBaseLocalRotations[flatIndex] *
-                        wheelRotation;
+                    ? steeringRotation * wheelBaseLocalRotations[flatIndex] * wheelRotation
+                    : wheelBaseLocalRotations[flatIndex] * wheelRotation;
             }
         }
     }
@@ -10906,34 +7980,24 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         bool reversingNow,
         float renderSpeed)
     {
-        if (vehicleIndex < 0 ||
-            vehicleIndex >= frontWheelSteeringAngles.Length ||
-            vehicleRoot == null)
+        if (vehicleIndex < 0 || vehicleIndex >= frontWheelSteeringAngles.Length || vehicleRoot == null)
         {
             return;
         }
 
-        float currentSteering =
-            frontWheelSteeringAngles[vehicleIndex];
+        float currentSteering = frontWheelSteeringAngles[vehicleIndex];
         float targetSteering = currentSteering;
-        Vector3 movement = previousPoseValid
-            ? position - previousVisualPositions[vehicleIndex]
-            : Vector3.zero;
+        Vector3 movement = previousPoseValid ? position - previousVisualPositions[vehicleIndex] : Vector3.zero;
         float travelDistance = movement.magnitude;
         float minimumSteeringTravel = 0.001f;
 
         if (laneChangeIsActive)
         {
             targetSteering = IsManeuverPathUsable(vehicleIndex)
-                ? SampleManeuverPathSteering(
-                    vehicleIndex,
-                    laneChangeProgress
-                  )
+                ? SampleManeuverPathSteering(vehicleIndex, laneChangeProgress)
                 : 0f;
         }
-        else if (previousPoseValid &&
-            travelDistance > minimumSteeringTravel &&
-            renderSpeed > 0.02f)
+        else if (previousPoseValid && travelDistance > minimumSteeringTravel && renderSpeed > 0.02f)
         {
             Vector3 surfaceUp = rotation * Vector3.up;
 
@@ -10950,49 +8014,24 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 vehicleRoot.rotation * Vector3.forward,
                 surfaceUp
             );
-            Vector3 currentForward = Vector3.ProjectOnPlane(
-                rotation * Vector3.forward,
-                surfaceUp
-            );
+            Vector3 currentForward = Vector3.ProjectOnPlane(rotation * Vector3.forward, surfaceUp);
 
-            if (previousForward.sqrMagnitude > 0.0001f &&
-                currentForward.sqrMagnitude > 0.0001f)
+            if (previousForward.sqrMagnitude > 0.0001f && currentForward.sqrMagnitude > 0.0001f)
             {
                 previousForward.Normalize();
                 currentForward.Normalize();
 
                 float yawRadians = Mathf.Deg2Rad *
-                    Vector3.SignedAngle(
-                        previousForward,
-                        currentForward,
-                        surfaceUp
-                    );
-                float signedTravelDistance =
-                    reversingNow
-                        ? -travelDistance
-                        : travelDistance;
-                float curvature = yawRadians /
-                    signedTravelDistance;
-                float wheelBase = Mathf.Max(
-                    2.2f,
-                    GetVehicleLength(vehicleIndex) * 0.55f
-                );
+                    Vector3.SignedAngle(previousForward, currentForward, surfaceUp);
+                float signedTravelDistance = reversingNow ? -travelDistance : travelDistance;
+                float curvature = yawRadians / signedTravelDistance;
+                float wheelBase = Mathf.Max(2.2f, GetVehicleLength(vehicleIndex) * 0.55f);
 
-                targetSteering = Mathf.Rad2Deg * Mathf.Atan(
-                    wheelBase * curvature
-                );
+                targetSteering = Mathf.Rad2Deg * Mathf.Atan(wheelBase * curvature);
                 targetSteering = Mathf.Clamp(
                     targetSteering,
-                    -Mathf.Clamp(
-                        maximumFrontWheelSteeringAngle,
-                        20f,
-                        40f
-                    ),
-                    Mathf.Clamp(
-                        maximumFrontWheelSteeringAngle,
-                        20f,
-                        40f
-                    )
+                    -Mathf.Clamp(maximumFrontWheelSteeringAngle, 20f, 40f),
+                    Mathf.Clamp(maximumFrontWheelSteeringAngle, 20f, 40f)
                 );
             }
         }
@@ -11005,12 +8044,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             Mathf.MoveTowards(
                 currentSteering,
                 targetSteering,
-                Mathf.Clamp(
-                    frontWheelSteeringResponse,
-                    90f,
-                    360f
-                ) *
-                Mathf.Min(Time.deltaTime, 0.1f)
+                Mathf.Clamp(frontWheelSteeringResponse, 90f, 360f) * Mathf.Min(Time.deltaTime, 0.1f)
             );
     }
 
@@ -11024,18 +8058,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float changeProgress,
         float renderSpeed)
     {
-        if (laneId < 0 ||
-            laneId >= laneDatabase.laneCount)
+        if (laneId < 0 || laneId >= laneDatabase.laneCount)
         {
             return;
         }
 
-        int sampleIndex =
-            laneDatabase.FindSampleIndex(
-                laneId,
-                renderS,
-                sampleHints[vehicleIndex]
-            );
+        int sampleIndex = laneDatabase.FindSampleIndex(laneId, renderS, sampleHints[vehicleIndex]);
 
         if (sampleIndex < 0)
         {
@@ -11044,34 +8072,21 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         sampleHints[vehicleIndex] = sampleIndex;
 
-        int lastSample =
-            laneDatabase.laneSampleStarts[laneId] +
-            laneDatabase.laneSampleCounts[laneId] -
-            1;
+        int lastSample = laneDatabase.laneSampleStarts[laneId] + laneDatabase.laneSampleCounts[laneId] - 1;
 
-        int nextSample = Mathf.Min(
-            sampleIndex + 1,
-            lastSample
-        );
+        int nextSample = Mathf.Min(sampleIndex + 1, lastSample);
 
-        float startDistance =
-            laneDatabase.sampleDistances[sampleIndex];
+        float startDistance = laneDatabase.sampleDistances[sampleIndex];
 
-        float endDistance =
-            laneDatabase.sampleDistances[nextSample];
+        float endDistance = laneDatabase.sampleDistances[nextSample];
 
-        float segmentLength =
-            endDistance - startDistance;
+        float segmentLength = endDistance - startDistance;
 
         float segmentInterpolation = 0f;
 
         if (segmentLength > 0.0001f)
         {
-            segmentInterpolation =
-                Mathf.Clamp01(
-                    (renderS - startDistance) /
-                    segmentLength
-                );
+            segmentInterpolation = Mathf.Clamp01((renderS - startDistance) / segmentLength);
         }
 
         Vector3 position = Vector3.Lerp(
@@ -11086,51 +8101,27 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             segmentInterpolation
         );
 
-        if (renderLaneChangeActive &&
-            targetLaneId >= 0 &&
-            targetLaneId < laneDatabase.laneCount)
+        if (renderLaneChangeActive && targetLaneId >= 0 && targetLaneId < laneDatabase.laneCount)
         {
-            int ruleIndex = FindLaneChangeRule(
-                laneId,
-                targetLaneId
-            );
+            int ruleIndex = FindLaneChangeRule(laneId, targetLaneId);
 
             if (ruleIndex >= 0)
             {
-                EnsureManeuverPath(
-                    vehicleIndex,
-                    renderS,
-                    changeProgress
-                );
+                EnsureManeuverPath(vehicleIndex, renderS, changeProgress);
 
                 if (IsManeuverPathUsable(vehicleIndex))
                 {
-                    position = SampleManeuverPathPosition(
-                        vehicleIndex,
-                        changeProgress
-                    );
-                    rotation = SampleManeuverPathRotation(
-                        vehicleIndex,
-                        changeProgress
-                    );
+                    position = SampleManeuverPathPosition(vehicleIndex, changeProgress);
+                    rotation = SampleManeuverPathRotation(vehicleIndex, changeProgress);
                 }
             }
         }
 
-        Transform vehicleRoot =
-            vehicleRoots[vehicleIndex];
-        bool previousPoseValid =
-            previousVisualPositionValid[vehicleIndex];
-        bool renderingInReverse =
-            IsReversePhase(
-                renderReverseManeuver,
-                changeProgress
-            );
+        Transform vehicleRoot = vehicleRoots[vehicleIndex];
+        bool previousPoseValid = previousVisualPositionValid[vehicleIndex];
+        bool renderingInReverse = IsReversePhase(renderReverseManeuver, changeProgress);
         float visualTravelDistance = previousPoseValid
-            ? Vector3.Distance(
-                position,
-                previousVisualPositions[vehicleIndex]
-              )
+            ? Vector3.Distance(position, previousVisualPositions[vehicleIndex])
             : 0f;
 
         wheelTravelDistanceDeltas[vehicleIndex] =
@@ -11152,68 +8143,45 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         previousVisualPositions[vehicleIndex] = position;
         previousVisualPositionValid[vehicleIndex] = true;
 
-        position +=
-            rotation *
-            Vector3.up *
-            heightOffset;
+        position += rotation * Vector3.up * heightOffset;
 
         Vector3 previousRootPosition = vehicleRoot.position;
 
-        float collisionDeltaTime = Mathf.Max(
-            0.0001f,
-            Mathf.Min(Time.deltaTime, 0.1f)
-        );
+        float collisionDeltaTime = Mathf.Max(0.0001f, Mathf.Min(Time.deltaTime, 0.1f));
 
         if (previousPoseValid)
         {
-            vehicleCollisionVelocities[vehicleIndex] =
-                (position - previousRootPosition) /
-                collisionDeltaTime;
+            vehicleCollisionVelocities[vehicleIndex] = (position - previousRootPosition) / collisionDeltaTime;
         }
         else
         {
             vehicleCollisionVelocities[vehicleIndex] =
-                rotation * Vector3.forward *
-                Mathf.Max(0f, renderSpeed);
+                rotation * Vector3.forward * Mathf.Max(0f, renderSpeed);
         }
 
-        vehicleRoot.SetPositionAndRotation(
-            position,
-            rotation
-        );
+        vehicleRoot.SetPositionAndRotation(position, rotation);
 
-        ApplyVehicleScale(
-            vehicleIndex,
-            laneId,
-            renderS
-        );
+        ApplyVehicleScale(vehicleIndex, laneId, renderS);
     }
 
-    private bool IsReversePhase(
-        bool reverseManeuver,
-        float progress)
+    private bool IsReversePhase(bool reverseManeuver, float progress)
     {
         if (!reverseManeuver)
         {
             return false;
         }
 
-        return progress <
-            GetRecoveryFirstReverseEndProgress() - 0.0001f;
+        return progress < GetRecoveryFirstReverseEndProgress() - 0.0001f;
     }
 
-    private float GetLaneChangeVisualProgress(
-        int vehicleIndex,
-        bool reverseManeuver,
-        float progress)
+    private float GetLaneChangeVisualProgress(int vehicleIndex, bool reverseManeuver, float progress)
     {
         if (!reverseManeuver)
         {
             return SmoothLaneChange01(progress);
         }
 
-        float preparationEnd =
-            GetRecoveryPreparationEndProgress();
+        float preparationEnd = GetRecoveryPreparationEndProgress();
         float recoveryDistance = Mathf.Max(
             MinimumReverseRecoveryDistance,
             laneChangeRecoveryDistance[vehicleIndex] > 0f
@@ -11221,15 +8189,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 : laneChangeReverseDistance
         );
         Vector3 preparationPose =
-            GetRecoveryKinematicLocalPose(
-                vehicleIndex,
-                Mathf.Min(progress, preparationEnd),
-                recoveryDistance
-            );
-        float laneWidth = GetLaneChangeSeparation(
-            vehicleIndex,
-            laneChangeReverseStartS[vehicleIndex]
-        );
+            GetRecoveryKinematicLocalPose(vehicleIndex, Mathf.Min(progress, preparationEnd), recoveryDistance);
+        float laneWidth = GetLaneChangeSeparation(vehicleIndex, laneChangeReverseStartS[vehicleIndex]);
 
         if (progress < preparationEnd)
         {
@@ -11237,26 +8198,14 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         }
 
         float startLateral = preparationPose.y / laneWidth;
-        float finalTravelDistance =
-            GetRecoveryFinalTravelDistance(
-                preparationPose,
-                laneWidth
-            );
-        float startTangent =
-            Mathf.Tan(preparationPose.z) *
-            finalTravelDistance / laneWidth;
-        float u = Mathf.InverseLerp(
-            preparationEnd,
-            1f,
-            progress
-        );
+        float finalTravelDistance = GetRecoveryFinalTravelDistance(preparationPose, laneWidth);
+        float startTangent = Mathf.Tan(preparationPose.z) * finalTravelDistance / laneWidth;
+        float u = Mathf.InverseLerp(preparationEnd, 1f, progress);
         float u2 = u * u;
         float u3 = u2 * u;
 
         return Mathf.Clamp(
-            (2f * u3 - 3f * u2 + 1f) * startLateral +
-            (u3 - 2f * u2 + u) * startTangent +
-            (-2f * u3 + 3f * u2),
+            (2f * u3 - 3f * u2 + 1f) * startLateral + (u3 - 2f * u2 + u) * startTangent + (-2f * u3 + 3f * u2),
             -0.5f,
             1.1f
         );
@@ -11266,66 +8215,39 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         float clampedT = Mathf.Clamp01(t);
 
-        return clampedT * clampedT * clampedT *
-            (clampedT *
-             (clampedT * 6f - 15f) + 10f);
+        return clampedT * clampedT * clampedT * (clampedT * (clampedT * 6f - 15f) + 10f);
     }
 
-    private void ApplyVehicleScale(
-        int vehicleIndex,
-        int laneId,
-        float renderS)
+    private void ApplyVehicleScale(int vehicleIndex, int laneId, float renderS)
     {
-        float startS =
-            laneDatabase.spawnS[laneId];
+        float startS = laneDatabase.spawnS[laneId];
 
-        float endS =
-            GetLaneEndS(laneId);
+        float endS = GetLaneEndS(laneId);
 
         float spawnFactor = 1f;
 
         if (spawnVisualDistance > 0.01f)
         {
-            spawnFactor = Mathf.InverseLerp(
-                startS,
-                startS + spawnVisualDistance,
-                renderS
-            );
+            spawnFactor = Mathf.InverseLerp(startS, startS + spawnVisualDistance, renderS);
         }
 
         float despawnFactor = 1f;
 
         if (despawnVisualDistance > 0.01f)
         {
-            despawnFactor = Mathf.InverseLerp(
-                endS,
-                endS - despawnVisualDistance,
-                renderS
-            );
+            despawnFactor = Mathf.InverseLerp(endS, endS - despawnVisualDistance, renderS);
         }
 
-        float visibility = Mathf.Clamp01(
-            Mathf.Min(
-                spawnFactor,
-                despawnFactor
-            )
-        );
+        float visibility = Mathf.Clamp01(Mathf.Min(spawnFactor, despawnFactor));
 
-        visibility =
-            visibility *
-            visibility *
-            (3f - 2f * visibility);
+        visibility = visibility * visibility * (3f - 2f * visibility);
 
-        vehicleRoots[vehicleIndex].localScale =
-            baseLocalScales[vehicleIndex] *
-            visibility;
+        vehicleRoots[vehicleIndex].localScale = baseLocalScales[vehicleIndex] * visibility;
     }
 
     private float NextRandom01()
     {
-        randomState =
-            (randomState * 25173 + 13849) &
-            65535;
+        randomState = (randomState * 25173 + 13849) & 65535;
 
         return randomState / 65535f;
     }

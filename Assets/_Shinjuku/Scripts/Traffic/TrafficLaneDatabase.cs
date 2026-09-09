@@ -1,4 +1,4 @@
-﻿using UdonSharp;
+using UdonSharp;
 using UnityEngine;
 
 /// <summary>
@@ -35,8 +35,7 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
 
     [HideInInspector] public float[] sampleDistances = new float[0];
     [HideInInspector] public Vector3[] samplePositions = new Vector3[0];
-    [HideInInspector] public Quaternion[] sampleRotations =
-        new Quaternion[0];
+    [HideInInspector] public Quaternion[] sampleRotations = new Quaternion[0];
 
     [HideInInspector] public float[] laneLengths = new float[0];
     [HideInInspector] public int[] laneVehicleMasks = new int[0];
@@ -64,15 +63,12 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     /// <remarks>매 프레임 호출 없이 관리자 초기화 시 한 번만 호출</remarks>
     public bool IsReady()
     {
-        if (laneCount != FixedLaneCount ||
-            !IsFinite(sampleSpacing) || sampleSpacing <= 0f)
+        if (laneCount != FixedLaneCount || !IsFinite(sampleSpacing) || sampleSpacing <= 0f)
         {
             return false;
         }
 
-        if (laneSampleStarts == null ||
-            laneSampleCounts == null ||
-            laneLengths == null ||
+        if (laneSampleStarts == null || laneSampleCounts == null || laneLengths == null ||
             laneVehicleMasks == null ||
             spawnS == null ||
             despawnS == null ||
@@ -86,8 +82,7 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
             return false;
         }
 
-        if (laneSampleStarts.Length != laneCount ||
-            laneSampleCounts.Length != laneCount ||
+        if (laneSampleStarts.Length != laneCount || laneSampleCounts.Length != laneCount ||
             laneLengths.Length != laneCount ||
             laneVehicleMasks.Length != laneCount ||
             spawnS.Length != laneCount ||
@@ -102,25 +97,19 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
             return false;
         }
 
-        if (sampleDistances == null ||
-            samplePositions == null ||
-            sampleRotations == null)
+        if (sampleDistances == null || samplePositions == null || sampleRotations == null)
         {
             return false;
         }
 
         int sampleCount = sampleDistances.Length;
 
-        if (sampleCount < 2 ||
-            samplePositions.Length != sampleCount ||
-            sampleRotations.Length != sampleCount)
+        if (sampleCount < 2 || samplePositions.Length != sampleCount || sampleRotations.Length != sampleCount)
         {
             return false;
         }
 
-        if (changeToLaneIds == null ||
-            changeStartS == null ||
-            changeEndS == null ||
+        if (changeToLaneIds == null || changeStartS == null || changeEndS == null ||
             changeVehicleMasks == null)
         {
             return false;
@@ -128,8 +117,7 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
 
         int ruleCount = changeToLaneIds.Length;
 
-        if (changeStartS.Length != ruleCount ||
-            changeEndS.Length != ruleCount ||
+        if (changeStartS.Length != ruleCount || changeEndS.Length != ruleCount ||
             changeVehicleMasks.Length != ruleCount) return false;
 
         // 배열 길이가 같아도 내부 구간이 잘못되면 런타임 조회가 범위를 벗어난다.
@@ -138,12 +126,10 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
         {
             int first = laneSampleStarts[lane];
             int count = laneSampleCounts[lane];
-            if (first < 0 || first > sampleCount || count < 2 ||
-                count > sampleCount - first) return false;
+            if (first < 0 || first > sampleCount || count < 2 || count > sampleCount - first) return false;
 
             float length = laneLengths[lane];
-            if (!IsFinite(length) || length <= 0f ||
-                !IsFinite(spawnS[lane]) || !IsFinite(despawnS[lane]) ||
+            if (!IsFinite(length) || length <= 0f || !IsFinite(spawnS[lane]) || !IsFinite(despawnS[lane]) ||
                 !IsFinite(stopLineS[lane]) || !IsFinite(speedLimits[lane]) ||
                 !IsFinite(spawnWeights[lane])) return false;
             if (despawnS[lane] < 0f || despawnS[lane] > length ||
@@ -155,8 +141,7 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
             for (int sample = first; sample < first + count; sample++)
             {
                 float distance = sampleDistances[sample];
-                if (!IsFinite(distance) || distance < 0f ||
-                    distance <= previous || distance > length + 0.01f) return false;
+                if (!IsFinite(distance) || distance < 0f || distance <= previous || distance > length + 0.01f) return false;
                 Vector3 position = samplePositions[sample];
                 if (!IsFinite(position.x) || !IsFinite(position.y) || !IsFinite(position.z)) return false;
                 previous = distance;
@@ -164,15 +149,13 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
 
             int ruleFirst = laneRuleStarts[lane];
             int rules = laneRuleCounts[lane];
-            if (ruleFirst < 0 || ruleFirst > ruleCount || rules < 0 ||
-                rules > ruleCount - ruleFirst) return false;
+            if (ruleFirst < 0 || ruleFirst > ruleCount || rules < 0 || rules > ruleCount - ruleFirst) return false;
             for (int rule = ruleFirst; rule < ruleFirst + rules; rule++)
             {
                 int targetLane = changeToLaneIds[rule];
                 float start = changeStartS[rule];
                 float end = changeEndS[rule];
-                if (targetLane < 0 || targetLane >= laneCount || targetLane == lane ||
-                    !IsFinite(start) || !IsFinite(end) ||
+                if (targetLane < 0 || targetLane >= laneCount || targetLane == lane || !IsFinite(start) || !IsFinite(end) ||
                     start < 0f || end < start || end > length) return false;
             }
         }
@@ -212,14 +195,9 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     /// <remarks>
     /// 연속 프레임에서는 이전 반환값을 <paramref name="sampleHint"/>로 전달해 전체 샘플 재탐색 방지
     /// </remarks>
-    public int FindSampleIndex(
-        int laneId,
-        float laneS,
-        int sampleHint)
+    public int FindSampleIndex(int laneId, float laneS, int sampleHint)
     {
-        if (!IsLaneIndexValid(laneId) ||
-            laneSampleStarts == null ||
-            laneSampleCounts == null ||
+        if (!IsLaneIndexValid(laneId) || laneSampleStarts == null || laneSampleCounts == null ||
             laneLengths == null ||
             sampleDistances == null)
         {
@@ -230,42 +208,28 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
         int count = laneSampleCounts[laneId];
         int last = first + count - 1;
 
-        if (count < 2 ||
-            first < 0 ||
-            last >= sampleDistances.Length)
+        if (count < 2 || first < 0 || last >= sampleDistances.Length)
         {
             return -1;
         }
 
-        float clampedS = Mathf.Clamp(
-            laneS,
-            0f,
-            laneLengths[laneId]
-        );
+        float clampedS = Mathf.Clamp(laneS, 0f, laneLengths[laneId]);
 
         int index = sampleHint;
 
         if (index < first || index >= last)
         {
-            int estimatedOffset = Mathf.FloorToInt(
-                clampedS / sampleSpacing
-            );
+            int estimatedOffset = Mathf.FloorToInt(clampedS / sampleSpacing);
 
-            index = Mathf.Clamp(
-                first + estimatedOffset,
-                first,
-                last - 1
-            );
+            index = Mathf.Clamp(first + estimatedOffset, first, last - 1);
         }
 
-        while (index > first &&
-               sampleDistances[index] > clampedS)
+        while (index > first && sampleDistances[index] > clampedS)
         {
             index--;
         }
 
-        while (index < last - 1 &&
-               sampleDistances[index + 1] < clampedS)
+        while (index < last - 1 && sampleDistances[index + 1] < clampedS)
         {
             index++;
         }
@@ -280,38 +244,21 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     /// <param name="laneS">차선 시작점부터의 거리(m)</param>
     /// <param name="sampleHint">이전 프레임에 사용한 전역 샘플 인덱스</param>
     /// <returns>보간된 월드 위치 반환. 데이터가 유효하지 않으면 <see cref="Vector3.zero"/> 반환</returns>
-    public Vector3 GetLanePosition(
-        int laneId,
-        float laneS,
-        int sampleHint)
+    public Vector3 GetLanePosition(int laneId, float laneS, int sampleHint)
     {
-        int sampleIndex = FindSampleIndex(
-            laneId,
-            laneS,
-            sampleHint
-        );
+        int sampleIndex = FindSampleIndex(laneId, laneS, sampleHint);
 
         if (sampleIndex < 0)
         {
             return Vector3.zero;
         }
 
-        int last = laneSampleStarts[laneId] +
-                   laneSampleCounts[laneId] - 1;
+        int last = laneSampleStarts[laneId] + laneSampleCounts[laneId] - 1;
 
         int nextIndex = Mathf.Min(sampleIndex + 1, last);
-        float t = GetSegmentInterpolation(
-            laneId,
-            laneS,
-            sampleIndex,
-            nextIndex
-        );
+        float t = GetSegmentInterpolation(laneId, laneS, sampleIndex, nextIndex);
 
-        return Vector3.Lerp(
-            samplePositions[sampleIndex],
-            samplePositions[nextIndex],
-            t
-        );
+        return Vector3.Lerp(samplePositions[sampleIndex], samplePositions[nextIndex], t);
     }
 
     /// <summary>
@@ -321,38 +268,21 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     /// <param name="laneS">차선 시작점부터의 거리(m)</param>
     /// <param name="sampleHint">이전 프레임에 사용한 전역 샘플 인덱스</param>
     /// <returns>보간된 월드 회전 반환. 데이터가 유효하지 않으면 단위 회전 반환</returns>
-    public Quaternion GetLaneRotation(
-        int laneId,
-        float laneS,
-        int sampleHint)
+    public Quaternion GetLaneRotation(int laneId, float laneS, int sampleHint)
     {
-        int sampleIndex = FindSampleIndex(
-            laneId,
-            laneS,
-            sampleHint
-        );
+        int sampleIndex = FindSampleIndex(laneId, laneS, sampleHint);
 
         if (sampleIndex < 0)
         {
             return Quaternion.identity;
         }
 
-        int last = laneSampleStarts[laneId] +
-                   laneSampleCounts[laneId] - 1;
+        int last = laneSampleStarts[laneId] + laneSampleCounts[laneId] - 1;
 
         int nextIndex = Mathf.Min(sampleIndex + 1, last);
-        float t = GetSegmentInterpolation(
-            laneId,
-            laneS,
-            sampleIndex,
-            nextIndex
-        );
+        float t = GetSegmentInterpolation(laneId, laneS, sampleIndex, nextIndex);
 
-        return Quaternion.Slerp(
-            sampleRotations[sampleIndex],
-            sampleRotations[nextIndex],
-            t
-        );
+        return Quaternion.Slerp(sampleRotations[sampleIndex], sampleRotations[nextIndex], t);
     }
 
     /// <summary>
@@ -362,14 +292,9 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     /// <param name="laneS">출발 차선 시작점부터의 거리(m)</param>
     /// <param name="vehicleMask">차량 유형을 나타내는 비트 마스크</param>
     /// <returns>거리 범위와 차량 마스크가 모두 일치하면 <c>true</c> 반환</returns>
-    public bool IsChangeAllowed(
-        int ruleIndex,
-        float laneS,
-        int vehicleMask)
+    public bool IsChangeAllowed(int ruleIndex, float laneS, int vehicleMask)
     {
-        if (changeToLaneIds == null ||
-            changeStartS == null ||
-            changeEndS == null ||
+        if (changeToLaneIds == null || changeStartS == null || changeEndS == null ||
             changeVehicleMasks == null ||
             ruleIndex < 0 ||
             ruleIndex >= changeToLaneIds.Length)
@@ -382,15 +307,10 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
             return false;
         }
 
-        return laneS >= changeStartS[ruleIndex] &&
-               laneS <= changeEndS[ruleIndex];
+        return laneS >= changeStartS[ruleIndex] && laneS <= changeEndS[ruleIndex];
     }
 
-    private float GetSegmentInterpolation(
-        int laneId,
-        float laneS,
-        int sampleIndex,
-        int nextIndex)
+    private float GetSegmentInterpolation(int laneId, float laneS, int sampleIndex, int nextIndex)
     {
         float startS = sampleDistances[sampleIndex];
         float endS = sampleDistances[nextIndex];
@@ -401,15 +321,9 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
             return 0f;
         }
 
-        float clampedS = Mathf.Clamp(
-            laneS,
-            0f,
-            laneLengths[laneId]
-        );
+        float clampedS = Mathf.Clamp(laneS, 0f, laneLengths[laneId]);
 
-        return Mathf.Clamp01(
-            (clampedS - startS) / segmentLength
-        );
+        return Mathf.Clamp01((clampedS - startS) / segmentLength);
     }
 
     private bool IsLaneIndexValid(int laneId)
