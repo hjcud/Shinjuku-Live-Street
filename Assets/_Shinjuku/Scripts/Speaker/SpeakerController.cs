@@ -1,4 +1,4 @@
-﻿
+
 using Nomlas.TopazChat;
 using TMPro;
 using UdonSharp;
@@ -37,10 +37,20 @@ public class SpeakerController : UdonSharpBehaviour
     private VRCPlayerApi placementOwner;
     private bool placedByLocalPlayer;
     private bool departedCleanupPending;
-    private VRCPlayerApi pendingReturnCaller;
     // 슬롯별로 매니저가 발급한 배치 번호. 반환 뒤에도 유지해 지연 메시지를 거부한다.
     private int placementGeneration;
     private bool placementClosed;
+    // 매니저가 확인한 배정. 실제 배치 상태와 분리하여 선행 승인도 기억한다.
+    private int approvedGeneration;
+    private VRCPlayerApi approvedPlayer;
+    private bool allocationClosed;
+    // 승인보다 먼저 온 메시지는 호출자별로 보관한다. 다른 호출자가 덮어쓸 수 없다.
+    private VRCPlayerApi[] waitingCallers = new VRCPlayerApi[0];
+    private int[] waitingGenerations = new int[0];
+    private Vector3[] waitingPositions = new Vector3[0];
+    private Quaternion[] waitingRotations = new Quaternion[0];
+    private bool[] waitingReturns = new bool[0];
+    private bool[] waitingInitialPlacements = new bool[0];
 
     [Header("스피커 음량 설정")]
     [SerializeField] Slider volumeSlider;
@@ -77,13 +87,11 @@ public class SpeakerController : UdonSharpBehaviour
         // 소유자 거리 검사는 0.2초 간격으로 제한하고 제곱 거리 사용
         if (Time.time < nextDistanceCheckTime) return;
         nextDistanceCheckTime = Time.time + 0.2f;
+        ApplyWaitingMessages();
         // 퇴장 이벤트와 소유권 이전의 처리 순서 차이를 다음 검사에서 재확인
         if (departedCleanupPending)
         {
-            if (Utilities.IsValid(pendingReturnCaller) && pendingReturnCaller == Networking.GetOwner(gameObject))
-                ApplyLocalReturn(true);
-            else
-                _RetryDepartedCleanup();
+            _RetryDepartedCleanup();
             return;
         }
         VRCPlayerApi localPlayer = Networking.LocalPlayer;
@@ -204,33 +212,10 @@ public class SpeakerController : UdonSharpBehaviour
     [NetworkCallable]
     public void SpeakerReturnAll(int generation)
     {
-        // 실제 설치자 또는 퇴장 후 정리를 맡은 현재 소유권자의 반환만 적용
         VRCPlayerApi caller = NetworkCalling.CallingPlayer;
         if (!Utilities.IsValid(caller)) return;
         if (generation <= 0 || generation < placementGeneration) return;
-        // 배치보다 반환이 먼저 도착해도 해당 세대를 닫아 늦은 배치를 막는다.
-        if (generation > placementGeneration)
-        {
-            placementGeneration = generation;
-            ApplyLocalReturn(true);
-            return;
-        }
-        if (caller != placementOwner)
-        {
-            if (Utilities.IsValid(placementOwner))
-            {
-                // 퇴장 통지보다 앞선 정리 이벤트는 보관 후 퇴장과 현재 소유권 모두 확인
-                pendingReturnCaller = caller;
-                return;
-            }
-            if (caller != Networking.GetOwner(gameObject))
-            {
-                // 반환 이벤트가 소유권 갱신보다 먼저 도착한 경우 갱신 후 재확인
-                if (departedCleanupPending) pendingReturnCaller = caller;
-                return;
-            }
-        }
-        ApplyLocalReturn(true);
+        WaitForAllocation(caller, generation, Vector3.zero, Quaternion.identity, true, false);
     }
 
     private void ApplyLocalReturn(bool cleanupCompleted)
@@ -247,7 +232,6 @@ public class SpeakerController : UdonSharpBehaviour
         if (cleanupCompleted)
         {
             departedCleanupPending = false;
-            pendingReturnCaller = null;
         }
 
         // 이 클라이언트에서 변경했던 소유자의 음성 증폭값만 기본값으로 복원
@@ -269,6 +253,7 @@ public class SpeakerController : UdonSharpBehaviour
     public bool _PlaceGrantedSpeaker(Vector3 position, Quaternion rotation, int generation)
     {
         if (!IsAvailableForPlacement() || generation <= placementGeneration) return false;
+        if (allocationClosed || generation != approvedGeneration || approvedPlayer != Networking.LocalPlayer) return false;
         placementOwner = Networking.LocalPlayer;
         placedByLocalPlayer = true;
         isSpeakerTaken = false;
@@ -313,14 +298,133 @@ public class SpeakerController : UdonSharpBehaviour
         VRCPlayerApi caller = NetworkCalling.CallingPlayer;
         if (!Utilities.IsValid(caller)) return;
         if (generation <= 0 || generation < placementGeneration) return;
+        if (playerId > 0 && Networking.LocalPlayer.playerId != playerId) return;
+        WaitForAllocation(caller, generation, targetPosition, targetRotation, false, playerId <= 0);
+    }
+
+    // 네트워크 호출 불가. 매니저의 승인 이벤트 또는 동기화된 배정표에서만 갱신한다.
+    public void _ApplyAllocation(VRCPlayerApi player, int generation)
+    {
+        if (generation <= 0 || generation < approvedGeneration) return;
+        if (generation == approvedGeneration)
+        {
+            if (allocationClosed) return;
+            if (player != null && approvedPlayer != player) return;
+        }
+        else
+        {
+            approvedGeneration = generation;
+            approvedPlayer = player;
+        }
+        allocationClosed = player == null;
+        if (allocationClosed && generation >= placementGeneration)
+        {
+            // 퇴장 후 미디어 정리는 기존 소유권 인계 절차가 끝까지 수행한다.
+            if (isSpeakerTaken && !Utilities.IsValid(placementOwner)) departedCleanupPending = true;
+            placementGeneration = generation;
+            ApplyLocalReturn(!departedCleanupPending);
+            _RetryDepartedCleanup();
+        }
+        ApplyWaitingMessages();
+    }
+
+    public int _GetApprovedGeneration() { return approvedGeneration; }
+
+    public int _GetAllocatedPlayerId()
+    {
+        if (placementClosed && placementGeneration == approvedGeneration) return 0;
+        return !allocationClosed && Utilities.IsValid(approvedPlayer) ? approvedPlayer.playerId : 0;
+    }
+
+    private void WaitForAllocation(VRCPlayerApi caller, int generation, Vector3 position, Quaternion rotation, bool returning, bool initialPlacement)
+    {
+        if (generation < approvedGeneration ||
+            (generation == approvedGeneration && allocationClosed && !(returning && departedCleanupPending))) return;
+        if (generation == approvedGeneration && !returning && caller != approvedPlayer) return;
+        int index = -1;
+        for (int i = 0; i < waitingCallers.Length; i++)
+        {
+            if (waitingCallers[i] == caller)
+            {
+                if (generation < waitingGenerations[i]) return;
+                if (generation == waitingGenerations[i] && waitingReturns[i]) return;
+                index = i;
+                break;
+            }
+            if (index < 0 && !Utilities.IsValid(waitingCallers[i])) index = i;
+        }
+        if (index < 0)
+        {
+            // 한 접속당 한 항목만 유지하고 비어 있거나 퇴장한 항목은 재사용한다.
+            index = waitingCallers.Length;
+            VRCPlayerApi[] callers = new VRCPlayerApi[index + 1];
+            int[] generations = new int[index + 1];
+            Vector3[] positions = new Vector3[index + 1];
+            Quaternion[] rotations = new Quaternion[index + 1];
+            bool[] returns = new bool[index + 1];
+            bool[] initialPlacements = new bool[index + 1];
+            for (int i = 0; i < index; i++)
+            {
+                callers[i] = waitingCallers[i];
+                generations[i] = waitingGenerations[i];
+                positions[i] = waitingPositions[i];
+                rotations[i] = waitingRotations[i];
+                returns[i] = waitingReturns[i];
+                initialPlacements[i] = waitingInitialPlacements[i];
+            }
+            waitingCallers = callers;
+            waitingGenerations = generations;
+            waitingPositions = positions;
+            waitingRotations = rotations;
+            waitingReturns = returns;
+            waitingInitialPlacements = initialPlacements;
+        }
+        waitingCallers[index] = caller;
+        waitingGenerations[index] = generation;
+        waitingPositions[index] = position;
+        waitingRotations[index] = rotation;
+        waitingReturns[index] = returning;
+        waitingInitialPlacements[index] = initialPlacement;
+        ApplyWaitingMessages();
+    }
+
+    private void ApplyWaitingMessages()
+    {
+        for (int i = 0; i < waitingCallers.Length; i++)
+        {
+            VRCPlayerApi caller = waitingCallers[i];
+            int generation = waitingGenerations[i];
+            if (!Utilities.IsValid(caller) || generation < approvedGeneration || generation < placementGeneration ||
+                (generation == approvedGeneration && allocationClosed && !(waitingReturns[i] && departedCleanupPending)))
+            {
+                waitingCallers[i] = null;
+                continue;
+            }
+            if (generation != approvedGeneration) continue;
+            if (waitingReturns[i] && caller != approvedPlayer)
+            {
+                // 정리 담당자의 메시지가 퇴장/소유권 정보보다 먼저 왔다면 계속 보류한다.
+                if (Utilities.IsValid(approvedPlayer) || caller != Networking.GetOwner(gameObject)) continue;
+            }
+            waitingCallers[i] = null;
+            if (waitingReturns[i])
+            {
+                placementGeneration = generation;
+                ApplyLocalReturn(true);
+            }
+            else if (caller == approvedPlayer)
+            {
+                ApplyPlacement(caller, generation, waitingPositions[i], waitingRotations[i], waitingInitialPlacements[i]);
+            }
+        }
+    }
+
+    private void ApplyPlacement(VRCPlayerApi caller, int generation, Vector3 targetPosition, Quaternion targetRotation, bool initialPlacement)
+    {
         if (generation == placementGeneration &&
             (placementClosed || (isSpeakerTaken && caller != placementOwner))) return;
         Debug.Log("[SpeakerController] Placing Speaker...");
-        if (playerId > 0)
-        {
-            if (Networking.LocalPlayer.playerId != playerId) return;
-        }
-        else
+        if (initialPlacement)
         {
             if (Networking.IsOwner(Networking.LocalPlayer, this.gameObject))
             {
@@ -343,7 +447,6 @@ public class SpeakerController : UdonSharpBehaviour
         placementOwner = caller;
         if (caller != Networking.LocalPlayer) placedByLocalPlayer = false;
         departedCleanupPending = false;
-        pendingReturnCaller = null;
         nextDistanceCheckTime = 0f;
         Transform tempTransform = transform;
         tempTransform.position = targetPosition;
