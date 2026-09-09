@@ -1541,7 +1541,7 @@ public class TrafficSimulationManagerEditor : Editor
     {
         if (!reverseManeuver)
         {
-            return SmoothProgress01(progress);
+            return TrafficRecoveryMath.SmoothLaneChange01(progress);
         }
 
         float preparationEnd = GetRecoveryPreparationEnd(manager);
@@ -1716,43 +1716,18 @@ public class TrafficSimulationManagerEditor : Editor
         float preparationEnd = GetRecoveryPreparationEnd(manager);
         float primaryCurvature = GetRecoveryPrimaryCurvature(manager, distance, laneSeparation, vehicleLength);
         Vector3 pose = Vector3.zero;
-        float phaseRatio = SmoothProgress01(Mathf.InverseLerp(0f, reverseOneEnd, progress));
+        float phaseRatio = TrafficRecoveryMath.SmoothLaneChange01(Mathf.InverseLerp(0f, reverseOneEnd, progress));
 
         if (progress < reverseOneEnd)
         {
-            return AdvanceRecoveryKinematicPose(pose, -distance * phaseRatio, -primaryCurvature);
+            return TrafficRecoveryMath.AdvanceRecoveryKinematicPose(pose, -distance * phaseRatio, -primaryCurvature);
         }
 
-        pose = AdvanceRecoveryKinematicPose(pose, -distance, -primaryCurvature);
+        pose = TrafficRecoveryMath.AdvanceRecoveryKinematicPose(pose, -distance, -primaryCurvature);
 
-        phaseRatio = SmoothRecoveryForwardExit01(Mathf.InverseLerp(reverseOneEnd, preparationEnd, progress));
+        phaseRatio = TrafficRecoveryMath.SmoothRecoveryForwardExit01(Mathf.InverseLerp(reverseOneEnd, preparationEnd, progress));
 
-        return AdvanceRecoveryKinematicPose(pose, distance * 0.65f * phaseRatio, primaryCurvature);
-    }
-
-    private static float SmoothRecoveryForwardExit01(float progress)
-    {
-        float t = Mathf.Clamp01(progress);
-
-        return t * t * (2f - t);
-    }
-
-    private static Vector3 AdvanceRecoveryKinematicPose(Vector3 pose, float signedDistance, float curvature)
-    {
-        float heading = pose.z;
-
-        if (Mathf.Abs(curvature) <= 0.0001f)
-        {
-            pose.x += signedDistance * Mathf.Cos(heading);
-            pose.y += signedDistance * Mathf.Sin(heading);
-            return pose;
-        }
-
-        float nextHeading = heading + curvature * signedDistance;
-        pose.x += (Mathf.Sin(nextHeading) - Mathf.Sin(heading)) / curvature;
-        pose.y += (-Mathf.Cos(nextHeading) + Mathf.Cos(heading)) / curvature;
-        pose.z = nextHeading;
-        return pose;
+        return TrafficRecoveryMath.AdvanceRecoveryKinematicPose(pose, distance * 0.65f * phaseRatio, primaryCurvature);
     }
 
     private static float GetRecoveryPrimaryCurvature(
@@ -1777,12 +1752,6 @@ public class TrafficSimulationManagerEditor : Editor
             0.02f,
             Mathf.Max(0.02f, Mathf.Min(maximumCurvature, maximumBodyCurvature))
         );
-    }
-
-    private static float SmoothProgress01(float progress)
-    {
-        float t = Mathf.Clamp01(progress);
-        return t * t * t * (t * (t * 6f - 15f) + 10f);
     }
 
     private static string GetLaneName(int laneId)
