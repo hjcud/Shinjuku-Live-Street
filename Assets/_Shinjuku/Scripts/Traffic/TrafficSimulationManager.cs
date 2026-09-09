@@ -171,7 +171,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     [Range(2f, 20f)]
     public float startupStopLineClearance = 10f;
-    
     [Header("Signal")]
     public float stopLineFrontBuffer = 1f;
     public float signalComfortDeceleration = 3f;
@@ -1141,7 +1140,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             laneChangeEmergencyManeuver[i] =
                 laneChangeActive[i] && !laneChangeReverseManeuver[i] && DecodeEmergencyManeuver(stateA);
 
-
             signalCommittedToCross[i] = !laneChangeActive[i] && (stateA & SignalCommitBit) != 0;
 
             laneChangeTargetLaneIds[i] = laneChangeActive[i] ? DecodeLaneChangeTarget(stateB) : -1;
@@ -1283,22 +1281,19 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void CopyNextSnapshotToPrevious()
     {
-        for (int i = 0; i < slotCount; i++)
-        {
-            snapshotPreviousActive[i] = snapshotNextActive[i];
-            snapshotPreviousSpawnGeneration[i] = snapshotNextSpawnGeneration[i];
-            snapshotPreviousLaneIds[i] = snapshotNextLaneIds[i];
-            snapshotPreviousTargetLaneIds[i] = snapshotNextTargetLaneIds[i];
-            snapshotPreviousS[i] = snapshotNextS[i];
-            snapshotPreviousSpeeds[i] = snapshotNextSpeeds[i];
-            snapshotPreviousAccelerations[i] = snapshotNextAccelerations[i];
-            snapshotPreviousSpeedFactors[i] = snapshotNextSpeedFactors[i];
-            snapshotPreviousLaneChangeProgress[i] = snapshotNextLaneChangeProgress[i];
-            snapshotPreviousLaneChangeActive[i] = snapshotNextLaneChangeActive[i];
-            snapshotPreviousEmergencyManeuver[i] = snapshotNextEmergencyManeuver[i];
-            snapshotPreviousReverseManeuver[i] = snapshotNextReverseManeuver[i];
-            snapshotPreviousRecoveryDistance[i] = snapshotNextRecoveryDistance[i];
-        }
+        System.Array.Copy(snapshotNextActive, snapshotPreviousActive, slotCount);
+        System.Array.Copy(snapshotNextSpawnGeneration, snapshotPreviousSpawnGeneration, slotCount);
+        System.Array.Copy(snapshotNextLaneIds, snapshotPreviousLaneIds, slotCount);
+        System.Array.Copy(snapshotNextTargetLaneIds, snapshotPreviousTargetLaneIds, slotCount);
+        System.Array.Copy(snapshotNextS, snapshotPreviousS, slotCount);
+        System.Array.Copy(snapshotNextSpeeds, snapshotPreviousSpeeds, slotCount);
+        System.Array.Copy(snapshotNextAccelerations, snapshotPreviousAccelerations, slotCount);
+        System.Array.Copy(snapshotNextSpeedFactors, snapshotPreviousSpeedFactors, slotCount);
+        System.Array.Copy(snapshotNextLaneChangeProgress, snapshotPreviousLaneChangeProgress, slotCount);
+        System.Array.Copy(snapshotNextLaneChangeActive, snapshotPreviousLaneChangeActive, slotCount);
+        System.Array.Copy(snapshotNextEmergencyManeuver, snapshotPreviousEmergencyManeuver, slotCount);
+        System.Array.Copy(snapshotNextReverseManeuver, snapshotPreviousReverseManeuver, slotCount);
+        System.Array.Copy(snapshotNextRecoveryDistance, snapshotPreviousRecoveryDistance, slotCount);
     }
 
     private void CopySyncedStateToBufferedSnapshot()
@@ -1310,11 +1305,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             PendingRemoteSnapshotCapacity;
         int offset = writeIndex * slotCount;
 
-        for (int i = 0; i < slotCount; i++)
-        {
-            snapshotBufferedStateA[offset + i] = syncedVehicleStateA[i];
-            snapshotBufferedStateB[offset + i] = syncedVehicleStateB[i];
-        }
+        System.Array.Copy(syncedVehicleStateA, 0, snapshotBufferedStateA, offset, slotCount);
+        System.Array.Copy(syncedVehicleStateB, 0, snapshotBufferedStateB, offset, slotCount);
 
         snapshotBufferedTimes[writeIndex] = syncedSimulationTime;
         if (pendingCount < PendingRemoteSnapshotCapacity)
@@ -1906,7 +1898,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         {
             signalQueueReleaseHoldRemaining = 0f;
         }
-        
         activeLaneChangeCount = 0;
 
         for (int i = 0; i < slotCount; i++)
@@ -2066,62 +2057,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float currentSpeed = vehicleSpeeds[vehicleIndex];
         signalStopDebugActive[vehicleIndex] = false;
 
-        if (laneChangeActive[vehicleIndex] && !laneChangePreparing[vehicleIndex])
-        {
-            EnsureManeuverPath(vehicleIndex, oldS, laneChangeProgress[vehicleIndex]);
-
-            if (!IsManeuverPathUsable(vehicleIndex))
-            {
-                StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
-                return;
-            }
-        }
-
-        if (!laneChangeActive[vehicleIndex])
-        {
-            laneChangePlayerBlocked[vehicleIndex] = false;
-            laneChangeVehicleBlocked[vehicleIndex] = false;
-            laneChangeRoadBoundaryBlocked[vehicleIndex] = false;
-            laneChangeObstacleRestartHoldRemaining[vehicleIndex] = 0f;
-            laneChangeObstacleClearHoldRemaining[vehicleIndex] = 0f;
-            laneChangeObstacleSweepDebugValid[vehicleIndex] = false;
-        }
-        else if (laneChangeReverseManeuver[vehicleIndex] &&
-                 laneChangeProgress[vehicleIndex] < GetRecoveryPreparationEndProgress())
-        {
-            UpdateBlockedLaneChangeRecoveryManeuver(vehicleIndex, deltaTime);
-
-            return;
-        }
-        else if (ShouldHoldLaneChangeForObstacle(vehicleIndex, deltaTime))
-        {
-            return;
-        }
-
-        int leaderIndex = FindNearestLeaderOnLane(vehicleIndex, laneId, oldS);
-
-        if (TryBeginBlockedLaneChangeRecovery(vehicleIndex, leaderIndex))
-        {
-            return;
-        }
-
-        bool laneChangeWasActive = laneChangeActive[vehicleIndex];
-
-        TryBeginLaneChange(vehicleIndex, leaderIndex);
-
-        // 새 후진 회복 경로는 후진으로 시작하므로 현재 전진 처리 단계를 여기서 종료
-        // 남은 전진 계산에서 출발 차선 좌표 기준으로 비단조 경로를 다시 매핑하는 문제 방지
-        if (!laneChangeWasActive && laneChangeActive[vehicleIndex] && laneChangeReverseManeuver[vehicleIndex])
-        {
-            return;
-        }
-
-        if (laneChangeActive[vehicleIndex] && !laneChangePreparing[vehicleIndex] &&
-            !IsManeuverPathUsable(vehicleIndex))
-        {
-            StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
-            return;
-        }
+        int leaderIndex;
+        if (!PrepareVehicleAdvance(vehicleIndex, deltaTime, out leaderIndex)) return;
 
         float sourceLeaderInfluence = GetSourceLaneConstraintInfluence(vehicleIndex);
 
@@ -2510,6 +2447,71 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         {
             DeactivateVehicle(vehicleIndex);
         }
+    }
+
+    private bool PrepareVehicleAdvance(int vehicleIndex, float deltaTime, out int leaderIndex)
+    {
+        int laneId = vehicleLaneIds[vehicleIndex];
+        float oldS = previousVehicleS[vehicleIndex];
+        leaderIndex = -1;
+
+        if (laneChangeActive[vehicleIndex] && !laneChangePreparing[vehicleIndex])
+        {
+            EnsureManeuverPath(vehicleIndex, oldS, laneChangeProgress[vehicleIndex]);
+
+            if (!IsManeuverPathUsable(vehicleIndex))
+            {
+                StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
+                return false;
+            }
+        }
+
+        if (!laneChangeActive[vehicleIndex])
+        {
+            laneChangePlayerBlocked[vehicleIndex] = false;
+            laneChangeVehicleBlocked[vehicleIndex] = false;
+            laneChangeRoadBoundaryBlocked[vehicleIndex] = false;
+            laneChangeObstacleRestartHoldRemaining[vehicleIndex] = 0f;
+            laneChangeObstacleClearHoldRemaining[vehicleIndex] = 0f;
+            laneChangeObstacleSweepDebugValid[vehicleIndex] = false;
+        }
+        else if (laneChangeReverseManeuver[vehicleIndex] &&
+                 laneChangeProgress[vehicleIndex] < GetRecoveryPreparationEndProgress())
+        {
+            UpdateBlockedLaneChangeRecoveryManeuver(vehicleIndex, deltaTime);
+
+            return false;
+        }
+        else if (ShouldHoldLaneChangeForObstacle(vehicleIndex, deltaTime))
+        {
+            return false;
+        }
+
+        leaderIndex = FindNearestLeaderOnLane(vehicleIndex, laneId, oldS);
+
+        if (TryBeginBlockedLaneChangeRecovery(vehicleIndex, leaderIndex))
+        {
+            return false;
+        }
+
+        bool laneChangeWasActive = laneChangeActive[vehicleIndex];
+
+        TryBeginLaneChange(vehicleIndex, leaderIndex);
+
+        // 새 후진 회복 경로는 후진으로 시작하므로 현재 전진 처리 단계를 여기서 종료
+        // 남은 전진 계산에서 출발 차선 좌표 기준으로 비단조 경로를 다시 매핑하는 문제 방지
+        if (!laneChangeWasActive && laneChangeActive[vehicleIndex] && laneChangeReverseManeuver[vehicleIndex])
+        {
+            return false;
+        }
+
+        if (laneChangeActive[vehicleIndex] && !laneChangePreparing[vehicleIndex] &&
+            !IsManeuverPathUsable(vehicleIndex))
+        {
+            StopVehicleForLaneChangeObstacle(vehicleIndex, deltaTime);
+            return false;
+        }
+        return true;
     }
 
     // -------------------------------------------------------------------------
@@ -4708,7 +4710,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         Vector3 surfaceUp = surfaceRotation * Vector3.up;
         Vector3 sourceForward = Vector3.ProjectOnPlane(sourceRotation * Vector3.forward, surfaceUp).normalized;
         Vector3 targetForward = Vector3.ProjectOnPlane(targetRotation * Vector3.forward, surfaceUp).normalized;
-        float lateralProgress = SmoothLaneChange01(progress);
+        float lateralProgress = TrafficRecoveryMath.SmoothLaneChange01(progress);
         float travelDistance = GetNormalLaneChangeTravelDistance(laneChangeEmergencyManeuver[vehicleIndex]);
         Vector3 tangent =
             Vector3.Lerp(sourceForward, targetForward, lateralProgress) * travelDistance +
@@ -6422,49 +6424,22 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float primaryCurvature = GetRecoveryPrimaryCurvature(vehicleIndex, distance);
         Vector3 pose = Vector3.zero;
 
-        float phaseRatio = SmoothLaneChange01(Mathf.InverseLerp(0f, reverseOneEnd, progress));
+        float phaseRatio = TrafficRecoveryMath.SmoothLaneChange01(Mathf.InverseLerp(0f, reverseOneEnd, progress));
 
         if (progress < reverseOneEnd)
         {
-            return AdvanceRecoveryKinematicPose(pose, -distance * phaseRatio, -primaryCurvature);
+            return TrafficRecoveryMath.AdvanceRecoveryKinematicPose(pose, -distance * phaseRatio, -primaryCurvature);
         }
 
-        pose = AdvanceRecoveryKinematicPose(pose, -distance, -primaryCurvature);
+        pose = TrafficRecoveryMath.AdvanceRecoveryKinematicPose(pose, -distance, -primaryCurvature);
 
-        phaseRatio = SmoothRecoveryForwardExit01(Mathf.InverseLerp(reverseOneEnd, preparationEnd, progress));
+        phaseRatio = TrafficRecoveryMath.SmoothRecoveryForwardExit01(Mathf.InverseLerp(reverseOneEnd, preparationEnd, progress));
 
-        return AdvanceRecoveryKinematicPose(
+        return TrafficRecoveryMath.AdvanceRecoveryKinematicPose(
             pose,
             distance * RecoveryForwardPreparationFactor * phaseRatio,
             primaryCurvature
         );
-    }
-
-    private float SmoothRecoveryForwardExit01(float progress)
-    {
-        float t = Mathf.Clamp01(progress);
-
-        // 전진 기어는 정지 상태에서 시작하고 준비 곡선의 끝에서는 단위 속도 유지
-        // 기존 5차 완화 곡선 양 끝의 속도 0으로 인해 최종 합류 전에 보이던 멈춤 방지
-        return t * t * (2f - t);
-    }
-
-    private Vector3 AdvanceRecoveryKinematicPose(Vector3 pose, float signedDistance, float curvature)
-    {
-        float heading = pose.z;
-
-        if (Mathf.Abs(curvature) <= 0.0001f)
-        {
-            pose.x += signedDistance * Mathf.Cos(heading);
-            pose.y += signedDistance * Mathf.Sin(heading);
-            return pose;
-        }
-
-        float nextHeading = heading + curvature * signedDistance;
-        pose.x += (Mathf.Sin(nextHeading) - Mathf.Sin(heading)) / curvature;
-        pose.y += (-Mathf.Cos(nextHeading) + Mathf.Cos(heading)) / curvature;
-        pose.z = nextHeading;
-        return pose;
     }
 
     private float GetRecoveryPrimaryCurvature(int vehicleIndex, float recoveryDistance)
@@ -7263,7 +7238,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         laneChangeCooldownRemaining[vehicleIndex] = 0f;
         laneChangeEvaluationRemaining[vehicleIndex] = 0f;
         ResetVehicleObstacleState(vehicleIndex);
-        
         vehicleSpeeds[vehicleIndex] = 0f;
         vehicleAccelerations[vehicleIndex] = 0f;
         vehicleRenderMaximumS[vehicleIndex] = -1f;
@@ -7298,356 +7272,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         for (int i = 0; i < slotCount; i++)
         {
-            bool useNextIdentity = interpolation >= 1f;
-
-            bool shouldBeActive = useNextIdentity ? snapshotNextActive[i] : snapshotPreviousActive[i];
-
-            bool spawnGenerationChanged =
-                snapshotPreviousActive[i] && snapshotNextActive[i] &&
-                snapshotPreviousSpawnGeneration[i] != snapshotNextSpawnGeneration[i];
-
-            bool renderSpawnGeneration = useNextIdentity
-                ? snapshotNextSpawnGeneration[i]
-                : snapshotPreviousSpawnGeneration[i];
-
-            if (shouldBeActive && visualActive[i] && visualSpawnGeneration[i] != renderSpawnGeneration)
-            {
-                SetVehicleVisualActive(i, false);
-            }
-
-            SetVehicleVisualActive(i, shouldBeActive);
-
-            if (shouldBeActive)
-            {
-                visualSpawnGeneration[i] = renderSpawnGeneration;
-            }
-
-            if (!shouldBeActive || vehicleRoots[i] == null)
-            {
-                continue;
-            }
-
+            bool countLaneChange;
+            if (!ApplyRemoteVehicleVisual(i, interpolation, out countLaneChange)) continue;
             renderedActiveCount++;
-
-            int laneId = snapshotNextLaneIds[i];
-
-            float renderS;
-            float renderSpeed;
-            float renderSpeedFactor;
-            bool renderLaneChangeActive = false;
-            bool renderReverseManeuver = false;
-            bool renderEmergencyManeuver = false;
-            float renderRecoveryDistance = 0f;
-            int renderTargetLaneId = -1;
-            float renderLaneChangeProgress = 0f;
-
-            int completionRuleIndex = -1;
-
-            bool completesLaneChange =
-                snapshotPreviousActive[i] && snapshotNextActive[i] && snapshotPreviousLaneChangeActive[i] &&
-                !snapshotNextLaneChangeActive[i] &&
-                snapshotPreviousTargetLaneIds[i] == snapshotNextLaneIds[i] &&
-                snapshotPreviousLaneIds[i] != snapshotNextLaneIds[i];
-
-            if (completesLaneChange)
-            {
-                completionRuleIndex = FindLaneChangeRule(snapshotPreviousLaneIds[i], snapshotNextLaneIds[i]);
-            }
-
-            bool canInterpolate =
-                snapshotPreviousActive[i] && snapshotNextActive[i] && !spawnGenerationChanged &&
-                (snapshotPreviousLaneIds[i] == snapshotNextLaneIds[i] || completionRuleIndex >= 0);
-
-            if (canInterpolate)
-            {
-                if (completionRuleIndex >= 0)
-                {
-                    laneId = snapshotPreviousLaneIds[i];
-
-                    float completedSourceS =
-                        MapTargetToSourceSUnclamped(completionRuleIndex, snapshotNextS[i]);
-
-                    renderS = Mathf.Lerp(snapshotPreviousS[i], completedSourceS, interpolation);
-                }
-                else
-                {
-                    laneId = snapshotNextLaneIds[i];
-
-                    renderS = Mathf.Lerp(snapshotPreviousS[i], snapshotNextS[i], interpolation);
-                }
-
-                renderSpeed = Mathf.Lerp(snapshotPreviousSpeeds[i], snapshotNextSpeeds[i], interpolation);
-
-                renderSpeedFactor = Mathf.Lerp(
-                    snapshotPreviousSpeedFactors[i],
-                    snapshotNextSpeedFactors[i],
-                    interpolation
-                );
-
-                if (completionRuleIndex >= 0)
-                {
-                    renderLaneChangeActive = true;
-                    renderReverseManeuver = snapshotPreviousReverseManeuver[i];
-                    renderEmergencyManeuver = snapshotPreviousEmergencyManeuver[i];
-                    renderRecoveryDistance = snapshotPreviousRecoveryDistance[i];
-                    renderTargetLaneId = snapshotNextLaneIds[i];
-                    renderLaneChangeProgress = Mathf.Lerp(
-                        snapshotPreviousLaneChangeProgress[i],
-                        1f,
-                        interpolation
-                    );
-                }
-                else
-                {
-                    bool sameLaneChange =
-                        snapshotPreviousLaneChangeActive[i] && snapshotNextLaneChangeActive[i] &&
-                        snapshotPreviousTargetLaneIds[i] == snapshotNextTargetLaneIds[i];
-
-                    if (sameLaneChange)
-                    {
-                        renderLaneChangeActive = true;
-                        renderReverseManeuver = snapshotNextReverseManeuver[i];
-                        renderEmergencyManeuver = snapshotNextEmergencyManeuver[i];
-                        renderRecoveryDistance = snapshotNextRecoveryDistance[i];
-                        renderTargetLaneId = snapshotNextTargetLaneIds[i];
-                        renderLaneChangeProgress = Mathf.Lerp(
-                            snapshotPreviousLaneChangeProgress[i],
-                            snapshotNextLaneChangeProgress[i],
-                            interpolation
-                        );
-                    }
-                    else if (snapshotNextLaneChangeActive[i])
-                    {
-                        renderLaneChangeActive = true;
-                        renderReverseManeuver = snapshotNextReverseManeuver[i];
-                        renderEmergencyManeuver = snapshotNextEmergencyManeuver[i];
-                        renderRecoveryDistance = snapshotNextRecoveryDistance[i];
-                        renderTargetLaneId = snapshotNextTargetLaneIds[i];
-                        renderLaneChangeProgress = Mathf.Lerp(
-                            0f,
-                            snapshotNextLaneChangeProgress[i],
-                            interpolation
-                        );
-                    }
-                }
-            }
-            else
-            {
-                bool usePrevious =
-                    shouldBeActive && (!snapshotNextActive[i] || (spawnGenerationChanged && !useNextIdentity));
-
-                if (usePrevious)
-                {
-                    laneId = snapshotPreviousLaneIds[i];
-                    renderS = snapshotPreviousS[i];
-                    renderSpeed = snapshotPreviousSpeeds[i];
-                    renderSpeedFactor = snapshotPreviousSpeedFactors[i];
-                    renderLaneChangeActive = snapshotPreviousLaneChangeActive[i];
-                    renderReverseManeuver = snapshotPreviousReverseManeuver[i];
-                    renderEmergencyManeuver = snapshotPreviousEmergencyManeuver[i];
-                    renderRecoveryDistance = snapshotPreviousRecoveryDistance[i];
-                    renderTargetLaneId = snapshotPreviousTargetLaneIds[i];
-                    renderLaneChangeProgress = snapshotPreviousLaneChangeProgress[i];
-                }
-                else
-                {
-                    laneId = snapshotNextLaneIds[i];
-                    renderS = snapshotNextS[i];
-                    renderSpeed = snapshotNextSpeeds[i];
-                    renderSpeedFactor = snapshotNextSpeedFactors[i];
-                    renderLaneChangeActive = snapshotNextLaneChangeActive[i];
-                    renderReverseManeuver = snapshotNextReverseManeuver[i];
-                    renderEmergencyManeuver = snapshotNextEmergencyManeuver[i];
-                    renderRecoveryDistance = snapshotNextRecoveryDistance[i];
-                    renderTargetLaneId = snapshotNextTargetLaneIds[i];
-                    renderLaneChangeProgress = snapshotNextLaneChangeProgress[i];
-                }
-            }
-
-            // 2026-09-08: 위치와 차선 변경 진행도를 별도로 외삽하지 않음
-            // 다음 상태가 늦으면 마지막 수신 자세를 유지하여 예측 초과 후 되감기 방지
-
-            int previousRenderedLaneId = vehicleLaneIds[i];
-            float previousRenderedS = vehicleS[i];
-            bool previousRenderValid = previousVisualPositionValid[i];
-            bool previousLaneChangeActive = laneChangeActive[i];
-            bool previousReverseManeuver = laneChangeReverseManeuver[i];
-            bool previousEmergencyManeuver = laneChangeEmergencyManeuver[i];
-            int previousTargetLaneId = laneChangeTargetLaneIds[i];
-            float previousRenderedProgress = laneChangeProgress[i];
-            float previousReverseStartS = laneChangeReverseStartS[i];
-
-            bool sameRenderedLaneChange =
-                previousRenderValid && previousLaneChangeActive && renderLaneChangeActive &&
-                previousRenderedLaneId == laneId &&
-                previousTargetLaneId == renderTargetLaneId &&
-                previousReverseManeuver == renderReverseManeuver &&
-                previousEmergencyManeuver == renderEmergencyManeuver;
-
-            bool renderedManeuverContextChanged =
-                previousLaneChangeActive != renderLaneChangeActive ||
-                (renderLaneChangeActive &&
-                 (!previousRenderValid || previousRenderedLaneId != laneId ||
-                  previousTargetLaneId != renderTargetLaneId ||
-                  previousReverseManeuver != renderReverseManeuver ||
-                  previousEmergencyManeuver != renderEmergencyManeuver));
-
-            if (renderedManeuverContextChanged)
-            {
-                // 이후 기동이 이전 기동과 같은 차선 조합을 사용하는 경우에도
-                // 원격 클라이언트의 새 기동이 이전 고정 경로 기준점을 이어받는 문제 방지
-                InvalidateManeuverPath(i);
-            }
-
-            if (sameRenderedLaneChange)
-            {
-                float signedProgressAdvance = (renderLaneChangeProgress - previousRenderedProgress);
-
-                if (signedProgressAdvance < 0f)
-                {
-                    renderLaneChangeProgress = previousRenderedProgress;
-                }
-            }
-
-            // 비권한 클라이언트에서는 차량 시뮬레이션 배열 갱신 없이 표시용 차선 변경 정보 사용
-            // 회복 곡선 평가 전에 정보를 채워 위치와 차체 방향 계산에 디코딩된 스냅샷과
-            // 동일한 출발 차선, 목표 차선, 규칙 적용
-            vehicleLaneIds[i] = laneId;
-            vehicleS[i] = renderS;
-            laneChangeActive[i] = renderLaneChangeActive;
-            laneChangeReverseManeuver[i] = renderReverseManeuver;
-            laneChangeEmergencyManeuver[i] = renderEmergencyManeuver;
-            laneChangePreparing[i] =
-                renderLaneChangeActive && !renderReverseManeuver && renderLaneChangeProgress <= 0.0001f &&
-                snapshotNextAccelerations[i] < -0.05f;
-            laneChangeTargetLaneIds[i] = renderTargetLaneId;
-            laneChangeProgress[i] = renderLaneChangeProgress;
-            laneChangeRuleIndices[i] = renderLaneChangeActive
-                ? FindLaneChangeRule(laneId, renderTargetLaneId)
-                : -1;
-            laneChangeRecoveryDistance[i] = renderReverseManeuver
-                ? Mathf.Max(
-                    MinimumReverseRecoveryDistance,
-                    renderRecoveryDistance > 0f
-                        ? renderRecoveryDistance
-                        : laneChangeReverseDistance
-                  )
-                : 0f;
-
-            if (renderLaneChangeActive && renderReverseManeuver &&
-                renderLaneChangeProgress <= GetRecoveryPreparationEndProgress() + 0.0001f)
-            {
-                float recoveryDistance = Mathf.Max(
-                    MinimumReverseRecoveryDistance,
-                    laneChangeRecoveryDistance[i] > 0f
-                        ? laneChangeRecoveryDistance[i]
-                        : laneChangeReverseDistance
-                );
-                float nextRecoveryStartS =
-                    snapshotNextS[i] -
-                    GetRecoveryLongitudinalOffset(i, snapshotNextLaneChangeProgress[i], recoveryDistance);
-                float recoveryStartS = nextRecoveryStartS;
-                bool sameRecoveryInBothSnapshots =
-                    canInterpolate && snapshotPreviousLaneChangeActive[i] && snapshotNextLaneChangeActive[i] &&
-                    snapshotPreviousReverseManeuver[i] &&
-                    snapshotNextReverseManeuver[i] &&
-                    snapshotPreviousLaneIds[i] == snapshotNextLaneIds[i] &&
-                    snapshotPreviousTargetLaneIds[i] == snapshotNextTargetLaneIds[i];
-
-                if (sameRecoveryInBothSnapshots)
-                {
-                    float previousRecoveryStartS =
-                        snapshotPreviousS[i] -
-                        GetRecoveryLongitudinalOffset(
-                            i,
-                            snapshotPreviousLaneChangeProgress[i],
-                            recoveryDistance
-                        );
-
-                    recoveryStartS = Mathf.Lerp(previousRecoveryStartS, nextRecoveryStartS, interpolation);
-                }
-                else if (!snapshotNextReverseManeuver[i] && snapshotPreviousReverseManeuver[i])
-                {
-                    recoveryStartS =
-                        snapshotPreviousS[i] -
-                        GetRecoveryLongitudinalOffset(
-                            i,
-                            snapshotPreviousLaneChangeProgress[i],
-                            recoveryDistance
-                        );
-                }
-
-                renderS = recoveryStartS +
-                    GetRecoveryLongitudinalOffset(i, renderLaneChangeProgress, recoveryDistance);
-
-                laneChangeReverseStartS[i] = recoveryStartS;
-                vehicleS[i] = renderS;
-            }
-            else
-            {
-                laneChangeReverseStartS[i] = renderS;
-            }
-
-            bool renderingInReverse = IsReversePhase(renderReverseManeuver, renderLaneChangeProgress);
-
-            if (previousRenderValid && previousRenderedLaneId == laneId)
-            {
-                float signedRenderedAdvance = (renderS - previousRenderedS) * (renderingInReverse ? -1f : 1f);
-
-                if (signedRenderedAdvance < 0f)
-                {
-                    // 지연되거나 양자화된 스냅샷에 의한 원격 차량의 화면상 위치 되감기 방지
-                    // 소유권자 상태가 따라올 때까지 전체 경로 자세 유지
-                    // S만 유지한 채 횡진행도를 늘릴 때 발생하는 차체 회전과 옆 미끄러짐 방지
-                    renderS = previousRenderedS;
-
-                    if (sameRenderedLaneChange)
-                    {
-                        renderLaneChangeProgress = previousRenderedProgress;
-
-                        if (renderReverseManeuver)
-                        {
-                            laneChangeReverseStartS[i] = previousReverseStartS;
-                        }
-                    }
-                    else if (renderLaneChangeActive && !previousLaneChangeActive)
-                    {
-                        // 새로 수신한 기동이 횡방향 보정만으로 시작되는 문제 방지
-                        renderLaneChangeProgress = 0f;
-                    }
-                }
-            }
-
-            vehicleS[i] = renderS;
-            vehicleSpeeds[i] = renderSpeed;
-            vehicleAccelerations[i] = Mathf.Lerp(
-                snapshotPreviousAccelerations[i],
-                snapshotNextAccelerations[i],
-                interpolation
-            );
-            speedFactors[i] = renderSpeedFactor;
-            laneChangeProgress[i] = renderLaneChangeProgress;
-            laneChangePreparing[i] =
-                renderLaneChangeActive && !renderReverseManeuver && renderLaneChangeProgress <= 0.0001f &&
-                snapshotNextAccelerations[i] < -0.05f;
-
-            ApplyVehiclePose(
-                i,
-                laneId,
-                renderS,
-                renderLaneChangeActive,
-                renderReverseManeuver,
-                renderTargetLaneId,
-                renderLaneChangeProgress,
-                renderSpeed
-            );
-
-            if (renderLaneChangeActive)
-            {
-                renderedLaneChangeCount++;
-            }
-
-            ApplyVehicleMotionVisuals(i, laneId, renderSpeed, renderSpeedFactor);
+            if (countLaneChange) renderedLaneChangeCount++;
         }
 
         if (!localIsAuthority)
@@ -7655,6 +7283,360 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             activeVehicleCount = renderedActiveCount;
             activeLaneChangeCount = renderedLaneChangeCount;
         }
+    }
+
+    private bool ApplyRemoteVehicleVisual(int vehicleIndex, float interpolation, out bool countLaneChange)
+    {
+        countLaneChange = false;
+        bool useNextIdentity = interpolation >= 1f;
+
+        bool shouldBeActive = useNextIdentity ? snapshotNextActive[vehicleIndex] : snapshotPreviousActive[vehicleIndex];
+
+        bool spawnGenerationChanged =
+            snapshotPreviousActive[vehicleIndex] && snapshotNextActive[vehicleIndex] &&
+            snapshotPreviousSpawnGeneration[vehicleIndex] != snapshotNextSpawnGeneration[vehicleIndex];
+
+        bool renderSpawnGeneration = useNextIdentity
+            ? snapshotNextSpawnGeneration[vehicleIndex]
+            : snapshotPreviousSpawnGeneration[vehicleIndex];
+
+        if (shouldBeActive && visualActive[vehicleIndex] && visualSpawnGeneration[vehicleIndex] != renderSpawnGeneration)
+        {
+            SetVehicleVisualActive(vehicleIndex, false);
+        }
+
+        SetVehicleVisualActive(vehicleIndex, shouldBeActive);
+
+        if (shouldBeActive)
+        {
+            visualSpawnGeneration[vehicleIndex] = renderSpawnGeneration;
+        }
+
+        if (!shouldBeActive || vehicleRoots[vehicleIndex] == null)
+        {
+            return false;
+        }
+
+
+
+        int laneId = snapshotNextLaneIds[vehicleIndex];
+
+        float renderS;
+        float renderSpeed;
+        float renderSpeedFactor;
+        bool renderLaneChangeActive = false;
+        bool renderReverseManeuver = false;
+        bool renderEmergencyManeuver = false;
+        float renderRecoveryDistance = 0f;
+        int renderTargetLaneId = -1;
+        float renderLaneChangeProgress = 0f;
+
+        int completionRuleIndex = -1;
+
+        bool completesLaneChange =
+            snapshotPreviousActive[vehicleIndex] && snapshotNextActive[vehicleIndex] && snapshotPreviousLaneChangeActive[vehicleIndex] &&
+            !snapshotNextLaneChangeActive[vehicleIndex] &&
+            snapshotPreviousTargetLaneIds[vehicleIndex] == snapshotNextLaneIds[vehicleIndex] &&
+            snapshotPreviousLaneIds[vehicleIndex] != snapshotNextLaneIds[vehicleIndex];
+
+        if (completesLaneChange)
+        {
+            completionRuleIndex = FindLaneChangeRule(snapshotPreviousLaneIds[vehicleIndex], snapshotNextLaneIds[vehicleIndex]);
+        }
+
+        bool canInterpolate =
+            snapshotPreviousActive[vehicleIndex] && snapshotNextActive[vehicleIndex] && !spawnGenerationChanged &&
+            (snapshotPreviousLaneIds[vehicleIndex] == snapshotNextLaneIds[vehicleIndex] || completionRuleIndex >= 0);
+
+        if (canInterpolate)
+        {
+            if (completionRuleIndex >= 0)
+            {
+                laneId = snapshotPreviousLaneIds[vehicleIndex];
+
+                float completedSourceS =
+                    MapTargetToSourceSUnclamped(completionRuleIndex, snapshotNextS[vehicleIndex]);
+
+                renderS = Mathf.Lerp(snapshotPreviousS[vehicleIndex], completedSourceS, interpolation);
+            }
+            else
+            {
+                laneId = snapshotNextLaneIds[vehicleIndex];
+
+                renderS = Mathf.Lerp(snapshotPreviousS[vehicleIndex], snapshotNextS[vehicleIndex], interpolation);
+            }
+
+            renderSpeed = Mathf.Lerp(snapshotPreviousSpeeds[vehicleIndex], snapshotNextSpeeds[vehicleIndex], interpolation);
+
+            renderSpeedFactor = Mathf.Lerp(
+                snapshotPreviousSpeedFactors[vehicleIndex],
+                snapshotNextSpeedFactors[vehicleIndex],
+                interpolation
+            );
+
+            if (completionRuleIndex >= 0)
+            {
+                renderLaneChangeActive = true;
+                renderReverseManeuver = snapshotPreviousReverseManeuver[vehicleIndex];
+                renderEmergencyManeuver = snapshotPreviousEmergencyManeuver[vehicleIndex];
+                renderRecoveryDistance = snapshotPreviousRecoveryDistance[vehicleIndex];
+                renderTargetLaneId = snapshotNextLaneIds[vehicleIndex];
+                renderLaneChangeProgress = Mathf.Lerp(
+                    snapshotPreviousLaneChangeProgress[vehicleIndex],
+                    1f,
+                    interpolation
+                );
+            }
+            else
+            {
+                bool sameLaneChange =
+                    snapshotPreviousLaneChangeActive[vehicleIndex] && snapshotNextLaneChangeActive[vehicleIndex] &&
+                    snapshotPreviousTargetLaneIds[vehicleIndex] == snapshotNextTargetLaneIds[vehicleIndex];
+
+                if (sameLaneChange)
+                {
+                    renderLaneChangeActive = true;
+                    renderReverseManeuver = snapshotNextReverseManeuver[vehicleIndex];
+                    renderEmergencyManeuver = snapshotNextEmergencyManeuver[vehicleIndex];
+                    renderRecoveryDistance = snapshotNextRecoveryDistance[vehicleIndex];
+                    renderTargetLaneId = snapshotNextTargetLaneIds[vehicleIndex];
+                    renderLaneChangeProgress = Mathf.Lerp(
+                        snapshotPreviousLaneChangeProgress[vehicleIndex],
+                        snapshotNextLaneChangeProgress[vehicleIndex],
+                        interpolation
+                    );
+                }
+                else if (snapshotNextLaneChangeActive[vehicleIndex])
+                {
+                    renderLaneChangeActive = true;
+                    renderReverseManeuver = snapshotNextReverseManeuver[vehicleIndex];
+                    renderEmergencyManeuver = snapshotNextEmergencyManeuver[vehicleIndex];
+                    renderRecoveryDistance = snapshotNextRecoveryDistance[vehicleIndex];
+                    renderTargetLaneId = snapshotNextTargetLaneIds[vehicleIndex];
+                    renderLaneChangeProgress = Mathf.Lerp(
+                        0f,
+                        snapshotNextLaneChangeProgress[vehicleIndex],
+                        interpolation
+                    );
+                }
+            }
+        }
+        else
+        {
+            bool usePrevious =
+                shouldBeActive && (!snapshotNextActive[vehicleIndex] || (spawnGenerationChanged && !useNextIdentity));
+
+            if (usePrevious)
+            {
+                laneId = snapshotPreviousLaneIds[vehicleIndex];
+                renderS = snapshotPreviousS[vehicleIndex];
+                renderSpeed = snapshotPreviousSpeeds[vehicleIndex];
+                renderSpeedFactor = snapshotPreviousSpeedFactors[vehicleIndex];
+                renderLaneChangeActive = snapshotPreviousLaneChangeActive[vehicleIndex];
+                renderReverseManeuver = snapshotPreviousReverseManeuver[vehicleIndex];
+                renderEmergencyManeuver = snapshotPreviousEmergencyManeuver[vehicleIndex];
+                renderRecoveryDistance = snapshotPreviousRecoveryDistance[vehicleIndex];
+                renderTargetLaneId = snapshotPreviousTargetLaneIds[vehicleIndex];
+                renderLaneChangeProgress = snapshotPreviousLaneChangeProgress[vehicleIndex];
+            }
+            else
+            {
+                laneId = snapshotNextLaneIds[vehicleIndex];
+                renderS = snapshotNextS[vehicleIndex];
+                renderSpeed = snapshotNextSpeeds[vehicleIndex];
+                renderSpeedFactor = snapshotNextSpeedFactors[vehicleIndex];
+                renderLaneChangeActive = snapshotNextLaneChangeActive[vehicleIndex];
+                renderReverseManeuver = snapshotNextReverseManeuver[vehicleIndex];
+                renderEmergencyManeuver = snapshotNextEmergencyManeuver[vehicleIndex];
+                renderRecoveryDistance = snapshotNextRecoveryDistance[vehicleIndex];
+                renderTargetLaneId = snapshotNextTargetLaneIds[vehicleIndex];
+                renderLaneChangeProgress = snapshotNextLaneChangeProgress[vehicleIndex];
+            }
+        }
+
+        // 2026-09-08: 위치와 차선 변경 진행도를 별도로 외삽하지 않음
+        // 다음 상태가 늦으면 마지막 수신 자세를 유지하여 예측 초과 후 되감기 방지
+
+        int previousRenderedLaneId = vehicleLaneIds[vehicleIndex];
+        float previousRenderedS = vehicleS[vehicleIndex];
+        bool previousRenderValid = previousVisualPositionValid[vehicleIndex];
+        bool previousLaneChangeActive = laneChangeActive[vehicleIndex];
+        bool previousReverseManeuver = laneChangeReverseManeuver[vehicleIndex];
+        bool previousEmergencyManeuver = laneChangeEmergencyManeuver[vehicleIndex];
+        int previousTargetLaneId = laneChangeTargetLaneIds[vehicleIndex];
+        float previousRenderedProgress = laneChangeProgress[vehicleIndex];
+        float previousReverseStartS = laneChangeReverseStartS[vehicleIndex];
+
+        bool sameRenderedLaneChange =
+            previousRenderValid && previousLaneChangeActive && renderLaneChangeActive &&
+            previousRenderedLaneId == laneId &&
+            previousTargetLaneId == renderTargetLaneId &&
+            previousReverseManeuver == renderReverseManeuver &&
+            previousEmergencyManeuver == renderEmergencyManeuver;
+
+        bool renderedManeuverContextChanged =
+            previousLaneChangeActive != renderLaneChangeActive ||
+            (renderLaneChangeActive &&
+             (!previousRenderValid || previousRenderedLaneId != laneId ||
+              previousTargetLaneId != renderTargetLaneId ||
+              previousReverseManeuver != renderReverseManeuver ||
+              previousEmergencyManeuver != renderEmergencyManeuver));
+
+        if (renderedManeuverContextChanged)
+        {
+            // 이후 기동이 이전 기동과 같은 차선 조합을 사용하는 경우에도
+            // 원격 클라이언트의 새 기동이 이전 고정 경로 기준점을 이어받는 문제 방지
+            InvalidateManeuverPath(vehicleIndex);
+        }
+
+        if (sameRenderedLaneChange)
+        {
+            float signedProgressAdvance = (renderLaneChangeProgress - previousRenderedProgress);
+
+            if (signedProgressAdvance < 0f)
+            {
+                renderLaneChangeProgress = previousRenderedProgress;
+            }
+        }
+
+        // 비권한 클라이언트에서는 차량 시뮬레이션 배열 갱신 없이 표시용 차선 변경 정보 사용
+        // 회복 곡선 평가 전에 정보를 채워 위치와 차체 방향 계산에 디코딩된 스냅샷과
+        // 동일한 출발 차선, 목표 차선, 규칙 적용
+        vehicleLaneIds[vehicleIndex] = laneId;
+        vehicleS[vehicleIndex] = renderS;
+        laneChangeActive[vehicleIndex] = renderLaneChangeActive;
+        laneChangeReverseManeuver[vehicleIndex] = renderReverseManeuver;
+        laneChangeEmergencyManeuver[vehicleIndex] = renderEmergencyManeuver;
+        laneChangePreparing[vehicleIndex] =
+            renderLaneChangeActive && !renderReverseManeuver && renderLaneChangeProgress <= 0.0001f &&
+            snapshotNextAccelerations[vehicleIndex] < -0.05f;
+        laneChangeTargetLaneIds[vehicleIndex] = renderTargetLaneId;
+        laneChangeProgress[vehicleIndex] = renderLaneChangeProgress;
+        laneChangeRuleIndices[vehicleIndex] = renderLaneChangeActive
+            ? FindLaneChangeRule(laneId, renderTargetLaneId)
+            : -1;
+        laneChangeRecoveryDistance[vehicleIndex] = renderReverseManeuver
+            ? Mathf.Max(
+                MinimumReverseRecoveryDistance,
+                renderRecoveryDistance > 0f
+                    ? renderRecoveryDistance
+                    : laneChangeReverseDistance
+              )
+            : 0f;
+
+        if (renderLaneChangeActive && renderReverseManeuver &&
+            renderLaneChangeProgress <= GetRecoveryPreparationEndProgress() + 0.0001f)
+        {
+            float recoveryDistance = Mathf.Max(
+                MinimumReverseRecoveryDistance,
+                laneChangeRecoveryDistance[vehicleIndex] > 0f
+                    ? laneChangeRecoveryDistance[vehicleIndex]
+                    : laneChangeReverseDistance
+            );
+            float nextRecoveryStartS =
+                snapshotNextS[vehicleIndex] -
+                GetRecoveryLongitudinalOffset(vehicleIndex, snapshotNextLaneChangeProgress[vehicleIndex], recoveryDistance);
+            float recoveryStartS = nextRecoveryStartS;
+            bool sameRecoveryInBothSnapshots =
+                canInterpolate && snapshotPreviousLaneChangeActive[vehicleIndex] && snapshotNextLaneChangeActive[vehicleIndex] &&
+                snapshotPreviousReverseManeuver[vehicleIndex] &&
+                snapshotNextReverseManeuver[vehicleIndex] &&
+                snapshotPreviousLaneIds[vehicleIndex] == snapshotNextLaneIds[vehicleIndex] &&
+                snapshotPreviousTargetLaneIds[vehicleIndex] == snapshotNextTargetLaneIds[vehicleIndex];
+
+            if (sameRecoveryInBothSnapshots)
+            {
+                float previousRecoveryStartS =
+                    snapshotPreviousS[vehicleIndex] -
+                    GetRecoveryLongitudinalOffset(
+                        vehicleIndex,
+                        snapshotPreviousLaneChangeProgress[vehicleIndex],
+                        recoveryDistance
+                    );
+
+                recoveryStartS = Mathf.Lerp(previousRecoveryStartS, nextRecoveryStartS, interpolation);
+            }
+            else if (!snapshotNextReverseManeuver[vehicleIndex] && snapshotPreviousReverseManeuver[vehicleIndex])
+            {
+                recoveryStartS =
+                    snapshotPreviousS[vehicleIndex] -
+                    GetRecoveryLongitudinalOffset(
+                        vehicleIndex,
+                        snapshotPreviousLaneChangeProgress[vehicleIndex],
+                        recoveryDistance
+                    );
+            }
+
+            renderS = recoveryStartS +
+                GetRecoveryLongitudinalOffset(vehicleIndex, renderLaneChangeProgress, recoveryDistance);
+
+            laneChangeReverseStartS[vehicleIndex] = recoveryStartS;
+            vehicleS[vehicleIndex] = renderS;
+        }
+        else
+        {
+            laneChangeReverseStartS[vehicleIndex] = renderS;
+        }
+
+        bool renderingInReverse = IsReversePhase(renderReverseManeuver, renderLaneChangeProgress);
+
+        if (previousRenderValid && previousRenderedLaneId == laneId)
+        {
+            float signedRenderedAdvance = (renderS - previousRenderedS) * (renderingInReverse ? -1f : 1f);
+
+            if (signedRenderedAdvance < 0f)
+            {
+                // 지연되거나 양자화된 스냅샷에 의한 원격 차량의 화면상 위치 되감기 방지
+                // 소유권자 상태가 따라올 때까지 전체 경로 자세 유지
+                // S만 유지한 채 횡진행도를 늘릴 때 발생하는 차체 회전과 옆 미끄러짐 방지
+                renderS = previousRenderedS;
+
+                if (sameRenderedLaneChange)
+                {
+                    renderLaneChangeProgress = previousRenderedProgress;
+
+                    if (renderReverseManeuver)
+                    {
+                        laneChangeReverseStartS[vehicleIndex] = previousReverseStartS;
+                    }
+                }
+                else if (renderLaneChangeActive && !previousLaneChangeActive)
+                {
+                    // 새로 수신한 기동이 횡방향 보정만으로 시작되는 문제 방지
+                    renderLaneChangeProgress = 0f;
+                }
+            }
+        }
+
+        vehicleS[vehicleIndex] = renderS;
+        vehicleSpeeds[vehicleIndex] = renderSpeed;
+        vehicleAccelerations[vehicleIndex] = Mathf.Lerp(
+            snapshotPreviousAccelerations[vehicleIndex],
+            snapshotNextAccelerations[vehicleIndex],
+            interpolation
+        );
+        speedFactors[vehicleIndex] = renderSpeedFactor;
+        laneChangeProgress[vehicleIndex] = renderLaneChangeProgress;
+        laneChangePreparing[vehicleIndex] =
+            renderLaneChangeActive && !renderReverseManeuver && renderLaneChangeProgress <= 0.0001f &&
+            snapshotNextAccelerations[vehicleIndex] < -0.05f;
+
+        ApplyVehiclePose(
+            vehicleIndex,
+            laneId,
+            renderS,
+            renderLaneChangeActive,
+            renderReverseManeuver,
+            renderTargetLaneId,
+            renderLaneChangeProgress,
+            renderSpeed
+        );
+
+        countLaneChange = renderLaneChangeActive;
+
+        ApplyVehicleMotionVisuals(vehicleIndex, laneId, renderSpeed, renderSpeedFactor);
+
+        return true;
     }
 
     private void ApplyAuthorityVisuals()
@@ -8178,7 +8160,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     {
         if (!reverseManeuver)
         {
-            return SmoothLaneChange01(progress);
+            return TrafficRecoveryMath.SmoothLaneChange01(progress);
         }
 
         float preparationEnd = GetRecoveryPreparationEndProgress();
@@ -8209,13 +8191,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             -0.5f,
             1.1f
         );
-    }
-
-    private float SmoothLaneChange01(float t)
-    {
-        float clampedT = Mathf.Clamp01(t);
-
-        return clampedT * clampedT * clampedT * (clampedT * (clampedT * 6f - 15f) + 10f);
     }
 
     private void ApplyVehicleScale(int vehicleIndex, int laneId, float renderS)
