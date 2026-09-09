@@ -1,4 +1,4 @@
-﻿
+
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Components;
@@ -79,14 +79,12 @@ public class PanelFly : UdonSharpBehaviour
         panelCollider = GetComponent<BoxCollider>();
         if (starPanelParticle != null)
         {
-            starPanelParticleRenderer =
-                starPanelParticle.GetComponent<Renderer>();
+            starPanelParticleRenderer = starPanelParticle.GetComponent<Renderer>();
         }
 
         if (starFlashParticle != null)
         {
-            starFlashParticleRenderer =
-                starFlashParticle.GetComponent<Renderer>();
+            starFlashParticleRenderer = starFlashParticle.GetComponent<Renderer>();
         }
 
         panelRenderers = GetComponentsInChildren<Renderer>(true);
@@ -94,8 +92,7 @@ public class PanelFly : UdonSharpBehaviour
         for (int i = 0; i < panelRenderers.Length; i++)
         {
             Renderer panelRenderer = panelRenderers[i];
-            initialRendererEnabled[i] = panelRenderer != null &&
-                panelRenderer.enabled;
+            initialRendererEnabled[i] = panelRenderer != null && panelRenderer.enabled;
         }
 
         panelColliders = GetComponentsInChildren<Collider>(true);
@@ -103,8 +100,7 @@ public class PanelFly : UdonSharpBehaviour
         for (int i = 0; i < panelColliders.Length; i++)
         {
             Collider childCollider = panelColliders[i];
-            initialColliderEnabled[i] = childCollider != null &&
-                childCollider.enabled;
+            initialColliderEnabled[i] = childCollider != null && childCollider.enabled;
         }
 
         initialPosition = transform.position;
@@ -122,9 +118,7 @@ public class PanelFly : UdonSharpBehaviour
         float probeInterval = Mathf.Max(0.04f, vehicleProbeInterval);
         nextVehicleProbeTime = Time.time + probeInterval;
 
-        if (Time.time < nextImpactTime ||
-            !Networking.IsOwner(gameObject) ||
-            trafficManager == null ||
+        if (Time.time < nextImpactTime || !Networking.IsOwner(gameObject) || trafficManager == null ||
             panelCollider == null ||
             !panelCollider.enabled ||
             !gameObject.activeInHierarchy)
@@ -135,19 +129,14 @@ public class PanelFly : UdonSharpBehaviour
         Vector3 scale = transform.lossyScale;
         Vector3 halfExtents = Vector3.Scale(
             panelCollider.size * 0.5f,
-            new Vector3(
-                Mathf.Abs(scale.x),
-                Mathf.Abs(scale.y),
-                Mathf.Abs(scale.z)
-            )
+            new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z))
         );
 
         // 프레임 사이의 접촉 누락 보완을 위한 작은 여유 추가
         // 화면상 떨어진 차량까지 충돌로 판정하지 않도록 여유 크기 제한
         halfExtents += new Vector3(0.015f, 0.015f, 0.015f);
 
-        Vector3 probeCenter =
-            transform.TransformPoint(panelCollider.center);
+        Vector3 probeCenter = transform.TransformPoint(panelCollider.center);
         int hitCount = Physics.OverlapBoxNonAlloc(
             probeCenter,
             halfExtents,
@@ -160,10 +149,7 @@ public class PanelFly : UdonSharpBehaviour
 
         if (requiresSweepTest)
         {
-            float maximumSweep = Mathf.Max(
-                0.1f,
-                maximumVehicleProbeSweep
-            );
+            float maximumSweep = Mathf.Max(0.1f, maximumVehicleProbeSweep);
             hitCount = Physics.OverlapBoxNonAlloc(
                 probeCenter,
                 halfExtents + Vector3.one * maximumSweep,
@@ -186,8 +172,7 @@ public class PanelFly : UdonSharpBehaviour
                 continue;
             }
 
-            Vector3 velocity =
-                trafficManager.GetCollisionVehicleVelocity(hit.transform);
+            Vector3 velocity = trafficManager.GetCollisionVehicleVelocity(hit.transform);
             float speedSquared = velocity.sqrMagnitude;
             if (speedSquared <= bestSpeedSquared)
             {
@@ -198,16 +183,12 @@ public class PanelFly : UdonSharpBehaviour
             {
                 float speed = Mathf.Sqrt(speedSquared);
                 float castDistance = Mathf.Clamp(
-                    speed * (probeInterval + 0.025f) +
-                        Mathf.Max(0f, vehicleProbeSweepPadding),
+                    speed * (probeInterval + 0.025f) + Mathf.Max(0f, vehicleProbeSweepPadding),
                     0.05f,
                     Mathf.Max(0.1f, maximumVehicleProbeSweep)
                 );
                 Vector3 castDirection = velocity / speed;
-                if (Vector3.Dot(
-                        hit.bounds.center - probeCenter,
-                        castDirection
-                    ) < 0f)
+                if (Vector3.Dot(hit.bounds.center - probeCenter, castDirection) < 0f)
                 {
                     castDirection = -castDirection;
                 }
@@ -242,20 +223,13 @@ public class PanelFly : UdonSharpBehaviour
 
         if (bestSpeedSquared > 0.0001f)
         {
-            HandleVehicleImpact(
-                bestVelocity,
-                bestVehiclePosition,
-                Vector3.zero,
-                false
-            );
+            HandleVehicleImpact(bestVelocity, bestVehiclePosition, Vector3.zero, false);
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer != 24 ||
-            !Networking.IsOwner(gameObject) ||
-            Time.time < nextImpactTime)
+        if (collision.gameObject.layer != 24 || !Networking.IsOwner(gameObject) || Time.time < nextImpactTime)
         {
             return;
         }
@@ -263,9 +237,7 @@ public class PanelFly : UdonSharpBehaviour
         Vector3 vehicleVelocity = Vector3.zero;
         if (trafficManager != null)
         {
-            vehicleVelocity = trafficManager.GetCollisionVehicleVelocity(
-                collision.transform
-            );
+            vehicleVelocity = trafficManager.GetCollisionVehicleVelocity(collision.transform);
         }
 
         if (vehicleVelocity.sqrMagnitude < 0.0001f)
@@ -280,12 +252,7 @@ public class PanelFly : UdonSharpBehaviour
             contactNormal = collision.GetContact(0).normal;
         }
 
-        HandleVehicleImpact(
-            vehicleVelocity,
-            collision.transform.position,
-            contactNormal,
-            hasContactNormal
-        );
+        HandleVehicleImpact(vehicleVelocity, collision.transform.position, contactNormal, hasContactNormal);
     }
 
     private void HandleVehicleImpact(
@@ -299,8 +266,7 @@ public class PanelFly : UdonSharpBehaviour
             return;
         }
 
-        nextImpactTime = Time.time +
-            Mathf.Max(0.1f, repeatedImpactCooldown);
+        nextImpactTime = Time.time + Mathf.Max(0.1f, repeatedImpactCooldown);
 
         // 플레이어가 패널을 든 상태에서도 겹침 검사 실행
         // 힘 적용 또는 원위치 복귀 전에 Pickup 해제
@@ -318,57 +284,39 @@ public class PanelFly : UdonSharpBehaviour
         float impactSpeed = collisionSpeed;
         if (hasContactNormal)
         {
-            impactSpeed = Mathf.Abs(Vector3.Dot(
-                vehicleVelocity,
-                contactNormal.normalized
-            ));
+            impactSpeed = Mathf.Abs(Vector3.Dot(vehicleVelocity, contactNormal.normalized));
         }
         else
         {
-            Vector3 approachDirection =
-                transform.position - vehiclePosition;
+            Vector3 approachDirection = transform.position - vehiclePosition;
             approachDirection.y = 0f;
             if (approachDirection.sqrMagnitude > 0.0001f)
             {
-                impactSpeed = Mathf.Abs(Vector3.Dot(
-                    vehicleVelocity,
-                    approachDirection.normalized
-                ));
+                impactSpeed = Mathf.Abs(Vector3.Dot(vehicleVelocity, approachDirection.normalized));
             }
         }
 
-        float highImpactThreshold =
-            highImpactThresholdKmh / 3.6f;
+        float highImpactThreshold = highImpactThresholdKmh / 3.6f;
 
-        if (Time.time >= nextHighImpactTime &&
-            impactSpeed >= highImpactThreshold)
+        if (Time.time >= nextHighImpactTime && impactSpeed >= highImpactThreshold)
         {
             nextHighImpactTime = Time.time + highImpactCooldown;
 
             float directionX = vehicleVelocity.x;
             if (Mathf.Abs(directionX) < 0.01f)
             {
-                directionX = transform.position.x -
-                    vehiclePosition.x;
+                directionX = transform.position.x - vehiclePosition.x;
             }
 
-            Vector3 launchDirection = directionX >= 0f
-                ? Vector3.right
-                : Vector3.left;
+            Vector3 launchDirection = directionX >= 0f ? Vector3.right : Vector3.left;
             Vector3 launchPosition = transform.position;
-            Vector3 launchVelocity =
-                launchDirection * starHorizontalSpeed +
-                Vector3.up * starUpwardSpeed;
+            Vector3 launchVelocity = launchDirection * starHorizontalSpeed + Vector3.up * starUpwardSpeed;
             Quaternion launchRotation = transform.rotation;
 
             HidePanelForHighImpact();
 
             // 숨긴 실제 패널 대신 같은 외형의 파티클 비행
-            EmitStarPanel(
-                launchPosition,
-                launchVelocity,
-                launchRotation
-            );
+            EmitStarPanel(launchPosition, launchVelocity, launchRotation);
             SendCustomNetworkEvent(
                 NetworkEventTarget.Others,
                 nameof(RemoteStarLaunch),
@@ -377,10 +325,7 @@ public class PanelFly : UdonSharpBehaviour
                 launchRotation
             );
 
-            nextImpactTime = Mathf.Max(
-                nextImpactTime,
-                nextHighImpactTime
-            );
+            nextImpactTime = Mathf.Max(nextImpactTime, nextHighImpactTime);
             RespawnAtWorldStart();
             return;
         }
@@ -388,9 +333,7 @@ public class PanelFly : UdonSharpBehaviour
         ApplySoftBounce(vehicleVelocity, vehiclePosition);
     }
 
-    private void ApplySoftBounce(
-        Vector3 vehicleVelocity,
-        Vector3 vehiclePosition)
+    private void ApplySoftBounce(Vector3 vehicleVelocity, Vector3 vehiclePosition)
     {
         if (rb == null)
         {
@@ -410,16 +353,11 @@ public class PanelFly : UdonSharpBehaviour
             planarDirection = Vector3.right;
         }
 
-        Vector3 bounceDirection =
-            (planarDirection.normalized + Vector3.up * 0.75f)
-                .normalized;
+        Vector3 bounceDirection = (planarDirection.normalized + Vector3.up * 0.75f) .normalized;
 
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.AddForce(
-            bounceDirection * bounceForce,
-            ForceMode.Impulse
-        );
+        rb.AddForce(bounceDirection * bounceForce, ForceMode.Impulse);
     }
 
     private void RespawnAtWorldStart()
@@ -448,10 +386,7 @@ public class PanelFly : UdonSharpBehaviour
         else
         {
             // ObjectSync가 없는 예외적인 패널에만 Start 시점 좌표 사용
-            transform.SetPositionAndRotation(
-                initialPosition,
-                initialRotation
-            );
+            transform.SetPositionAndRotation(initialPosition, initialRotation);
         }
 
         if (rb != null)
@@ -487,17 +422,10 @@ public class PanelFly : UdonSharpBehaviour
     /// <param name="launchVelocity">별 파티클의 초기 월드 속도</param>
     /// <param name="launchRotation">별 파티클의 초기 월드 회전</param>
     [NetworkCallable]
-    public void RemoteStarLaunch(
-        Vector3 launchPosition,
-        Vector3 launchVelocity,
-        Quaternion launchRotation)
+    public void RemoteStarLaunch(Vector3 launchPosition, Vector3 launchVelocity, Quaternion launchRotation)
     {
         HidePanelForHighImpact();
-        EmitStarPanel(
-            launchPosition,
-            launchVelocity,
-            launchRotation
-        );
+        EmitStarPanel(launchPosition, launchVelocity, launchRotation);
     }
 
     private void HidePanelForHighImpact()
@@ -511,17 +439,8 @@ public class PanelFly : UdonSharpBehaviour
             rb.isKinematic = true;
         }
 
-        float hiddenDuration = Mathf.Max(
-            0.2f,
-            Mathf.Max(
-                starFlightDuration,
-                highImpactHiddenDuration
-            )
-        );
-        SendCustomEventDelayedSeconds(
-            nameof(RestorePanelAfterHighImpact),
-            hiddenDuration
-        );
+        float hiddenDuration = Mathf.Max(0.2f, Mathf.Max(starFlightDuration, highImpactHiddenDuration));
+        SendCustomEventDelayedSeconds(nameof(RestorePanelAfterHighImpact), hiddenDuration);
     }
 
     /// <summary>
@@ -546,15 +465,13 @@ public class PanelFly : UdonSharpBehaviour
         {
             Renderer panelRenderer = panelRenderers[i];
 
-            if (panelRenderer == null ||
-                panelRenderer == starPanelParticleRenderer ||
+            if (panelRenderer == null || panelRenderer == starPanelParticleRenderer ||
                 panelRenderer == starFlashParticleRenderer)
             {
                 continue;
             }
 
-            panelRenderer.enabled = visible &&
-                initialRendererEnabled[i];
+            panelRenderer.enabled = visible && initialRendererEnabled[i];
         }
 
         for (int i = 0; i < panelColliders.Length; i++)
@@ -566,41 +483,30 @@ public class PanelFly : UdonSharpBehaviour
                 continue;
             }
 
-            childCollider.enabled = visible &&
-                initialColliderEnabled[i];
+            childCollider.enabled = visible && initialColliderEnabled[i];
         }
     }
 
-    private void EmitStarPanel(
-        Vector3 launchPosition,
-        Vector3 launchVelocity,
-        Quaternion launchRotation)
+    private void EmitStarPanel(Vector3 launchPosition, Vector3 launchVelocity, Quaternion launchRotation)
     {
         if (starPanelParticle == null)
         {
             return;
         }
 
-        ParticleSystem.EmitParams emitParams =
-            new ParticleSystem.EmitParams();
+        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
         emitParams.position = launchPosition;
         emitParams.velocity = launchVelocity;
         emitParams.startLifetime = starFlightDuration;
         emitParams.startSize = 1f;
-        emitParams.rotation3D =
-            launchRotation.eulerAngles * Mathf.Deg2Rad;
+        emitParams.rotation3D = launchRotation.eulerAngles * Mathf.Deg2Rad;
         starPanelParticle.Play(false);
         starPanelParticle.Emit(emitParams, 1);
 
         float flashDelay = starFlightDuration * 0.82f;
         pendingStarPosition =
-            launchPosition +
-            launchVelocity * flashDelay +
-            Physics.gravity * 0.5f * flashDelay * flashDelay;
-        SendCustomEventDelayedSeconds(
-            nameof(_PlayStarFlash),
-            flashDelay
-        );
+            launchPosition + launchVelocity * flashDelay + Physics.gravity * 0.5f * flashDelay * flashDelay;
+        SendCustomEventDelayedSeconds(nameof(_PlayStarFlash), flashDelay);
     }
 
     /// <summary>
@@ -630,10 +536,7 @@ public class PanelFly : UdonSharpBehaviour
         EmitFlashBurst(0, 3);
 
         starTwinkleStep = 0;
-        SendCustomEventDelayedSeconds(
-            nameof(_PlaySmallStarTwinkle),
-            0.14f
-        );
+        SendCustomEventDelayedSeconds(nameof(_PlaySmallStarTwinkle), 0.14f);
     }
 
     /// <summary>
@@ -652,10 +555,7 @@ public class PanelFly : UdonSharpBehaviour
 
         if (starTwinkleStep < 3)
         {
-            SendCustomEventDelayedSeconds(
-                nameof(_PlaySmallStarTwinkle),
-                0.14f
-            );
+            SendCustomEventDelayedSeconds(nameof(_PlaySmallStarTwinkle), 0.14f);
         }
     }
 
@@ -668,8 +568,7 @@ public class PanelFly : UdonSharpBehaviour
             float y = 1f - 2f * (sample + 0.5f) / 6f;
             float radius = Mathf.Sqrt(Mathf.Max(0f, 1f - y * y));
             float angle = sample * 2.399963f;
-            Vector3 direction = new Vector3(
-                Mathf.Cos(angle) * radius, y, Mathf.Sin(angle) * radius);
+            Vector3 direction = new Vector3(Mathf.Cos(angle) * radius, y, Mathf.Sin(angle) * radius);
             float variation = (i % 5) / 4f;
             float tint = sample / 5f;
             // 역 건물의 따뜻한 조명에 맞춘 저채도 골드~아이보리~하늘색.
@@ -697,18 +596,13 @@ public class PanelFly : UdonSharpBehaviour
         float rotationDegrees,
         Color color)
     {
-        ParticleSystem.EmitParams emitParams =
-            new ParticleSystem.EmitParams();
+        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
         emitParams.position = position;
         emitParams.velocity = velocity;
         emitParams.startLifetime = lifetime;
         emitParams.startSize = size;
         emitParams.startColor = color;
-        emitParams.rotation3D = new Vector3(
-            0f,
-            0f,
-            rotationDegrees * Mathf.Deg2Rad
-        );
+        emitParams.rotation3D = new Vector3(0f, 0f, rotationDegrees * Mathf.Deg2Rad);
         starFlashParticle.Emit(emitParams, 1);
     }
 }
