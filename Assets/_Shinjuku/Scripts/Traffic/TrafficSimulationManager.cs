@@ -526,7 +526,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private int[] sourceLaneVehicleCounts = new int[0];
     private int[] reservationLaneVehicleOrder = new int[0];
     private int[] reservationLaneVehicleCounts = new int[0];
-    private int[] cachedSourceLeaderIndices = new int[0];
 
     private int[] vehicleLaneIds = new int[0];
     private int[] sampleHints = new int[0];
@@ -1882,7 +1881,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             new int[laneCacheCapacity];
         reservationLaneVehicleCounts =
             new int[TrafficLaneDatabase.FixedLaneCount];
-        cachedSourceLeaderIndices = new int[slotCount];
 
         vehicleLaneIds = new int[slotCount];
         sampleHints = new int[slotCount];
@@ -2076,7 +2074,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             vehicleSpawnGeneration[i] = false;
             processedSlots[i] = false;
             signalCommittedToCross[i] = false;
-            cachedSourceLeaderIndices[i] = -1;
 
             vehicleLaneIds[i] = -1;
             sampleHints[i] = -1;
@@ -2277,75 +2274,23 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         TryFillVehicleSlots();
     }
 
-    private void SimulateLane(
-        int laneId,
-        float deltaTime)
+    private void SimulateLane(int laneId, float deltaTime)
     {
-        if (laneVehicleCacheReady &&
-            laneId >= 0 &&
-            laneId < sourceLaneVehicleCounts.Length)
+        // SimulateStep에서 정렬한 캐시를 앞 차량부터 처리한다.
+        if (!laneVehicleCacheReady || laneId < 0 || laneId >= sourceLaneVehicleCounts.Length) return;
+        int count = sourceLaneVehicleCounts[laneId];
+        int offset = laneId * slotCount;
+
+        for (int orderIndex = count - 1; orderIndex >= 0; orderIndex--)
         {
-            int count = sourceLaneVehicleCounts[laneId];
-            int offset = laneId * slotCount;
+            int vehicleIndex = sourceLaneVehicleOrder[offset + orderIndex];
+            if (vehicleIndex < 0 || vehicleIndex >= slotCount || !vehicleActive[vehicleIndex] ||
+                processedSlots[vehicleIndex] || vehicleLaneIds[vehicleIndex] != laneId) continue;
 
-            for (int orderIndex = count - 1;
-                 orderIndex >= 0;
-                 orderIndex--)
-            {
-                int vehicleIndex =
-                    sourceLaneVehicleOrder[offset + orderIndex];
-
-                if (vehicleIndex < 0 ||
-                    vehicleIndex >= slotCount ||
-                    !vehicleActive[vehicleIndex] ||
-                    processedSlots[vehicleIndex] ||
-                    vehicleLaneIds[vehicleIndex] != laneId)
-                {
-                    continue;
-                }
-
-                processedSlots[vehicleIndex] = true;
-                AdvanceVehicle(vehicleIndex, deltaTime);
-            }
-
-            return;
-        }
-
-        while (true)
-        {
-            int nextVehicleIndex = -1;
-            float greatestS = -1000000f;
-
-            for (int i = 0; i < slotCount; i++)
-            {
-                if (!vehicleActive[i] ||
-                    processedSlots[i] ||
-                    vehicleLaneIds[i] != laneId)
-                {
-                    continue;
-                }
-
-                if (previousVehicleS[i] > greatestS)
-                {
-                    greatestS = previousVehicleS[i];
-                    nextVehicleIndex = i;
-                }
-            }
-
-            if (nextVehicleIndex < 0)
-            {
-                break;
-            }
-
-            processedSlots[nextVehicleIndex] = true;
-
-            AdvanceVehicle(
-                nextVehicleIndex,
-                deltaTime
-            );
+            processedSlots[vehicleIndex] = true;
+            AdvanceVehicle(vehicleIndex, deltaTime);
         }
     }
-
     private void BuildLaneVehicleCaches()
     {
         int laneCount = Mathf.Min(
@@ -2363,8 +2308,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         for (int i = 0; i < slotCount; i++)
         {
-            cachedSourceLeaderIndices[i] = -1;
-
             if (!vehicleActive[i])
             {
                 continue;
@@ -2741,11 +2684,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             currentSpeed
         );
 
-        float detectedPlayerStopS = GetPlayerStopS(
-            vehicleIndex,
-            laneId,
-            oldS
-        );
+        float detectedPlayerStopS = GetPlayerStopS(vehicleIndex);
 
         float playerStopS = ApplyPlayerObstacleReleaseHold(
             vehicleIndex,
@@ -3180,10 +3119,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     // 물리 장애물 감지와 재출발 제어
     // -------------------------------------------------------------------------
 
-    private float GetPlayerStopS(
-        int vehicleIndex,
-        int laneId,
-        float currentS)
+    private float GetPlayerStopS(int vehicleIndex)
     {
         if (vehicleIndex < 0 ||
             vehicleIndex >= physicsObstacleStopS.Length)
@@ -7501,14 +7437,6 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             nearestS = candidateS;
             nearestIndex = i;
-        }
-
-        if (vehicleIndex >= 0 &&
-            vehicleIndex < cachedSourceLeaderIndices.Length &&
-            laneId == vehicleLaneIds[vehicleIndex])
-        {
-            cachedSourceLeaderIndices[vehicleIndex] =
-                nearestIndex;
         }
 
         return nearestIndex;
