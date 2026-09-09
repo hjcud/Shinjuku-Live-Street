@@ -1,6 +1,6 @@
 name: 不具合を報告（日本語）
 description: ワールド内で発生した不具合や想定外の動作をご報告ください。
-title: "[不具合] "
+title: "[Bug] "
 labels:
   - bug
 assignees: []
