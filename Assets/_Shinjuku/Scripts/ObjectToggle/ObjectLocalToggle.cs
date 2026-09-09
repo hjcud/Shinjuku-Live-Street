@@ -31,26 +31,10 @@ public class ObjectLocalToggle : UdonSharpBehaviour
     void ObjectToggle()
     {
         isObjectActive = !isObjectActive;
-        
-        if (isObjectActive)
-        {
-            SwitchOn.SetActive(false);
-            SwitchOff.SetActive(true);
-
-            foreach (GameObject obj in targetObjects)
-            {
-                obj.SetActive(false);
-            }
-        }
-        else
-        {
-            SwitchOn.SetActive(true);
-            SwitchOff.SetActive(false);
-
-            foreach (GameObject obj in targetObjects)
-            {
-                obj.SetActive(true);
-            }
-        }
+        bool active = !isObjectActive;
+        SwitchOn.SetActive(active);
+        SwitchOff.SetActive(!active);
+        foreach (GameObject obj in targetObjects)
+            obj.SetActive(active);
     }
 }

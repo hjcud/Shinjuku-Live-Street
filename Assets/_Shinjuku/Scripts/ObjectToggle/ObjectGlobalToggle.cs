@@ -18,9 +18,8 @@ public class ObjectGlobalToggle : UdonSharpBehaviour
 
     void Start()
     {
-        targetObject.SetActive(activeDefault);
-        isObjectActive = targetObject.activeSelf;
-        ButtonText.color = isObjectActive ? new Color(171/255f , 171/255f, 171/255f) : new Color(64/255f , 64/255f, 64/255f);
+        isObjectActive = activeDefault;
+        ToggleTarget();
     }
 
     public override void OnPlayerJoined(VRCPlayerApi player)
