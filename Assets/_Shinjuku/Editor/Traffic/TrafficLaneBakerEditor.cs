@@ -389,7 +389,7 @@ public class TrafficLaneBakerEditor : EditorWindow
                  laneId < TrafficLaneDatabase.FixedLaneCount;
                  laneId++)
             {
-                Transform laneSource = RequireChild(
+                Transform laneSource = RequirePath(
                     laneSources,
                     LaneNames[laneId]
                 );
@@ -928,7 +928,7 @@ public class TrafficLaneBakerEditor : EditorWindow
              laneId < SpawnMarkerNames.Length;
              laneId++)
         {
-            Transform marker = RequireChild(
+            Transform marker = RequirePath(
                 container,
                 SpawnMarkerNames[laneId]
             );
@@ -958,7 +958,7 @@ public class TrafficLaneBakerEditor : EditorWindow
              laneId < DespawnMarkerNames.Length;
              laneId++)
         {
-            Transform marker = RequireChild(
+            Transform marker = RequirePath(
                 container,
                 DespawnMarkerNames[laneId]
             );
@@ -983,12 +983,12 @@ public class TrafficLaneBakerEditor : EditorWindow
             -1f, -1f, -1f, -1f, -1f, -1f, -1f
         };
 
-        Transform stopLineL = RequireChild(
+        Transform stopLineL = RequirePath(
             container,
             "StopLine_L"
         );
 
-        Transform stopLineR = RequireChild(
+        Transform stopLineR = RequirePath(
             container,
             "StopLine_R"
         );
@@ -1122,12 +1122,12 @@ public class TrafficLaneBakerEditor : EditorWindow
         string endMarkerName,
         List<string> warnings)
     {
-        Transform startMarker = RequireChild(
+        Transform startMarker = RequirePath(
             container,
             startMarkerName
         );
 
-        Transform endMarker = RequireChild(
+        Transform endMarker = RequirePath(
             container,
             endMarkerName
         );
@@ -1470,23 +1470,6 @@ public class TrafficLaneBakerEditor : EditorWindow
         {
             throw new InvalidOperationException(
                 root.name + "/" + path +
-                "를 찾지 못했습니다."
-            );
-        }
-
-        return result;
-    }
-
-    private Transform RequireChild(
-        Transform parent,
-        string childName)
-    {
-        Transform result = parent.Find(childName);
-
-        if (result == null)
-        {
-            throw new InvalidOperationException(
-                parent.name + "/" + childName +
                 "를 찾지 못했습니다."
             );
         }

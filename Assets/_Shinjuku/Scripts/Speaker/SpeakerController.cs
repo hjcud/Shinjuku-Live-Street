@@ -223,8 +223,7 @@ public class SpeakerController : UdonSharpBehaviour
         Debug.Log("[SpeakerController] Speaker Local Returning");
         Transform tempTransform = transform;
         var parent = tempTransform.parent;
-        tempTransform.position = parent.position;
-        tempTransform.rotation = parent.rotation;
+        tempTransform.SetPositionAndRotation(parent.position, parent.rotation);
         isSpeakerTaken = false;
         placementClosed = true;
         placementOwner = null;
@@ -449,8 +448,7 @@ public class SpeakerController : UdonSharpBehaviour
         departedCleanupPending = false;
         nextDistanceCheckTime = 0f;
         Transform tempTransform = transform;
-        tempTransform.position = targetPosition;
-        tempTransform.rotation = targetRotation;
+        tempTransform.SetPositionAndRotation(targetPosition, targetRotation);
         UpdateSpeakerData();
     }
 
@@ -473,16 +471,9 @@ public class SpeakerController : UdonSharpBehaviour
         // 최초 배치/반환/늦은 참가자 복원 모두 실제 슬롯 상태에서 수량 계산
         speakerManager.RecalculateUsableCount();
 
-        if (IsLocalPerformer() && Networking.IsOwner(Networking.LocalPlayer, this.gameObject))
-        {
-            foreach (GameObject obj in ownerObjects)
-                obj.SetActive(true);
-        }
-        else
-        {
-            foreach (GameObject obj in ownerObjects)
-                obj.SetActive(false);
-        }
+        bool showOwnerObjects = IsLocalPerformer() && Networking.IsOwner(Networking.LocalPlayer, this.gameObject);
+        foreach (GameObject obj in ownerObjects)
+            obj.SetActive(showOwnerObjects);
     }
 
     public bool IsLocalPerformer()

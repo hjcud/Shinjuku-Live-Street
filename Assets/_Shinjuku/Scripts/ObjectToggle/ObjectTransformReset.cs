@@ -30,8 +30,7 @@ public class ObjectTransformReset : UdonSharpBehaviour
         {
             if (objects[i] != null)
             {
-                objects[i].position = objects[i].parent.transform.position;
-                objects[i].rotation = objects[i].parent.transform.rotation;
+                objects[i].SetPositionAndRotation(objects[i].parent.position, objects[i].parent.rotation);
             }
         }
     }

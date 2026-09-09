@@ -424,6 +424,15 @@ public class PanelFly : UdonSharpBehaviour
 
     private void RespawnAtWorldStart()
     {
+        ResetWorldStartPose();
+
+        // 다음 프레임에 복귀를 확정해 충돌 물리 프레임과 Rigidbody 보간에 의한
+        // 복구 위치 덮어쓰기 방지
+        SendCustomEventDelayedFrames(nameof(FinalizeWorldStartRespawn), 1);
+    }
+
+    private void ResetWorldStartPose()
+    {
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
@@ -451,12 +460,6 @@ public class PanelFly : UdonSharpBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
-        // 다음 프레임에 복귀를 확정해 충돌 물리 프레임과 Rigidbody 보간에 의한
-        // 복구 위치 덮어쓰기 방지
-        SendCustomEventDelayedFrames(
-            nameof(FinalizeWorldStartRespawn),
-            1
-        );
     }
 
     /// <summary>
@@ -470,29 +473,9 @@ public class PanelFly : UdonSharpBehaviour
             return;
         }
 
+        ResetWorldStartPose();
         if (rb != null)
         {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-
-        if (objectSync != null)
-        {
-            objectSync.Respawn();
-            objectSync.FlagDiscontinuity();
-        }
-        else
-        {
-            transform.SetPositionAndRotation(
-                initialPosition,
-                initialRotation
-            );
-        }
-
-        if (rb != null)
-        {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
             rb.Sleep();
         }
     }
