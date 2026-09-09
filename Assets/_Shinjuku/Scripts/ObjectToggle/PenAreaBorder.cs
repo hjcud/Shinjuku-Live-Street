@@ -19,7 +19,7 @@ namespace QvPen.UdonScript
 
         private void Start()
         {
-            // Cuding Edit: 기존 Manager 연결에서 해당 Pen만 캐시하여 다른 소품은 무시
+            // 기존 Manager 연결에서 해당 Pen만 캐시하여 다른 소품은 무시
             if (Utilities.IsValid(qvPen_Manager))
                 targetPen = (QvPen_Pen)qvPen_Manager.GetProgramVariable("pen");
         }

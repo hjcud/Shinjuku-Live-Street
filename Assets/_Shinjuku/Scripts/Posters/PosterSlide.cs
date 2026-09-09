@@ -31,7 +31,7 @@ public class PosterSlide : UdonSharpBehaviour
 
     void Start()
     {
-        // Cuding Edit: 잘못된 설정에서는 Update까지 진행하지 않고 한 번만 오류 안내
+        // 잘못된 설정에서는 Update까지 진행하지 않고 한 번만 오류 안내
         if (sprites == null || sprites.Length == 0 || posterPrefab == null || createTarget == null)
         {
             Debug.LogError("[PosterSlide] Sprite, prefab and create target are required.");
@@ -48,7 +48,7 @@ public class PosterSlide : UdonSharpBehaviour
         slideDuration = Mathf.Max(0.01f, slideDuration);
         interval = Mathf.Max(0.1f, interval);
 
-        // Cuding Edit: 시작할 때만 출력 생성 및 컴포넌트 캐시. 교체 중 생성/삭제는 하지 않음
+        // 시작할 때만 출력 생성 및 컴포넌트 캐시. 교체 중 생성/삭제는 하지 않음
         currentPoster = Instantiate(posterPrefab, createTarget).GetComponent<Image>();
         currentRect = currentPoster.rectTransform;
         currentPoster.sprite = sprites[0];

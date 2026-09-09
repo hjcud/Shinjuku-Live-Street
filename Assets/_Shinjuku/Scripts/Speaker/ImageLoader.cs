@@ -35,7 +35,7 @@ public class ImageLoader : UdonSharpBehaviour
         LoadImage();
     }
 
-    // Cuding Edit: 입장/역직렬화 순서와 관계없이 출력 참조와 원래 표시 크기를 한 번만 준비
+    // 입장/역직렬화 순서와 관계없이 출력 참조와 원래 표시 크기를 한 번만 준비
     private bool Initialize()
     {
         if (initialized) return true;
@@ -56,7 +56,7 @@ public class ImageLoader : UdonSharpBehaviour
     [NetworkCallable]
     public void ResetTex()
     {
-        // Cuding Edit: All 이벤트를 받아도 이미지 소유자 한 명만 영속 상태 변경
+        // All 이벤트를 받아도 이미지 소유자 한 명만 영속 상태 변경
         if (!Networking.IsOwner(gameObject)) return;
         syncedUrl = VRCUrl.Empty;
         imageRevision++;
@@ -92,7 +92,7 @@ public class ImageLoader : UdonSharpBehaviour
         appliedRevision = imageRevision;
         appliedUrl = url;
 
-        // Cuding Edit: 이전 요청과 텍스처는 교체 시 해제. 같은 URL 재요청도 새 핸들로 구분
+        // 이전 요청과 텍스처는 교체 시 해제. 같은 URL 재요청도 새 핸들로 구분
         ClearDownload();
         if (url == "")
         {
@@ -111,7 +111,7 @@ public class ImageLoader : UdonSharpBehaviour
     }
     
     public override void OnImageLoadSuccess(IVRCImageDownload result) {
-        // Cuding Edit: 취소/초기화 전의 늦은 응답은 출력과 입력 UI를 변경하지 않음
+        // 취소/초기화 전의 늦은 응답은 출력과 입력 UI를 변경하지 않음
         if (result == null) return;
         if (result != downloadInfo) { result.Dispose(); return; }
         Texture2D tex = result.Result;

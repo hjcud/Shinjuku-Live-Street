@@ -21,8 +21,9 @@ public class SpeakerManager : UdonSharpBehaviour
     [Header("스피커 오브젝트 설정")]
     [SerializeField] private SpeakerController[] speakerControllers;
 
-    // Cuding Edit: 매니저 소유자가 슬롯 배정을 직렬 처리. 배정 중인 슬롯도 빈자리로 재사용하지 않음
+    // 매니저 소유자가 슬롯 배정을 직렬 처리. 배정 중인 슬롯도 빈자리로 재사용하지 않음
     [UdonSynced] private int[] allocatedPlayerIds = new int[0];
+    [UdonSynced] private int[] allocationGenerations = new int[0];
     private bool placementPending;
     private int placementRequestId;
     private Vector3 pendingPlacementPosition;
@@ -225,7 +226,7 @@ public class SpeakerManager : UdonSharpBehaviour
         }
 
         holoSpeaker.transform.position = endPoint;
-        // Cuding Edit: 두 Raycast가 모두 실패하면 영벡터를 설치면으로 취급하지 않음
+        // 두 Raycast가 모두 실패하면 영벡터를 설치면으로 취급하지 않음
         if (!hasSurface)
         {
             SetHoloStatus(true, 1);
@@ -317,7 +318,7 @@ public class SpeakerManager : UdonSharpBehaviour
         _RetryPlacement();
     }
 
-    // Cuding Edit: 소유권 전환 중 승인을 놓쳐도 같은 요청/위치로 재확인. 새 슬롯을 중복 예약하지 않음
+    // 소유권 전환 중 승인을 놓쳐도 같은 요청/위치로 재확인. 새 슬롯을 중복 예약하지 않음
     public void _RetryPlacement()
     {
         if (!placementPending || Time.time < nextPlacementRetryTime) return;
@@ -330,12 +331,15 @@ public class SpeakerManager : UdonSharpBehaviour
 
     private void EnsureAllocationTable()
     {
-        if (allocatedPlayerIds != null && allocatedPlayerIds.Length == speakerControllers.Length) return;
-        allocatedPlayerIds = new int[speakerControllers.Length];
+        bool rebuildOwners = allocatedPlayerIds == null || allocatedPlayerIds.Length != speakerControllers.Length;
+        if (rebuildOwners) allocatedPlayerIds = new int[speakerControllers.Length];
+        if (allocationGenerations == null || allocationGenerations.Length != speakerControllers.Length)
+            allocationGenerations = new int[speakerControllers.Length];
         for (int i = 0; i < speakerControllers.Length; i++)
         {
-            if (speakerControllers[i].isSpeakerTaken)
-                allocatedPlayerIds[i] = Networking.GetOwner(speakerControllers[i].gameObject).playerId;
+            if (rebuildOwners) allocatedPlayerIds[i] = speakerControllers[i].GetPerformerId();
+            // 소유권 인계 시 동기화 배열보다 먼저 본 배치/반환 번호도 보존한다.
+            allocationGenerations[i] = Mathf.Max(allocationGenerations[i], speakerControllers[i].GetPlacementGeneration());
         }
     }
 
@@ -350,32 +354,36 @@ public class SpeakerManager : UdonSharpBehaviour
         int slot = -1;
         for (int i = 0; i < speakerControllers.Length; i++)
         {
+            SpeakerController speaker = speakerControllers[i];
+            // 소유권 인계와 실제 설치를 구분하여 다른 사용자의 설치 제한 방지
+            if (speaker.IsPerformer(caller))
+            {
+                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, -1, position, rotation, 0);
+                return;
+            }
+            if (!speaker.IsAvailableForPlacement()) continue;
             if (allocatedPlayerIds[i] == caller.playerId)
             {
                 // 매니저 소유권 이전 중 응답을 놓친 요청은 기존 예약 슬롯으로 재응답
-                slot = speakerControllers[i].isSpeakerTaken ? -1 : i;
-                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, slot, position, rotation);
+                slot = i;
+                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, slot, position, rotation, allocationGenerations[slot]);
                 return;
             }
-            if (speakerControllers[i].isSpeakerTaken && Networking.GetOwner(speakerControllers[i].gameObject) == caller)
-            {
-                SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, -1, position, rotation);
-                return;
-            }
-            if (slot < 0 && allocatedPlayerIds[i] == 0 && !speakerControllers[i].isSpeakerTaken) slot = i;
+            if (slot < 0 && allocatedPlayerIds[i] == 0 && allocationGenerations[i] < int.MaxValue) slot = i;
         }
         if (slot >= 0)
         {
             allocatedPlayerIds[slot] = caller.playerId;
+            allocationGenerations[slot]++;
             RequestSerialization();
             RecalculateUsableCount();
         }
-        SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, slot, position, rotation);
+        SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, slot, position, rotation, slot >= 0 ? allocationGenerations[slot] : 0);
     }
 
     /// <summary>매니저가 승인한 사용자만 해당 스피커 소유권을 확보하고 위치 전달</summary>
     [NetworkCallable]
-    public void ReceivePlacement(int playerId, int requestId, int slot, Vector3 position, Quaternion rotation)
+    public void ReceivePlacement(int playerId, int requestId, int slot, Vector3 position, Quaternion rotation, int generation)
     {
         if (NetworkCalling.CallingPlayer != Networking.GetOwner(gameObject)) return;
         // 이전 요청의 늦은 승인으로 새 요청 위치가 덮어써지지 않도록 요청 번호 확인
@@ -383,33 +391,35 @@ public class SpeakerManager : UdonSharpBehaviour
         placementPending = false;
         if (slot >= 0 && slot < speakerControllers.Length)
         {
-            if (!speakerControllers[slot]._PlaceGrantedSpeaker(position, rotation))
-                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), slot);
+            if (!speakerControllers[slot]._PlaceGrantedSpeaker(position, rotation, generation))
+                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), slot, generation);
         }
         RecalculateUsableCount();
     }
 
-    public void _ReleaseSpeaker(SpeakerController speaker)
+    public void _ReleaseSpeaker(SpeakerController speaker, int generation)
     {
         for (int i = 0; i < speakerControllers.Length; i++)
             if (speakerControllers[i] == speaker)
             {
-                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), i);
+                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), i, generation);
                 return;
             }
     }
 
     [NetworkCallable]
-    public void ReleaseAllocation(int slot)
+    public void ReleaseAllocation(int slot, int generation)
     {
         if (!Networking.IsOwner(gameObject) || slot < 0 || slot >= speakerControllers.Length) return;
         VRCPlayerApi caller = NetworkCalling.CallingPlayer;
         if (!Utilities.IsValid(caller)) return;
         EnsureAllocationTable();
+        if (generation <= 0 || generation != allocationGenerations[slot]) return;
         int allocated = allocatedPlayerIds[slot];
         if (allocated == 0) return;
-        if (allocated != caller.playerId &&
-            (Utilities.IsValid(VRCPlayerApi.GetPlayerById(allocated)) || caller != Networking.GetOwner(speakerControllers[slot].gameObject))) return;
+        SpeakerController speaker = speakerControllers[slot];
+        if (allocated != caller.playerId && caller != Networking.GetOwner(speaker.gameObject)) return;
+        if (speaker.isSpeakerTaken && !speaker.IsPerformer(caller)) return;
         allocatedPlayerIds[slot] = 0;
         RequestSerialization();
         RecalculateUsableCount();
@@ -419,10 +429,18 @@ public class SpeakerManager : UdonSharpBehaviour
 
     public override void OnOwnershipTransferred(VRCPlayerApi player)
     {
-        // Cuding Edit: 대기 중 요청은 유지. 예약된 마지막 슬롯도 UI 재입력 없이 새 소유자에게 재확인
+        // 대기 중 요청은 유지. 예약된 마지막 슬롯도 UI 재입력 없이 새 소유자에게 재확인
         if (Networking.IsOwner(gameObject))
         {
             EnsureAllocationTable();
+            // 인계받은 오브젝트 소유자가 아닌 실제 설치자의 접속 상태로 배정표 복구
+            for (int i = 0; i < speakerControllers.Length; i++)
+            {
+                if (speakerControllers[i].isSpeakerTaken)
+                    allocatedPlayerIds[i] = speakerControllers[i].GetPerformerId();
+                else if (!Utilities.IsValid(VRCPlayerApi.GetPlayerById(allocatedPlayerIds[i])))
+                    allocatedPlayerIds[i] = 0;
+            }
             RequestSerialization();
         }
         RecalculateUsableCount();
@@ -430,12 +448,23 @@ public class SpeakerManager : UdonSharpBehaviour
 
     public override void OnPlayerLeft(VRCPlayerApi player)
     {
-        if (!Networking.IsOwner(gameObject)) return;
         EnsureAllocationTable();
         bool changed = false;
         for (int i = 0; i < allocatedPlayerIds.Length; i++)
-            if (allocatedPlayerIds[i] == player.playerId) { allocatedPlayerIds[i] = 0; changed = true; }
-        if (changed) { RequestSerialization(); RecalculateUsableCount(); }
+        {
+            if (allocatedPlayerIds[i] != player.playerId) continue;
+            // 같은 숫자 ID의 새 설치가 확인된 슬롯은 이전 접속의 퇴장 처리에서 제외
+            SpeakerController speaker = speakerControllers[i];
+            if (speaker.GetPerformerId() == player.playerId && !speaker.IsPerformer(player)) continue;
+            allocatedPlayerIds[i] = 0;
+            changed = true;
+        }
+        // 소유권 이전 전에도 각 클라이언트의 퇴장자 예약 해제, 동기화는 현재 소유자만 수행
+        if (changed)
+        {
+            if (Networking.IsOwner(gameObject)) RequestSerialization();
+            RecalculateUsableCount();
+        }
     }
 
     /// <summary>
@@ -449,7 +478,7 @@ public class SpeakerManager : UdonSharpBehaviour
         {
             SpeakerController speaker = speakerControllers[i];
             bool reserved = allocatedPlayerIds != null && i < allocatedPlayerIds.Length && allocatedPlayerIds[i] != 0;
-            if (!speaker.isSpeakerTaken && !reserved) count++;
+            if (speaker.IsAvailableForPlacement() && !reserved) count++;
             if (speaker.IsLocalPerformer()) localOwned = true;
         }
         UsableSpeakerCount = count;

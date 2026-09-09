@@ -5,13 +5,14 @@ using UnityEngine;
 /// 베이크된 차선 샘플과 차선 변경 규칙을 런타임 교통 시뮬레이션에 제공
 /// </summary>
 /// <remarks>
-/// 배열의 인덱스와 길이는 베이커에서 함께 생성하고 런타임에서는 데이터 변경 없이 사용
+/// 배열의 인덱스와 길이는 베이커에서 함께 생성, 기존 데이터는 초기화 시 높이 보정 후 사용
 /// 모든 거리는 차선 시작점 기준의 m 단위
 /// </remarks>
 [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
 public class TrafficLaneDatabase : UdonSharpBehaviour
 {
     public const int FixedLaneCount = 7;
+    public const float RoadSurfaceClearance = 0.01f;
 
     public const int LaneL1 = 0;
     public const int LaneL2 = 1;
@@ -26,6 +27,8 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
 
     [HideInInspector] public int laneCount = FixedLaneCount;
     [HideInInspector] public float sampleSpacing = 2f;
+    // 좌표에 이미 반영한 노면 여유 높이 기록으로 재초기화 시 중복 상승 방지
+    [HideInInspector] public float bakedRoadSurfaceClearance;
 
     [HideInInspector] public int[] laneSampleStarts = new int[0];
     [HideInInspector] public int[] laneSampleCounts = new int[0];
@@ -62,7 +65,7 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
     public bool IsReady()
     {
         if (laneCount != FixedLaneCount ||
-            sampleSpacing <= 0f)
+            !IsFinite(sampleSpacing) || sampleSpacing <= 0f)
         {
             return false;
         }
@@ -125,9 +128,78 @@ public class TrafficLaneDatabase : UdonSharpBehaviour
 
         int ruleCount = changeToLaneIds.Length;
 
-        return changeStartS.Length == ruleCount &&
-               changeEndS.Length == ruleCount &&
-               changeVehicleMasks.Length == ruleCount;
+        if (changeStartS.Length != ruleCount ||
+            changeEndS.Length != ruleCount ||
+            changeVehicleMasks.Length != ruleCount) return false;
+
+        // 배열 길이가 같아도 내부 구간이 잘못되면 런타임 조회가 범위를 벗어난다.
+        // 초기화/베이크 시 한 번만 검사하고 정상 프레임의 조회 비용은 유지한다.
+        for (int lane = 0; lane < laneCount; lane++)
+        {
+            int first = laneSampleStarts[lane];
+            int count = laneSampleCounts[lane];
+            if (first < 0 || first > sampleCount || count < 2 ||
+                count > sampleCount - first) return false;
+
+            float length = laneLengths[lane];
+            if (!IsFinite(length) || length <= 0f ||
+                !IsFinite(spawnS[lane]) || !IsFinite(despawnS[lane]) ||
+                !IsFinite(stopLineS[lane]) || !IsFinite(speedLimits[lane]) ||
+                !IsFinite(spawnWeights[lane])) return false;
+            if (despawnS[lane] < 0f || despawnS[lane] > length ||
+                (spawnS[lane] != -1f && (spawnS[lane] < 0f || spawnS[lane] > despawnS[lane])) ||
+                (stopLineS[lane] != -1f && (stopLineS[lane] < 0f || stopLineS[lane] > length)) ||
+                speedLimits[lane] <= 0f || spawnWeights[lane] < 0f) return false;
+
+            float previous = -1f;
+            for (int sample = first; sample < first + count; sample++)
+            {
+                float distance = sampleDistances[sample];
+                if (!IsFinite(distance) || distance < 0f ||
+                    distance <= previous || distance > length + 0.01f) return false;
+                Vector3 position = samplePositions[sample];
+                if (!IsFinite(position.x) || !IsFinite(position.y) || !IsFinite(position.z)) return false;
+                previous = distance;
+            }
+
+            int ruleFirst = laneRuleStarts[lane];
+            int rules = laneRuleCounts[lane];
+            if (ruleFirst < 0 || ruleFirst > ruleCount || rules < 0 ||
+                rules > ruleCount - ruleFirst) return false;
+            for (int rule = ruleFirst; rule < ruleFirst + rules; rule++)
+            {
+                int targetLane = changeToLaneIds[rule];
+                float start = changeStartS[rule];
+                float end = changeEndS[rule];
+                if (targetLane < 0 || targetLane >= laneCount || targetLane == lane ||
+                    !IsFinite(start) || !IsFinite(end) ||
+                    start < 0f || end < start || end > length) return false;
+            }
+        }
+        return true;
+    }
+
+    private bool IsFinite(float value)
+    {
+        return !float.IsNaN(value) && !float.IsInfinity(value);
+    }
+
+    /// <summary>
+    /// 기존 베이크 좌표에 노면 위 1cm 여유를 한 번만 적용하여 그림자와 도로의 겹침 완화
+    /// </summary>
+    public void ApplyRoadSurfaceClearance()
+    {
+        if (samplePositions == null || samplePositions.Length == 0) return;
+
+        float adjustment = RoadSurfaceClearance - bakedRoadSurfaceClearance;
+        if (adjustment == 0f) return;
+
+        // 월드 Y축으로 동일하게 이동하여 차선 간격, 거리 및 회전 유지
+        Vector3 offset = Vector3.up * adjustment;
+        for (int i = 0; i < samplePositions.Length; i++)
+            samplePositions[i] += offset;
+
+        bakedRoadSurfaceClearance = RoadSurfaceClearance;
     }
 
     /// <summary>

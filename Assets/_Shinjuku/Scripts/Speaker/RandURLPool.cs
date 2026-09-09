@@ -18,7 +18,7 @@ public class RandURLPool : UdonSharpBehaviour
     /// <returns>선택된 VRCUrl</returns>
     public VRCUrl GetRandUrl()
     {
-        // Cuding Edit: 정수 난수의 상한은 제외되므로 Length까지 전달. 빈 목록은 안전하게 반환
+        // 정수 난수의 상한은 제외되므로 Length까지 전달. 빈 목록은 안전하게 반환
         if (vrcUrlPool == null || vrcUrlPool.Length == 0) return VRCUrl.Empty;
         int index = Random.Range(0, vrcUrlPool.Length);
         return vrcUrlPool[index];
