@@ -1834,7 +1834,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         {
             Debug.LogError(
                 "[TrafficSimulationManager] " +
-                "Lane Database가 베이크되지 않았습니다."
+                "Lane Database가 없거나 베이크 데이터의 배열/구간이 유효하지 않습니다. 다시 베이크해 주세요."
             );
 
             return false;
@@ -1862,6 +1862,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             return false;
         }
+
+        // 재베이크 전 데이터도 초기화 시 한 번만 보정, 매 프레임 노면 검사 없이 높이 여유 유지
+        laneDatabase.ApplyRoadSurfaceClearance();
 
         EnsureNetworkBuffers();
 

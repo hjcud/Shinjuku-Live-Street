@@ -230,6 +230,11 @@ public class TrafficLaneBakerEditor : EditorWindow
             )
         );
 
+        EditorGUILayout.LabelField(
+            "Road Clearance (m)",
+            TrafficLaneDatabase.RoadSurfaceClearance.ToString("0.00")
+        );
+
         markerWarningDistance = Mathf.Max(
             0.1f,
             EditorGUILayout.FloatField(
@@ -551,7 +556,8 @@ public class TrafficLaneBakerEditor : EditorWindow
                 );
             }
 
-            positions[i] = hit.point;
+            // 도로와 그림자 면의 겹침 완화를 위해 노면 교차점보다 1cm 위에 차선 저장
+            positions[i] = hit.point + Vector3.up * TrafficLaneDatabase.RoadSurfaceClearance;
             normals[i] = hit.normal.normalized;
         }
 
@@ -1401,6 +1407,7 @@ public class TrafficLaneBakerEditor : EditorWindow
             TrafficLaneDatabase.FixedLaneCount;
 
         database.sampleSpacing = sampleSpacing;
+        database.bakedRoadSurfaceClearance = TrafficLaneDatabase.RoadSurfaceClearance;
 
         database.laneSampleStarts = laneStarts;
         database.laneSampleCounts = laneCounts;

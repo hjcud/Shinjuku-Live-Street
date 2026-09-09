@@ -227,7 +227,7 @@ public class PanelFly : UdonSharpBehaviour
                     continue;
                 }
 
-                // Cuding Edit: 다른 차량에 맞은 Cast를 현재 후보의 충돌로 사용하지 않음
+                // 다른 차량에 맞은 Cast를 현재 후보의 충돌로 사용하지 않음
                 // 실제로 맞은 Collider는 자신의 후보 검사에서 해당 차량 속도로 처리
                 if (sweepHit.collider != hit)
                 {
@@ -640,10 +640,10 @@ public class PanelFly : UdonSharpBehaviour
             new Color(0.96f, 0.91f, 0.80f, 1f)
         );
 
-        // Cuding Edit: 한 평면의 고정 섬광 대신 구형으로 퍼지는 별을 방출.
+        // 한 평면의 고정 섬광 대신 구형으로 퍼지는 별을 방출.
         // 동일한 인덱스로 방향/색을 정해 원격에서도 같은 연출을 재생하고,
         // 방출 이후 이동은 ParticleSystem에 맡겨 매 프레임 Udon 계산을 피한다.
-        // Cuding Edit: 주 별을 가볍게 꾸미는 6개만 사용 (처음 3개 + 시간차 3개).
+        // 주 별을 가볍게 꾸미는 6개만 사용 (처음 3개 + 시간차 3개).
         EmitFlashBurst(0, 3);
 
         starTwinkleStep = 0;
@@ -680,7 +680,7 @@ public class PanelFly : UdonSharpBehaviour
     {
         for (int i = first; i < first + count; i++)
         {
-            // Cuding Edit: 방출 순서를 섞어 첫 섬광부터 구의 한쪽에 몰리지 않도록 한다.
+            // 방출 순서를 섞어 첫 섬광부터 구의 한쪽에 몰리지 않도록 한다.
             int sample = (i * 5) % 6;
             float y = 1f - 2f * (sample + 0.5f) / 6f;
             float radius = Mathf.Sqrt(Mathf.Max(0f, 1f - y * y));
@@ -689,7 +689,7 @@ public class PanelFly : UdonSharpBehaviour
                 Mathf.Cos(angle) * radius, y, Mathf.Sin(angle) * radius);
             float variation = (i % 5) / 4f;
             float tint = sample / 5f;
-            // Cuding Edit: 역 건물의 따뜻한 조명에 맞춘 저채도 골드~아이보리~하늘색.
+            // 역 건물의 따뜻한 조명에 맞춘 저채도 골드~아이보리~하늘색.
             Color gold = new Color(0.88f, 0.75f, 0.55f, 1f);
             Color ivory = new Color(0.96f, 0.91f, 0.80f, 1f);
             Color sky = new Color(0.67f, 0.77f, 0.84f, 1f);
