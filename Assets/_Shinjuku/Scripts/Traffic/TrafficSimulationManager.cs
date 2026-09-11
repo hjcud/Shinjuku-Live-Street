@@ -113,7 +113,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     [Header("Population")]
     [Range(1, NetworkSlotCapacity)]
-    public int targetActiveVehicles = 10;
+    public int targetActiveVehicles = 6;
 
     public int randomSeed = 12345;
 
@@ -162,7 +162,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     [Tooltip("빈 슬롯을 한 대씩 보충하는 간격. 차량 일괄 보충 방지")]
     [Range(0.15f, 2f)]
-    public float respawnInterval = 0.4f;
+    public float respawnInterval = 0.8f;
 
     [Tooltip("첫 권한자의 새 교통 상태 생성 시 차량을 차선 전체에 분산 배치")]
     public bool distributeVehiclesOnStartup = true;
@@ -706,6 +706,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private void Start()
     {
+        // 모든 월드/씬에서 전시용 교통량 설정을 동일하게 강제한다.
+        targetActiveVehicles = 6;
+        respawnInterval = 0.8f;
+
         initialized = InitializeManager();
 
         if (!initialized)
