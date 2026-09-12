@@ -16,6 +16,7 @@ public class ImageLoader : UdonSharpBehaviour
 {
     [UdonSynced] public VRCUrl syncedUrl = VRCUrl.Empty;
     [UdonSynced] private int imageRevision;
+    [UdonSynced] private int speakerGeneration;
     [SerializeField] private VRCUrlInputField inputField;
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private Text systemText;
@@ -26,6 +27,9 @@ public class ImageLoader : UdonSharpBehaviour
     private float maxWidth;
     private float maxHeight;
     private bool initialized;
+    private bool speakerActive;
+    private int activeSpeakerGeneration;
+    private int pendingResetGeneration;
     private int appliedRevision = -1;
     private string appliedUrl = "";
     private float messageUntil;
@@ -33,6 +37,62 @@ public class ImageLoader : UdonSharpBehaviour
     public void Start()
     {
         LoadImage();
+    }
+
+    /// <summary>
+    /// 새 배치 세대를 시작하고 이전 배치의 로컬 이미지와 다운로드를 제거
+    /// </summary>
+    public void BeginSpeakerPlacement(int generation)
+    {
+        if (generation <= 0 || generation < activeSpeakerGeneration) return;
+        activeSpeakerGeneration = generation;
+        speakerActive = true;
+        ClearLocalImage();
+
+        // 동기화가 배치 이벤트보다 먼저 도착한 경우 현재 세대의 이미지를 복원
+        if (speakerGeneration >= generation) LoadImage();
+    }
+
+    /// <summary>
+    /// 반환된 스피커에서 늦게 도착한 동기화가 이미지를 다시 표시하지 않도록 차단
+    /// </summary>
+    public void EndSpeakerPlacement(int generation)
+    {
+        if (generation <= 0 || generation < activeSpeakerGeneration) return;
+        activeSpeakerGeneration = generation;
+        speakerActive = false;
+        ClearLocalImage();
+    }
+
+    /// <summary>
+    /// 현재 스피커 사용자가 이미지 객체의 소유권을 확보하고 빈 상태를 동기화
+    /// </summary>
+    public void ResetSpeakerImage(int generation)
+    {
+        if (generation <= 0 || generation < activeSpeakerGeneration) return;
+        activeSpeakerGeneration = generation;
+        ClearLocalImage();
+        pendingResetGeneration = generation;
+        TryResetSpeakerImage();
+    }
+
+    private void TryResetSpeakerImage()
+    {
+        if (pendingResetGeneration <= 0 || !Utilities.IsValid(Networking.LocalPlayer)) return;
+        if (!Networking.IsOwner(gameObject)) Networking.SetOwner(Networking.LocalPlayer, gameObject);
+        if (!Networking.IsOwner(gameObject)) return;
+
+        speakerGeneration = pendingResetGeneration;
+        pendingResetGeneration = 0;
+        syncedUrl = VRCUrl.Empty;
+        imageRevision++;
+        LoadImage();
+        RequestSerialization();
+    }
+
+    public override void OnOwnershipTransferred(VRCPlayerApi newOwner)
+    {
+        if (newOwner == Networking.LocalPlayer) TryResetSpeakerImage();
     }
 
     // 입장/역직렬화 순서와 관계없이 출력 참조와 원래 표시 크기를 한 번만 준비
@@ -58,10 +118,9 @@ public class ImageLoader : UdonSharpBehaviour
     {
         // All 이벤트를 받아도 이미지 소유자 한 명만 영속 상태 변경
         if (!Networking.IsOwner(gameObject)) return;
-        syncedUrl = VRCUrl.Empty;
-        imageRevision++;
-        LoadImage();
-        RequestSerialization();
+        int generation = Mathf.Max(activeSpeakerGeneration, speakerGeneration);
+        if (generation <= 0) return;
+        ResetSpeakerImage(generation);
     }
 
     /// <summary>
@@ -69,9 +128,11 @@ public class ImageLoader : UdonSharpBehaviour
     /// </summary>
     public void OnEndUrlEdit()
     {
-        if (!Utilities.IsValid(inputField) || !Utilities.IsValid(Networking.LocalPlayer)) return;
+        if (!speakerActive || !Utilities.IsValid(inputField) || !Utilities.IsValid(Networking.LocalPlayer)) return;
         if (!Networking.IsOwner(gameObject)) Networking.SetOwner(Networking.LocalPlayer, gameObject);
         if (!Networking.IsOwner(gameObject)) return;
+        pendingResetGeneration = 0;
+        speakerGeneration = activeSpeakerGeneration;
         syncedUrl = inputField.GetUrl();
         imageRevision++;
         
@@ -81,12 +142,23 @@ public class ImageLoader : UdonSharpBehaviour
 
     public override void OnDeserialization()
     {
+        if (!speakerActive || speakerGeneration < activeSpeakerGeneration)
+        {
+            ClearLocalImage();
+            return;
+        }
+        activeSpeakerGeneration = speakerGeneration;
         LoadImage();
     }
 
     private void LoadImage()
     {
         if (!Initialize()) return;
+        if (!speakerActive || speakerGeneration < activeSpeakerGeneration)
+        {
+            ClearLocalImage();
+            return;
+        }
         string url = Utilities.IsValid(syncedUrl) ? syncedUrl.ToString() : "";
         if (appliedRevision == imageRevision && appliedUrl == url) return;
         appliedRevision = imageRevision;
@@ -150,6 +222,15 @@ public class ImageLoader : UdonSharpBehaviour
     {
         if (Utilities.IsValid(inputField) && inputField.GetUrl().ToString() == appliedUrl)
             inputField.SetUrl(VRCUrl.Empty);
+    }
+
+    private void ClearLocalImage()
+    {
+        appliedRevision = -1;
+        appliedUrl = "";
+        ClearDownload();
+        if (Utilities.IsValid(inputField)) inputField.SetUrl(VRCUrl.Empty);
+        SetMessage("");
     }
 
     private void ClearDownload()
