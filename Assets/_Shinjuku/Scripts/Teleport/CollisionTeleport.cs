@@ -8,6 +8,7 @@ using VRC.Udon.Common.Enums;
 /// <summary>
 /// 로컬 사용자가 Trigger에 들어오면 화면 전환 연출 후 지정 위치로 이동
 /// </summary>
+[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class CollisionTeleport : UdonSharpBehaviour
 {
     [SerializeField] Transform TeleportTarget;
@@ -23,7 +24,7 @@ public class CollisionTeleport : UdonSharpBehaviour
             {
                 isTping = true;
                 DarkSlideAnimator.SetBool("IsTping", isTping);
-                SendCustomEventDelayedSeconds("TeleportPlayer", 0.58f, EventTiming.Update);
+                SendCustomEventDelayedSeconds(nameof(_TeleportPlayer), 0.58f, EventTiming.Update);
             }
         }
     }
@@ -31,8 +32,10 @@ public class CollisionTeleport : UdonSharpBehaviour
     /// <summary>
     /// 로컬 사용자의 목적지 이동 및 화면 전환 상태 종료
     /// </summary>
-    public void TeleportPlayer()
+    public void _TeleportPlayer()
     {
+        if (!isTping) return;
+
         Networking.LocalPlayer.TeleportTo(TeleportTarget.position, TeleportTarget.rotation);
         isTping = false;
         DarkSlideAnimator.SetBool("IsTping", isTping);
