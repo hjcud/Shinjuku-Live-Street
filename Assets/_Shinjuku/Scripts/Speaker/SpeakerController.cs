@@ -180,10 +180,10 @@ public class SpeakerController : UdonSharpBehaviour
         }
 
         Debug.Log("[SpeakerController] Speaker Returning");
-        // 스피커와 연결된 공유 기능을 먼저 끈 다음 표시 상태 반환
+        // 이미지 상태를 먼저 비운 뒤 스피커와 연결된 공유 기능을 끈다.
+        imageLoader.ResetSpeakerImage(placementGeneration);
         sketchGlobalToggle.SendCustomNetworkEvent(NetworkEventTarget.Owner, "OwnerDisableTarget");
         screenGlobalToggle.SendCustomNetworkEvent(NetworkEventTarget.Owner, "OwnerDisableTarget");
-        imageLoader.SendCustomNetworkEvent(NetworkEventTarget.All, "ResetTex");
         Debug.Log("[SpeakerController] Toggle Object turned off");
 
         // 반환하는 스피커의 Player만 초기화하며 다른 스피커의 스트림은 유지
@@ -236,6 +236,7 @@ public class SpeakerController : UdonSharpBehaviour
     private void ApplyLocalReturn(bool cleanupCompleted)
     {
         Debug.Log("[SpeakerController] Speaker Local Returning");
+        imageLoader.EndSpeakerPlacement(placementGeneration);
         Transform tempTransform = transform;
         var parent = tempTransform.parent;
         tempTransform.position = parent.position;
@@ -345,6 +346,9 @@ public class SpeakerController : UdonSharpBehaviour
         departedCleanupPending = false;
         pendingReturnCaller = null;
         nextDistanceCheckTime = 0f;
+        imageLoader.BeginSpeakerPlacement(generation);
+        if (playerId <= 0 && caller == Networking.LocalPlayer)
+            imageLoader.ResetSpeakerImage(generation);
         Transform tempTransform = transform;
         tempTransform.position = targetPosition;
         tempTransform.rotation = targetRotation;
