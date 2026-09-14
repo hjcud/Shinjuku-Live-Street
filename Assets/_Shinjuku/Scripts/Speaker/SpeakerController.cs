@@ -456,7 +456,7 @@ public class SpeakerController : UdonSharpBehaviour
         departedCleanupPending = false;
         nextDistanceCheckTime = 0f;
         imageLoader.BeginSpeakerPlacement(generation);
-        if (playerId <= 0 && caller == Networking.LocalPlayer)
+        if (initialPlacement && caller == Networking.LocalPlayer)
             imageLoader.ResetSpeakerImage(generation);
         Transform tempTransform = transform;
         tempTransform.SetPositionAndRotation(targetPosition, targetRotation);
