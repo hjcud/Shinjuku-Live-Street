@@ -26,6 +26,8 @@ public class SpeakerController : UdonSharpBehaviour
 
     // 지도에서 시작 시 연결. 기존 배치 동기화 결과만 로컬 UI에 전달
     private SpeakerMap[] speakerMaps = new SpeakerMap[0];
+    // 본인의 배치·반환 결과만 저장 서비스에 전달. 음성 내용이나 발화 여부는 수집하지 않음.
+    public WorldPlayerData playerData;
 
     [Header("스피커 오너 설정")]
     [SerializeField] SpeakerManager speakerManager;
@@ -224,6 +226,7 @@ public class SpeakerController : UdonSharpBehaviour
 
     private void ApplyLocalReturn(bool cleanupCompleted)
     {
+        if (playerData != null) playerData._RecordSpeakerReturned(this);
         Debug.Log("[SpeakerController] Speaker Local Returning");
         Transform tempTransform = transform;
         var parent = tempTransform.parent;
@@ -453,6 +456,7 @@ public class SpeakerController : UdonSharpBehaviour
         nextDistanceCheckTime = 0f;
         Transform tempTransform = transform;
         tempTransform.SetPositionAndRotation(targetPosition, targetRotation);
+        if (playerData != null && IsLocalPerformer()) playerData._RecordSpeakerPlaced(this, generation);
         UpdateSpeakerData();
     }
 

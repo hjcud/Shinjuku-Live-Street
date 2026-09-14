@@ -111,6 +111,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     [Tooltip("Truck을 슬롯 0에 배치하고 CHR부터 Zest까지 순서대로 등록")]
     public Transform[] vehicleRoots = new Transform[0];
 
+    [Header("Local Display")]
+    [Tooltip("관리기와 분리된 차량 표시 전용 부모. 이 오브젝트만 로컬로 숨김")]
+    public GameObject localVehicleVisualRoot;
+
     [Header("Population")]
     [Range(1, NetworkSlotCapacity)]
     public int targetActiveVehicles = 6;
@@ -699,10 +703,22 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private bool refreshAudioVisualsThisFrame = true;
     private bool initialized;
     private bool running;
+    private bool localVehiclesVisible = true;
 
     // -------------------------------------------------------------------------
     // 생명주기와 소유권 제어
     // -------------------------------------------------------------------------
+
+    /// <summary>교통 계산과 소유권은 유지하고 차량 표시만 로컬로 전환</summary>
+    public void _SetLocalVehiclesVisible(bool visible)
+    {
+        if (localVehicleVisualRoot == null || transform.IsChildOf(localVehicleVisualRoot.transform)) return;
+        localVehiclesVisible = visible;
+        // 복귀할 때 이전 위치에서 한 프레임 보이거나 바퀴가 과도하게 회전하지 않도록 초기화
+        for (int i = 0; i < previousVisualPositionValid.Length; i++) previousVisualPositionValid[i] = false;
+        if (visible && initialized) ApplyNetworkVisuals();
+        localVehicleVisualRoot.SetActive(visible);
+    }
 
     private void Start()
     {
@@ -7364,6 +7380,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             Networking.GetServerTimeInSeconds() - remoteRenderDelay
         );
 
+        // 숨긴 원격 차량은 수신 큐만 진행. 소유권자의 계산/표현 경로에는 영향 없음
+        if (!localVehiclesVisible) return;
+
         int renderedActiveCount = 0;
         int renderedLaneChangeCount = 0;
 
@@ -7838,7 +7857,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             AudioSource audioSource = vehicleAudioSources[vehicleIndex];
 
-            if (audioSource != null && !audioSource.isPlaying)
+            if (localVehiclesVisible && audioSource != null && audioSource.isActiveAndEnabled && !audioSource.isPlaying)
             {
                 audioSource.Play();
             }
@@ -7960,6 +7979,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float renderSpeed,
         float renderSpeedFactor)
     {
+        if (!localVehiclesVisible) return;
         if (refreshAudioVisualsThisFrame)
         {
             float referenceSpeed = Mathf.Max(0.1f, GetBaseCruiseSpeed(vehicleIndex) * renderSpeedFactor);
@@ -7983,7 +8003,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                     speedRatio
                 );
 
-                if (!audioSource.isPlaying)
+                if (audioSource.isActiveAndEnabled && !audioSource.isPlaying)
                 {
                     audioSource.Play();
                 }
