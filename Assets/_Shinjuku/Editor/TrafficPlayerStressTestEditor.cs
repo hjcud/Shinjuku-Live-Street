@@ -127,11 +127,9 @@ public static class TrafficPlayerStressTestEditor
         StopProfileCycle(true);
     }
 
-    private static void OnPlayModeStateChanged(
-        PlayModeStateChange state)
+    private static void OnPlayModeStateChanged(PlayModeStateChange state)
     {
-        if (state == PlayModeStateChange.ExitingPlayMode ||
-            state == PlayModeStateChange.EnteredEditMode)
+        if (state == PlayModeStateChange.ExitingPlayMode || state == PlayModeStateChange.EnteredEditMode)
         {
             StopProfileCycle(false);
             EditorPrefs.SetBool(ProfileCyclePendingKey, false);
@@ -163,15 +161,13 @@ public static class TrafficPlayerStressTestEditor
 
         if (remotePlayerCount < ExpectedRemotePlayers)
         {
-            if (ClientSimMain.HasInstance() &&
-                EditorApplication.timeSinceStartup >= nextSpawnTime)
+            if (ClientSimMain.HasInstance() && EditorApplication.timeSinceStartup >= nextSpawnTime)
             {
                 ClientSimMain.SpawnRemotePlayer(
                     "Traffic Test V1 " + (remotePlayerCount + 1)
                 );
 
-                nextSpawnTime =
-                    EditorApplication.timeSinceStartup + 0.08d;
+                nextSpawnTime = EditorApplication.timeSinceStartup + 0.08d;
             }
 
             if (EditorApplication.timeSinceStartup >= waitUntil)
@@ -193,8 +189,7 @@ public static class TrafficPlayerStressTestEditor
 
     private static void StartProfileCycle()
     {
-        if (!Application.isPlaying ||
-            CountRemotePlayers() < ExpectedRemotePlayers)
+        if (!Application.isPlaying || CountRemotePlayers() < ExpectedRemotePlayers)
         {
             return;
         }
@@ -206,9 +201,7 @@ public static class TrafficPlayerStressTestEditor
             )
         );
 
-        Directory.CreateDirectory(
-            Path.GetDirectoryName(profileLogPath)
-        );
+        Directory.CreateDirectory(Path.GetDirectoryName(profileLogPath));
 
         File.WriteAllText(
             profileLogPath,
@@ -250,10 +243,7 @@ public static class TrafficPlayerStressTestEditor
         }
 
         int currentFrame = Time.frameCount;
-        int elapsedFrames = Mathf.Max(
-            0,
-            currentFrame - profileStateStartFrame
-        );
+        int elapsedFrames = Mathf.Max(0, currentFrame - profileStateStartFrame);
 
         if (elapsedFrames >= ProfileStateDurationFrames)
         {
@@ -273,9 +263,7 @@ public static class TrafficPlayerStressTestEditor
             }
             else
             {
-                BeginProfileState(
-                    (ProfileState)((int)profileState + 1)
-                );
+                BeginProfileState((ProfileState)((int)profileState + 1));
             }
 
             return;
@@ -291,10 +279,7 @@ public static class TrafficPlayerStressTestEditor
             SceneView.RepaintAll();
         }
 
-        CustomSampler sampler = GetStateSampler(
-            profileState,
-            warmup
-        );
+        CustomSampler sampler = GetStateSampler(profileState, warmup);
 
         sampler.Begin();
         sampler.End();
@@ -349,18 +334,14 @@ public static class TrafficPlayerStressTestEditor
                 return ArrangeAcrossMainLanes();
 
             case ProfileState.Crowd:
-                return ArrangeAtSinglePoint(
-                    TrafficLaneDatabase.LaneR2
-                );
+                return ArrangeAtSinglePoint(TrafficLaneDatabase.LaneR2);
 
             default:
                 return 0;
         }
     }
 
-    private static void WriteProfileStateLog(
-        string status,
-        int endFrame)
+    private static void WriteProfileStateLog(string status, int endFrame)
     {
         if (string.IsNullOrEmpty(profileLogPath))
         {
@@ -424,27 +405,19 @@ public static class TrafficPlayerStressTestEditor
         }
     }
 
-    private static CustomSampler GetStateSampler(
-        ProfileState state,
-        bool warmup)
+    private static CustomSampler GetStateSampler(ProfileState state, bool warmup)
     {
         if (state == ProfileState.Wait)
         {
-            return warmup
-                ? WaitWarmupSampler
-                : WaitMeasureSampler;
+            return warmup ? WaitWarmupSampler : WaitMeasureSampler;
         }
 
         if (state == ProfileState.Distributed)
         {
-            return warmup
-                ? DistributedWarmupSampler
-                : DistributedMeasureSampler;
+            return warmup ? DistributedWarmupSampler : DistributedMeasureSampler;
         }
 
-        return warmup
-            ? CrowdWarmupSampler
-            : CrowdMeasureSampler;
+        return warmup ? CrowdWarmupSampler : CrowdMeasureSampler;
     }
 
     private static int GetProfilerFrame()
@@ -482,17 +455,13 @@ public static class TrafficPlayerStressTestEditor
 
     private static void DrawProfileStatus(SceneView sceneView)
     {
-        if (!profileCycleRunning ||
-            string.IsNullOrEmpty(profileStatusText))
+        if (!profileCycleRunning || string.IsNullOrEmpty(profileStatusText))
         {
             return;
         }
 
         Handles.BeginGUI();
-        GUI.Box(
-            new Rect(12f, 12f, 350f, 30f),
-            profileStatusText
-        );
+        GUI.Box(new Rect(12f, 12f, 350f, 30f), profileStatusText);
         Handles.EndGUI();
     }
 
@@ -505,9 +474,7 @@ public static class TrafficPlayerStressTestEditor
             return 0;
         }
 
-        int rows = Mathf.CeilToInt(
-            remotePlayers.Length / (float)MainLaneCount
-        );
+        int rows = Mathf.CeilToInt(remotePlayers.Length / (float)MainLaneCount);
         int arrangedCount = 0;
 
         for (int i = 0; i < remotePlayers.Length; i++)
@@ -521,24 +488,15 @@ public static class TrafficPlayerStressTestEditor
 
             int laneId = i % MainLaneCount;
             int row = i / MainLaneCount;
-            float rowT = rows <= 1
-                ? 0.5f
-                : row / (float)(rows - 1);
+            float rowT = rows <= 1 ? 0.5f : row / (float)(rows - 1);
             float laneT = Mathf.Lerp(0.18f, 0.82f, rowT);
-            Vector3 position = Vector3.Lerp(
-                MainLaneStarts[laneId],
-                MainLaneEnds[laneId],
-                laneT
-            );
+            Vector3 position = Vector3.Lerp(MainLaneStarts[laneId], MainLaneEnds[laneId], laneT);
             Quaternion rotation = Quaternion.LookRotation(
                 MainLaneEnds[laneId] - MainLaneStarts[laneId],
                 Vector3.up
             );
 
-            if (TeleportClientSimPlayer(
-                player,
-                position + Vector3.up * 0.05f,
-                rotation))
+            if (TeleportClientSimPlayer(player, position + Vector3.up * 0.05f, rotation))
             {
                 arrangedCount++;
             }
@@ -563,11 +521,7 @@ public static class TrafficPlayerStressTestEditor
 
         const int columns = 10;
         const float spacing = 1.5f;
-        Vector3 waitingOrigin = new Vector3(
-            -6.75f,
-            7f,
-            -55f
-        );
+        Vector3 waitingOrigin = new Vector3(-6.75f, 7f, -55f);
         int arrangedCount = 0;
 
         for (int i = 0; i < remotePlayers.Length; i++)
@@ -581,16 +535,9 @@ public static class TrafficPlayerStressTestEditor
 
             int column = i % columns;
             int row = i / columns;
-            Vector3 position = waitingOrigin + new Vector3(
-                (column - 4.5f) * spacing,
-                0f,
-                -row * spacing
-            );
+            Vector3 position = waitingOrigin + new Vector3((column - 4.5f) * spacing, 0f, -row * spacing);
 
-            if (TeleportClientSimPlayer(
-                player,
-                position,
-                Quaternion.identity))
+            if (TeleportClientSimPlayer(player, position, Quaternion.identity))
             {
                 arrangedCount++;
             }
@@ -618,17 +565,9 @@ public static class TrafficPlayerStressTestEditor
             return 0;
         }
 
-        Vector3 laneDirection =
-            (MainLaneEnds[laneId] - MainLaneStarts[laneId]).normalized;
-        Vector3 position = Vector3.Lerp(
-            MainLaneStarts[laneId],
-            MainLaneEnds[laneId],
-            0.5f
-        ) + Vector3.up * 0.05f;
-        Quaternion rotation = Quaternion.LookRotation(
-            laneDirection,
-            Vector3.up
-        );
+        Vector3 laneDirection = (MainLaneEnds[laneId] - MainLaneStarts[laneId]).normalized;
+        Vector3 position = Vector3.Lerp(MainLaneStarts[laneId], MainLaneEnds[laneId], 0.5f) + Vector3.up * 0.05f;
+        Quaternion rotation = Quaternion.LookRotation(laneDirection, Vector3.up);
         int arrangedCount = 0;
 
         for (int i = 0; i < remotePlayers.Length; i++)
@@ -640,10 +579,7 @@ public static class TrafficPlayerStressTestEditor
                 continue;
             }
 
-            if (TeleportClientSimPlayer(
-                player,
-                position,
-                rotation))
+            if (TeleportClientSimPlayer(player, position, rotation))
             {
                 arrangedCount++;
             }
@@ -670,8 +606,7 @@ public static class TrafficPlayerStressTestEditor
 
         for (int i = 0; i < players.Length; i++)
         {
-            if (Utilities.IsValid(players[i]) &&
-                !players[i].isLocal)
+            if (Utilities.IsValid(players[i]) && !players[i].isLocal)
             {
                 count++;
             }
@@ -693,21 +628,18 @@ public static class TrafficPlayerStressTestEditor
 
         for (int i = 0; i < players.Length; i++)
         {
-            if (Utilities.IsValid(players[i]) &&
-                !players[i].isLocal)
+            if (Utilities.IsValid(players[i]) && !players[i].isLocal)
             {
                 remoteCount++;
             }
         }
 
-        VRCPlayerApi[] remotePlayers =
-            new VRCPlayerApi[remoteCount];
+        VRCPlayerApi[] remotePlayers = new VRCPlayerApi[remoteCount];
         int writeIndex = 0;
 
         for (int i = 0; i < players.Length; i++)
         {
-            if (!Utilities.IsValid(players[i]) ||
-                players[i].isLocal)
+            if (!Utilities.IsValid(players[i]) || players[i].isLocal)
             {
                 continue;
             }
@@ -720,8 +652,7 @@ public static class TrafficPlayerStressTestEditor
 
     private static VRCPlayerApi[] GetAllPlayers()
     {
-        if (!Application.isPlaying ||
-            !ClientSimMain.HasInstance())
+        if (!Application.isPlaying || !ClientSimMain.HasInstance())
         {
             return null;
         }
@@ -733,28 +664,22 @@ public static class TrafficPlayerStressTestEditor
             return null;
         }
 
-        VRCPlayerApi[] players =
-            new VRCPlayerApi[playerCount];
+        VRCPlayerApi[] players = new VRCPlayerApi[playerCount];
 
         VRCPlayerApi.GetPlayers(players);
         return players;
     }
 
-    private static bool TeleportClientSimPlayer(
-        VRCPlayerApi player,
-        Vector3 position,
-        Quaternion rotation)
+    private static bool TeleportClientSimPlayer(VRCPlayerApi player, Vector3 position, Quaternion rotation)
     {
-        ClientSimPlayer clientSimPlayer =
-            player.GetClientSimPlayer();
+        ClientSimPlayer clientSimPlayer = player.GetClientSimPlayer();
 
         if (clientSimPlayer == null)
         {
             return false;
         }
 
-        ClientSimPlayerController controller =
-            clientSimPlayer.GetPlayerController();
+        ClientSimPlayerController controller = clientSimPlayer.GetPlayerController();
 
         if (controller != null)
         {
@@ -762,10 +687,7 @@ public static class TrafficPlayerStressTestEditor
         }
         else
         {
-            clientSimPlayer.transform.SetPositionAndRotation(
-                position,
-                rotation
-            );
+            clientSimPlayer.transform.SetPositionAndRotation(position, rotation);
         }
 
         return true;

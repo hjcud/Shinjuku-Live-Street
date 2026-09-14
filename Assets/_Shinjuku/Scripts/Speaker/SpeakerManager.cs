@@ -1,4 +1,4 @@
-﻿
+
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.UdonNetworkCalling;
@@ -337,9 +337,13 @@ public class SpeakerManager : UdonSharpBehaviour
             allocationGenerations = new int[speakerControllers.Length];
         for (int i = 0; i < speakerControllers.Length; i++)
         {
-            if (rebuildOwners) allocatedPlayerIds[i] = speakerControllers[i].GetPerformerId();
-            // 소유권 인계 시 동기화 배열보다 먼저 본 배치/반환 번호도 보존한다.
-            allocationGenerations[i] = Mathf.Max(allocationGenerations[i], speakerControllers[i].GetPlacementGeneration());
+            SpeakerController speaker = speakerControllers[i];
+            // 소유권 인계 시에는 검증한 승인만 복원한다. 수신자가 주장한 번호는 사용하지 않는다.
+            if (speaker._GetApprovedGeneration() > allocationGenerations[i] || rebuildOwners)
+            {
+                allocatedPlayerIds[i] = speaker._GetAllocatedPlayerId();
+                allocationGenerations[i] = Mathf.Max(allocationGenerations[i], speaker._GetApprovedGeneration());
+            }
         }
     }
 
@@ -386,6 +390,10 @@ public class SpeakerManager : UdonSharpBehaviour
     public void ReceivePlacement(int playerId, int requestId, int slot, Vector3 position, Quaternion rotation, int generation)
     {
         if (NetworkCalling.CallingPlayer != Networking.GetOwner(gameObject)) return;
+        // 승인 사실은 모든 수신자가 기록하고, 실제 설치 입력은 요청자만 이어간다.
+        VRCPlayerApi player = VRCPlayerApi.GetPlayerById(playerId);
+        if (slot >= 0 && slot < speakerControllers.Length && Utilities.IsValid(player))
+            speakerControllers[slot]._ApplyAllocation(player, generation);
         // 이전 요청의 늦은 승인으로 새 요청 위치가 덮어써지지 않도록 요청 번호 확인
         if (Networking.LocalPlayer.playerId != playerId || !placementPending || requestId != placementRequestId) return;
         placementPending = false;
@@ -421,11 +429,32 @@ public class SpeakerManager : UdonSharpBehaviour
         if (allocated != caller.playerId && caller != Networking.GetOwner(speaker.gameObject)) return;
         if (speaker.isSpeakerTaken && !speaker.IsPerformer(caller)) return;
         allocatedPlayerIds[slot] = 0;
+        ApplyAllocationTable();
         RequestSerialization();
         RecalculateUsableCount();
     }
 
-    public override void OnDeserialization() { RecalculateUsableCount(); }
+    private void ApplyAllocationTable()
+    {
+        if (allocatedPlayerIds == null || allocationGenerations == null ||
+            allocatedPlayerIds.Length != speakerControllers.Length || allocationGenerations.Length != speakerControllers.Length) return;
+        for (int i = 0; i < speakerControllers.Length; i++)
+        {
+            int playerId = allocatedPlayerIds[i];
+            VRCPlayerApi player = VRCPlayerApi.GetPlayerById(playerId);
+            // 참가자 정보가 아직 도착하지 않은 배정을 반환으로 오인하지 않는다.
+            if (playerId != 0 && !Utilities.IsValid(player)) continue;
+            speakerControllers[i]._ApplyAllocation(playerId == 0 ? null : player, allocationGenerations[i]);
+        }
+    }
+
+    public override void OnDeserialization()
+    {
+        ApplyAllocationTable();
+        RecalculateUsableCount();
+    }
+
+    public override void OnPlayerJoined(VRCPlayerApi player) { ApplyAllocationTable(); }
 
     public override void OnOwnershipTransferred(VRCPlayerApi player)
     {
@@ -436,11 +465,13 @@ public class SpeakerManager : UdonSharpBehaviour
             // 인계받은 오브젝트 소유자가 아닌 실제 설치자의 접속 상태로 배정표 복구
             for (int i = 0; i < speakerControllers.Length; i++)
             {
-                if (speakerControllers[i].isSpeakerTaken)
+                if (speakerControllers[i].isSpeakerTaken &&
+                    speakerControllers[i].GetPlacementGeneration() == allocationGenerations[i])
                     allocatedPlayerIds[i] = speakerControllers[i].GetPerformerId();
                 else if (!Utilities.IsValid(VRCPlayerApi.GetPlayerById(allocatedPlayerIds[i])))
                     allocatedPlayerIds[i] = 0;
             }
+            ApplyAllocationTable();
             RequestSerialization();
         }
         RecalculateUsableCount();
@@ -462,6 +493,7 @@ public class SpeakerManager : UdonSharpBehaviour
         // 소유권 이전 전에도 각 클라이언트의 퇴장자 예약 해제, 동기화는 현재 소유자만 수행
         if (changed)
         {
+            ApplyAllocationTable();
             if (Networking.IsOwner(gameObject)) RequestSerialization();
             RecalculateUsableCount();
         }
