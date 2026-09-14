@@ -526,7 +526,7 @@ public class PanelFly : UdonSharpBehaviour
             Mathf.Max(0.1f, starFlashSize),
             1.3f,
             0f,
-            new Color(0.96f, 0.91f, 0.80f, 1f)
+            new Color(1f, 1f, 0.96f, 1f)
         );
 
         // 한 평면의 고정 섬광 대신 구형으로 퍼지는 별을 방출.
@@ -571,10 +571,10 @@ public class PanelFly : UdonSharpBehaviour
             Vector3 direction = new Vector3(Mathf.Cos(angle) * radius, y, Mathf.Sin(angle) * radius);
             float variation = (i % 5) / 4f;
             float tint = sample / 5f;
-            // 역 건물의 따뜻한 조명에 맞춘 저채도 골드~아이보리~하늘색.
-            Color gold = new Color(0.88f, 0.75f, 0.55f, 1f);
-            Color ivory = new Color(0.96f, 0.91f, 0.80f, 1f);
-            Color sky = new Color(0.67f, 0.77f, 0.84f, 1f);
+            // 어두운 배경에서도 선명하게 보이도록 밝은 레몬색/아이보리/하늘색 적용
+            Color gold = new Color(1f, 0.94f, 0.60f, 1f);
+            Color ivory = new Color(1f, 0.99f, 0.94f, 1f);
+            Color sky = new Color(0.72f, 0.94f, 1f, 1f);
             Color color = tint < 0.5f
                 ? Color.Lerp(gold, ivory, tint * 2f)
                 : Color.Lerp(ivory, sky, (tint - 0.5f) * 2f);

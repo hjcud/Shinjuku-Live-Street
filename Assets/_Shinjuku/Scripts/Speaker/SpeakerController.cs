@@ -24,6 +24,11 @@ public class SpeakerController : UdonSharpBehaviour
     [Header("스피커 좌표 싱크")]
     public bool isSpeakerTaken;
 
+    // 지도에서 시작 시 연결. 기존 배치 동기화 결과만 로컬 UI에 전달
+    private SpeakerMap[] speakerMaps = new SpeakerMap[0];
+    // 본인의 배치·반환 결과만 저장 서비스에 전달. 음성 내용이나 발화 여부는 수집하지 않음.
+    public WorldPlayerData playerData;
+
     [Header("스피커 오너 설정")]
     [SerializeField] SpeakerManager speakerManager;
     [SerializeField] private GameObject speakerObject;
@@ -77,6 +82,7 @@ public class SpeakerController : UdonSharpBehaviour
         isSpeakerTaken = false;
         voiceGainPlayer = null;
         despawnWaitTime = 0f;
+        RefreshMaps();
     }
 
     void Update()
@@ -220,6 +226,7 @@ public class SpeakerController : UdonSharpBehaviour
 
     private void ApplyLocalReturn(bool cleanupCompleted)
     {
+        if (playerData != null) playerData._RecordSpeakerReturned(this);
         Debug.Log("[SpeakerController] Speaker Local Returning");
         imageLoader.EndSpeakerPlacement(placementGeneration);
         Transform tempTransform = transform;
@@ -449,10 +456,11 @@ public class SpeakerController : UdonSharpBehaviour
         departedCleanupPending = false;
         nextDistanceCheckTime = 0f;
         imageLoader.BeginSpeakerPlacement(generation);
-        if (playerId <= 0 && caller == Networking.LocalPlayer)
+        if (initialPlacement && caller == Networking.LocalPlayer)
             imageLoader.ResetSpeakerImage(generation);
         Transform tempTransform = transform;
         tempTransform.SetPositionAndRotation(targetPosition, targetRotation);
+        if (playerData != null && IsLocalPerformer()) playerData._RecordSpeakerPlaced(this, generation);
         UpdateSpeakerData();
     }
 
@@ -478,6 +486,26 @@ public class SpeakerController : UdonSharpBehaviour
         bool showOwnerObjects = IsLocalPerformer() && Networking.IsOwner(Networking.LocalPlayer, this.gameObject);
         foreach (GameObject obj in ownerObjects)
             obj.SetActive(showOwnerObjects);
+
+        // 설치/반환/퇴장 회수/늦은 참가자 복원이 완료된 상태를 지도에 반영
+        RefreshMaps();
+    }
+
+    /// <summary>각 안내판이 시작할 때 등록. 같은 지도는 중복 등록하지 않음</summary>
+    public void _RegisterMap(SpeakerMap map)
+    {
+        if (map == null) return;
+        for (int i = 0; i < speakerMaps.Length; i++) if (speakerMaps[i] == map) return;
+        var updated = new SpeakerMap[speakerMaps.Length + 1];
+        for (int i = 0; i < speakerMaps.Length; i++) updated[i] = speakerMaps[i];
+        updated[speakerMaps.Length] = map;
+        speakerMaps = updated;
+    }
+
+    private void RefreshMaps()
+    {
+        for (int i = 0; i < speakerMaps.Length; i++)
+            if (speakerMaps[i] != null) speakerMaps[i]._RefreshMap();
     }
 
     public bool IsLocalPerformer()
