@@ -17,21 +17,7 @@ public class PortalToggle : UdonSharpBehaviour
     {
         for (int i = 0; i < portals.Length; i++)
         {
-            if (i == PortalNum)
-            {
-                if (!portals[i].activeSelf)
-                {
-                    portals[i].SetActive(true);
-                }
-                else
-                {
-                    portals[i].SetActive(false);
-                }
-            }
-            else
-            {
-                portals[i].SetActive(false);
-            }
+            portals[i].SetActive(i == PortalNum && !portals[i].activeSelf);
         }
     }
 }
