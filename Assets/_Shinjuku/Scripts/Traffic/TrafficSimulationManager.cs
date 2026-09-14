@@ -24,6 +24,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private const float PositionQuantum = 0.02f;
     private const float SpeedQuantum = 0.05f;
+    private const float MinimumYellowCrossingSpeed = 0.5f;
     private const float AccelerationQuantum = 0.1f;
     // 2026-09-08: 드문 수신 공백에 대비해 최소 재생 여유를 0.75초에서 1초로 확대
     private const float MinimumRemoteRenderDelay = 1f;
@@ -476,6 +477,9 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private double syncedSimulationTime;
 
     [UdonSynced]
+    private int syncedSignalDecisions;
+
+    [UdonSynced]
     private int[] syncedVehicleStateA = new int[NetworkSlotCapacity];
 
     [UdonSynced]
@@ -509,6 +513,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
     private bool[] vehicleSpawnGeneration = new bool[0];
     private bool[] processedSlots = new bool[0];
     private bool[] signalCommittedToCross = new bool[0];
+    private bool[] signalYellowDecisionMade = new bool[0];
 
     private int[] sourceLaneVehicleOrder = new int[0];
     private int[] sourceLaneVehicleCounts = new int[0];
@@ -888,6 +893,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         syncedSnapshotSequence++;
         syncedRandomState = randomState;
         syncedSimulationTime = simulationStateTime;
+        syncedSignalDecisions = 0;
 
         for (int i = 0;
              i < NetworkSlotCapacity;
@@ -905,6 +911,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             int positionValue = Mathf.Clamp(Mathf.RoundToInt(vehicleS[i] / PositionQuantum), 0, 131071);
 
             int speedValue = Mathf.Clamp(Mathf.RoundToInt(vehicleSpeeds[i] / SpeedQuantum), 0, 511);
+
+            // 차량당 2비트로 황색 판단 완료와 통과 결정을 보존한다. 차선 변경 중에도 권한 이전 시 복원한다.
+            if (signalYellowDecisionMade[i])
+            {
+                syncedSignalDecisions |= 1 << (i * 2);
+            }
+            if (signalCommittedToCross[i])
+            {
+                syncedSignalDecisions |= 2 << (i * 2);
+            }
 
             // A: 활성 0, 차선 1~3, 위치 4~20, 속도 21~29번 비트 사용
             // 30번은 신호 통과 또는 긴급 회피, 31번은 후진 회복 표시에 사용
@@ -1112,6 +1128,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 vehicleAccelerations[i] = 0f;
                 speedFactors[i] = 1f;
                 signalCommittedToCross[i] = false;
+                signalYellowDecisionMade[i] = false;
                 laneChangeActive[i] = false;
                 laneChangeReverseManeuver[i] = false;
                 laneChangeEmergencyManeuver[i] = false;
@@ -1140,7 +1157,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             laneChangeEmergencyManeuver[i] =
                 laneChangeActive[i] && !laneChangeReverseManeuver[i] && DecodeEmergencyManeuver(stateA);
 
-            signalCommittedToCross[i] = !laneChangeActive[i] && (stateA & SignalCommitBit) != 0;
+            signalCommittedToCross[i] = (syncedSignalDecisions & (2 << (i * 2))) != 0 ||
+                (!laneChangeActive[i] && (stateA & SignalCommitBit) != 0);
+            signalYellowDecisionMade[i] = signalCommittedToCross[i] ||
+                (syncedSignalDecisions & (1 << (i * 2))) != 0;
 
             laneChangeTargetLaneIds[i] = laneChangeActive[i] ? DecodeLaneChangeTarget(stateB) : -1;
 
@@ -1669,6 +1689,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         maneuverPathDistances = new float[maneuverSampleCapacity];
         maneuverPathSteeringAngles = new float[maneuverSampleCapacity];
         signalCommittedToCross = new bool[slotCount];
+        signalYellowDecisionMade = new bool[slotCount];
 
         visualActive = new bool[slotCount];
         visualSpawnGeneration = new bool[slotCount];
@@ -1764,6 +1785,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             vehicleSpawnGeneration[i] = false;
             processedSlots[i] = false;
             signalCommittedToCross[i] = false;
+            signalYellowDecisionMade[i] = false;
 
             vehicleLaneIds[i] = -1;
             sampleHints[i] = -1;
@@ -1906,6 +1928,17 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
             if (vehicleActive[i])
             {
+                // 이동이나 장애물 대기로 상태가 바뀌기 전에 판단하며, 황색 중 생성된 차량도 첫 단계에서 판단한다.
+                if (currentSignalState == ShinhoTime.SignalGreen)
+                {
+                    signalCommittedToCross[i] = false;
+                    signalYellowDecisionMade[i] = false;
+                }
+                else if (currentSignalState == ShinhoTime.SignalYellow && !signalYellowDecisionMade[i])
+                {
+                    GetSignalStopS(i, vehicleS[i], vehicleSpeeds[i]);
+                }
+
                 previousVehicleS[i] = vehicleS[i];
                 previousVehicleSpeeds[i] = vehicleSpeeds[i];
                 previousLaneChangeProgress[i] = laneChangeProgress[i];
@@ -2455,6 +2488,20 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         float oldS = previousVehicleS[vehicleIndex];
         leaderIndex = -1;
 
+        if (laneChangeActive[vehicleIndex] && laneChangePreparing[vehicleIndex] &&
+            !laneChangeReverseManeuver[vehicleIndex] && laneChangeProgress[vehicleIndex] <= 0f)
+        {
+            int ruleIndex = laneChangeRuleIndices[vehicleIndex];
+            if (ruleIndex >= 0 && ruleIndex < laneDatabase.changeEndS.Length &&
+                laneDatabase.changeEndS[ruleIndex] - oldS <
+                    GetNormalLaneChangeTravelDistance(laneChangeEmergencyManeuver[vehicleIndex]))
+            {
+                // 감속 중 남은 전환 거리가 부족해지면 시작 전 예약을 취소하고 현재 차선에서 다시 판단한다.
+                ResetLaneChange(vehicleIndex);
+                UpdateAuthorityPhysicsObstacleSensor(vehicleIndex, oldS, vehicleSpeeds[vehicleIndex]);
+            }
+        }
+
         if (laneChangeActive[vehicleIndex] && !laneChangePreparing[vehicleIndex])
         {
             EnsureManeuverPath(vehicleIndex, oldS, laneChangeProgress[vehicleIndex]);
@@ -2614,7 +2661,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
         ClearAuthorityPhysicsObstacleState(vehicleIndex);
 
-        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0 || !localIsAuthority ||
+        int obstacleLayerMask = GetVehicleObstacleLayerMask(vehicleIndex);
+        if (!enableAuthorityPhysicsObstacles || obstacleLayerMask == 0 || !localIsAuthority ||
             !authorityReady)
         {
             return;
@@ -2705,7 +2753,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         authorityPhysicsQueryCount++;
 
         // 검사 시작 영역에 이미 겹친 장애물을 먼저 확인
-        bool blocked = Physics.CheckBox(boxCenter, halfExtents, vehicleRotation, authorityObstacleLayerMask);
+        bool blocked = Physics.CheckBox(boxCenter, halfExtents, vehicleRotation, obstacleLayerMask);
 
         float hitDistance = 0f;
         // 시작 영역이 비어 있을 때만 전방을 검사해 추가 물리 쿼리 실행
@@ -2720,7 +2768,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
                 out hit,
                 vehicleRotation,
                 castDistance,
-                authorityObstacleLayerMask
+                obstacleLayerMask
             );
 
             if (blocked)
@@ -2852,13 +2900,25 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
     }
 
+    private int GetVehicleObstacleLayerMask(int vehicleIndex)
+    {
+        // 후진 회피가 시작된 차량만 합류 완료까지 Player와 PlayerLocal 감지를 제외한다.
+        if (laneChangeActive[vehicleIndex] && laneChangeReverseManeuver[vehicleIndex])
+        {
+            return authorityObstacleLayerMask & ~((1 << 9) | (1 << 10));
+        }
+
+        return authorityObstacleLayerMask;
+    }
+
     private bool IsPhysicsPoseBlockedByObstacle(
         int vehicleIndex,
         Vector3 vehiclePosition,
         Quaternion vehicleRotation,
         float safetyMargin)
     {
-        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0)
+        int obstacleLayerMask = GetVehicleObstacleLayerMask(vehicleIndex);
+        if (!enableAuthorityPhysicsObstacles || obstacleLayerMask == 0)
         {
             return false;
         }
@@ -2875,7 +2935,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
 
         authorityPhysicsQueryCount++;
-        bool blocked = Physics.CheckBox(boxCenter, halfExtents, vehicleRotation, authorityObstacleLayerMask);
+        bool blocked = Physics.CheckBox(boxCenter, halfExtents, vehicleRotation, obstacleLayerMask);
 
         if (blocked)
         {
@@ -2891,7 +2951,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         Quaternion vehicleRotation,
         float safetyMargin)
     {
-        if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0)
+        int obstacleLayerMask = GetVehicleObstacleLayerMask(vehicleIndex);
+        if (!enableAuthorityPhysicsObstacles || obstacleLayerMask == 0)
         {
             return false;
         }
@@ -2908,7 +2969,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         );
 
         authorityPhysicsQueryCount++;
-        bool blocked = Physics.CheckBox(center, halfExtents, vehicleRotation, authorityObstacleLayerMask);
+        bool blocked = Physics.CheckBox(center, halfExtents, vehicleRotation, obstacleLayerMask);
 
         if (blocked)
         {
@@ -2954,6 +3015,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         Vector3 targetLaneOffset,
         float safetyMargin)
     {
+        int obstacleLayerMask = GetVehicleObstacleLayerMask(vehicleIndex);
+        if (!enableAuthorityPhysicsObstacles || obstacleLayerMask == 0)
+        {
+            return false;
+        }
+
         Vector3 up = vehicleRotation * Vector3.up;
         up = up.sqrMagnitude > 0.0001f ? up.normalized : Vector3.up;
 
@@ -2984,7 +3051,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         Vector3 halfExtents = new Vector3(sideHalfWidth, fullHalfExtents.y, fullHalfExtents.z);
 
         authorityPhysicsQueryCount++;
-        bool blocked = Physics.CheckBox(center, halfExtents, vehicleRotation, authorityObstacleLayerMask);
+        bool blocked = Physics.CheckBox(center, halfExtents, vehicleRotation, obstacleLayerMask);
 
         if (blocked)
         {
@@ -2996,6 +3063,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
 
     private float ApplyPhysicsReverseLimit(int vehicleIndex, float currentS, float minimumS)
     {
+        // 기동 시작 전 후방 공간 검사에서는 플레이어도 계속 감지한다.
         float castDistance = Mathf.Max(0f, currentS - minimumS);
 
         if (!enableAuthorityPhysicsObstacles || authorityObstacleLayerMask == 0 || castDistance <= 0.001f)
@@ -4959,6 +5027,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         if (currentSignalState == ShinhoTime.SignalGreen)
         {
             signalCommittedToCross[vehicleIndex] = false;
+            signalYellowDecisionMade[vehicleIndex] = false;
 
             return -1f;
         }
@@ -4979,15 +5048,17 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             return -1f;
         }
 
-        if (currentSignalState == ShinhoTime.SignalYellow)
+        if (currentSignalState == ShinhoTime.SignalYellow && !signalYellowDecisionMade[vehicleIndex])
         {
+            signalYellowDecisionMade[vehicleIndex] = true;
             float brakingRate = Mathf.Max(0.1f, signalComfortDeceleration);
 
             float requiredBrakingDistance =
                 currentSpeed * currentSpeed / (2f * brakingRate) + yellowDecisionMargin;
 
-            // 황색 전환 시 정지선과 너무 가까우면 급정지 없이 통과
-            if (distanceToStop <= requiredBrakingDistance)
+            // 주행 중 급정지가 필요한 차량만 통과한다. 정지 또는 서행 차량과 이미 내린 정지 결정은 유지한다.
+            if (currentSpeed > MinimumYellowCrossingSpeed && distanceToStop > 0f &&
+                distanceToStop <= requiredBrakingDistance)
             {
                 signalCommittedToCross[vehicleIndex] = true;
 
@@ -5841,8 +5912,10 @@ public class TrafficSimulationManager : UdonSharpBehaviour
             sourceBumperGap =
                 sourceLeaderS - currentS - GetCombinedHalfLength(vehicleIndex, sourceLeaderIndex);
 
+            // 일반적인 속도 차이는 따라가고, 거의 멈춘 앞차만 추월 대상으로 판단한다.
             shouldOvertake =
                 sourceBumperGap <= overtakeTriggerDistance &&
+                vehicleSpeeds[sourceLeaderIndex] <= GetCruiseSpeed(vehicleIndex, sourceLaneId) * 0.2f &&
                 vehicleSpeeds[sourceLeaderIndex] + overtakeSpeedAdvantage <
                     GetCruiseSpeed(vehicleIndex, sourceLaneId);
 
@@ -6086,6 +6159,12 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         ClearAuthorityPhysicsObstacleState(vehicleIndex);
         ClearPhysicalObstacleRestartState(vehicleIndex);
 
+        if (isBlockedOvertake)
+        {
+            ResetVehicleObstacleState(vehicleIndex);
+            UpdateAuthorityPhysicsObstacleSensor(vehicleIndex, vehicleS[vehicleIndex], currentSpeed);
+        }
+
         if (laneChangeTargetLaneIds[vehicleIndex] == TrafficLaneDatabase.LaneR4Branch)
         {
             laneChangeBranchDecisions[vehicleIndex] = 2;
@@ -6163,6 +6242,8 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         vehicleSpeeds[vehicleIndex] = 0f;
         vehicleAccelerations[vehicleIndex] = 0f;
         BuildManeuverPath(vehicleIndex, currentS);
+        ResetVehicleObstacleState(vehicleIndex);
+        UpdateAuthorityPhysicsObstacleSensor(vehicleIndex, currentS, 0f);
         return true;
     }
 
@@ -6706,6 +6787,16 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         vehicleRenderMaximumS[vehicleIndex] = -1f;
         sampleHints[vehicleIndex] = laneDatabase.FindSampleIndex(targetLaneId, targetS, -1);
 
+        bool wasReverseManeuver = laneChangeReverseManeuver[vehicleIndex];
+        ResetLaneChange(vehicleIndex);
+        if (wasReverseManeuver)
+        {
+            UpdateAuthorityPhysicsObstacleSensor(vehicleIndex, targetS, vehicleSpeeds[vehicleIndex]);
+        }
+    }
+
+    private void ResetLaneChange(int vehicleIndex)
+    {
         laneChangeActive[vehicleIndex] = false;
         InvalidateManeuverPath(vehicleIndex);
         InvalidateLaneVehicleCaches();
@@ -7017,6 +7108,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         InvalidateLaneVehicleCaches();
         vehicleLaneIds[vehicleIndex] = laneId;
         signalCommittedToCross[vehicleIndex] = false;
+        signalYellowDecisionMade[vehicleIndex] = false;
         laneChangeActive[vehicleIndex] = false;
         InvalidateManeuverPath(vehicleIndex);
         laneChangeReverseManeuver[vehicleIndex] = false;
@@ -7242,6 +7334,7 @@ public class TrafficSimulationManager : UdonSharpBehaviour
         vehicleAccelerations[vehicleIndex] = 0f;
         vehicleRenderMaximumS[vehicleIndex] = -1f;
         signalCommittedToCross[vehicleIndex] = false;
+        signalYellowDecisionMade[vehicleIndex] = false;
 
         activeVehicleCount = Mathf.Max(0, activeVehicleCount - 1);
     }
