@@ -30,6 +30,10 @@ public class SpeakerManager : UdonSharpBehaviour
     private Vector3 pendingPlacementPosition;
     private Quaternion pendingPlacementRotation;
     private float nextPlacementRetryTime;
+    private int[] pendingReleaseGenerations;
+    private float nextReleaseRetryTime;
+    private float instanceLimitFeedbackUntil;
+    private const int PlacementResultInstanceLimit = -3;
 
     private int UsableSpeakerCount = 0;
     private bool isVrUser;
@@ -170,6 +174,9 @@ public class SpeakerManager : UdonSharpBehaviour
 
     private void Update()
     {
+        // 지연 이벤트 한 번에 의존하지 않고, 응답/반환 확인 전까지만 3초 간격으로 재확인한다.
+        if (placementPending) _RetryPlacement();
+        RetryPendingReleases();
         HandlePlacementInput();
     }
 
@@ -499,7 +506,7 @@ public class SpeakerManager : UdonSharpBehaviour
         {
             SetPlacementState(true, PlacementInvalidSurface);
         }
-        else if (UsableSpeakerCount < 1)
+        else if (UsableSpeakerCount < 1 || Time.time < instanceLimitFeedbackUntil)
         {
             SetPlacementState(true, PlacementInstanceLimit);
         }
@@ -895,11 +902,12 @@ public class SpeakerManager : UdonSharpBehaviour
             placementRequestId, pendingPlacementPosition, pendingPlacementRotation);
         if (!placementPending) return; // 로컬 소유자의 즉시 응답이면 재시도 불필요
         nextPlacementRetryTime = Time.time + 3f;
-        SendCustomEventDelayedSeconds(nameof(_RetryPlacement), 3f);
+        // 다음 재시도는 Update에서 처리. 거절/승인 응답을 받으면 placementPending이 해제된다.
     }
 
     private void EnsureAllocationTable()
     {
+        bool changed = false;
         bool rebuildOwners = allocatedPlayerIds == null || allocatedPlayerIds.Length != speakerControllers.Length;
         if (rebuildOwners) allocatedPlayerIds = new int[speakerControllers.Length];
         if (allocationGenerations == null || allocationGenerations.Length != speakerControllers.Length)
@@ -912,8 +920,16 @@ public class SpeakerManager : UdonSharpBehaviour
             {
                 allocatedPlayerIds[i] = speaker._GetAllocatedPlayerId();
                 allocationGenerations[i] = Mathf.Max(allocationGenerations[i], speaker._GetApprovedGeneration());
+                changed = true;
+            }
+            // 반환은 배치 번호를 올리지 않는다. 같은 번호의 검증된 반환도 예약표에 반영한다.
+            if (allocatedPlayerIds[i] != 0 && speaker._IsReturnedAllocation(allocationGenerations[i]))
+            {
+                allocatedPlayerIds[i] = 0;
+                changed = true;
             }
         }
+        if (changed && Networking.IsOwner(gameObject)) RequestSerialization();
     }
 
     /// <summary>요청자의 빈 슬롯을 소유권자 한 명이 확정한 뒤 결과 전달</summary>
@@ -930,7 +946,7 @@ public class SpeakerManager : UdonSharpBehaviour
             return;
         }
         EnsureAllocationTable();
-        int slot = -1;
+        int slot = PlacementResultInstanceLimit;
         for (int i = 0; i < speakerControllers.Length; i++)
         {
             SpeakerController speaker = speakerControllers[i];
@@ -957,6 +973,8 @@ public class SpeakerManager : UdonSharpBehaviour
             RequestSerialization();
             RecalculateUsableCount();
         }
+        // 상한 거절 시에도 최신 예약표를 보내 요청자의 표시가 오래된 상태에 머물지 않게 한다.
+        else RequestSerialization();
         SendCustomNetworkEvent(NetworkEventTarget.All, nameof(ReceivePlacement), caller.playerId, requestId, slot, position, rotation, slot >= 0 ? allocationGenerations[slot] : 0);
     }
 
@@ -969,11 +987,15 @@ public class SpeakerManager : UdonSharpBehaviour
         VRCPlayerApi player = VRCPlayerApi.GetPlayerById(playerId);
         if (slot >= 0 && slot < speakerControllers.Length && Utilities.IsValid(player))
             speakerControllers[slot]._ApplyAllocation(player, generation);
+        // 요청자가 아니어도 예약 승인 즉시 남은 개수를 갱신한다. 실제 위치 수신을 기다리지 않는다.
+        RecalculateUsableCount();
         // 이전 요청의 늦은 승인으로 새 요청 위치가 덮어써지지 않도록 요청 번호 확인
         if (Networking.LocalPlayer.playerId != playerId || !placementPending || requestId != placementRequestId) return;
         placementPending = false;
-        if (slot == -2)
+        if (slot == PlacementResultInstanceLimit || slot == -2 || slot == -1)
         {
+            // 상한과 본인 소유 거절을 구분한다. 지연된 거절이 반환보다 늦게 와도 영구 차단하지 않는다.
+            if (slot == PlacementResultInstanceLimit) instanceLimitFeedbackUntil = Time.time + 1f;
             isPlacingSpeaker = true;
             ConfigureAudibleRangeRenderer();
             nextRangeUpdate = 0f;
@@ -984,19 +1006,46 @@ public class SpeakerManager : UdonSharpBehaviour
         if (slot >= 0 && slot < speakerControllers.Length)
         {
             if (!speakerControllers[slot]._PlaceGrantedSpeaker(position, rotation, generation))
-                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), slot, generation);
+                _ReleaseSpeaker(speakerControllers[slot], generation);
         }
         RecalculateUsableCount();
     }
 
     public void _ReleaseSpeaker(SpeakerController speaker, int generation)
     {
+        if (generation <= 0) return;
+        if (pendingReleaseGenerations == null) pendingReleaseGenerations = new int[speakerControllers.Length];
         for (int i = 0; i < speakerControllers.Length; i++)
             if (speakerControllers[i] == speaker)
             {
-                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), i, generation);
+                pendingReleaseGenerations[i] = Mathf.Max(pendingReleaseGenerations[i], generation);
+                nextReleaseRetryTime = 0f;
+                RetryPendingReleases();
                 return;
             }
+    }
+
+    private void RetryPendingReleases()
+    {
+        if (pendingReleaseGenerations == null || Time.time < nextReleaseRetryTime) return;
+        nextReleaseRetryTime = Time.time + 3f;
+        for (int i = 0; i < pendingReleaseGenerations.Length; i++)
+        {
+            int generation = pendingReleaseGenerations[i];
+            if (generation == 0) continue;
+            // 내 화면에서 사라졌는지가 아니라 관리자의 예약표로 반환 완료를 확인한다.
+            // 더 새 배치가 시작된 경우에도 종료하여 이전 반환으로 새 스피커를 지우지 않는다.
+            if (IsReleaseConfirmed(i, generation)) pendingReleaseGenerations[i] = 0;
+            else SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ReleaseAllocation), i, generation);
+        }
+    }
+
+    private bool IsReleaseConfirmed(int slot, int generation)
+    {
+        return allocatedPlayerIds != null && allocationGenerations != null &&
+            slot < allocatedPlayerIds.Length && slot < allocationGenerations.Length &&
+            (allocationGenerations[slot] > generation ||
+             (allocationGenerations[slot] == generation && allocatedPlayerIds[slot] == 0));
     }
 
     [NetworkCallable]
@@ -1006,9 +1055,16 @@ public class SpeakerManager : UdonSharpBehaviour
         VRCPlayerApi caller = NetworkCalling.CallingPlayer;
         if (!Utilities.IsValid(caller)) return;
         EnsureAllocationTable();
-        if (generation <= 0 || generation != allocationGenerations[slot]) return;
+        if (generation <= 0) return;
+        if (generation != allocationGenerations[slot])
+        {
+            // 이전 반환의 재시도에는 최신 배정표만 재전송하고 현재 배치는 건드리지 않는다.
+            if (generation < allocationGenerations[slot]) RequestSerialization();
+            return;
+        }
         int allocated = allocatedPlayerIds[slot];
-        if (allocated == 0) return;
+        // 이미 반환했어도 요청자가 확인하지 못했다면 완료 상태를 다시 알려준다.
+        if (allocated == 0) { RequestSerialization(); return; }
         SpeakerController speaker = speakerControllers[slot];
         if (allocated != caller.playerId && caller != Networking.GetOwner(speaker.gameObject)) return;
         if (speaker.isSpeakerTaken && !speaker.IsPerformer(caller)) return;
@@ -1088,15 +1144,21 @@ public class SpeakerManager : UdonSharpBehaviour
     /// </summary>
     public void RecalculateUsableCount()
     {
+        if (Networking.IsOwner(gameObject)) EnsureAllocationTable();
         int count = 0;
         bool localOwned = false;
         for (int i = 0; i < speakerControllers.Length; i++)
         {
             SpeakerController speaker = speakerControllers[i];
             bool reserved = allocatedPlayerIds != null && i < allocatedPlayerIds.Length && allocatedPlayerIds[i] != 0;
+            int tableGeneration = allocationGenerations != null && i < allocationGenerations.Length ? allocationGenerations[i] : 0;
+            // 동기화보다 승인/반환 이벤트가 먼저 온 경우에는 더 최신인 검증 상태를 사용한다.
+            if (speaker._GetApprovedGeneration() > 0 && speaker._GetApprovedGeneration() >= tableGeneration)
+                reserved = speaker._HasOpenAllocation();
             if (speaker.IsAvailableForPlacement() && !reserved) count++;
             if (speaker.IsLocalPerformer()) localOwned = true;
         }
+        if (count > UsableSpeakerCount) instanceLimitFeedbackUntil = 0f;
         UsableSpeakerCount = count;
         speakerOwned = localOwned;
     }
