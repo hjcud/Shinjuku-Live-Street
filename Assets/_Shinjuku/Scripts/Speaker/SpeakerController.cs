@@ -337,6 +337,19 @@ public class SpeakerController : UdonSharpBehaviour
 
     public int _GetApprovedGeneration() { return approvedGeneration; }
 
+    // 비활성 상태만으로는 설치 승인 대기와 구분할 수 없으므로, 같은 배치의 반환 기록까지 확인한다.
+    public bool _IsReturnedAllocation(int generation)
+    {
+        return generation > 0 && generation == approvedGeneration &&
+            generation == placementGeneration && placementClosed;
+    }
+
+    public bool _HasOpenAllocation()
+    {
+        // 참가자 정보가 늦게 도착해도 승인된 예약 자체는 빈자리로 세지 않는다.
+        return approvedGeneration > 0 && !allocationClosed && !_IsReturnedAllocation(approvedGeneration);
+    }
+
     public int _GetAllocatedPlayerId()
     {
         if (placementClosed && placementGeneration == approvedGeneration) return 0;
