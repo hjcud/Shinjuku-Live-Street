@@ -20,8 +20,8 @@
 
 <table align="center">
   <tr>
-    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697回</strong><br><sub>累計訪問数</sub></td>
-    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>64,453人</strong><br><sub>お気に入り</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,929,340回</strong><br><sub>累計訪問数</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>67,260人</strong><br><sub>お気に入り</sub></td>
     <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>最大80人</strong><br><sub>定員</sub></td>
   </tr>
 </table>
@@ -30,7 +30,7 @@
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChatでワールドを開く ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChatソーシャルワールド / Unity / UdonSharp / 2名で制作<br>訪問数・お気に入り数 / 2026年9月3日時点</sub></p>
+<p align="center"><sub>VRChatソーシャルワールド / Unity / UdonSharp / 2名で制作<br>訪問数・お気に入り数 / 2026年10月12日確認</sub></p>
 
 ## ストリートライブとコミュニティ
 
@@ -64,9 +64,21 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 ## 最近の改善
 
-<sub>2026年9月3日時点</sub>
+<sub>2026年10月12日確認</sub>
 
-ライブ機材の同期と交通シミュレーションを再設計しました。同時接続が多い場面でも機材の状態を安定して共有できるようにし、CPUフレーム時間、物理演算時間、1フレームあたりのGC割り当てを削減しました。
+公開コードの最終更新日は**2026年9月21日**です。スピーカーの設置・返却処理、ライブの場所を探すマップ、多言語案内、ユーザーごとの設定を改善しました。
+
+| 反映日 | 主な変更 |
+| --- | --- |
+| 9月21日 | スピーカーの設置上限と残数表示を改善し、返却完了の確認と再試行により、返却後に再設置できなくなる問題を修正しました。古い返却要求が新しい設置に影響しないよう保護します。([#16](https://github.com/hjcud/Shinjuku-Live-Street/pull/16)) |
+| 9月14日 | 入口のマップに設置済みスピーカーの位置、出演者名、使用状況を表示します。PC・VRでの設置キャンセル、モデル選択、設置ガイドも改善しました。([#14](https://github.com/hjcud/Shinjuku-Live-Street/pull/14)) |
+| 9月14日 | VRChatの言語設定に応じた日本語・韓国語・英語の案内と、ユーザーごとの車両表示・環境音設定を追加しました。車両を非表示にしても共有の交通シミュレーションは継続します。 |
+| 9月14日 | Questシーンの分離、シェーダー・照明・看板の点検、ネットワークIDの修復、SDKビルド検証用のエディターツールを追加しました。 |
+| 9月12日 | テレポート処理をローカルイベントに限定し、移動処理中のみ実行するよう改善しました。([#11](https://github.com/hjcud/Shinjuku-Live-Street/pull/11)) |
+
+### ライブの場所とユーザーごとの設定
+
+マップはスピーカーの同期済み設置情報を再利用し、位置と出演者名を表示します。マップ外のスピーカーも全体の使用状況に含め、名前が重なる場合や端からはみ出す場合は表示位置を調整します。車両表示と環境音はローカル設定として連携し、各ユーザーが調整できます。
 
 ### ライブ機材の同期 — 設置から返却まで状態を一貫して管理
 
@@ -86,7 +98,7 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
   <img src="./Docs/images/traffic-system-architecture.ja.svg" alt="エディタ、オーナー、ネットワーク、リモートユーザーへ続く交通状態の処理構成" width="900">
 </p>
 
-交通オーナーが10台の走行状態を1つの管理スクリプトで計算し、各車両の状態を64ビットに圧縮して送信します。リモート側は同じレーンデータから車両を再現し、毎フレーム補間して滑らかな動きを保ちます。
+交通オーナーが車両の走行状態を1つの管理スクリプトで計算し、各車両の状態を64ビットに圧縮して送信します。現在の公開コードでは目標車両数を**6台**、車両の補充間隔を**0.8秒**に設定しています。リモート側は同じレーンデータから車両を再現し、毎フレーム補間して滑らかな動きを保ちます。
 
 <details>
 <summary><strong>実行時のデバッグ表示を見る</strong></summary>
@@ -99,13 +111,15 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 </details>
 
-### パフォーマンス改善結果
+### パフォーマンス改善結果 — 既存の300フレーム測定記録
 
-![交通システムの初期スナップショットと最新スナップショットのUnity Profiler比較](./Docs/images/traffic-performance-comparison.ja.svg)
+以下は2026年9月3日のREADMEに掲載した比較記録です。車両10台は当時の測定条件であり、現在のコードでの再測定は行っていません。削減率は[公開測定データ](./Docs/benchmarks/traffic-300-frames/README.md)の丸め前の平均値から計算しました。
+
+![交通システムの初期スナップショットと改善後のスナップショットのUnity Profiler比較](./Docs/images/traffic-performance-comparison.ja.svg)
 
 <p align="center"><sub>Unity Editor・ClientSim環境での同一条件比較であり、実際のVRChatインスタンスでは結果が異なる場合があります。</sub></p>
 
-車両10台とClientSimで再現したリモートプレイヤー80人を同じエリアに集め、Unity Editor上で初期・最新スナップショットをそれぞれ300フレーム計測しました。平均CPUフレーム時間は`17.65 ms → 11.92 ms`、P95フレーム時間は`24.60 ms → 17.44 ms`まで減少しました。物理処理時間は65.3%、1フレームあたりのGC割り当ては88.1%削減しています。
+車両10台とClientSimで再現したリモートプレイヤー80人を同じエリアに集め、Unity Editor上で初期・改善後のスナップショットをそれぞれ300フレーム計測しました。平均CPUフレーム時間は`17.65 ms → 11.92 ms`、P95フレーム時間は`24.60 ms → 17.44 ms`まで減少しました。物理処理時間は65.5%、1フレームあたりのGC割り当ては88.1%削減しています。
 
 <p align="center">
   <a href="./Docs/optimization.ja.md"><strong>測定条件と実装の詳細を見る →</strong></a>
@@ -114,6 +128,8 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 ---
 
 ## モデルと描画の最適化
+
+<sub>以下のモデル・描画数値は既存の開発記録の測定値であり、その後のPC・Questシーン変更を反映した再集計値ではありません。</sub>
 
 <p align="center">
   <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="通常レンダリングとワイヤーフレームの比較" width="900">
@@ -142,26 +158,35 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 | レーンデータ | [`TrafficLaneDatabase.cs`](./Assets/_Shinjuku/Scripts/Traffic/TrafficLaneDatabase.cs) | ベイク済みレーンの参照と車両姿勢の復元 |
 | エディターツール | [`TrafficLaneBakerEditor.cs`](./Assets/_Shinjuku/Editor/Traffic/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/_Shinjuku/Editor/Traffic/TrafficSimulationManagerEditor.cs) | レーンのベイク、検証、可視化 |
 | ワールド機能 | [`PosterSlide.cs`](./Assets/_Shinjuku/Scripts/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/_Shinjuku/Scripts/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/_Shinjuku/Scripts/Teleport/CollisionTeleport.cs) | ポスター切り替え、ポータル、テレポート |
+| ライブマップ | [`SpeakerMap.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMap.cs), [`SpeakerMapNameLayout.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMapNameLayout.cs) | スピーカー位置・出演者名・使用状況と名前の配置 |
+| 言語・個人設定 | [`WorldLanguage.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLanguage.cs), [`WorldLocalSettings.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLocalSettings.cs), [`SpeakerMapPanel.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMapPanel.cs) | 共通言語の選択、ローカルの車両表示・環境音、設定UI |
+| 画像読み込み | [`ImageLoader.cs`](./Assets/_Shinjuku/Scripts/Speaker/ImageLoader.cs) | スピーカー画面のURL画像読み込みと初期化 |
+| マップ・案内制作 | [`SpeakerMapSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerMapSetup.cs), [`SpeakerPlacementSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerPlacementSetup.cs), [`LocalPatchBoardSetup.cs`](./Assets/_Shinjuku/Editor/LocalPatchBoardSetup.cs) | マップ・設置ガイドと多言語更新案内板の構築 |
+| Quest制作ツール | [`QuestSceneSplitSetup.cs`](./Assets/_Shinjuku/Editor/QuestSceneSplitSetup.cs), [`QuestSceneAudit.cs`](./Assets/_Shinjuku/Editor/QuestSceneAudit.cs), [`QuestSdkBuildVerification.cs`](./Assets/_Shinjuku/Editor/QuestSdkBuildVerification.cs) | Questシーン分離、状態点検、SDKビルド検証 |
 
 ## リポジトリについて
 
 このリポジトリは、ワールドを実行できる完全なUnityプロジェクトではありません。作成したC#・UdonSharpコードと開発資料に加え、自作または提供いただいた紹介用の画像・動画を公開しています。ワールドの動作に必要なUnityシーン、Prefab、モデル、テクスチャ、音声、動画、マテリアル、アニメーション、シェーダー、`.meta`ファイル、外部アセットは含まれていません。
+
+公開コードはプロジェクト全体の一部です。例えば、`WorldLocalSettings`が参照する保存層の`WorldPlayerData`は公開対象から除外しています。エディターツールも元のプロジェクトのシーン・アセットパスを前提としているため、リポジトリの複製だけではコンパイルやワールドのビルドはできません。
 
 <details>
 <summary><strong>使用したSDK・パッケージ・外部コンポーネント</strong></summary>
 
 ### 開発環境
 
+<sub>2026年10月12日に開発プロジェクトのUnityバージョンとパッケージ設定から確認したインストール済みバージョンです。</sub>
+
 - Unity `2022.3.22f1`
-- VRChat SDK - Worlds `3.8.1`
+- VRChat SDK - Worlds `3.10.5`
 - UdonSharp
-- TextMesh Pro
+- TextMesh Pro `2.1.6`
 
 ### ワールドで使用した外部コンポーネント
 
-- Topaz Chat `0.1.6`
-- lilToon `1.10.3`
-- VRWorldToolkit `3.2.1`
+- Topaz Chat `0.3.0`
+- lilToon `2.3.4`
+- VRWorldToolkit `3.4.1`
 - AVPro Video
 - Bakery GPU Lightmapper
 - QvPen

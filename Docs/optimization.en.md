@@ -40,14 +40,14 @@ Future published results should use matching build and Profiler settings and sta
 
 | Unity Profiler metric | Initial snapshot | Latest snapshot | Change |
 | --- | ---: | ---: | ---: |
-| Average CPU frame time | 17.65 ms | **11.92 ms** | **32.5% lower** |
+| Average CPU frame time | 17.65 ms | **11.92 ms** | **32.4% lower** |
 | CPU frame time P95 | 24.60 ms | **17.44 ms** | **29.1% lower** |
-| Average PlayerLoop | 9.03 ms | **5.46 ms** | **39.5% lower** |
-| Average Physics.Simulate | 0.49 ms | **0.17 ms** | **65.3% lower** |
-| Average GC allocation per frame | 101.0 KB | **12.0 KB** | **88.1% lower** |
-| Average Udon time | **0.82 ms** | 1.08 ms | 31.7% higher |
+| Average PlayerLoop | 9.03 ms | **5.46 ms** | **39.6% lower** |
+| Average Physics.Simulate | 0.49 ms | **0.17 ms** | **65.5% lower** |
+| Average GC allocation per frame | 101.0 KiB | **12.0 KiB** | **88.1% lower** |
+| Average Udon time | **0.82 ms** | 1.08 ms | 31.5% higher |
 
-The latest snapshot includes centralized simulation, lane changes, state compression, and remote interpolation, increasing average Udon time from `0.82 ms to 1.08 ms`. Larger reductions in PlayerLoop, Physics, and GC lowered overall CPU frame time by 32.5%.
+The latest snapshot includes centralized simulation, lane changes, state compression, and remote interpolation, increasing average Udon time from `0.82 ms to 1.08 ms`. Larger reductions in PlayerLoop, Physics, and GC lowered overall CPU frame time by 32.4%.
 
 ## 1. Every vehicle ran its own workload every frame
 
@@ -154,7 +154,7 @@ Traffic-light stopping now uses baked stop-line data, and lane-change sensor bou
 
 ### Result
 
-Between the initial and latest snapshots, CPU frame-time P95 fell from `24.60 ms to 17.44 ms`, a 29.1% reduction. Average CPU frame time also fell by 32.5%, improving both typical performance and recurring slow frames. Model, material, and render settings remained unchanged.
+Between the initial and latest snapshots, CPU frame-time P95 fell from `24.60 ms to 17.44 ms`, a 29.1% reduction. Average CPU frame time also fell by 32.4%, improving both typical performance and recurring slow frames. Model, material, and render settings remained unchanged.
 
 ## Supporting editor tools
 

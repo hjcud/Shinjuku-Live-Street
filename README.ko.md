@@ -20,8 +20,8 @@
 
 <table align="center">
   <tr>
-    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,693,697회</strong><br><sub>누적 방문</sub></td>
-    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>64,453명</strong><br><sub>즐겨찾기</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-visits.svg" alt="" width="28"><br><strong>1,929,340회</strong><br><sub>누적 방문</sub></td>
+    <td width="180" align="center"><img src="./Docs/images/metric-favorites.svg" alt="" width="28"><br><strong>67,260명</strong><br><sub>즐겨찾기</sub></td>
     <td width="180" align="center"><img src="./Docs/images/metric-capacity.svg" alt="" width="28"><br><strong>최대 80명</strong><br><sub>수용 인원</sub></td>
   </tr>
 </table>
@@ -30,7 +30,7 @@
   <a href="https://vrchat.com/home/world/wrld_c82a5c14-97a5-4782-a034-d897d2d943a2/info"><strong>VRChat에서 월드 열기 ↗</strong></a>
 </p>
 
-<p align="center"><sub>VRChat 소셜 월드 / Unity / UdonSharp / 2인 제작<br>방문, 즐겨찾기 수치 / 2026년 9월 3일 기준</sub></p>
+<p align="center"><sub>VRChat 소셜 월드 / Unity / UdonSharp / 2인 제작<br>방문, 즐겨찾기 수치 / 2026년 10월 12일 확인</sub></p>
 
 ## 거리 공연과 커뮤니티
 
@@ -64,9 +64,21 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 ## 최근 개발과 개선
 
-<sub>2026년 9월 3일 기준</sub>
+<sub>2026년 10월 12일 확인</sub>
 
-공연 장비 동기화와 교통 시뮬레이션을 다시 설계했습니다. 여러 사용자가 동시에 접속한 상황에서도 장비 상태가 안정적으로 동기화되도록 했으며, CPU 프레임 시간과 물리 연산 시간, 프레임당 GC 할당량을 줄였습니다.
+공개 코드의 최신 반영일은 **2026년 9월 21일**입니다. 스피커 설치·반납 처리, 공연 위치를 찾는 지도, 다국어 안내와 개인별 설정을 개선했습니다.
+
+| 반영일 | 주요 변경 |
+| --- | --- |
+| 9월 21일 | 스피커 설치 상한과 남은 개수 표시를 보완하고, 반환 완료 확인·재시도로 반납 후 재설치가 막히는 문제를 수정했습니다. 이전 반환 요청이 새 배치에 영향을 주지 않도록 보호합니다. ([#16](https://github.com/hjcud/Shinjuku-Live-Street/pull/16)) |
+| 9월 14일 | 입구 지도에 설치된 스피커 위치, 공연자 이름과 사용 현황을 표시합니다. PC·VR의 설치 취소, 모델 선택과 배치 안내도 개선했습니다. ([#14](https://github.com/hjcud/Shinjuku-Live-Street/pull/14)) |
+| 9월 14일 | VRChat 언어 설정에 맞춘 일본어·한국어·영어 안내와 개인별 차량 표시·환경음 설정을 추가했습니다. 차량을 숨겨도 공유 교통 시뮬레이션은 유지됩니다. |
+| 9월 14일 | Quest 씬 분리, 셰이더·조명·표지판 점검, 네트워크 ID 복구와 SDK 빌드 검증용 에디터 도구를 추가했습니다. |
+| 9월 12일 | 순간이동 처리를 로컬 이벤트로 제한하고, 이동 중일 때만 실행하도록 보완했습니다. ([#11](https://github.com/hjcud/Shinjuku-Live-Street/pull/11)) |
+
+### 공연 위치와 개인별 설정
+
+지도는 스피커의 동기화된 배치 정보를 재사용해 위치와 공연자 이름을 표시합니다. 지도 밖의 스피커도 전체 사용 현황에 포함하며, 이름이 겹치거나 가장자리를 벗어나는 경우 표시 위치를 조정합니다. 차량 표시와 환경음은 로컬 설정으로 연결해 각 사용자가 조절할 수 있습니다.
 
 ### 공연 장비 동기화 — 배치부터 반납까지 상태를 일관되게 관리
 
@@ -86,7 +98,7 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
   <img src="./Docs/images/traffic-system-architecture.ko.svg" alt="에디터, 교통 소유자, 네트워크와 원격 사용자로 이어지는 교통 상태 처리 구조" width="900">
 </p>
 
-교통 소유자가 차량 10대의 주행 상태를 한 곳에서 계산하고, 차량 상태는 64비트로 압축해 전송합니다. 원격 클라이언트는 같은 차선 데이터에서 차량을 복원하고 매 프레임 보간해 끊김을 줄였습니다.
+교통 소유자가 차량의 주행 상태를 한 곳에서 계산하고, 차량 상태는 64비트로 압축해 전송합니다. 현재 공개 코드에서는 목표 차량 수를 **6대**, 차량 보충 간격을 **0.8초**로 설정합니다. 원격 클라이언트는 같은 차선 데이터에서 차량을 복원하고 매 프레임 보간해 끊김을 줄였습니다.
 
 <details>
 <summary><strong>실행 중 디버그 화면 보기</strong></summary>
@@ -99,13 +111,15 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 </details>
 
-### 성능 개선 결과
+### 성능 개선 결과 — 기존 300프레임 측정 기록
 
-![교통 시스템 초기 스냅샷과 최신 스냅샷의 Unity Profiler 비교](./Docs/images/traffic-performance-comparison.ko.svg)
+아래 수치는 2026년 9월 3일 README에 수록한 비교 기록입니다. 차량 10대는 당시의 측정 조건이며, 현재 코드에 대한 재측정은 수행하지 않았습니다. 감소율은 [공개 원자료](./Docs/benchmarks/traffic-300-frames/README.md)의 반올림 전 평균으로 계산했습니다.
+
+![교통 시스템 초기 스냅샷과 개선 후 스냅샷의 Unity Profiler 비교](./Docs/images/traffic-performance-comparison.ko.svg)
 
 <p align="center"><sub>Unity Editor, ClientSim에서 동일 조건으로 비교한 결과이며, 실제 VRChat 인스턴스 성능과는 다를 수 있습니다.</sub></p>
 
-차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, Unity Editor에서 초기, 최신 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.3%, 프레임당 GC 할당은 88.1% 줄었습니다.
+차량 10대와 ClientSim으로 재현한 원격 플레이어 80명을 같은 지점에 배치하고, Unity Editor에서 초기 상태와 개선 후 상태를 각각 300프레임 측정했습니다. 평균 CPU 프레임 시간은 `17.65 ms → 11.92 ms`, P95 프레임 시간은 `24.60 ms → 17.44 ms`로 감소했습니다. 물리 처리 시간은 65.5%, 프레임당 GC 할당은 88.1% 줄었습니다.
 
 <p align="center">
   <a href="./Docs/optimization.md"><strong>측정 조건과 문제별 적용 내용을 자세히 보기 →</strong></a>
@@ -114,6 +128,8 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 ---
 
 ## 모델과 렌더링 최적화
+
+<sub>아래 모델·렌더링 수치는 기존 개발 기록의 측정값이며, 이후 PC·Quest 씬 변경을 반영한 재집계 값은 아닙니다.</sub>
 
 <p align="center">
   <img src="./Docs/images/shinjuku-model-rendering-comparison.webp" alt="기본 렌더링과 와이어프레임 비교" width="900">
@@ -142,26 +158,35 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 | 차선 데이터 | [`TrafficLaneDatabase.cs`](./Assets/_Shinjuku/Scripts/Traffic/TrafficLaneDatabase.cs) | 베이크된 차선 정보 조회와 차량 자세 복원 |
 | 제작 도구 | [`TrafficLaneBakerEditor.cs`](./Assets/_Shinjuku/Editor/Traffic/TrafficLaneBakerEditor.cs), [`TrafficSimulationManagerEditor.cs`](./Assets/_Shinjuku/Editor/Traffic/TrafficSimulationManagerEditor.cs) | 차선 베이킹, 설정 검사와 시각화 |
 | 월드 기능 | [`PosterSlide.cs`](./Assets/_Shinjuku/Scripts/Posters/PosterSlide.cs), [`PortalToggle.cs`](./Assets/_Shinjuku/Scripts/Portal/PortalToggle.cs), [`CollisionTeleport.cs`](./Assets/_Shinjuku/Scripts/Teleport/CollisionTeleport.cs) | 포스터 전환, 포털과 이동 처리 |
+| 공연 지도 | [`SpeakerMap.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMap.cs), [`SpeakerMapNameLayout.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMapNameLayout.cs) | 스피커 위치·공연자 이름·사용 현황과 이름 배치 |
+| 언어·개인 설정 | [`WorldLanguage.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLanguage.cs), [`WorldLocalSettings.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLocalSettings.cs), [`SpeakerMapPanel.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMapPanel.cs) | 공통 언어 선택, 로컬 차량 표시·환경음과 설정 UI |
+| 이미지 로딩 | [`ImageLoader.cs`](./Assets/_Shinjuku/Scripts/Speaker/ImageLoader.cs) | 스피커 화면의 URL 이미지 로딩과 초기화 |
+| 지도·안내 제작 | [`SpeakerMapSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerMapSetup.cs), [`SpeakerPlacementSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerPlacementSetup.cs), [`LocalPatchBoardSetup.cs`](./Assets/_Shinjuku/Editor/LocalPatchBoardSetup.cs) | 지도·설치 안내와 다국어 업데이트 게시판 구성 |
+| Quest 제작 도구 | [`QuestSceneSplitSetup.cs`](./Assets/_Shinjuku/Editor/QuestSceneSplitSetup.cs), [`QuestSceneAudit.cs`](./Assets/_Shinjuku/Editor/QuestSceneAudit.cs), [`QuestSdkBuildVerification.cs`](./Assets/_Shinjuku/Editor/QuestSdkBuildVerification.cs) | Quest 씬 분리, 상태 점검과 SDK 빌드 검증 |
 
 ## 저장소 안내
 
 이 저장소는 월드를 실행할 수 있는 완전한 Unity 프로젝트가 아닙니다. 작성한 C#, UdonSharp 코드와 개발 문서, 직접 제작하거나 제공받은 소개용 이미지, 영상을 공개합니다. 월드 구동에 필요한 Unity 씬, Prefab, 모델, 텍스처, 음원, 영상, 머티리얼, 애니메이션, 셰이더, `.meta` 파일과 외부 에셋은 포함하지 않습니다.
+
+공개 코드는 전체 프로젝트의 일부입니다. 예를 들어 `WorldLocalSettings`가 참조하는 저장 계층 `WorldPlayerData`는 공개 대상에서 제외되어 있습니다. 에디터 도구 역시 원본 프로젝트의 씬·에셋 경로를 전제로 하므로, 저장소를 복제하는 것만으로 컴파일하거나 월드를 빌드할 수 없습니다.
 
 <details>
 <summary><strong>사용한 SDK, 패키지, 외부 구성요소</strong></summary>
 
 ### 개발 환경
 
+<sub>2026년 10월 12일 개발 프로젝트의 Unity 버전과 패키지 설정에서 확인한 설치 버전입니다.</sub>
+
 - Unity `2022.3.22f1`
-- VRChat SDK - Worlds `3.8.1`
+- VRChat SDK - Worlds `3.10.5`
 - UdonSharp
-- TextMesh Pro
+- TextMesh Pro `2.1.6`
 
 ### 월드에서 사용한 외부 구성요소
 
-- Topaz Chat `0.1.6`
-- lilToon `1.10.3`
-- VRWorldToolkit `3.2.1`
+- Topaz Chat `0.3.0`
+- lilToon `2.3.4`
+- VRWorldToolkit `3.4.1`
 - AVPro Video
 - Bakery GPU Lightmapper
 - QvPen
