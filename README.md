@@ -66,16 +66,6 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 <sub>2026年10月12日確認</sub>
 
-公開コードの最終更新日は**2026年9月21日**です。スピーカーの設置・返却処理、ライブの場所を探すマップ、多言語案内、ユーザーごとの設定を改善しました。
-
-| 反映日 | 主な変更 |
-| --- | --- |
-| 9月21日 | スピーカーの設置上限と残数表示を改善し、返却完了の確認と再試行により、返却後に再設置できなくなる問題を修正しました。古い返却要求が新しい設置に影響しないよう保護します。([#16](https://github.com/hjcud/Shinjuku-Live-Street/pull/16)) |
-| 9月14日 | 入口のマップに設置済みスピーカーの位置、出演者名、使用状況を表示します。PC・VRでの設置キャンセル、モデル選択、設置ガイドも改善しました。([#14](https://github.com/hjcud/Shinjuku-Live-Street/pull/14)) |
-| 9月14日 | VRChatの言語設定に応じた日本語・韓国語・英語の案内と、ユーザーごとの車両表示・環境音設定を追加しました。車両を非表示にしても共有の交通シミュレーションは継続します。 |
-| 9月14日 | Questシーンの分離、シェーダー・照明・看板の点検、ネットワークIDの修復、SDKビルド検証用のエディターツールを追加しました。 |
-| 9月12日 | テレポート処理をローカルイベントに限定し、移動処理中のみ実行するよう改善しました。([#11](https://github.com/hjcud/Shinjuku-Live-Street/pull/11)) |
-
 ### ライブの場所とユーザーごとの設定
 
 マップはスピーカーの同期済み設置情報を再利用し、位置と出演者名を表示します。マップ外のスピーカーも全体の使用状況に含め、名前が重なる場合や端からはみ出す場合は表示位置を調整します。車両表示と環境音はローカル設定として連携し、各ユーザーが調整できます。
@@ -162,7 +152,6 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 | 言語・個人設定 | [`WorldLanguage.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLanguage.cs), [`WorldLocalSettings.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLocalSettings.cs), [`SpeakerMapPanel.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMapPanel.cs) | 共通言語の選択、ローカルの車両表示・環境音、設定UI |
 | 画像読み込み | [`ImageLoader.cs`](./Assets/_Shinjuku/Scripts/Speaker/ImageLoader.cs) | スピーカー画面のURL画像読み込みと初期化 |
 | マップ・案内制作 | [`SpeakerMapSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerMapSetup.cs), [`SpeakerPlacementSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerPlacementSetup.cs), [`LocalPatchBoardSetup.cs`](./Assets/_Shinjuku/Editor/LocalPatchBoardSetup.cs) | マップ・設置ガイドと多言語更新案内板の構築 |
-| Quest制作ツール | [`QuestSceneSplitSetup.cs`](./Assets/_Shinjuku/Editor/QuestSceneSplitSetup.cs), [`QuestSceneAudit.cs`](./Assets/_Shinjuku/Editor/QuestSceneAudit.cs), [`QuestSdkBuildVerification.cs`](./Assets/_Shinjuku/Editor/QuestSdkBuildVerification.cs) | Questシーン分離、状態点検、SDKビルド検証 |
 
 ## リポジトリについて
 

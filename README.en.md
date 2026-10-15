@@ -66,16 +66,6 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 <sub>Checked October 12, 2026</sub>
 
-The latest published code changes were merged on **September 21, 2026**. Updates improve speaker placement and returns, a map for finding performances, multilingual guidance, and individual settings.
-
-| Merged | Main changes |
-| --- | --- |
-| September 21 | Improved speaker capacity checks and available counts. Return confirmation and retries fix blocked placement after returning a speaker, while stale return requests cannot affect a new placement. ([#16](https://github.com/hjcud/Shinjuku-Live-Street/pull/16)) |
-| September 14 | The entrance map shows placed speakers, performer names, and usage counts. PC and VR placement cancellation, model selection, and placement guidance were also improved. ([#14](https://github.com/hjcud/Shinjuku-Live-Street/pull/14)) |
-| September 14 | Added Japanese, Korean, and English guidance based on the VRChat language setting, plus individual vehicle visibility and ambient sound controls. Hiding vehicles keeps the shared traffic simulation running. |
-| September 14 | Added editor tools for Quest scene separation, shader, lighting and sign checks, network ID repair, and SDK build verification. |
-| September 12 | Restricted teleportation to a local event that runs only during an active teleport sequence. ([#11](https://github.com/hjcud/Shinjuku-Live-Street/pull/11)) |
-
 ### Finding performances and adjusting local settings
 
 The map reuses synchronized speaker placement data to display positions and performer names. Speakers outside the map still count toward total usage, and name labels are repositioned to reduce overlap and stay within the map. Vehicle visibility and ambient sound controls share local settings that each player can adjust.
@@ -162,7 +152,6 @@ The environment is divided into sections, with occlusion culling, static batchin
 | Language and local settings | [`WorldLanguage.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLanguage.cs), [`WorldLocalSettings.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLocalSettings.cs), [`SpeakerMapPanel.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMapPanel.cs) | Shared language selection, local vehicle visibility, ambient sound, and settings UI |
 | Image loading | [`ImageLoader.cs`](./Assets/_Shinjuku/Scripts/Speaker/ImageLoader.cs) | URL image loading and reset for speaker screens |
 | Map and guidance tools | [`SpeakerMapSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerMapSetup.cs), [`SpeakerPlacementSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerPlacementSetup.cs), [`LocalPatchBoardSetup.cs`](./Assets/_Shinjuku/Editor/LocalPatchBoardSetup.cs) | Map, placement guide, and multilingual update board setup |
-| Quest tools | [`QuestSceneSplitSetup.cs`](./Assets/_Shinjuku/Editor/QuestSceneSplitSetup.cs), [`QuestSceneAudit.cs`](./Assets/_Shinjuku/Editor/QuestSceneAudit.cs), [`QuestSdkBuildVerification.cs`](./Assets/_Shinjuku/Editor/QuestSdkBuildVerification.cs) | Quest scene separation, audits, and SDK build verification |
 
 ## Repository scope
 

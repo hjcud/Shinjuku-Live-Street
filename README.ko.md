@@ -66,16 +66,6 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 
 <sub>2026년 10월 12일 확인</sub>
 
-공개 코드의 최신 반영일은 **2026년 9월 21일**입니다. 스피커 설치·반납 처리, 공연 위치를 찾는 지도, 다국어 안내와 개인별 설정을 개선했습니다.
-
-| 반영일 | 주요 변경 |
-| --- | --- |
-| 9월 21일 | 스피커 설치 상한과 남은 개수 표시를 보완하고, 반환 완료 확인·재시도로 반납 후 재설치가 막히는 문제를 수정했습니다. 이전 반환 요청이 새 배치에 영향을 주지 않도록 보호합니다. ([#16](https://github.com/hjcud/Shinjuku-Live-Street/pull/16)) |
-| 9월 14일 | 입구 지도에 설치된 스피커 위치, 공연자 이름과 사용 현황을 표시합니다. PC·VR의 설치 취소, 모델 선택과 배치 안내도 개선했습니다. ([#14](https://github.com/hjcud/Shinjuku-Live-Street/pull/14)) |
-| 9월 14일 | VRChat 언어 설정에 맞춘 일본어·한국어·영어 안내와 개인별 차량 표시·환경음 설정을 추가했습니다. 차량을 숨겨도 공유 교통 시뮬레이션은 유지됩니다. |
-| 9월 14일 | Quest 씬 분리, 셰이더·조명·표지판 점검, 네트워크 ID 복구와 SDK 빌드 검증용 에디터 도구를 추가했습니다. |
-| 9월 12일 | 순간이동 처리를 로컬 이벤트로 제한하고, 이동 중일 때만 실행하도록 보완했습니다. ([#11](https://github.com/hjcud/Shinjuku-Live-Street/pull/11)) |
-
 ### 공연 위치와 개인별 설정
 
 지도는 스피커의 동기화된 배치 정보를 재사용해 위치와 공연자 이름을 표시합니다. 지도 밖의 스피커도 전체 사용 현황에 포함하며, 이름이 겹치거나 가장자리를 벗어나는 경우 표시 위치를 조정합니다. 차량 표시와 환경음은 로컬 설정으로 연결해 각 사용자가 조절할 수 있습니다.
@@ -162,7 +152,6 @@ https://github.com/user-attachments/assets/9ec884f0-df47-49f0-b39f-327cdfda0ede
 | 언어·개인 설정 | [`WorldLanguage.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLanguage.cs), [`WorldLocalSettings.cs`](./Assets/_Shinjuku/Scripts/UI/WorldLocalSettings.cs), [`SpeakerMapPanel.cs`](./Assets/_Shinjuku/Scripts/UI/SpeakerMapPanel.cs) | 공통 언어 선택, 로컬 차량 표시·환경음과 설정 UI |
 | 이미지 로딩 | [`ImageLoader.cs`](./Assets/_Shinjuku/Scripts/Speaker/ImageLoader.cs) | 스피커 화면의 URL 이미지 로딩과 초기화 |
 | 지도·안내 제작 | [`SpeakerMapSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerMapSetup.cs), [`SpeakerPlacementSetup.cs`](./Assets/_Shinjuku/Editor/SpeakerPlacementSetup.cs), [`LocalPatchBoardSetup.cs`](./Assets/_Shinjuku/Editor/LocalPatchBoardSetup.cs) | 지도·설치 안내와 다국어 업데이트 게시판 구성 |
-| Quest 제작 도구 | [`QuestSceneSplitSetup.cs`](./Assets/_Shinjuku/Editor/QuestSceneSplitSetup.cs), [`QuestSceneAudit.cs`](./Assets/_Shinjuku/Editor/QuestSceneAudit.cs), [`QuestSdkBuildVerification.cs`](./Assets/_Shinjuku/Editor/QuestSdkBuildVerification.cs) | Quest 씬 분리, 상태 점검과 SDK 빌드 검증 |
 
 ## 저장소 안내
 
